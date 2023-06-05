@@ -14,11 +14,13 @@ const deleteLogs = require("./middleware/deleteLogs");
 const corsOptions = require("./config/cors");
 // const csrf = require('csurf');
 const app = express();
-
-app.set("view engine", "ejs");
+app.engine('ejs', require('express-ejs-extend'));
 
 // Custom middleware logger
 app.use(logger);
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, 'views'));
 
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
@@ -47,7 +49,7 @@ app.use(session({
 //     cookie: true,
 //     httpOnly: true,
 //     maxAge: 3600,
-//     domain: process.env.APP_HOST,
+//     domain: process.env.APP_URL,
 //     secure: process.env.NODE_ENV === "production",
 // });
 
@@ -62,7 +64,13 @@ app.listen(process.env.PORT || 5000, () => {
 });
 
 app.get("/", (req, res) => {
-    res.render("home");
+    var params = {
+        title: 'Page Title',
+        description: 'Page Description',
+        class_name: "home"
+    };
+
+    res.render('home', params);
 });
 
 // Cron

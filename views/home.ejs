@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
-    <title>Document</title>
-</head>
-<body>
-    <h1 id="test">Hello World</h1>
-</body>
+    <%- include('layout/head.ejs') %>
 
-<script async src="js/main.js"></script>
+    <link rel="stylesheet" href="css/home.css" />
+</head>
+
+<body id="app">
+    <div class="site-wrap">
+
+        <%- include('layout/header.ejs') %>
+
+        <main class="<%= class_name %>">
+            <h1>HOME</h1>
+        </main>
+
+        <%- include('layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/main.js" />
+    <script type="text/javascript" src="js/plugins/slick.min.js" />
+</body>
 </html>

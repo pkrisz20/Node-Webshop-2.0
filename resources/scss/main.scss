@@ -1,7 +1,348 @@
-body {
-    background-color: green;
+@import "./variables.scss";
+@import "./mixins.scss";
+@import "./base.scss";
 
-    h1 {
-        color: white;
+@import "./components/header.scss";
+@import "./components/footer.scss";
+
+.form {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @media(max-width: $r-max-xxl) {
+        width: 65%;
     }
+
+    @media(max-width: $r-max-xl) {
+        width: 100%;
+    }
+
+    @media(max-width: $r-max-l) {
+        width: 60%;
+    }
+
+    @media(max-width: $r-max-m) {
+        width: 75%;
+    }
+
+    @media(max-width: $r-max-s) {
+        width: 90%;
+    }
+
+    & > .row {
+        display: flex;
+        flex-direction: column;
+
+        @media #{ $r-min-m } {
+          flex-direction: row;
+          gap: 25px;
+        }
+    }
+
+    &-row {
+        width: 100%;
+        position: relative;
+        margin-bottom: 28px;
+
+        &.gdpr {
+            & > label {
+                all: unset;
+                color: $c-9;
+                cursor: pointer;
+                position: relative;
+                padding-left: 25px;
+                cursor: pointer;
+                font-size: 14px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+
+                @media #{ $r-min-m } {
+                  font-size: 16px;
+                }
+
+                .checkmark {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 15px;
+                    width: 15px;
+                    background-color: $c-c;
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        left: 6px;
+                        top: 2px;
+                        width: 5px;
+                        height: 10px;
+                        border: solid $c-white;
+                        border-width: 0 3px 3px 0;
+                        -webkit-transform: rotate(45deg);
+                        -ms-transform: rotate(45deg);
+                        transform: rotate(45deg);
+                    }
+                }
+
+                &:hover input ~ .checkmark {
+                  background-color: $c-9;
+                }
+
+                input {
+                  position: absolute;
+                  opacity: 0;
+                  cursor: pointer;
+                  height: 0;
+                  width: 0;
+
+                  &:checked ~ .checkmark {
+                    background-color: $c-theme;
+                  }
+
+                  &:checked ~ .checkmark::after {
+                    display: block;
+                  }
+              }
+            }
+            span.gdpr-details {
+                color: $c-9;
+                font-size: 14px;
+
+                @media #{ $r-min-m } {
+                  font-size: 16px;
+                }
+
+                a {
+                    font-weight: 600;
+                    transition: .2s ease-in-out;
+                    &:hover {
+                      color: $c-dark-blue;
+                    }
+                }
+            }
+        }
+
+        .characters-count {
+            color: $c-light-gray;
+        }
+
+        i {
+            color: $c-red;
+            font-size: 18px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            &.textarea-error {
+                top: 20px;
+            }
+        }
+
+        &-error {
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            width: 100%;
+            font-size: 13px;
+            color: $c-red;
+        }
+    }
+
+    label {
+        position: absolute;
+        z-index: 2;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        transition: all .2s ease-in-out;
+        color: $c-9;
+        pointer-events: none;
+
+        &.textarea-label {
+            top: 20px;
+        }
+
+        &.is-invalid {
+            color: $c-red !important;
+        }
+    }
+
+    &-control {
+        padding: 10px 30px 10px 10px;
+        border: 1px solid $c-light-gray2;
+        font-size: 16px;
+        line-height: 19px;
+        color: $c-dark;
+        width: 100%;
+
+        &:focus, &:active {
+            outline: 2px solid $c-theme;
+        }
+        &:focus + label, &:not(:placeholder-shown) + label, &:active + label, &:-webkit-autofill + label {
+            top: -2px;
+            left: 10px;
+            background-color: $c-white;
+            color: $c-theme;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 3px;
+        }
+        &::placeholder {
+            opacity: 0;
+            color: $c-9;
+            transition: all .3s;
+        }
+        &:focus::placeholder {
+            opacity: 1;
+        }
+        &:not(:placeholder-shown) {
+            outline: 2px solid $c-theme;
+        }
+
+        &.is-invalid {
+            color: $c-red !important;
+            border-color: $c-red !important;
+            outline: 2px solid $c-red !important;
+        }
+    }
+
+    textarea {
+        line-height: 19px;
+        color: $c-dark;
+        font-size: 16px;
+        padding: 10px 25px 10px 10px;
+        border: 1px solid $c-light-gray2;
+        width: 100%;
+        resize: none;
+
+        &:not(:placeholder-shown) {
+            outline: 2px solid $c-theme;
+        }
+
+        &::placeholder {
+            color: $c-light-gray;
+        }
+
+        &:focus, &:active {
+            outline: 2px solid $c-theme;
+        }
+        &:focus + label, &:not(:placeholder-shown) + label, &:active + label, &:-webkit-autofill + label {
+            top: -2px;
+            left: 10px;
+            background-color: $c-white;
+            color: $c-theme;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 3px;
+        }
+        &::placeholder {
+            opacity: 0;
+            color: $c-9;
+            transition: all .3s;
+        }
+        &:focus::placeholder {
+            opacity: 1;
+        }
+        &.is-invalid {
+            color: $c-red !important;
+            border-color: $c-red !important;
+            outline: 2px solid $c-red !important;
+        }
+    }
+
+    &-submit {
+        padding: 15px 0;
+        font-size: 15px;
+        color: $c-white;
+        font-weight: 700;
+        border-radius: 3px;
+        border: none;
+        width: 160px;
+        text-transform: uppercase;
+        background-color: $c-theme;
+        position: relative;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        @media #{ $r-min-m } {
+          width: 250px;
+          font-size: 18px;
+          line-height: 16px;
+          padding: 20px 0;
+        }
+
+        &.disabled {
+          opacity: .5;
+          cursor: not-allowed;
+        }
+
+        &:hover {
+          background-color: $c-light-green;
+        }
+
+        &::after {
+          position: absolute;
+          content: '';
+          width: 100%;
+          height: 4px;
+          left: 0;
+          bottom: 0;
+          background-color: $c-light-green2;
+        }
+
+        i {
+          margin-right: 5px;
+        }
+    }
+}
+
+.pagination {
+  margin-bottom: 40px;
+  @include flexBox();
+
+  li {
+    background-color: $c-success;
+    transition: all .3s ease;
+    border-radius: 3px;
+    @include flexBox();
+
+    &.disabled {
+      background-color: $c-light-gray;
+    }
+
+    &:not(.disabled) {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $c-warning;
+      }
+    }
+
+    a {
+      padding: 10px;
+      color: $c-white;
+      cursor: unset;
+    }
+
+    &:first-child {
+      margin-right: 15px;
+    }
+
+    &:last-child {
+      margin-left: 15px;
+    }
+  }
+
+  &-item {
+    margin: 0 5px;
+
+    &.active {
+      background-color: $c-warning;
+    }
+  }
 }

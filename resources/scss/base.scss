@@ -1,0 +1,88 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+*:focus {
+    outline: none;
+}
+
+*::selection {
+    background-color: $c-theme;
+    color: $c-white;
+}
+
+.wrapper {
+    padding: 0 30px;
+    width: 100%;
+
+    @media #{$r-min-xl} {
+        padding: 0 15px;
+        max-width: $wrapper;
+        margin: 0 auto;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+ol, ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+section {
+    padding: 60px 0;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: $c-theme;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    border: none;
+    outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    appearance: textfield;
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.grecaptcha-badge {
+    display: none !important;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: $main-font;
+    @include scrollbars(7px, rgba($c-theme, .6), $c-d);
+
+    &:focus-within {
+      scroll-behavior: smooth;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}

@@ -1,0 +1,104 @@
+.footer {
+    z-index: 99;
+    width: 100%;
+
+    &-top {
+        background-color: $c-theme;
+        width: 100%;
+        padding: 10px 0;
+
+        & > .wrapper {
+            @include flexBox();
+        }
+    }
+
+    &-logo {
+        width: 300px;
+        picture { @include paddingBottom(80px, 300px); }
+
+        img {
+            object-fit: contain !important;
+        }
+    }
+
+    &-middle {
+        background-color: $c-dark-blue;
+        padding: 30px 0;
+
+        &-container {
+            @include gridBox();
+
+            @media #{$r-max-xl} {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            @media #{$r-max-m} {
+                @include flexBox("center", "flex-start", 30px);
+                flex-direction: column;
+                margin: 0;
+            }
+        }
+
+        &-col {
+            @include flexBox("flex-start", "flex-start", 20px);
+            flex-direction: column;
+        }
+    }
+
+    &-title {
+        color: $c-d;
+        margin-bottom: 15px;
+        position: relative;
+        text-transform: uppercase;
+
+        &::after {
+            position: absolute;
+            content: "";
+            left: 0;
+            bottom: -12px;
+            width: 40px;
+            height: 3px;
+            background-color: $c-d;
+            border-radius: 5px;
+        }
+
+        &-link {
+            color: $c-a;
+            transition: .2s ease-in-out;
+            font-size: 14px;
+
+            @media #{ $r-min-m } {
+                font-size: 16px;
+            }
+
+            &:hover {
+                color: $c-white;
+            }
+
+            i {
+                margin-right: 5px;
+                transform: translateY(1px);
+                font-size: 16px;
+
+                @media #{ $r-min-m } {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+
+    &-bottom {
+        background-color: $c-dark3;
+        padding: 20px 0;
+
+        &-row {
+            width: 100%;
+            @include flexBox();
+
+            & > h4 {
+                color: $c-d;
+                text-align: center;
+            }
+        }
+    }
+}
