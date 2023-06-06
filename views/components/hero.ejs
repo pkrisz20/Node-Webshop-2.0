@@ -1,8 +1,22 @@
 <section class="hero js-hero-slick">
-    <div>
-        <h1>test</h1>
-    </div>
-    <div>
-        <h1>1516</h1>
+    <div class="js-hero-slick">
+        <% datas.sliders.forEach(item => { %>
+            <div class="slide">
+                <div class="box">
+                    <h2 class="box-title"><%= item.title %></h2>
+                    <% if(item.subText) { %>
+                        <span class="box-decoration"><i class="fas fa-circle"></i></span>
+                        <h3 class="box-subtitle"><%= item.subText %></h3>
+                    <% } %>
+                    <% if(item.button) { %>
+                        <a href="<%= item.link %>" target="<%= item.targetPage %>" class="box-btn" aria-label="Navigation to the current link"><%= item.button %></a>
+                    <% } %>
+                </div>
+                <picture>
+                    <source srcset="<%= item.image %>">
+                    <img alt="heroimage" loading="lazy" src="/images/no-picture.jpg">
+                </picture>
+            </div>
+        <% }) %>
     </div>
 </section>

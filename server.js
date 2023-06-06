@@ -1,6 +1,7 @@
 require('dotenv').config();
-const path = require("path");
 const express = require("express");
+const app = express();
+const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
@@ -12,15 +13,31 @@ const { logger } = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errorHandler");
 const deleteLogs = require("./middleware/deleteLogs");
 const corsOptions = require("./config/cors");
-// const csrf = require('csurf');
-const app = express();
-app.engine('ejs', require('express-ejs-extend'));
+const i18Next = require("i18next");
+const Backend = require("i18next-fs-backend");
+const i18NextMiddleware = require("i18next-http-middleware");
 
 // Custom middleware logger
 app.use(logger);
 
+// Multi language handler
+i18Next
+    .use(Backend)
+    .use(i18NextMiddleware.LanguageDetector)
+    .init({
+        preload: ['en', 'sr', 'hu'],
+        fallbackLng: process.env.FALLBACK_LANG,
+        backend: {
+            loadPath: "./locales/{{lng}}.json"
+        }
+    });
+
+app.use(i18NextMiddleware.handle(i18Next));
+
+// View template engine
+app.engine('ejs', require('express-ejs-extend'));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, '/views'));
 
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
@@ -30,6 +47,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cookies
 app.use(cookieParser());
+
+// Language splitter
+// app.use("/:lang", (req, res, next) => {
+//     var match = req.url.match(/^\/([A-Z]{2})([\/\?].*)?$/i);
+//     if (match){
+//         req.lang = match[1];
+//         req.url = match[2] || '/';
+//     }
+//     next();
+// });
 
 // Session
 app.use(session({
@@ -44,42 +71,24 @@ app.use(session({
     }
 }));
 
-// CSRF
-// const csrfProtection = csrf({
-//     cookie: true,
-//     httpOnly: true,
-//     maxAge: 3600,
-//     domain: process.env.APP_URL,
-//     secure: process.env.NODE_ENV === "production",
-// });
-
 // app.use(csrfProtection());
 
 // Assets path
-app.use(express.static(__dirname + '/files'));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/files')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
-});
-
-app.get("/", (req, res) => {
-    var params = {
-        title: 'Page Title',
-        description: 'Page Description',
-        class_name: "home"
-    };
-
-    res.render('home', params);
 });
 
 // Cron
 cron.schedule('0 0 0 * * *', deleteLogs);
 
 //Routes
+const homeRouter = require("./routes/home");
+app.use("/", homeRouter);
 // const cartRouter = require("./routes/cart");
 // const productsRouter = require("./routes/products");
-// const homeRouter = require("./routes/home");
 // const blogsRouter = require("./routes/blogs");
 // const galleryRouter = require("./routes/gallery");
 // const staticContentsRouter = require("./routes/staticContents");
@@ -91,7 +100,6 @@ cron.schedule('0 0 0 * * *', deleteLogs);
 
 // app.use("/api", cartRouter);
 // app.use("/api", productsRouter);
-// app.use("/api", homeRouter);
 // app.use("/api", blogsRouter);
 // app.use("/api", galleryRouter);
 // app.use("/api", staticContentsRouter);

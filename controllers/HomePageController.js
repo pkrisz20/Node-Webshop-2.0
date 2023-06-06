@@ -3,20 +3,33 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
+const i18Next = require("i18next");
 
-const getFeaturedProducts = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ?";
+const getData = (req, res) => {
+    const { lang } = req;
+    let datas = {
+        products: [],
+        sliders: [],
+        galleries: [],
+        blogs: [],
+        title: "Home",
+        description: "This is the home page",
+        lang: i18Next.language ?? "en"
+    };
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
+    datas.lang = "en";
 
-    db.query(sqlQuery, [1, 1], (err, data) => {
+    // if (!lang) {
+    //     return res.status(400).render('not-found');
+    // }
+
+    // PRODUCTS
+    const sqlQueryProducts = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ?";
+
+    db.query(sqlQueryProducts, [1, 1], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", datas);
         }
 
         else if (data.length > 0) {
@@ -33,27 +46,18 @@ const getFeaturedProducts = (req, res) => {
                     maxQuantity: parseInt(element.max_order_count)
                 }
 
-                result.push(tempObject);
+                datas.products.push(tempObject);
             });
         }
-
-        return res.status(200).json({ status: 'success', products: result ?? [] });
     });
-}
 
-const getFeaturedBlogs = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ?";
+    // BLOGS
+    const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ?";
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, [1, 1], (err, data) => {
+    db.query(sqlQueryBlogs, [1, 1], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", datas);
         }
 
         else if (data.length > 0) {
@@ -70,10 +74,10 @@ const getFeaturedBlogs = (req, res) => {
                     commentsCount: element.comments_count
                 }
 
-                result.push(tempObject);
+                datas.blogs.push(tempObject);
             });
 
-            result = result.map(item => {
+            datas.blogs = datas.blogs.map(item => {
                 return {
                     ...item,
                     fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
@@ -81,24 +85,15 @@ const getFeaturedBlogs = (req, res) => {
                 };
             });
         }
-
-        return res.status(200).json({ status: 'success', blogs: result ?? [] });
     });
-}
 
-const getHeroItems = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ?";
+    // HERO ITEMS
+    const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ?";
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, 1, (err, data) => {
+    db.query(sqlQuerySliders, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", datas);
         }
 
         else if (data.length > 0) {
@@ -113,27 +108,18 @@ const getHeroItems = (req, res) => {
                     targetPage: element.target_page ?? "blank"
                 }
 
-                result.push(tempObject);
+                datas.sliders.push(tempObject);
             });
         }
-
-        return res.status(200).json({ status: 'success', heroItems: result ?? [] });
     });
-}
 
-const getFeaturedGalleries = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id";
+    // GALLERY ITEMS
+    const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id";
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, [1, 1], (err, data) => {
+    db.query(sqlQueryGallery, [1, 1], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", datas);
         }
 
         else if (data.length > 0) {
@@ -147,19 +133,19 @@ const getFeaturedGalleries = (req, res) => {
                     category: getValueByLanguage(element.category_name, lang)
                 }
 
-                result.push(tempObject);
+                datas.galleries.push(tempObject);
             });
 
-            result = result.map(item => {
+            datas.galleries = datas.galleries.map(item => {
                 return {
                     ...item,
                     category: capitalizeFirstLetter(item.category)
                 };
             });
         }
-
-        return res.status(200).json({ status: 'success', featuredGalleries: result ?? [] });
     });
+
+    res.render("home", { datas });
 }
 
-module.exports = { getFeaturedProducts, getHeroItems, getFeaturedBlogs, getFeaturedGalleries };
+module.exports = { getData };

@@ -5,19 +5,22 @@
     <link rel="stylesheet" href="css/home.css" />
 </head>
 
-<body id="app">
+<body>
     <div class="site-wrap">
-
         <%- include('layout/header.ejs') %>
 
-        <main class="<%= class_name %>">
+        <main class="home">
+            <%- include('components/hero.ejs') %>
+
             <h1>HOME</h1>
+            <h2><% t('nav.home') %></h2>
         </main>
 
         <%- include('layout/footer.ejs') %>
     </div>
 
-    <script type="text/javascript" src="js/main.js" />
-    <script type="text/javascript" src="js/plugins/slick.min.js" />
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
