@@ -106,7 +106,7 @@
     $diff: math.div($diff, 1px);
     $diffRange: $rangeMax - $rangeMin;
     $diffRange: math.div($diffRange, 1px);
-    #{$property}: calc(#{$min} + #{$diff} * (math.div((100vw - #{$rangeMin}), #{$diffRange})));
+    #{$property}: calc(#{$min} + #{$diff} * ((100vw - #{$rangeMin}) / #{$diffRange}));
 
     @media (max-width: $rangeMin) {
         #{$property}: $min;

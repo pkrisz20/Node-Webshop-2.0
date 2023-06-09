@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <%- include('layout/head.ejs') %>
 
-    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" type="text/css" href="css/plugins/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css"/>
 </head>
 
 <body>
@@ -12,8 +14,7 @@
         <main class="home">
             <%- include('components/hero.ejs') %>
 
-            <h1>HOME</h1>
-            <h2><% t('nav.home') %></h2>
+            <%- include('components/categories.ejs') %>
         </main>
 
         <%- include('layout/footer.ejs') %>

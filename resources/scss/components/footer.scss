@@ -95,7 +95,7 @@
             width: 100%;
             @include flexBox();
 
-            & > h4 {
+            & > strong {
                 color: $c-d;
                 text-align: center;
             }

@@ -963,9 +963,19 @@ body {
   align-items: center;
   gap: 0;
 }
-.footer-bottom-row > h4 {
+.footer-bottom-row > strong {
   color: #ddd;
   text-align: center;
+}
+
+.site-wrap {
+  padding-top: 180px;
+  min-height: 100vh;
+}
+@media (max-width: 1024px) {
+  .site-wrap {
+    padding-top: 110px;
+  }
 }
 
 .form {

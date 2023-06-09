@@ -1,0 +1,234 @@
+.hero {
+    padding: 0 !important;
+    height: calc(100vh - 110px);
+    height: 100vh;
+    width: 100%;
+    max-height: 1200px !important;
+    position: relative;
+
+    @media #{ $r-min-l } {
+        height: calc(100vh - 180px);
+    }
+
+    &-wrapper {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 110px);
+        max-height: 1200px !important;
+        position: relative;
+
+        @media #{$r-min-l} {
+            height: calc(100vh - 180px);
+        }
+    }
+
+    .slick {
+        &-track,
+        &-list {
+            height: 100%;
+        }
+
+        &-prev {
+            left: 10px;
+
+            @media #{ $r-min-l } {
+                left: 33px;
+            }
+        }
+
+        &-next {
+            right: 10px;
+
+            @media #{ $r-min-l } {
+                right: 33px;
+            }
+        }
+
+        &-next, &-prev {
+            display: none;
+
+            i {
+                font-size: 30px;
+                color: $c-white;
+
+                @media #{$r-max-m} {
+                    font-size: 24px;
+                }
+            }
+
+            @media #{ $r-min-xl } {
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+                border-radius: 3px;
+                @include flexBox();
+                z-index: 1;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                color: transparent;
+                background-color: $c-theme;
+            }
+        }
+
+
+        &-dots {
+            position: absolute;
+            bottom: 15px !important;
+            width: auto;
+            display: flex;
+            align-items: center;
+            padding: 3px 0;
+            left: 50%;
+            transform: translateX(-50%);
+
+            @media #{ $r-min-l } {
+                bottom: 35px !important;
+            }
+
+            li {
+                width: 11px!important;
+                height: 11px!important;
+                border-radius: 50%!important;
+                margin: 0 4px;
+
+                button {
+                    color: transparent;
+                    width: 100%!important;
+                    height: 100%!important;
+                    background-color: $c-white;
+                    border-radius: 50%!important;
+                    padding: 0;
+
+                    &:before {
+                        display: none;
+                    }
+                }
+
+                &.slick-active {
+                    button {
+                        background-color: $c-theme;
+                    }
+                }
+            }
+        }
+
+        &-slide {
+            height: 100%;
+            position: relative;
+
+            &::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: '';
+                width: 100%;
+                height: 100%;
+                background-color: rgba($c-black, 0.6);
+            }
+
+            img {
+                @include imageCover();
+            }
+
+            .box {
+                @include absoluteCenter();
+                z-index: 2;
+                @include flexBox();
+                flex-direction: column;
+                max-width: 1200px;
+                width: 100%;
+                padding: 0 30px;
+                height: auto;
+                text-align: center;
+
+                @media #{ $r-min-xl } {
+                    padding: 0 50px;
+                }
+
+                &-title {
+                    font-size: 50px;
+                    @include resp('font-size', 25px, 50px);
+                    color: $c-white;
+                    pointer-events: none;
+                    text-transform: uppercase;
+                }
+
+                &-decoration {
+                    margin: 14px 0;
+                    position: relative;
+
+                    i {
+                        font-size: 15px;
+                        color: $c-white;
+
+                        @media #{ $r-min-l } {
+                            font-size: 18px;
+                        }
+                    }
+
+                    &::before, &::after {
+                        position: absolute;
+                        content: "";
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background-color: $c-white;
+                        height: 2px;
+                        width: 50px;
+                        border-radius: 5px;
+
+                        @media #{ $r-min-l } {
+                            width: 90px;
+                        }
+                    }
+
+                    &::before {
+                        left: -60px;
+
+                        @media #{ $r-min-l } {
+                            left: -120px;
+                        }
+                    }
+
+                    &::after {
+                        right: -60px;
+
+                        @media #{ $r-min-l } {
+                            right: -120px;
+                        }
+                    }
+                }
+
+                &-subtitle {
+                    @include resp('font-size', 16px, 20px);
+                    color: $c-white;
+                    pointer-events: none;
+                    margin-bottom: 25px;
+                }
+
+                &-btn {
+                    cursor: pointer;
+                    text-decoration: none;
+                    padding: 10px 24px;
+                    background-color: transparent;
+                    color: $c-white;
+                    @include resp('font-size', 16px, 20px);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    transition: all .3s ease;
+                    border: 3px solid $c-white;
+
+                    @media #{ $r-min-s } {
+                        padding: 12px 30px;
+                    }
+
+                    &:hover {
+                        background-color: $c-theme;
+                        color: $c-dark-blue;
+                        border-color: $c-theme;
+                    }
+                }
+            }
+        }
+    }
+}

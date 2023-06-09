@@ -1,11 +1,13 @@
-// @import "../components/hero.scss";
-// @import "../components/featured-categories.scss";
-// @import "../components/featured-products.scss";
-// @import "../components/featured-gallery.scss";
-// @import "../components/featured-blogs.scss";
 @import "../variables.scss";
 @import "../mixins.scss";
 @import "../base.scss";
+
+// @import "../components/featured-blogs.scss";
+// @import "../components/featured-categories.scss";
+// @import "../components/featured-products.scss";
+// @import "../components/featured-gallery.scss";
+@import "../components/hero.scss";
+@import "../components/featured-categories.scss";
 
 .home {
     min-height: 100vh;

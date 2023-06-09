@@ -1,0 +1,19 @@
+<section class="featured-categories">
+    <div class="wrapper">
+        <div class="featured-categories-carousel js-categories-carousel">
+            <% categories.forEach(item => { %>
+                <a href="/products/<%= item.id %>">
+                    <div class="card">
+                        <img src="<%= item.icon %>" class="card-icon" alt="<%= item.name %>" />
+                        <h3 class="card-text" title="<%= item.name %>"><%= item.name %></h3>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+
+        <% if (categories.length > 1) { %>
+            <button class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+            <button class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+        <% } %>
+    </div>
+</section>

@@ -5,6 +5,7 @@ const HomePageController = require("../controllers/HomePageController");
 homeRouter.route("/")
     .get(HomePageController.getData);
 
+// .get(HomePageController.getData);
 // homeRouter.route("/home/blogs")
 //     .post(HomePageController.getFeaturedBlogs);
 

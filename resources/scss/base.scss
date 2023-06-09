@@ -17,7 +17,7 @@
     padding: 0 30px;
     width: 100%;
 
-    @media #{$r-min-xl} {
+    @media #{ $r-min-xl } {
         padding: 0 15px;
         max-width: $wrapper;
         margin: 0 auto;

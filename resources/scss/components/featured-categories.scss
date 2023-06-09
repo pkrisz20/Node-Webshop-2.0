@@ -1,0 +1,125 @@
+.featured-categories {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: 0;
+    margin: 20px 0 0;
+
+    & > .wrapper {
+        position: relative;
+    }
+
+    .slick {
+
+        &-slide {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: $c-theme;
+            border-radius: 3px;
+            padding: 8px !important;
+            cursor: pointer;
+
+            i {
+                font-size: 24px;
+                color: $c-white;
+
+                @media #{ $r-min-m } {
+                    font-size: 30px;
+                }
+            }
+
+            @media #{ $r-min-xl } {
+                padding: 10px !important;
+            }
+        }
+
+        &-prev {
+            left: 5px !important;
+
+            @media #{ $r-min-xl } {
+                left: 20px !important;
+            }
+        }
+
+        &-next {
+            right: 5px !important;
+
+            @media #{ $r-min-xl } {
+                right: 20px !important;
+            }
+        }
+    }
+
+    .card {
+        width: 210px;
+        height: 210px;
+        @include flexBox("center", "center", 25px);
+        flex-direction: column;
+        padding: 50px;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+        overflow: hidden;
+        border-radius: 50%;
+        color: $c-d;
+
+        @media (min-width: 1200px) {
+            width: 260px;
+            height: 260px;
+            margin: 0;
+        }
+
+        @media #{$r-max-m} {
+            padding: 60px 40px;
+        }
+        @media #{$r-max-s} {
+            padding: 50px 30px;
+        }
+
+        &:hover {
+            .card-text, img {
+                transform: scale(1.3);
+            }
+        }
+
+        img {
+            width: 55px;
+            height: 55px;
+            transition: transform .3s ease-in-out;
+            filter: invert(97%) sepia(11%) saturate(17%) hue-rotate(60deg) brightness(109%) contrast(73%);
+
+            @media (min-width: 1200px) {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
+        &:nth-child(even) {
+            background-color: $c-theme;
+            border: 10px solid $c-dark-blue;
+        }
+
+        &:nth-child(odd) {
+            background-color: $c-dark-blue;
+            border: 10px solid $c-theme;
+        }
+
+        &-text {
+            font-weight: 700;
+            text-align: center;
+            transition: transform .3s ease-in-out;
+
+            @include resp('font-size', 16px, 20px);
+
+            @media #{$r-max-xl} {
+                padding: 15px 0;
+            }
+        }
+    }
+}

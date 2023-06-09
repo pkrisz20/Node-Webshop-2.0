@@ -1,1 +1,53 @@
-<footer>THIS IS THE FOOTER</footer>
+<footer class="footer">
+    <div class="footer-top">
+        <div class="wrapper">
+            <a class="footer-logo" href="/" aria-label="Link to main page via logo image">
+                <picture>
+                    <source srcset="/images/logo.webp" type="image/webp" />
+                    <img alt="Footer logo" loading="lazy" src="/images/logo.png" />
+                </picture>
+            </a>
+        </div>
+    </div>
+    <div class="footer-middle">
+        <div class="wrapper">
+            <div class="footer-middle-container">
+                <div class="footer-middle-col">
+                    <h3 class="footer-title">Contact</h3>
+                    <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0611237896"><i class="fas fa-phone-alt"></i> +061 1237896</a>
+                    <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0631234567"><i class="fas fa-phone-alt"></i> +063 1234567</a>
+                    <a class="footer-title-link" aria-label="Link to send a mail" href="mail:example@gmail.com"><i class="fas fa-envelope"></i> email@gmail.com</a>
+                    <a class="footer-title-link" aria-label="Link to the map" href="/"><i class="fas fa-map-marker-alt"></i> Name of the street, Tornjoš</a>
+                </div>
+                <div class="footer-middle-col">
+                    <h3 class="footer-title">Quick links</h3>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="`/${$i18n.locale}/about`">About</a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="`/${$i18n.locale}/list/products`">{{ $t('general.products') }}</a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="`/${$i18n.locale}/list/gallery`">{{ $t('nav.gallery') }}</a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="`/${$i18n.locale}/list/blogs`">{{ $t('nav.blog') }}</a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="`/${$i18n.locale}/contact`">{{ $t('nav.contact') }}</a>
+                </div>
+                <div class="footer-middle-col">
+                    <h3 class="footer-title">Support</h3>
+                    <a href="`/${$i18n.locale}/faq`" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-question-circle"></i> {{ $t('nav.FAQ') }}</a>
+                    <a href="`/${$i18n.locale}/termsofuse`" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-hand-point-right"></i> {{ $t('nav.terms_of_use') }}</a>
+                    <a href="`/${$i18n.locale}/policy`" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-shield-alt"></i> {{ $t('nav.privacy_policy') }}</a>
+                    <a href="`/${$i18n.locale}/gdpr`" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-database"></i> {{ $t('nav.gdpr') }}</a>
+                </div>
+                <div class="footer-middle-col">
+                    <h3 class="footer-title">Follow us</h3>
+                    <a href="/facebook" aria-label="Link to social media platform" target="blank" class="footer-title-link social"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="/instagram" aria-label="Link to social media platform" target="blank" class="footer-title-link social"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="/twitter" aria-label="Link to social media platform" target="blank" class="footer-title-link social"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="wrapper">
+            <div class="footer-bottom-row">
+                <strong><%= process.env.SITE_NAME %> &copy; 2023. All rights reserved.</strong>
+            </div>
+        </div>
+    </div>
+</footer>

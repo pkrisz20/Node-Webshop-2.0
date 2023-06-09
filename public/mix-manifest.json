@@ -1,7 +1,7 @@
 {
-    "/js/main.js": "/js/main.js?id=e8604ec027e0b5b7044e4e4224b15f9f",
-    "/css/home.css": "/css/home.css?id=ef51575b70602567e5ffdfde6ed6cedf",
-    "/css/main.css": "/css/main.css?id=5b4338498f0bedeb3f0744d067cee834",
+    "/js/main.js": "/js/main.js?id=2658aa4b3e21c910d1610d411944816e",
+    "/css/home.css": "/css/home.css?id=3c5e36627c77e1845fa63bda5378f67c",
+    "/css/main.css": "/css/main.css?id=3090573eb4b27790057953e862ecdc1d",
     "/js/plugins/jquery.min.js": "/js/plugins/jquery.min.js?id=e6c2415c0ace414e5153670314ce99a9",
     "/js/plugins/slick.min.js": "/js/plugins/slick.min.js?id=777da4aaf5b960636dec0fd4e50ba489",
     "/images/12.jpg": "/images/12.jpg?id=ea482bd46debe0c15c801096a92cdf43",
@@ -42,5 +42,6 @@
     "/images/received_3609522925785043.jpeg": "/images/received_3609522925785043.jpeg?id=7b6965db1ca3bd73546eb64e67dabac0",
     "/images/received_849397825395072.jpeg": "/images/received_849397825395072.jpeg?id=d12d99bb44e9307eec4af4bc15ca6bf5",
     "/images/worker1.jpg": "/images/worker1.jpg?id=f071190ab7f479571f18bb8fec4fd406",
-    "/images/worker2.jpg": "/images/worker2.jpg?id=68a0147849f2540ed9a2956679402d59"
+    "/images/worker2.jpg": "/images/worker2.jpg?id=68a0147849f2540ed9a2956679402d59",
+    "/css/plugins/slick.min.css": "/css/plugins/slick.min.css?id=72bdc86c8d50acd5528c93d6bcb36d23"
 }

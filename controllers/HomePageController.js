@@ -6,18 +6,18 @@ const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFun
 const i18Next = require("i18next");
 
 const getData = (req, res) => {
-    const { lang } = req;
-    let datas = {
-        products: [],
-        sliders: [],
-        galleries: [],
-        blogs: [],
+    let products = [];
+    let sliders = [];
+    var galleries = [];
+    var blogs = [];
+    var categories = [];
+    var metas = {
         title: "Home",
-        description: "This is the home page",
-        lang: i18Next.language ?? "en"
-    };
-
-    datas.lang = "en";
+        type: "article",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the home page"
+    }
+    var lang = i18Next.language ?? "en";
 
     // if (!lang) {
     //     return res.status(400).render('not-found');
@@ -25,127 +25,152 @@ const getData = (req, res) => {
 
     // PRODUCTS
     const sqlQueryProducts = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ?";
-
-    db.query(sqlQueryProducts, [1, 1], (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).render("500", datas);
-        }
-
-        else if (data.length > 0) {
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    name: getValueByLanguage(element.name, lang),
-                    image: imagePathConverter(element.image_thumbnail, "products"),
-                    price: element.price,
-                    isOnDiscount: Boolean(element.discount_value),
-                    discount: element.discount_value,
-                    isAvailable: Boolean(element.is_available),
-                    isPostable: Boolean(element.is_delivered),
-                    maxQuantity: parseInt(element.max_order_count)
-                }
-
-                datas.products.push(tempObject);
-            });
-        }
-    });
-
     // BLOGS
     const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ?";
-
-    db.query(sqlQueryBlogs, [1, 1], (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).render("500", datas);
-        }
-
-        else if (data.length > 0) {
-            setMomentLocale(lang);
-
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    title: getValueByLanguage(element.title, lang),
-                    shortDescription: getValueByLanguage(element.short_description, lang),
-                    image: imagePathConverter(element.image_thumbnail, "blogs"),
-                    author: element.author,
-                    fullDate: element.date,
-                    commentsCount: element.comments_count
-                }
-
-                datas.blogs.push(tempObject);
-            });
-
-            datas.blogs = datas.blogs.map(item => {
-                return {
-                    ...item,
-                    fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
-                    relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
-                };
-            });
-        }
-    });
-
-    // HERO ITEMS
-    const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ?";
-
-    db.query(sqlQuerySliders, 1, (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).render("500", datas);
-        }
-
-        else if (data.length > 0) {
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    text: getValueByLanguage(element.title, lang),
-                    subText: getValueByLanguage(element.subtitle, lang),
-                    image: imagePathConverter(element.image, "heros"),
-                    link: getValueByLanguage(element.link, lang),
-                    button: getValueByLanguage(element.button_text, lang),
-                    targetPage: element.target_page ?? "blank"
-                }
-
-                datas.sliders.push(tempObject);
-            });
-        }
-    });
-
-    // GALLERY ITEMS
+    // GALLERIES
     const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id";
+    // HEROS
+    const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ?";
+    // CATEGORIES
+    const sqlQueryCategories = "SELECT id, name, icon FROM categories";
 
-    db.query(sqlQueryGallery, [1, 1], (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).render("500", datas);
+    setMomentLocale(lang);
+
+    db.query(sqlQueryProducts, [1, 1], (product_err, product_items) => {
+        if (product_err) {
+            console.log(product_err);
+            return res.status(500).render("500");
         }
 
-        else if (data.length > 0) {
-            setMomentLocale(lang);
-
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    name: getValueByLanguage(element.gallery_name, lang),
-                    source: imagePathConverter(element.gallery_thumbnail, "gallery"),
-                    category: getValueByLanguage(element.category_name, lang)
+        else if (product_items.length > 0) {
+            product_items.forEach(product_element => {
+                let tempObjectProduct = {
+                    id: parseInt(product_element.id),
+                    name: getValueByLanguage(product_element.name, lang),
+                    image: imagePathConverter(product_element.image_thumbnail, "products"),
+                    price: product_element.price,
+                    isOnDiscount: Boolean(product_element.discount_value),
+                    discount: product_element.discount_value,
+                    isAvailable: Boolean(product_element.is_available),
+                    isPostable: Boolean(product_element.is_delivered),
+                    maxQuantity: parseInt(product_element.max_order_count)
                 }
 
-                datas.galleries.push(tempObject);
+                products.push(tempObjectProduct);
             });
 
-            datas.galleries = datas.galleries.map(item => {
-                return {
-                    ...item,
-                    category: capitalizeFirstLetter(item.category)
-                };
+            db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
+                if (blog_err) {
+                    console.log(blog_err);
+                    return res.status(500).render("500");
+                }
+
+                else if (blog_data.length > 0) {
+
+                    blog_data.forEach(blog_element => {
+                        let tempObjectBlog = {
+                            id: parseInt(blog_element.id),
+                            title: getValueByLanguage(blog_element.title, lang),
+                            shortDescription: getValueByLanguage(blog_element.short_description, lang),
+                            image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
+                            author: blog_element.author,
+                            fullDate: blog_element.date,
+                            commentsCount: blog_element.comments_count
+                        }
+
+                        blogs.push(tempObjectBlog);
+                    });
+
+                    blogs = blogs.map(item => {
+                        return {
+                            ...item,
+                            fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
+                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                        };
+                    });
+
+                    db.query(sqlQuerySliders, 1, (hero_err, heros_data) => {
+                        if (hero_err) {
+                            console.log(hero_err);
+                            return res.status(500).render("500");
+                        }
+
+                        else if (heros_data.length > 0) {
+                            heros_data.forEach(hero_element => {
+                                let tempObjectSlider = {
+                                    id: parseInt(hero_element.id),
+                                    text: getValueByLanguage(hero_element.title, lang),
+                                    subText: getValueByLanguage(hero_element.subtitle, lang),
+                                    image: imagePathConverter(hero_element.image, "heros"),
+                                    link: getValueByLanguage(hero_element.link, lang),
+                                    button: getValueByLanguage(hero_element.button_text, lang),
+                                    targetPage: hero_element.target_page ?? "blank"
+                                }
+
+                                sliders.push(tempObjectSlider);
+                            });
+
+                            db.query(sqlQueryGallery, [1, 1], (gallery_err, gallery_data) => {
+                                if (gallery_err) {
+                                    console.log(gallery_err);
+                                    return res.status(500).render("500");
+                                }
+
+                                else if (gallery_data.length > 0) {
+
+                                    gallery_data.forEach(gallery_element => {
+                                        let tempObjectGallery = {
+                                            id: parseInt(gallery_element.id),
+                                            name: getValueByLanguage(gallery_element.gallery_name, lang),
+                                            source: imagePathConverter(gallery_element.gallery_thumbnail, "gallery"),
+                                            category: getValueByLanguage(gallery_element.category_name, lang)
+                                        }
+
+                                        galleries.push(tempObjectGallery);
+                                    });
+
+                                    galleries = galleries.map(item => {
+                                        return {
+                                            ...item,
+                                            category: capitalizeFirstLetter(item.category)
+                                        };
+                                    });
+
+                                    db.query(sqlQueryCategories, (category_err, category_data) => {
+                                        if (category_err) {
+                                            console.log(category_err);
+                                            return res.status(500).render("500");
+                                        }
+
+                                        else if (category_data.length > 0) {
+                                            category_data.forEach(category_element => {
+                                                let tempObjectCategory = {
+                                                    id: parseInt(category_element.id),
+                                                    name: getValueByLanguage(category_element.name, lang),
+                                                    icon: imagePathConverter(category_element.icon, "categories")
+                                                }
+
+                                                categories.push(tempObjectCategory);
+                                            });
+                                        }
+
+                                        res.render("home", {
+                                            heros: sliders,
+                                            galleries: galleries,
+                                            blogs: blogs,
+                                            products: products,
+                                            categories: categories,
+                                            metas: metas
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             });
         }
     });
-
-    res.render("home", { datas });
 }
 
 module.exports = { getData };

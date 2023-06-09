@@ -14,3 +14,5 @@ mix
     .copyDirectory('resources/js/plugins', 'public/js/plugins')
 
     .copyDirectory('resources/images', 'public/images')
+
+    .copyDirectory('resources/scss/plugins', 'public/css/plugins')

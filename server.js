@@ -35,28 +35,18 @@ i18Next
 app.use(i18NextMiddleware.handle(i18Next));
 
 // View template engine
-app.engine('ejs', require('express-ejs-extend'));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, '/views'));
+app.set("views", path.join(__dirname, 'views'));
 
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Cookies
 app.use(cookieParser());
-
-// Language splitter
-// app.use("/:lang", (req, res, next) => {
-//     var match = req.url.match(/^\/([A-Z]{2})([\/\?].*)?$/i);
-//     if (match){
-//         req.lang = match[1];
-//         req.url = match[2] || '/';
-//     }
-//     next();
-// });
 
 // Session
 app.use(session({
@@ -87,6 +77,7 @@ cron.schedule('0 0 0 * * *', deleteLogs);
 //Routes
 const homeRouter = require("./routes/home");
 app.use("/", homeRouter);
+
 // const cartRouter = require("./routes/cart");
 // const productsRouter = require("./routes/products");
 // const blogsRouter = require("./routes/blogs");

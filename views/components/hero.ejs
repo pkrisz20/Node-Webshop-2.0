@@ -1,22 +1,30 @@
-<section class="hero js-hero-slick">
-    <div class="js-hero-slick">
-        <% datas.sliders.forEach(item => { %>
+<section class="hero">
+    <div class="hero-wrapper js-hero-slick">
+        <% heros.forEach(data => { %>
             <div class="slide">
                 <div class="box">
-                    <h2 class="box-title"><%= item.title %></h2>
-                    <% if(item.subText) { %>
+                    <h2 class="box-title"><%= data.text %></h2>
+                    <% if (data.subText) { %>
                         <span class="box-decoration"><i class="fas fa-circle"></i></span>
-                        <h3 class="box-subtitle"><%= item.subText %></h3>
+                        <h3 class="box-subtitle"><%= data.subText %></h3>
                     <% } %>
-                    <% if(item.button) { %>
-                        <a href="<%= item.link %>" target="<%= item.targetPage %>" class="box-btn" aria-label="Navigation to the current link"><%= item.button %></a>
+                    <% if (data.button) { %>
+                        <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button %></a>
                     <% } %>
                 </div>
                 <picture>
-                    <source srcset="<%= item.image %>">
-                    <img alt="heroimage" loading="lazy" src="/images/no-picture.jpg">
+                    <source srcset="<%= data.image %>">
+                    <img alt="<%= data.text %>" loading="lazy" src="images/no-picture.jpg">
                 </picture>
             </div>
         <% }) %>
     </div>
+
+    <% if (heros.length > 1) { %>
+        <button class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+        <button class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+    <% } %>
+    <% if (heros.length > 1) { %>
+        <div class="hero-dots"></div>
+    <% } %>
 </section>

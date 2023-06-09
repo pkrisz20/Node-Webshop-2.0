@@ -5,6 +5,15 @@
 @import "./components/header.scss";
 @import "./components/footer.scss";
 
+.site-wrap {
+  padding-top: 180px;
+  min-height: 100vh;
+
+  @media #{$r-max-l} {
+      padding-top: 110px;
+  }
+}
+
 .form {
     margin: 0;
     width: 100%;
