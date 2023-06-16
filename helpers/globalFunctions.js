@@ -9,11 +9,12 @@ function setMomentLocale (lang = "en") {
     }
 }
 
-function numberWithCommas (x) {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function numberWithCommas (num) {
+    return num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 function capitalizeFirstLetter (string) {
+    console.log(string);
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 

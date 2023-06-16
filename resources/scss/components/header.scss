@@ -227,6 +227,7 @@
           gap: 5px;
           justify-content: center;
           align-items: center;
+          text-transform: uppercase;
 
           &:hover {
             background-color: $c-warning;
@@ -255,19 +256,27 @@
             box-shadow: 0 1px 6px rgba($c-black, .75);
             width: 70px;
             z-index: 50;
+            visibility: hidden;
+            opacity: 0;
+            transition: all .3s ease-in-out;
 
             &-item {
-              display: inline-flex;
-              justify-content: center;
-              align-items: center;
-              gap: 5px;
               width: 100%;
               padding: 10px;
-              font-size: 16px;
               cursor: pointer;
               transition: all .2s ease-in-out;
               background-color: $c-dark-blue;
-              color: $c-a;
+
+              & > a {
+                font-size: 16px;
+                color: $c-a;
+                text-transform: uppercase;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                transition: color .3s ease;
+              }
 
               img {
                 width: 25px;
@@ -278,12 +287,20 @@
 
               &:hover {
                 background-color: $c-warning;
-                color: $c-dark2;
+
+                a {
+                  color: $c-dark2;
+                }
               }
 
               &:not(:last-child) {
                 border-bottom: 1px solid $c-a;
               }
+            }
+
+            &--open {
+              visibility: visible;
+              opacity: 1;
             }
         }
       }

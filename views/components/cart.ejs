@@ -1,0 +1,48 @@
+<div class="cart js-cart">
+    <div class="cart-close js-cart-close"><i class="fas fa-times"></i></div>
+    <h4 class="cart-title"><i class="fas fa-shopping-cart"></i> <%= languageHandler('orders.your_cart', current_locale) %></h4>
+    <h6 class="cart-counter" v-if="cart.length > 0"><%= languageHandler('orders.cart_count', current_locale) %>: <%= cartTotalCount %></h6>
+
+    <div class="cart-container" v-if="cart.length > 0">
+        <div class="cart-container-top">
+            <a href="/<%= current_locale %>/order`" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= ('orders.order', current_locale) %></>
+            <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <%= numberWithCommas(calculateTotalPrice) %> <small>RSD</small></strong>
+        </div>
+
+        <ul class="cart-container-list">
+            <% cart.forEach(cartItem => { %>
+                <li class="cart-container-list-item">
+                    <div class="cart-product">
+                        <div class="cart-product-image">
+                            <picture>
+                                <source srcset="<%= cartItem.image %>">
+                                <img class="cart-product-img" alt="<%= cartItem.productName %>" loading="lazy" src="images/no-picture.jpg">
+                            </picture>
+                        </div>
+
+                        <div class="cart-product-desc">
+                            <h5 class="cart-product-desc_name"><%= cartItem.productName %></h5>
+
+                            <div class="quantities">
+                                <div class="quantities-container">
+                                    <button @click="decreaseQuantity(cartItem.productId, cartItem.quantity)" type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                    <input class="quantities-input" @keypress="isDigit($event)" @change="setAmountQuantity(cartItem.productId, cartItem.maxQuantity, $event)" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
+                                    <button @click="increaseQuantity(cartItem.productId, cartItem.maxQuantity, cartItem.quantity)" type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                </div>
+
+                                <small class="quantities-price"><i class="fas fa-times"></i> <span><%= cartItem.price %> RSD</span></small>
+                            </div>
+
+                            <div class="functions">
+                                <a href="/<%= current_locale %>/product/${ cartItem.productId }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                <button type="button" value="Remove" class="functions_remove" @click="removeCartItem(cartItem.productId)"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <h5 class="cart-empty" v-else-if="cart.length == 0"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
+</div>

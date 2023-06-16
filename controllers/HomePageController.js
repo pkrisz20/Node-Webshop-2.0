@@ -3,6 +3,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
+const languageHandler = require("../helpers/languageHandler");
 const i18Next = require("i18next");
 
 const getData = (req, res) => {
@@ -11,17 +12,13 @@ const getData = (req, res) => {
     var galleries = [];
     var blogs = [];
     var categories = [];
+    var lang = req.session.lang;
     var metas = {
         title: "Home",
         type: "article",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the home page"
     }
-    var lang = i18Next.language ?? "en";
-
-    // if (!lang) {
-    //     return res.status(400).render('not-found');
-    // }
 
     // PRODUCTS
     const sqlQueryProducts = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ?";
@@ -129,12 +126,12 @@ const getData = (req, res) => {
                                         galleries.push(tempObjectGallery);
                                     });
 
-                                    galleries = galleries.map(item => {
-                                        return {
-                                            ...item,
-                                            category: capitalizeFirstLetter(item.category)
-                                        };
-                                    });
+                                    // galleries = galleries.map(item => {
+                                    //     return {
+                                    //         ...item,
+                                    //         category: capitalizeFirstLetter(item.category)
+                                    //     };
+                                    // });
 
                                     db.query(sqlQueryCategories, (category_err, category_data) => {
                                         if (category_err) {
@@ -160,7 +157,10 @@ const getData = (req, res) => {
                                             blogs: blogs,
                                             products: products,
                                             categories: categories,
-                                            metas: metas
+                                            metas: metas,
+                                            current_locale: req.session.lang,
+                                            locales: ['hu', 'sr', 'en'],
+                                            languageHandler: languageHandler
                                         });
                                     });
                                 }

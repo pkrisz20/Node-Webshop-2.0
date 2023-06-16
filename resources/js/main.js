@@ -50,3 +50,21 @@ $(document).ready(function() {
         ]
     });
 });
+
+// Language dropdown
+$('body').on("mouseenter", ".js-lang-switcher", function () {
+    $(".js-langs-list").addClass('dropdown-list--open');
+});
+
+$('body').on("mouseleave", ".js-lang-switcher", function () {
+    $(".js-langs-list").removeClass("dropdown-list--open");
+});
+
+// Cart toggle
+$('body').on("click", ".js-cart-btn", function () {
+    $(".js-cart").addClass('open');
+});
+
+$('body').on("click", ".js-cart-close", function () {
+    $(".js-cart").removeClass('open');
+});

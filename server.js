@@ -13,26 +13,9 @@ const { logger } = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errorHandler");
 const deleteLogs = require("./middleware/deleteLogs");
 const corsOptions = require("./config/cors");
-const i18Next = require("i18next");
-const Backend = require("i18next-fs-backend");
-const i18NextMiddleware = require("i18next-http-middleware");
 
 // Custom middleware logger
 app.use(logger);
-
-// Multi language handler
-i18Next
-    .use(Backend)
-    .use(i18NextMiddleware.LanguageDetector)
-    .init({
-        preload: ['en', 'sr', 'hu'],
-        fallbackLng: process.env.FALLBACK_LANG,
-        backend: {
-            loadPath: "./locales/{{lng}}.json"
-        }
-    });
-
-app.use(i18NextMiddleware.handle(i18Next));
 
 // View template engine
 app.set("view engine", "ejs");
@@ -71,12 +54,18 @@ app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
 });
 
-// Cron
-cron.schedule('0 0 0 * * *', deleteLogs);
+app.get("/", (req, res) => {
+    res.redirect(`/${ process.env.FALLBACK_LANG }`);
+});
+
+app.use("/:lang", function (req, res, next) {
+    req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
+    next();
+});
 
 //Routes
 const homeRouter = require("./routes/home");
-app.use("/", homeRouter);
+app.use("/:lang", homeRouter);
 
 // const cartRouter = require("./routes/cart");
 // const productsRouter = require("./routes/products");
@@ -99,6 +88,9 @@ app.use("/", homeRouter);
 // app.use("/api", ordersRouter);
 // app.use("/api", searchRouter);
 // app.use("/api/admin", adminRouter);
+
+// Crons
+cron.schedule('0 0 0 * * *', deleteLogs);
 
 // Log the errors
 app.use(errorHandler);

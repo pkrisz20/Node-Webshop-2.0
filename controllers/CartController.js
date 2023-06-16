@@ -1,5 +1,6 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
+const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getCartItems = (req, res) => {
     const { lang } = req.body;
@@ -30,7 +31,7 @@ const getCartItems = (req, res) => {
             else if (result.length > 0) {
                 let productName = getValueByLanguage(result[0].name, lang);
 
-                cart = cart.map(item => ({ ...item, productName }));
+                cart = cart.map(item => ({ ...item, productName, price: numberWithCommas(item.price) }));
 
                 req.session.cart = cart;
             }
@@ -60,7 +61,7 @@ const getCartItems = (req, res) => {
                 });
 
                 cart = cart.map(cartItem => {
-                    return { ...cartItem, productName: productNamesWithIds.find(item => item.productId === cartItem.productId).productName };
+                    return { ...cartItem, price: numberWithCommas(cartItem.price), productName: productNamesWithIds.find(item => item.productId === cartItem.productId).productName };
                 });
 
                 req.session.cart = cart;
