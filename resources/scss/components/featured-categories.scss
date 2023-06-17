@@ -69,7 +69,7 @@
         border-radius: 50%;
         color: $c-d;
 
-        @media (min-width: 1200px) {
+        @media #{ $r-min-xl } {
             width: 260px;
             height: 260px;
             margin: 0;
@@ -94,7 +94,7 @@
             transition: transform .3s ease-in-out;
             filter: invert(97%) sepia(11%) saturate(17%) hue-rotate(60deg) brightness(109%) contrast(73%);
 
-            @media (min-width: 1200px) {
+            @media #{ $r-min-xl } {
                 width: 65px;
                 height: 65px;
             }

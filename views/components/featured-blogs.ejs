@@ -1,0 +1,13 @@
+<section class="blogs">
+    <div class="wrapper">
+        <%- include('./block-title.ejs', { title: languageHandler('general.blog', current_locale), subtitle: languageHandler('general.blog_subtitle', current_locale) }) %>
+
+        <div class="js-featured-blogs">
+            <% blogs.forEach(item => { %>
+                <div class="slide">
+                    <%- include("./blog-card.ejs", { blog: item }) %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</section>

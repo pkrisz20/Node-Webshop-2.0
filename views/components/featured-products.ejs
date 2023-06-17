@@ -1,0 +1,18 @@
+<section class="products-carousel">
+    <div class="wrapper">
+        <%- include('./block-title.ejs', { title: languageHandler('general.products', current_locale), subtitle: languageHandler('general.product_subtitle', current_locale) }) %>
+
+        <div class="js-featured-products">
+            <% products.forEach(item => { %>
+                <div class="slide">
+                    <%- include("./product-card.ejs", { product: item }) %>
+                </div>
+            <% }) %>
+        </div>
+
+        <% if (categories.length > 1) { %>
+            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+        <% } %>
+    </div>
+</section>

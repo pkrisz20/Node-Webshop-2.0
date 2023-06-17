@@ -1,0 +1,73 @@
+.products-carousel {
+    padding: 40px 0;
+
+    @media #{ $r-min-l } {
+        padding: 60px 0 40px;
+    }
+
+    .slick {
+
+        &-track {
+            display: flex !important;
+            padding: 10px 0;
+        }
+
+        &-slide {
+            height: inherit !important;
+        }
+
+        &-arrow {
+            position: absolute;
+            top: 55%;
+            background-color: $c-theme;
+            border-radius: 3px;
+            padding: 8px !important;
+            cursor: pointer;
+
+            i {
+                font-size: 24px;
+                color: $c-white;
+
+                @media #{ $r-min-m } {
+                    font-size: 30px;
+                }
+            }
+
+            @media #{ $r-min-xl } {
+                padding: 10px !important;
+            }
+        }
+
+        &-prev {
+            left: 30px !important;
+
+            @media #{ $r-min-xl } {
+                left: -5px !important;
+            }
+        }
+
+        &-next {
+            right: 30px !important;
+
+            @media #{ $r-min-xl } {
+                right: -5px !important;
+            }
+        }
+    }
+
+    & > .wrapper {
+        position: relative;
+    }
+
+    .header_title {
+        margin-bottom: 40px;
+    }
+
+    .product {
+        margin: 0 12px;
+
+        @media #{ $r-min-xl } {
+            margin: 0 6px;
+        }
+    }
+}

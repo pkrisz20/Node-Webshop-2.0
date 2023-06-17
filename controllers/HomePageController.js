@@ -4,7 +4,6 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const i18Next = require("i18next");
 
 const getData = (req, res) => {
     let products = [];
@@ -59,7 +58,7 @@ const getData = (req, res) => {
             db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
                 if (blog_err) {
                     console.log(blog_err);
-                    return res.status(500).render("500");
+                    return res.status(500).render("server-error");
                 }
 
                 else if (blog_data.length > 0) {
@@ -89,7 +88,7 @@ const getData = (req, res) => {
                     db.query(sqlQuerySliders, 1, (hero_err, heros_data) => {
                         if (hero_err) {
                             console.log(hero_err);
-                            return res.status(500).render("500");
+                            return res.status(500).render("server-error");
                         }
 
                         else if (heros_data.length > 0) {
@@ -110,7 +109,7 @@ const getData = (req, res) => {
                             db.query(sqlQueryGallery, [1, 1], (gallery_err, gallery_data) => {
                                 if (gallery_err) {
                                     console.log(gallery_err);
-                                    return res.status(500).render("500");
+                                    return res.status(500).render("server-error");
                                 }
 
                                 else if (gallery_data.length > 0) {
@@ -126,17 +125,17 @@ const getData = (req, res) => {
                                         galleries.push(tempObjectGallery);
                                     });
 
-                                    // galleries = galleries.map(item => {
-                                    //     return {
-                                    //         ...item,
-                                    //         category: capitalizeFirstLetter(item.category)
-                                    //     };
-                                    // });
+                                    galleries = galleries.map(item => {
+                                        return {
+                                            ...item,
+                                            category: capitalizeFirstLetter(item.category)
+                                        };
+                                    });
 
                                     db.query(sqlQueryCategories, (category_err, category_data) => {
                                         if (category_err) {
                                             console.log(category_err);
-                                            return res.status(500).render("500");
+                                            return res.status(500).render("server-error");
                                         }
 
                                         else if (category_data.length > 0) {

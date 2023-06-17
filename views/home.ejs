@@ -15,6 +15,37 @@
             <%- include('components/hero.ejs') %>
 
             <%- include('components/categories.ejs') %>
+
+            <%- include('components/featured-products.ejs') %>
+
+            <% if (products.length > 0) { %>
+                <div class="more">
+                    <a class="more-button" href="/<%= current_locale %>/products"><i class="fas fa-arrow-right"></i> <%= languageHandler("products.all_products", current_locale) %></a>
+                </div>
+            <% } %>
+
+            <section class="bg">
+                <div class="bg-box">
+                    <h2 class="bg-box--title">We love the animals</h2>
+                    <p class="bg-box--subtitle">Smooth reliable, responsive rebgy, perfect portfolio, unique blog layout and many many options for you</p>
+                    <a href="/<%= current_locale %>/about" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>
+                    <a href="/<%= current_locale %>/gallery" aria-label="Link to gallery list page" target="_self" class="bg-box_btn bg-btn"><%= languageHandler("nav.gallery", current_locale) %></a>
+                </div>
+            </section>
+
+            <% if (galleries.length > 0) { %>
+                <%- include('components/featured-gallery.ejs', { images: galleries }) %>
+            <% } %>
+
+            <% if (blogs.length > 0) { %>
+                <%- include('components/featured-blogs.ejs', { blogs: blogs }) %>
+            <% } %>
+
+            <% if (blogs.length > 0) { %>
+                <div class="more">
+                    <a class="more-button" href="<%= current_locale %>/blogs"><i class="fas fa-arrow-right"></i> <%= languageHandler("nav.visit_blog", current_locale) %></a>
+                </div>
+            <% } %>
         </main>
 
         <%- include('layout/footer.ejs') %>

@@ -1,0 +1,29 @@
+<div class="product">
+    <a class="product_image" href="/<%= current_locale %>/product/<%= product.id %>" aria-label="Navigation to the current product - <%= product.name %>">
+        <% if (product.isOnDiscount) { %>
+            <span class="badge badge-discount"><%= languageHandler("products.discount", current_locale) %></span>
+        <% } %>
+        <% if (product.isPostable) { %>
+            <span class="badge badge-postable"><i class="fas fa-truck"></i></span>
+        <% } %>
+        <picture>
+            <source srcset="<%= product.image %>">
+            <img alt="<%= product.name %>" loading="lazy" src="/images/no-picture.jpg">
+        </picture>
+    </a>
+    <div class="product_desc">
+        <a class="title" href="/<%= current_locale %>/product/<%= product.id %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
+        <strong class="price"><%= product.price %> <small>RSD</small></strong>
+        <% if (product.isOnDiscount) { %>
+            <del class="price old"><%= product.price %> RSD</del>
+        <% } %>
+        <% if (product.isAvailable) { %>
+            <button type="button" class="cart-btn"><i class="fas fa-shopping-cart"></i> <%= languageHandler("products.add_cart", current_locale) %></button>
+        <% } else if (!product.isAvailable) { %>
+            <div class="unavailable"><i class="fas fa-times-circle"></i><%= languageHandler("products.out_of_stock", current_locale) %></div>
+        <% } %>
+        <%# else if () %>
+            <%# <div class="added-cart" v-else-if="checkInCart(product.id)"><i class="fas fa-coins"></i>  %> <%# languageHandler('orders.already_added', current_locale) </div> %>
+        <%# } %>
+    </div>
+</div>

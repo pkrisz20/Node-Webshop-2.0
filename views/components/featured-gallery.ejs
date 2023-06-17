@@ -1,0 +1,34 @@
+<section class="gallery">
+    <div class="wrapper">
+        <%- include('./block-title.ejs', { title: languageHandler('general.gallery', current_locale), subtitle: languageHandler('general.gallery_subtitle', current_locale) }) %>
+        <div class="gallery-list">
+            <% images.forEach(item => { %>
+                <figure class="gallery-list-card">
+                    <% if (item.source) { %>
+                        <picture>
+                            <source srcset="<%= item.source %>">
+                            <img loading="lazy" alt="<%= item.name %>" src="/images/no-picture.jpg">
+                        </picture>
+                    <% } %>
+                    <div class="overlay">
+                        <figcaption class="overlay_content">
+                            <div class="icons">
+                                <i class="fas fa-link"></i>
+                                <a href="/<%= current_locale %>/gallery"><i class="far fa-eye"></i></a>
+                            </div>
+                            <% if (item.name) { %>
+                                <h4 class="hover_title"><%= item.name %></h4>
+                            <% } %>
+                            <% if (item.category) { %>
+                                <p class="hover_sub"><%= item.category %></p>
+                            <% } %>
+                        </figcaption>
+                    </div>
+                </figure>
+            <% }) %>
+        </div>
+    </div>
+    <div class="more">
+        <a class="more-button" href="/<%= current_locale %>/gallery"><i class="fas fa-arrow-right"></i> <%= languageHandler("nav.watch_gallery", current_locale) %></a>
+    </div>
+</section>

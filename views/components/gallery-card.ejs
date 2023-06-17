@@ -1,0 +1,21 @@
+<a class="gallery-card" href="/<%= current_locale %>/gallery">
+    <time class="gallery-card-date"><%= galleryItem.date %></time>
+    <figure class="gallery-card-image">
+        <picture>
+            <source srcset="<%= galleryItem.thumbnailImage %>">
+            <img loading="lazy" src="/images/no-picture.jpg" />
+        </picture>
+        <div class="icon">
+            <i class="far fa-eye"></i>
+        </div>
+        <figcaption class="caption">
+            <% if (galleryItem.name) { %>
+                <h3 class="caption-name"><%= galleryItem.name %></h3>
+            <% } %>
+
+            <% if (galleryItem.category) { %>
+                <h4 class="caption-category"><span>|</span><%= galleryItem.category %><span>|</span></h4>
+            <% } %>
+        </figcaption>
+    </figure>
+</a>

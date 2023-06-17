@@ -1,0 +1,62 @@
+.main-title {
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0 0 40px;
+    padding: 0 15px;
+    position: relative;
+    color: $c-dark;
+    @include resp('font-size', 26px, 35px, 767px, 1200px);
+
+    &::before {
+        position: absolute;
+        content: '';
+        bottom: -20px;
+        right: 50%;
+        transform: translate(40%);
+        width: 90px;
+        height: 2px;
+        background-color: $c-theme;
+    }
+
+    &::after {
+        position: absolute;
+        content: '';
+        bottom: -25px;
+        left: 50%;
+        transform: translate(-40%);
+        width: 90px;
+        height: 2px;
+        background-color: $c-theme;
+    }
+}
+
+.header_title {
+    font-family: $main-font;
+    color: $c-2;
+
+    &-main {
+        text-transform: uppercase;
+        width: auto;
+        position: relative;
+        @include resp('font-size', 25px, 30px, 767px, 1200px);
+
+        &::after {
+            position: absolute;
+            content: "";
+            left: 2px;
+            bottom: -6px;
+            width: 50px;
+            height: 3px;
+            background-color: $c-theme;
+        }
+    }
+
+    &-sub {
+        font-size: 20px;
+        margin-top: 20px;
+
+        @media #{$r-max-l} {
+            font-size: 18px;
+        }
+    }
+}
