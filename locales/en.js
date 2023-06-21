@@ -46,7 +46,8 @@ const en = {
 		confirm_delete: "Are you sure you want to delete?",
 		gdpr_db_info: "You could make a request, that what kind of data is being stored about You in our database. We won't register this request.",
 		next_page: "Next",
-		prev_page: "Prev"
+		prev_page: "Prev",
+		remove: "Remove"
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

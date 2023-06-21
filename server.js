@@ -67,7 +67,7 @@ app.use("/:lang", function (req, res, next) {
 const homeRouter = require("./routes/home");
 app.use("/:lang", homeRouter);
 
-// const cartRouter = require("./routes/cart");
+const cartRouter = require("./routes/cart");
 // const productsRouter = require("./routes/products");
 // const blogsRouter = require("./routes/blogs");
 // const galleryRouter = require("./routes/gallery");
@@ -78,7 +78,7 @@ app.use("/:lang", homeRouter);
 // const searchRouter = require("./routes/search");
 // const adminRouter = require("./routes/admin");
 
-// app.use("/api", cartRouter);
+app.use("/api", cartRouter);
 // app.use("/api", productsRouter);
 // app.use("/api", blogsRouter);
 // app.use("/api", galleryRouter);

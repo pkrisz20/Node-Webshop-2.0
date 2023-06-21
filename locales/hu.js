@@ -46,7 +46,8 @@ const hu = {
         confirm_delete: "Biztos, hogy törölni szeretné?",
         gdpr_db_info: "Küldhet felénk egy lekérést arról, hogy milyen adatok vannak tárolva Önről az adatbázisunkban. Ezt a lekérést nem regisztráljuk.",
         next_page: "Következő",
-        prev_page: "Előző"
+        prev_page: "Előző",
+		remove: "Törlés"
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

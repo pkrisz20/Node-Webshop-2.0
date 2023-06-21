@@ -91,8 +91,8 @@ $(document).ready(function() {
         autoplay: false,
         dots: false,
         arrows: true,
-        prevArrow: $('.blogs .slick-prev'),
-        nextArrow: $('.blogs .slick-next'),
+        prevArrow: $('.featured-blogs .slick-prev'),
+        nextArrow: $('.featured-blogs .slick-next'),
         responsive: [
             {
                 breakpoint: 1200,
@@ -135,6 +135,47 @@ $('body').on("click", ".js-cart-btn", function () {
 
 $('body').on("click", ".js-cart-close", function () {
     $(".js-cart").removeClass('open');
+});
+
+$('body').on('click', '.js-add-to-cart', function (event) {
+    event.preventDefault();
+    var this_button = $(this);
+    var quantity_wrapper = this_button.closest('.js-quantities');
+    var quantity = null;
+
+    if (quantity_wrapper.length > 0) {
+        quantity = ~~parseInt($('.js-product-quantity').val());
+    } else {
+        quantity = 1;
+    }
+
+    let item = {
+        productId: this_button.data('id'),
+        quantity: quantity
+    };
+
+    $.ajax({
+        type: 'post',
+        url: `${ process.env.APP_URL }/api/cart/add`,
+        dataType: 'json',
+        data: item,
+        beforeSend: function (jqXHR) {
+            this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+            this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+            // $.openModal({
+            //     type: 'alert',
+            //     content: response.message,
+            //     buttons: 'OK'
+            // });
+            if (response.message == 'success') {
+                console.log('success')
+            }
+        }
+    });
 });
 
 // Search

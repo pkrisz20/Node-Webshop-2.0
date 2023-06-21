@@ -4,8 +4,10 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
+const { getCartItems } = require("../helpers/getCartItems");
 
 const getData = (req, res) => {
+    let cart = getCartItems(req, res);
     let products = [];
     let sliders = [];
     var galleries = [];
@@ -158,6 +160,7 @@ const getData = (req, res) => {
                                             categories: categories,
                                             metas: metas,
                                             current_locale: req.session.lang,
+                                            cart: cart,
                                             locales: ['hu', 'sr', 'en'],
                                             languageHandler: languageHandler
                                         });

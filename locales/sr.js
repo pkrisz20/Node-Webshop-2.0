@@ -46,7 +46,8 @@ const sr = {
         confirm_delete: "Sigurno želite da ga izbrišete?",
         gdpr_db_info: "Možete nam poslati zahtev o tome, koji podaci o Vama čuvamo u našoj bazi podataka. Ne registrujemo ovaj zahtev.",
         next_page: "Sledeći",
-        prev_page: "Predhodni"
+        prev_page: "Predhodni",
+		remove: "Izbriši"
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

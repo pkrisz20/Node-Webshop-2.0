@@ -1,0 +1,63 @@
+.featured-blogs {
+    .header_title {
+        margin-bottom: 40px;
+    }
+
+    & > .wrapper {
+        position: relative;
+    }
+
+    .slick {
+        &-track {
+            padding: 10px 0;
+            display: flex !important;
+        }
+
+        &-slide {
+            height: inherit !important;
+            margin: 0 12px;
+
+            @media #{ $r-min-xl } {
+                margin: 0 6px;
+            }
+        }
+
+        &-arrow {
+            position: absolute;
+            top: 55%;
+            background-color: $c-theme;
+            border-radius: 3px;
+            padding: 8px !important;
+            cursor: pointer;
+
+            i {
+                font-size: 24px;
+                color: $c-white;
+
+                @media #{ $r-min-m } {
+                    font-size: 30px;
+                }
+            }
+
+            @media #{ $r-min-xl } {
+                padding: 10px !important;
+            }
+        }
+
+        &-prev {
+            left: 30px !important;
+
+            @media #{ $r-min-xl } {
+                left: -5px !important;
+            }
+        }
+
+        &-next {
+            right: 30px !important;
+
+            @media #{ $r-min-xl } {
+                right: -5px !important;
+            }
+        }
+    }
+}

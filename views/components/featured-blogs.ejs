@@ -1,4 +1,4 @@
-<section class="blogs">
+<section class="featured-blogs">
     <div class="wrapper">
         <%- include('./block-title.ejs', { title: languageHandler('general.blog', current_locale), subtitle: languageHandler('general.blog_subtitle', current_locale) }) %>
 
@@ -9,5 +9,10 @@
                 </div>
             <% }) %>
         </div>
+
+        <% if (blogs.length > 1) { %>
+            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+        <% } %>
     </div>
 </section>
