@@ -1,6 +1,6 @@
 const sr = {
     nav: {
-        home: "Glavna",
+        home: "Naslovna",
         about: "O nama",
         webshop: "Webshop",
         discounts: "Popusti",

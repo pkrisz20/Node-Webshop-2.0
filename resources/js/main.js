@@ -119,6 +119,18 @@ $(document).ready(function() {
     });
 });
 
+$(document).on('scroll', function () {
+    var navbar = $(".js-header");
+    var sticky = navbar.offsetTop;
+
+    if (window.pageYOffset >= sticky) {
+        navbar.addClass("header-sticky");
+    }
+    else {
+        navbar.removeClass("header-sticky");
+    }
+});
+
 // Language dropdown
 $('body').on("mouseenter", ".js-lang-switcher", function () {
     $(".js-langs-list").addClass('dropdown-list--open');

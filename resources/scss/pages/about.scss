@@ -1,0 +1,132 @@
+.about {
+    background-color: $c-grayF9;
+    padding: 50px 0 0;
+
+    .main-title {
+        margin: 0 0 25px;
+
+        @media #{ $r-min-m } {
+            margin: 0 0 60px;
+        }
+    }
+
+    &-short {
+        padding: 20px 0;
+
+        &-text {
+            color: $c-dark;
+            @include resp('font-size', 14px, 17px, 767px);
+            font-weight: 600;
+            line-height: 22px;
+
+            @media #{ $r-min-m } {
+                line-height: 27px;
+            }
+        }
+    }
+
+    &-long {
+        padding: 20px 0 50px;
+
+        & > .header_title {
+            margin-bottom: 30px;
+        }
+    }
+
+    &-content {
+        padding: 20px 0;
+
+        & > .header_title {
+            margin-bottom: 30px;
+        }
+
+        .workers {
+            @include flexBox("center", "center", 25px);
+            flex-direction: column;
+            width: 100%;
+
+            @media #{ $r-max-m } {
+                margin: 0 auto;
+                max-width: 430px;
+            }
+
+            @media #{ $r-min-m } {
+                @include gridBox("center", 2, 25px, 25px);
+            }
+
+            &-container {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                border-radius: 10px;
+                position: relative;
+
+                &::before {
+                    @include absoluteFullSize();
+                    content: "";
+                    z-index: 3;
+                    background-color: rgba($c-dark-blue, .6);
+                    transition: all .3s ease-in-out;
+                }
+
+                &:hover::before {
+                    background: radial-gradient(rgba($c-dark-blue, 0) 0, rgba($c-dark-blue, 1) 80%);
+                }
+
+                &-box {
+                    width: 100%;
+                    height: 100%;
+
+                    picture {
+                        @include respImage(0.75);
+                    }
+
+                    figcaption {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        z-index: 5;
+                        width: auto;
+                        padding: 20px;
+                        pointer-events: none;
+                    }
+                }
+
+                &-name {
+                    color: $c-white;
+                    font-size: 26px;
+                    font-weight: 400;
+                    margin-bottom: 10px;
+                    @include resp('font-size', 17px, 26px, 767px);
+                }
+                &-position {
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    font-size: 18px;
+                    color: $c-b;
+                    @include resp('font-size', 14px, 18px, 767px);
+                }
+                &-contacts {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    z-index: 5;
+                    width: auto;
+                    padding: 20px;
+                    @include flexBox("center", "center", 20px);
+
+                    & > a {
+                        transition: color .3s ease-in-out;
+                        font-size: 24px;
+                        @include resp('font-size', 18px, 24px, 767px);
+                        color: $c-white;
+
+                        &:hover {
+                            color: $c-theme;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

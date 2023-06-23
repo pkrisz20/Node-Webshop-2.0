@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('layout/head.ejs') %>
+
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/about.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('layout/header.ejs') %>
+
+        <%- include('components/cart.ejs') %>
+
+        <main class="home">
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('nav.about', current_locale) %></h1>
+
+                <% if (pageData.shortDesc) { %>
+                    <section class="about-short">
+                        <p class="about-short-text"><%= pageData.shortDesc %></p>
+                    </section>
+                <% } %>
+
+                <% if (employees.length > 0) { %>
+                    <section class="about-content">
+                        <%- include('./block-title.ejs', { title: languageHandler('about.our_workers', current_locale), subtitle: languageHandler('about.our_workers_subtitle', current_locale) }) %>
+
+                        <div class="workers">
+                            <% employees.forEach(employee => { %>
+                                <div class="workers-container">
+                                    <figure class="workers-container-box">
+                                        <picture>
+                                            <source srcset="<%= employee.image %>">
+                                            <img loading="lazy" src="/images/no-picture.jpg" alt="<%= employee.name %> - <%= employee.position %>" />
+                                        </picture>
+                                        <figcaption>
+                                            <h4 class="workers-container-name"><%= employee.name %></h4>
+                                            <h5 class="workers-container-position"><%= employee.position %></h5>
+                                        </figcaption>
+                                    </figure>
+                                    <div class="workers-container-contacts">
+                                        <% if (employee.contact.facebook) { %>
+                                            <a title="Facebook" href="<%= employee.contact.facebook %>" target="blank" aria-label="Link to Facebook"><i class="fab fa-facebook"></i></a>
+                                        <% } %>
+
+                                        <% if (employee.contact.twitter) { %>
+                                            <a title="Twitter" href="<%= employee.contact.twitter %>" target="blank" aria-label="Link to Twitter"><i class="fab fa-twitter"></i></a>
+                                        <% } %>
+
+                                        <% if (employee.contact.instagram) { %>
+                                            <a title="Instagram" href="<%= employee.contact.instagram %>" target="blank" aria-label="Link to Instagram"><i class="fab fa-instagram"></i></a>
+                                        <% } %>
+
+                                        <% if (employee.contact.email) { %>
+                                            <a title="E-mail" href="mailto:<%= employee.contact.email %>" aria-label="Link to Email sending"><i class="fas fa-envelope"></i></a>
+                                        <% } %>
+
+                                        <% if (employee.contact.phone) { %>
+                                            <a title="Phone" href="tel:<%= employee.contact.phone %>" aria-label="Link to phone call"><i class="fas fa-phone-alt"></i></a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </section>
+                <% } %>
+
+                <section class="about-long">
+                    <%- include('./block-title.ejs', { title: languageHandler('about.our_story', current_locale), subtitle: languageHandler('about.our_story_subtitle', current_locale) }) %>
+
+                    <article>
+                        <%= pageData.longDesc %>
+                    </article>
+                </section>
+            </div>
+        </main>
+
+        <%- include('layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

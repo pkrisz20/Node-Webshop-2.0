@@ -1,12 +1,21 @@
 <section class="hero">
     <div class="hero-wrapper js-hero-slick">
-        <% heros.forEach(data => { %>
+        <% heros.forEach((data, index) => { %>
             <div class="slide">
                 <div class="box">
-                    <h2 class="box-title"><%= data.text %></h2>
+                    <% if (index == 0) { %>
+                        <h1 class="box-title"><%= data.text %></h1>
+                    <% } else { %>
+                        <h2 class="box-title"><%= data.text %></h2>
+                    <% } %>
+
                     <% if (data.subText) { %>
                         <span class="box-decoration"><i class="fas fa-circle"></i></span>
-                        <h3 class="box-subtitle"><%= data.subText %></h3>
+                        <% if (index == 0) { %>
+                            <h2 class="box-subtitle"><%= data.subText %></h2>
+                        <% } else { %>
+                            <h3 class="box-subtitle"><%= data.subText %></h3>
+                        <% } %>
                     <% } %>
                     <% if (data.button) { %>
                         <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button %></a>

@@ -68,23 +68,24 @@ const homeRouter = require("./routes/home");
 app.use("/:lang", homeRouter);
 
 const cartRouter = require("./routes/cart");
+app.use("/api", cartRouter);
+
+const employeesRouter = require("./routes/employees");
+app.use("/:lang", employeesRouter);
+// const staticContentsRouter = require("./routes/staticContents");
+// app.use("/api", staticContentsRouter);
 // const productsRouter = require("./routes/products");
 // const blogsRouter = require("./routes/blogs");
 // const galleryRouter = require("./routes/gallery");
-// const staticContentsRouter = require("./routes/staticContents");
 // const contactRouter = require("./routes/contact");
-// const employeesRouter = require("./routes/employees");
 // const ordersRouter = require("./routes/orders");
 // const searchRouter = require("./routes/search");
 // const adminRouter = require("./routes/admin");
 
-app.use("/api", cartRouter);
 // app.use("/api", productsRouter);
 // app.use("/api", blogsRouter);
 // app.use("/api", galleryRouter);
-// app.use("/api", staticContentsRouter);
 // app.use("/api", contactRouter);
-// app.use("/api", employeesRouter);
 // app.use("/api", ordersRouter);
 // app.use("/api", searchRouter);
 // app.use("/api/admin", adminRouter);

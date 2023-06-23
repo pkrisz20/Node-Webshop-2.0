@@ -18,8 +18,9 @@ const getData = (req, res) => {
         title: "Home",
         type: "article",
         image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the home page"
-    }
+        description: "This is the home page",
+        // keywords: []
+    };
 
     // PRODUCTS
     const sqlQueryProducts = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ?";
@@ -37,7 +38,7 @@ const getData = (req, res) => {
     db.query(sqlQueryProducts, [1, 1], (product_err, product_items) => {
         if (product_err) {
             console.log(product_err);
-            return res.status(500).render("500");
+            return res.sendStatus(500).render("500");
         }
 
         else if (product_items.length > 0) {
@@ -60,7 +61,7 @@ const getData = (req, res) => {
             db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
                 if (blog_err) {
                     console.log(blog_err);
-                    return res.status(500).render("server-error");
+                    return res.sendStatus(500).render("500");
                 }
 
                 else if (blog_data.length > 0) {
@@ -90,7 +91,7 @@ const getData = (req, res) => {
                     db.query(sqlQuerySliders, 1, (hero_err, heros_data) => {
                         if (hero_err) {
                             console.log(hero_err);
-                            return res.status(500).render("server-error");
+                            return res.sendStatus(500).render("500");
                         }
 
                         else if (heros_data.length > 0) {
@@ -111,7 +112,7 @@ const getData = (req, res) => {
                             db.query(sqlQueryGallery, [1, 1], (gallery_err, gallery_data) => {
                                 if (gallery_err) {
                                     console.log(gallery_err);
-                                    return res.status(500).render("server-error");
+                                    return res.sendStatus(500).render("500");
                                 }
 
                                 else if (gallery_data.length > 0) {
@@ -137,7 +138,7 @@ const getData = (req, res) => {
                                     db.query(sqlQueryCategories, (category_err, category_data) => {
                                         if (category_err) {
                                             console.log(category_err);
-                                            return res.status(500).render("server-error");
+                                            return res.status(500).render("500");
                                         }
 
                                         else if (category_data.length > 0) {
@@ -152,15 +153,15 @@ const getData = (req, res) => {
                                             });
                                         }
 
-                                        res.render("home", {
-                                            heros: sliders,
-                                            galleries: galleries,
-                                            blogs: blogs,
-                                            products: products,
-                                            categories: categories,
-                                            metas: metas,
+                                        return res.render("home", {
+                                            heros: sliders ?? [],
+                                            galleries: galleries ?? [],
+                                            blogs: blogs ?? [],
+                                            products: products ?? [],
+                                            categories: categories ?? [],
+                                            meta: metas,
                                             current_locale: req.session.lang,
-                                            cart: cart,
+                                            cart: cart ?? [],
                                             locales: ['hu', 'sr', 'en'],
                                             languageHandler: languageHandler
                                         });

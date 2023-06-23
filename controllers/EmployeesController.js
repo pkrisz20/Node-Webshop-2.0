@@ -1,20 +1,26 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
+const languageHandler = require("../helpers/languageHandler");
+const { getCartItems } = require("../helpers/getCartItems");
 
 const getEmployees = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT name, position, image, facebook, twitter, instagram, email, phone FROM employees WHERE is_active = ?";
+    let cart = getCartItems(req, res);
+    let employees = [];
+    var lang = req.session.lang;
+    var metas = {
+        title: "About",
+        type: "article",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the about page, here can the guests read about us"
+    };
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
+    const sqlQuery = "SELECT name, position, image, facebook, twitter, instagram, email, phone FROM employees WHERE is_active = ?";
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.sendStatus(500).render("500");
         }
 
         else if (data.length > 0) {
@@ -33,11 +39,18 @@ const getEmployees = (req, res) => {
                     }
                 }
 
-                result.push(tempObject);
+                employees.push(tempObject);
             });
         }
 
-        return res.status(200).json({ status: 'success', result: result ?? [] });
+        return res.render("about", {
+            employees: employees ?? [],
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler
+        });
     });
 }
 

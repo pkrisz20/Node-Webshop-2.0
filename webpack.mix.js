@@ -7,6 +7,7 @@ mix
 
     .sass("resources/scss/main.scss", "public/css")
     .sass("resources/scss/pages/home.scss", "public/css")
+    .sass("resources/scss/pages/about.scss", "public/css")
 
     .version();
 
