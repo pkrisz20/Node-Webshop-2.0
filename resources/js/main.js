@@ -119,7 +119,7 @@ $(document).ready(function() {
     });
 });
 
-$(document).on('scroll', function () {
+$(window).on('scroll', function () {
     var navbar = $(".js-header");
     var sticky = navbar.offsetTop;
 
@@ -149,7 +149,7 @@ $('body').on("click", ".js-cart-close", function () {
     $(".js-cart").removeClass('open');
 });
 
-$('body').on('click', '.js-add-to-cart', function (event) {
+$('body').on("click", ".js-add-to-cart", function (event) {
     event.preventDefault();
     var this_button = $(this);
     var quantity_wrapper = this_button.closest('.js-quantities');
@@ -168,9 +168,9 @@ $('body').on('click', '.js-add-to-cart', function (event) {
 
     $.ajax({
         type: 'post',
-        url: `${ process.env.APP_URL }/api/cart/add`,
+        url: "/api/cart/add",
         dataType: 'json',
-        data: item,
+        data: { cartItem: item },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
         },
@@ -178,13 +178,69 @@ $('body').on('click', '.js-add-to-cart', function (event) {
             this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
         },
         success: function (response) {
-            // $.openModal({
-            //     type: 'alert',
-            //     content: response.message,
-            //     buttons: 'OK'
-            // });
-            if (response.message == 'success') {
-                console.log('success')
+            if (response.status == 'success') {
+
+                $.each(response.results, function (item) {
+                    $('.js-cart-list').html(`
+                        <li class="cart-container-list-item">
+                            <div class="cart-product">
+                                <div class="cart-product-image">
+                                    <picture>
+                                        <source srcset="${ item.image }">
+                                        <img class="cart-product-img" alt="${ item.productName }" loading="lazy" src="images/no-picture.jpg">
+                                    </picture>
+                                </div>
+
+                                <div class="cart-product-desc">
+                                    <h5 class="cart-product-desc_name">${ item.productName }</h5>
+
+                                    <div class="quantities">
+                                        <div class="quantities-container">
+                                            <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                            <%# setAmountQuantity(item.productId, item.maxQuantity, $event) %>
+                                            <%#  @keypress="isDigit($event)" %>
+                                            <input class="quantities-input" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
+                                            <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                        </div>
+
+                                        <small class="quantities-price"><i class="fas fa-times"></i> <span>${ item.price } RSD</span></small>
+                                    </div>
+
+                                    <div class="functions">
+                                        <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                        <button type="button" value="${ response.remove_text } %>" class="functions_remove"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>`
+                    );
+                });
+
+                $('.js-cart-counter').text(response.totalCount);
+                $('.js-total-price').text(response.totalPrice);
+
+                $.alert({
+                    boxWidth: '350px',
+                    title: response.title,
+                    content: response.message,
+                    buttons: 'OK'
+                });
+            }
+            else if (response.status == 'error') {
+                $.confirm({
+                    title: response.title,
+                    content: response.message,
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        tryAgain: {
+                            text: 'OK',
+                            action: function(){
+                                // do nothing
+                            }
+                        }
+                    }
+                });
             }
         }
     });

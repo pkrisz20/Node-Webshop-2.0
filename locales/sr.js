@@ -105,7 +105,8 @@ const sr = {
         error: "Greška",
         common_error: "Došlo je do greške!",
         wrong_data: "Netačne podatke!",
-        unprocessable_data: "Neobrađene podatke!"
+        unprocessable_data: "Neobrađene podatke!",
+		not_found: "Stranica nije pronađena"
     }
 };
 

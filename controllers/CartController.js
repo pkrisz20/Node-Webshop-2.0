@@ -1,4 +1,8 @@
 const languageHandler = require("../helpers/languageHandler");
+const { db } = require("../config/db-config");
+const getValueByLanguage = require("../helpers/getValueByLanguage");
+const imagePathConverter = require("../helpers/imagePathConverter");
+const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const deleteCartItem = (req, res) => {
     const { productId } = req.body;
@@ -21,27 +25,66 @@ const deleteCartItem = (req, res) => {
 const addCartItem = (req, res) => {
     let { cartItem } = req.body;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    let cart = req.session.cart ?? [];
-
-    cartItem = { lang, ...cartItem };
+    var cart = req.session.cart ?? [];
 
     if (
-            !cartItem.hasOwnProperty("productId")
-            || !cartItem.hasOwnProperty("image")
-            || !cartItem.hasOwnProperty("productName")
-            || !cartItem.hasOwnProperty("maxQuantity")
-            || !cartItem.hasOwnProperty("quantity")
-            || !cartItem.hasOwnProperty("price")
-            || (cartItem.quantity > cartItem.maxQuantity)
+            !cartItem.productId
+            || !cartItem.quantity
         )
     {
-        return res.status(400).json({ status: 'error', message: languageHandler('errors.common_error') });
+        return res.status(400).json({ status: 'error', title: languageHandler('errors.error'), message: languageHandler('errors.unprocessable_data') });
     }
 
-    cart.push(cartItem);
-    req.session.cart = cart;
+    const cartQuery = "SELECT id, name, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
 
-    return res.status(200).json({ status: 'success', cart: req.session.cart });
+    db.query(cartQuery, cartItem.productId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).render("500", { current_locale: req.session.lang });
+        }
+
+        else if (data.length > 0) {
+            // Check if this product is orderable
+            let isAvailableEachProduct = data[0].is_active !== 0 && data[0].is_available !== 0;
+
+            if ( !isAvailableEachProduct ) {
+                return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
+            }
+
+            // Check if quantity is bigger than the max orderable quantity
+            if ( cartItem.quantity > data[0].max_order_count ) {
+                return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
+            }
+
+            // Calculate total price for cart items
+            let resultItem = {
+                productId: data[0].id,
+                productName: getValueByLanguage(data[0].name, lang),
+                quantity: cartItem.quantity,
+                price: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : numberWithCommas(data[0].price),
+                image: imagePathConverter(data[0].image_thumbnail, "products")
+            };
+
+            cart.push(resultItem);
+
+            let totalPrice = cart.reduce((total, product) => product.quantity * product.price + total, 0);
+            let totalCount = cart.length;
+
+            req.session.cart = cart;
+            console.table(req.session.cart);
+
+            return res.status(200).json({
+                status: 'success',
+                title: languageHandler('general.process_success', lang),
+                message: languageHandler('orders.added_to_cart', lang),
+                totalPrice: totalPrice,
+                totalCount: totalCount,
+                results: req.session.cart,
+                current_locale: lang,
+                remove_text: languageHandler('general.remove', lang)
+            });
+        }
+    });
 }
 
 const updateCartItem = (req, res) => {

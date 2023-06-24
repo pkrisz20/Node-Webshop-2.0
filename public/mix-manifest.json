@@ -1,9 +1,10 @@
 {
-    "/js/main.js": "/js/main.js?id=5a3aa70b87ce6c7b39285c4a94044f3e",
-    "/css/home.css": "/css/home.css?id=9efbd0d13562dda6886703da50f14865",
-    "/css/main.css": "/css/main.css?id=d7279acad7a88e4b24d1a9995f9fb91c",
+    "/js/main.js": "/js/main.js?id=50b3914e5a91d2e165774dd16428e784",
+    "/css/about.css": "/css/about.css?id=653dc620e2733f9259c62a8ff67f4df7",
+    "/css/home.css": "/css/home.css?id=a2fc9f775d7f61ce8f2aa7fe03c70c5b",
+    "/css/main.css": "/css/main.css?id=053b7bf4d81af42f350a7865029894d3",
+    "/js/plugins/jconfirm.min.js": "/js/plugins/jconfirm.min.js?id=a49fda8034d2833345a396df281759cf",
     "/js/plugins/jquery.min.js": "/js/plugins/jquery.min.js?id=e6c2415c0ace414e5153670314ce99a9",
-    "/js/plugins/modal.min.js": "/js/plugins/modal.min.js?id=4b6cb2967ad490416803ba7de6955205",
     "/js/plugins/slick.min.js": "/js/plugins/slick.min.js?id=777da4aaf5b960636dec0fd4e50ba489",
     "/images/12.jpg": "/images/12.jpg?id=ea482bd46debe0c15c801096a92cdf43",
     "/images/20200505_164046.jpg": "/images/20200505_164046.jpg?id=f7fed0e61a32cd3a5487859894bbe44d",
@@ -44,6 +45,6 @@
     "/images/received_849397825395072.jpeg": "/images/received_849397825395072.jpeg?id=d12d99bb44e9307eec4af4bc15ca6bf5",
     "/images/worker1.jpg": "/images/worker1.jpg?id=f071190ab7f479571f18bb8fec4fd406",
     "/images/worker2.jpg": "/images/worker2.jpg?id=68a0147849f2540ed9a2956679402d59",
-    "/css/plugins/modal.min.css": "/css/plugins/modal.min.css?id=627fcea78be06b9936aa4171b999fec0",
+    "/css/plugins/jquery-confirm.css": "/css/plugins/jquery-confirm.css?id=2537809298493b71ab153892bb037f59",
     "/css/plugins/slick.min.css": "/css/plugins/slick.min.css?id=72bdc86c8d50acd5528c93d6bcb36d23"
 }

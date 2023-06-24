@@ -1,4 +1,4 @@
-const whiteList = [process.env.APP_HOST, "http://127.0.0.1:3000", "http://localhost:3001"];
+const whiteList = [process.env.APP_URL, "http://127.0.0.1:3000", "http://localhost:3000"];
 
 const corsOptions = {
     credentials: true,

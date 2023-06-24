@@ -1,19 +1,17 @@
 <div class="cart js-cart">
     <div class="cart-close js-cart-close"><i class="fas fa-times"></i></div>
     <h4 class="cart-title"><i class="fas fa-shopping-cart"></i> <%= languageHandler('orders.your_cart', current_locale) %></h4>
-    <% if (cart.length > 0) { %>
-        <h6 class="cart-counter js-cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: 18</h6>
-    <% } %>
 
-    <% if (cart.length > 0) { %>
+    <% if (cart.items.length > 0) { %>
+        <h5 class="cart-counter js-cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span><%= cart.totalCount %></span></h5>
         <div class="cart-container">
             <div class="cart-container-top">
                 <a href="/<%= current_locale %>/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= ('orders.order', current_locale) %></>
-                <strong class="cart-container-top_total js-total-price"><%= languageHandler('orders.total_price', current_locale) %>: <%= 18.568 %> <small>RSD</small></strong>
+                <strong class="cart-container-top_total js-total-price"><%= languageHandler('orders.total_price', current_locale) %>: <%= cart.totalPrice %> <small>RSD</small></strong>
             </div>
 
             <ul class="cart-container-list js-cart-list">
-                <% cart.forEach(cartItem => { %>
+                <% cart.items.forEach(cartItem => { %>
                     <li class="cart-container-list-item">
                         <div class="cart-product">
                             <div class="cart-product-image">
@@ -28,12 +26,10 @@
 
                                 <div class="quantities">
                                     <div class="quantities-container">
-                                        <%# decreaseQuantity(cartItem.productId, cartItem.quantity)" %>
                                         <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
                                         <%# setAmountQuantity(cartItem.productId, cartItem.maxQuantity, $event) %>
                                         <%#  @keypress="isDigit($event)" %>
                                         <input class="quantities-input" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
-                                        <%# @click="increaseQuantity(cartItem.productId, cartItem.maxQuantity, cartItem.quantity)" %>
                                         <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
                                     </div>
 
@@ -51,7 +47,7 @@
             </ul>
         </div>
 
-    <% } else if (cart.length == 0) { %>
+    <% } else if (cart.items.length == 0) { %>
         <h5 class="cart-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
     <% } %>
 </div>

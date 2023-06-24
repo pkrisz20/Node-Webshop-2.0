@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= current_locale %>">
     <%- include('layout/head.ejs') %>
 
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/about.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 
@@ -24,7 +23,7 @@
 
                 <% if (employees.length > 0) { %>
                     <section class="about-content">
-                        <%- include('./block-title.ejs', { title: languageHandler('about.our_workers', current_locale), subtitle: languageHandler('about.our_workers_subtitle', current_locale) }) %>
+                        <%- include('./components/block-title.ejs', { title: languageHandler('about.our_workers', current_locale), subtitle: languageHandler('about.our_workers_subtitle', current_locale) }) %>
 
                         <div class="workers">
                             <% employees.forEach(employee => { %>
@@ -35,8 +34,8 @@
                                             <img loading="lazy" src="/images/no-picture.jpg" alt="<%= employee.name %> - <%= employee.position %>" />
                                         </picture>
                                         <figcaption>
-                                            <h4 class="workers-container-name"><%= employee.name %></h4>
-                                            <h5 class="workers-container-position"><%= employee.position %></h5>
+                                            <h3 class="workers-container-name"><%= employee.name %></h3>
+                                            <h4 class="workers-container-position"><%= employee.position %></h4>
                                         </figcaption>
                                     </figure>
                                     <div class="workers-container-contacts">
@@ -66,13 +65,15 @@
                     </section>
                 <% } %>
 
-                <section class="about-long">
-                    <%- include('./block-title.ejs', { title: languageHandler('about.our_story', current_locale), subtitle: languageHandler('about.our_story_subtitle', current_locale) }) %>
+                <% if (pageData.longDesc) { %>
+                    <section class="about-long">
+                        <%- include('./components/block-title.ejs', { title: languageHandler('about.our_story', current_locale), subtitle: languageHandler('about.our_story_subtitle', current_locale) }) %>
 
-                    <article>
-                        <%= pageData.longDesc %>
-                    </article>
-                </section>
+                        <article>
+                            <%= pageData.longDesc %>
+                        </article>
+                    </section>
+                <% } %>
             </div>
         </main>
 

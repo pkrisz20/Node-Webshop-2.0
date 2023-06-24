@@ -93,7 +93,8 @@ const en = {
 		cart_contains_sub: "These products will be ordered",
 		order_form: "Ordering form",
 		order_form_sub: "Fill the form below to send your order",
-		order_succes_message: "Your order has been processed successfully. We sent a summary to your email address!"
+		order_succes_message: "Your order has been processed successfully. We sent a summary to your email address!",
+		added_to_cart: "Successfully added to cart!"
 	},
 	about: {
 		our_workers: "Our team",
@@ -105,7 +106,8 @@ const en = {
 		error: "Error",
 		common_error: "Something went wrong during the processing!",
 		wrong_data: "Wrong datas!",
-		unprocessable_data: "Unprocessable data types!"
+		unprocessable_data: "Unprocessable data types!",
+		not_found: "Page not found"
 	}
 };
 

@@ -5,7 +5,7 @@ const { format } = require("date-fns");
 const { v4: uuid } = require("uuid");
 
 const logEvents = async (message, logName) => {
-    const dateTime = `${format(new Date(), 'yyyyMMdd\tHH:mm:ss')}`;
+    const dateTime = `${format(new Date(), 'yyyy.MM.dd\tHH:mm:ss')}`;
     const logItem = `${dateTime}\t${uuid()}\t${message}\n`;
 
     try {

@@ -1,79 +1,70 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
+const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getCartItems = (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var cartProductIds = [];
-    var cart = req.session.cart ?? [];
+    let cartItems = req.session.cart ?? [];
 
-    // This whole code is 'cause of the language differences
-
-    // There is no items in cart
-    if (cart.length == 0 || !cart) {
-        // return res.status(200).json({ status: 'success', cart: req.session.cart ?? [] });
-        return req.session.cart ?? [];
-    }
-
-    cartProductIds = cart?.map(item => {
+    cartProductIds = cartItems?.map(item => {
         return item.productId;
     });
 
-    // There is one item in cart
-    if (cartProductIds.length == 1) {
-        const sqlSelect = "SELECT name FROM products WHERE id = ?";
-
-        db.query(sqlSelect, cartProductIds[0], (err, result) => {
-            if (err) {
-                console.log(err);
-                // return res.status(500).json({ status: "error" });
-                return [];
-            }
-
-            else if (result.length > 0) {
-                let productName = getValueByLanguage(result[0].name, lang);
-
-                cart = cart.map(item => ({ ...item, productName, price: numberWithCommas(item.price) }));
-
-                req.session.cart = cart;
-            }
-
-            // return res.status(200).json({ status: 'success', cart: req.session.cart ?? [] });
-            return req.session.cart ?? [];
-        });
-    }
-
-    // There are more items in cart
-    else if (cartProductIds.length > 1) {
+    if ( cartProductIds.length > 0 ) {
 
         let countParams = Array(cartProductIds.length).fill("?").join(",");
 
-        db.query(`SELECT id, name FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
+        // console.log('[...cartProductIds]', [...cartProductIds]);
+        // console.log(`SELECT id, name, price, image_thumbnail, discount_value FROM products WHERE id IN (${ countParams })`);
+
+        // TODO: Fix this cart issue
+
+        db.query(`SELECT id, name, price, image_thumbnail, discount_value FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 console.log(err);
-                // return res.status(500).json({ status: "error" });
-                return [];
+                return res.status(500).render("500", { current_locale: req.session.lang });
             }
 
             else if (result.length > 0) {
-                let productNamesWithIds = [];
-                let tempObj = {};
+                console.table("result in function", result);
 
-                result.forEach(item => {
-                    tempObj = { productId: item.id, productName: getValueByLanguage(item.name, lang) };
-                    productNamesWithIds.push(tempObj);
+                cartItems = result?.map(cartItem => {
+                    return {
+                        ...cartItem,
+                        price: cartItem.discount_value != null ? numberWithCommas(cartItem.discount_value) : numberWithCommas(cartItem.price),
+                        productName: getValueByLanguage(cartItem.productName, lang),
+                        image: imagePathConverter(cartItem.image_thumbnail, "products")
+                    };
                 });
 
-                cart = cart.map(cartItem => {
-                    return { ...cartItem, price: numberWithCommas(cartItem.price), productName: productNamesWithIds.find(item => item.productId === cartItem.productId).productName };
-                });
+                let totalPrice = cartItems.reduce((total, product) => product.quantity * product.price + total, 0);
+                let totalCount = cartItems.length;
 
-                req.session.cart = cart;
+                req.session.cart = cartItems;
+
+                // console.log('there are items in cart');
+
+                let cart = {
+                    items: req.session.cart ?? [],
+                    totalCount, totalCount,
+                    totalPrice: totalPrice
+                };
+
+                return cart;
             }
-
-            // return res.status(200).json({ status: 'success', cart: req.session.cart ?? [] });
-            return req.session.cart ?? [];
         });
+    }
+
+    else if ( cartProductIds.length == 0 ) {
+        // console.log('there NO in cart');
+
+        return {
+            items: [],
+            totalCount: 0,
+            totalPrice: 0
+        };
     }
 }
 

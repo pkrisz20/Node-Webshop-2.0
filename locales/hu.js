@@ -105,7 +105,8 @@ const hu = {
         error: "Hiba",
         common_error: "Váratlan hiba lépett fel!",
         wrong_data: "Nem megfelelő adatok!",
-        unprocessable_data: "Nem feldolgozható adatok!"
+        unprocessable_data: "Nem feldolgozható adatok!",
+		not_found: "Nem található"
     }
 };
 

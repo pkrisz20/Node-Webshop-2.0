@@ -9,6 +9,6 @@ cartRouter.route("/cart/add")
     .post(CartController.addCartItem);
 
 cartRouter.route("/cart/update")
-    .put(CartController.updateCartItem);
+    .post(CartController.updateCartItem);
 
 module.exports = cartRouter;

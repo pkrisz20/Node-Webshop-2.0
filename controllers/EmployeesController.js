@@ -9,18 +9,17 @@ const getEmployees = (req, res) => {
     let employees = [];
     var lang = req.session.lang;
     var metas = {
-        title: "About",
+        title: languageHandler("nav.about", lang),
         type: "article",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the about page, here can the guests read about us"
     };
-
     const sqlQuery = "SELECT name, position, image, facebook, twitter, instagram, email, phone FROM employees WHERE is_active = ?";
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.sendStatus(500).render("500");
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -45,6 +44,10 @@ const getEmployees = (req, res) => {
 
         return res.render("about", {
             employees: employees ?? [],
+            pageData: {
+                shortDesc: "Short desc goes here",
+                longDesc: "Long desc goes here",
+            },
             meta: metas,
             current_locale: req.session.lang,
             cart: cart,

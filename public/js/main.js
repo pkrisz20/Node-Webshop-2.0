@@ -1,1 +1,390 @@
-(()=>{var e,o={277:(e,o,t)=>{var r=t(155);$(document).ready((function(){$(".js-hero-slick").slick({inifinite:!0,slidesToShow:1,autoplay:!0,dots:!1,arrows:!0,appendDots:$(".hero .hero-dots"),prevArrow:$(".hero .slick-prev"),nextArrow:$(".hero .slick-next"),responsive:[{breakpoint:1200,settings:{dots:!0,arrows:!1}}]}),$(".js-categories-carousel").slick({inifinite:!0,slidesToShow:4,slidesToScroll:1,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".featured-categories .slick-prev"),nextArrow:$(".featured-categories .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3}},{breakpoint:768,settings:{slidesToShow:2}},{breakpoint:540,settings:{slidesToShow:1}}]}),$(".js-featured-products").slick({inifinite:!0,slidesToShow:4,slidesToScroll:4,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".products-carousel .slick-prev"),nextArrow:$(".products-carousel .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:768,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:540,settings:{slidesToShow:1,slidesToScroll:1}}]}),$(".js-featured-blogs").slick({inifinite:!0,slidesToShow:4,slidesToScroll:4,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".featured-blogs .slick-prev"),nextArrow:$(".featured-blogs .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:768,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:540,settings:{slidesToShow:1,slidesToScroll:1}}]})})),$(document).on("scroll",(function(){var e=$(".js-header"),o=e.offsetTop;window.pageYOffset>=o?e.addClass("header-sticky"):e.removeClass("header-sticky")})),$("body").on("mouseenter",".js-lang-switcher",(function(){$(".js-langs-list").addClass("dropdown-list--open")})),$("body").on("mouseleave",".js-lang-switcher",(function(){$(".js-langs-list").removeClass("dropdown-list--open")})),$("body").on("click",".js-cart-btn",(function(){$(".js-cart").addClass("open")})),$("body").on("click",".js-cart-close",(function(){$(".js-cart").removeClass("open")})),$("body").on("click",".js-add-to-cart",(function(e){e.preventDefault();var o=$(this),t=null;t=o.closest(".js-quantities").length>0?~~parseInt($(".js-product-quantity").val()):1;var s={productId:o.data("id"),quantity:t};$.ajax({type:"post",url:"".concat(r.env.APP_URL,"/api/cart/add"),dataType:"json",data:s,beforeSend:function(e){o.addClass("disabled").attr("disabled","disabled").prop("disabled",!0)},complete:function(e,t){o.removeClass("disabled").removeAttr("disabled").prop("disabled",!1)},success:function(e){"success"==e.message&&console.log("success")}})})),$("body").on("click",".js-search-btn",(function(){$(".js-search-input").focus()}))},679:()=>{},775:()=>{},155:e=>{var o,t,r=e.exports={};function s(){throw new Error("setTimeout has not been defined")}function n(){throw new Error("clearTimeout has not been defined")}function i(e){if(o===setTimeout)return setTimeout(e,0);if((o===s||!o)&&setTimeout)return o=setTimeout,setTimeout(e,0);try{return o(e,0)}catch(t){try{return o.call(null,e,0)}catch(t){return o.call(this,e,0)}}}!function(){try{o="function"==typeof setTimeout?setTimeout:s}catch(e){o=s}try{t="function"==typeof clearTimeout?clearTimeout:n}catch(e){t=n}}();var l,a=[],c=!1,d=-1;function u(){c&&l&&(c=!1,l.length?a=l.concat(a):d=-1,a.length&&p())}function p(){if(!c){var e=i(u);c=!0;for(var o=a.length;o;){for(l=a,a=[];++d<o;)l&&l[d].run();d=-1,o=a.length}l=null,c=!1,function(e){if(t===clearTimeout)return clearTimeout(e);if((t===n||!t)&&clearTimeout)return t=clearTimeout,clearTimeout(e);try{return t(e)}catch(o){try{return t.call(null,e)}catch(o){return t.call(this,e)}}}(e)}}function f(e,o){this.fun=e,this.array=o}function h(){}r.nextTick=function(e){var o=new Array(arguments.length-1);if(arguments.length>1)for(var t=1;t<arguments.length;t++)o[t-1]=arguments[t];a.push(new f(e,o)),1!==a.length||c||i(p)},f.prototype.run=function(){this.fun.apply(null,this.array)},r.title="browser",r.browser=!0,r.env={},r.argv=[],r.version="",r.versions={},r.on=h,r.addListener=h,r.once=h,r.off=h,r.removeListener=h,r.removeAllListeners=h,r.emit=h,r.prependListener=h,r.prependOnceListener=h,r.listeners=function(e){return[]},r.binding=function(e){throw new Error("process.binding is not supported")},r.cwd=function(){return"/"},r.chdir=function(e){throw new Error("process.chdir is not supported")},r.umask=function(){return 0}}},t={};function r(e){var s=t[e];if(void 0!==s)return s.exports;var n=t[e]={exports:{}};return o[e](n,n.exports,r),n.exports}r.m=o,e=[],r.O=(o,t,s,n)=>{if(!t){var i=1/0;for(d=0;d<e.length;d++){for(var[t,s,n]=e[d],l=!0,a=0;a<t.length;a++)(!1&n||i>=n)&&Object.keys(r.O).every((e=>r.O[e](t[a])))?t.splice(a--,1):(l=!1,n<i&&(i=n));if(l){e.splice(d--,1);var c=s();void 0!==c&&(o=c)}}return o}n=n||0;for(var d=e.length;d>0&&e[d-1][2]>n;d--)e[d]=e[d-1];e[d]=[t,s,n]},r.o=(e,o)=>Object.prototype.hasOwnProperty.call(e,o),(()=>{var e={522:0,449:0,870:0};r.O.j=o=>0===e[o];var o=(o,t)=>{var s,n,[i,l,a]=t,c=0;if(i.some((o=>0!==e[o]))){for(s in l)r.o(l,s)&&(r.m[s]=l[s]);if(a)var d=a(r)}for(o&&o(t);c<i.length;c++)n=i[c],r.o(e,n)&&e[n]&&e[n][0](),e[n]=0;return r.O(d)},t=self.webpackChunkWebshop_Node=self.webpackChunkWebshop_Node||[];t.forEach(o.bind(null,0)),t.push=o.bind(null,t.push.bind(t))})(),r.O(void 0,[449,870],(()=>r(277))),r.O(void 0,[449,870],(()=>r(679)));var s=r.O(void 0,[449,870],(()=>r(775)));s=r.O(s)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/main.js":
+/*!******************************!*\
+  !*** ./resources/js/main.js ***!
+  \******************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  $(".js-hero-slick").slick({
+    inifinite: true,
+    slidesToShow: 1,
+    autoplay: true,
+    dots: false,
+    arrows: true,
+    appendDots: $('.hero .hero-dots'),
+    prevArrow: $('.hero .slick-prev'),
+    nextArrow: $('.hero .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        dots: true,
+        arrows: false
+      }
+    }]
+  });
+  $(".js-categories-carousel").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.featured-categories .slick-prev'),
+    nextArrow: $('.featured-categories .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1
+      }
+    }]
+  });
+  $(".js-featured-products").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.products-carousel .slick-prev'),
+    nextArrow: $('.products-carousel .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }]
+  });
+  $(".js-featured-blogs").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.featured-blogs .slick-prev'),
+    nextArrow: $('.featured-blogs .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }]
+  });
+});
+$(window).on('scroll', function () {
+  var navbar = $(".js-header");
+  var sticky = navbar.offsetTop;
+  if (window.pageYOffset >= sticky) {
+    navbar.addClass("header-sticky");
+  } else {
+    navbar.removeClass("header-sticky");
+  }
+});
+
+// Language dropdown
+$('body').on("mouseenter", ".js-lang-switcher", function () {
+  $(".js-langs-list").addClass('dropdown-list--open');
+});
+$('body').on("mouseleave", ".js-lang-switcher", function () {
+  $(".js-langs-list").removeClass("dropdown-list--open");
+});
+
+// Cart toggle
+$('body').on("click", ".js-cart-btn", function () {
+  $(".js-cart").addClass('open');
+});
+$('body').on("click", ".js-cart-close", function () {
+  $(".js-cart").removeClass('open');
+});
+$('body').on("click", ".js-add-to-cart", function (event) {
+  event.preventDefault();
+  var this_button = $(this);
+  var quantity_wrapper = this_button.closest('.js-quantities');
+  var quantity = null;
+  if (quantity_wrapper.length > 0) {
+    quantity = ~~parseInt($('.js-product-quantity').val());
+  } else {
+    quantity = 1;
+  }
+  var item = {
+    productId: this_button.data('id'),
+    quantity: quantity
+  };
+  $.ajax({
+    type: 'post',
+    url: "/api/cart/add",
+    dataType: 'json',
+    data: {
+      cartItem: item
+    },
+    beforeSend: function beforeSend(jqXHR) {
+      this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function complete(jqXHR, textStatus) {
+      this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function success(response) {
+      if (response.status == 'success') {
+        $.each(response.results, function (item) {
+          $('.js-cart-list').html("\n                        <li class=\"cart-container-list-item\">\n                            <div class=\"cart-product\">\n                                <div class=\"cart-product-image\">\n                                    <picture>\n                                        <source srcset=\"".concat(item.image, "\">\n                                        <img class=\"cart-product-img\" alt=\"").concat(item.productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                    </picture>\n                                </div>\n\n                                <div class=\"cart-product-desc\">\n                                    <h5 class=\"cart-product-desc_name\">").concat(item.productName, "</h5>\n\n                                    <div class=\"quantities\">\n                                        <div class=\"quantities-container\">\n                                            <button type=\"button\" class=\"quantities-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                            <%# setAmountQuantity(item.productId, item.maxQuantity, $event) %>\n                                            <%#  @keypress=\"isDigit($event)\" %>\n                                            <input class=\"quantities-input\" type=\"number\" value=\"").concat(item.quantity, "\" min=\"1\" max=\"").concat(item.maxQuantity, "\" />\n                                            <button type=\"button\" class=\"quantities-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                        </div>\n\n                                        <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(item.price, " RSD</span></small>\n                                    </div>\n\n                                    <div class=\"functions\">\n                                        <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                        <button type=\"button\" value=\"").concat(response.remove_text, " %>\" class=\"functions_remove\"><i class=\"fas fa-times\"></i></button>\n                                    </div>\n                                </div>\n                            </div>\n                        </li>"));
+        });
+        $('.js-cart-counter').text(response.totalCount);
+        $('.js-total-price').text(response.totalPrice);
+        $.alert({
+          boxWidth: '350px',
+          title: response.title,
+          content: response.message,
+          buttons: 'OK'
+        });
+      } else if (response.status == 'error') {
+        $.confirm({
+          title: response.title,
+          content: response.message,
+          type: 'red',
+          typeAnimated: true,
+          buttons: {
+            tryAgain: {
+              text: 'OK',
+              action: function action() {
+                // do nothing
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+});
+
+// Search
+$('body').on('click', '.js-search-btn', function () {
+  $('.js-search-input').focus();
+});
+
+/***/ }),
+
+/***/ "./resources/scss/main.scss":
+/*!**********************************!*\
+  !*** ./resources/scss/main.scss ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/home.scss":
+/*!****************************************!*\
+  !*** ./resources/scss/pages/home.scss ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/about.scss":
+/*!*****************************************!*\
+  !*** ./resources/scss/pages/about.scss ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/js/main": 0,
+/******/ 			"css/about": 0,
+/******/ 			"css/home": 0,
+/******/ 			"css/main": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkWebshop_Node"] = self["webpackChunkWebshop_Node"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["css/about","css/home","css/main"], () => (__webpack_require__("./resources/js/main.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/about","css/home","css/main"], () => (__webpack_require__("./resources/scss/main.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/about","css/home","css/main"], () => (__webpack_require__("./resources/scss/pages/home.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/about","css/home","css/main"], () => (__webpack_require__("./resources/scss/pages/about.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;

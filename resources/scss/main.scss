@@ -9,11 +9,11 @@
 @import "./components/block-title.scss";
 
 .site-wrap {
-  padding-top: 180px;
+  padding-top: 200px;
   min-height: 100vh;
 
   @media #{$r-max-l} {
-      padding-top: 110px;
+    padding-top: 110px;
   }
 }
 
