@@ -5,11 +5,12 @@ const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const { getCartItems } = require("../helpers/getCartItems");
+const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getData = (req, res) => {
     let cart = getCartItems(req, res);
-    console.log("variable", cart);
-    console.log("function", getCartItems(req, res))
+    // console.log("variable", cart);
+    // console.log("function", getCartItems(req, res))
     let products = [];
     let sliders = [];
     var galleries = [];
@@ -49,7 +50,7 @@ const getData = (req, res) => {
                     id: parseInt(product_element.id),
                     name: getValueByLanguage(product_element.name, lang),
                     image: imagePathConverter(product_element.image_thumbnail, "products"),
-                    price: product_element.price,
+                    price: numberWithCommas(product_element.price),
                     isOnDiscount: Boolean(product_element.discount_value),
                     discount: product_element.discount_value,
                     isAvailable: Boolean(product_element.is_available),

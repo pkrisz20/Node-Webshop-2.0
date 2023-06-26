@@ -83,7 +83,7 @@ const hu = {
         no_category_like_this: "Nincs ilyen kategória"
     },
     orders: {
-    total_price: "Összeg",
+        total_price: "Összeg",
         order: "Rendelés",
         your_cart: "Az Ön kosara",
         cart_count: "Elemek száma",
@@ -93,7 +93,8 @@ const hu = {
         cart_contains_sub: "Ezek a termékek kerülnek megrendelésre",
         order_form: "Megrendelő űrlap",
         order_form_sub: "Töltse ki az alábbi űrlapot, hogy elküldje a rendelését",
-        order_succes_message: "A rendelését sikeresen feldolgoztuk. Elküldtünk egy összegzést az e-mail címére!"
+        order_succes_message: "A rendelését sikeresen feldolgoztuk. Elküldtünk egy összegzést az e-mail címére!",
+		added_to_cart: "Sikeresk hozzáadva a kosárhoz!"
     },
     about: {
         our_workers: "Csapatunk",

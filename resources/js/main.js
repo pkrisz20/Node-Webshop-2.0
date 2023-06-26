@@ -179,63 +179,115 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         },
         success: function (response) {
             if (response.status == 'success') {
+                var cartItems = '';
 
-                $.each(response.results, function (item) {
-                    $('.js-cart-list').html(`
-                        <li class="cart-container-list-item">
-                            <div class="cart-product">
-                                <div class="cart-product-image">
-                                    <picture>
-                                        <source srcset="${ item.image }">
-                                        <img class="cart-product-img" alt="${ item.productName }" loading="lazy" src="images/no-picture.jpg">
-                                    </picture>
-                                </div>
+                if ($('.js-cart-list').length > 0) {
+                    $.each(response.results, function (index, item) {
+                        cartItems += `
+                            <li class="cart-container-list-item">
+                                <div class="cart-product">
+                                    <div class="cart-product-image">
+                                        <picture>
+                                            <source srcset="${ item.image || '' }">
+                                            <img class="cart-product-img" alt="${ item.productName }" loading="lazy" src="images/no-picture.jpg">
+                                        </picture>
+                                    </div>
 
-                                <div class="cart-product-desc">
-                                    <h5 class="cart-product-desc_name">${ item.productName }</h5>
+                                    <div class="cart-product-desc">
+                                        <h5 class="cart-product-desc_name">${ item.productName }</h5>
 
-                                    <div class="quantities">
-                                        <div class="quantities-container">
-                                            <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                            <%# setAmountQuantity(item.productId, item.maxQuantity, $event) %>
-                                            <%#  @keypress="isDigit($event)" %>
-                                            <input class="quantities-input" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
-                                            <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                        <div class="quantities">
+                                            <div class="quantities-container">
+                                                <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                                <input class="quantities-input" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
+                                                <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                            </div>
+
+                                            <small class="quantities-price"><i class="fas fa-times"></i> <span>${ item.price } RSD</span></small>
                                         </div>
 
-                                        <small class="quantities-price"><i class="fas fa-times"></i> <span>${ item.price } RSD</span></small>
-                                    </div>
-
-                                    <div class="functions">
-                                        <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                        <button type="button" value="${ response.remove_text } %>" class="functions_remove"><i class="fas fa-times"></i></button>
+                                        <div class="functions">
+                                            <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                            <button type="button" value="${ response.remove_text } %>" class="functions_remove"><i class="fas fa-times"></i></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>`
-                    );
-                });
+                            </li>`;
+                    });
 
-                $('.js-cart-counter').text(response.totalCount);
-                $('.js-total-price').text(response.totalPrice);
+                    $('.js-cart-list').html(cartItems);
+                    $('span.js-cart-counter').text(response.totalCount);
+                    $('span.js-total-price').text(response.totalPrice);
+                }
+                else {
+                    $('.js-cart-empty').hide();
+
+                    $('.js-cart').append(
+                        `<h5 class="cart-counter">${ response.ordersCartCountText }: <span class="js-cart-counter">${ response.totalCount }</span></h5>
+                        <div class="cart-container">
+                            <div class="cart-container-top">
+                                <a href="/${ response.current_locale }/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">${ response.orderPageText }</a>
+                                <strong class="cart-container-top_total">${ response.totalPriceText }: <span class="js-total-price">${ response.totalPrice }</span><small>RSD</small></strong>
+                            </div>
+
+                            <ul class="cart-container-list js-cart-list">
+                                <li class="cart-container-list-item">
+                                    <div class="cart-product">
+                                        <div class="cart-product-image">
+                                            <picture>
+                                                <source srcset="${ response.results[0].image || '' }">
+                                                <img class="cart-product-img" alt="${ response.results[0].productName }" loading="lazy" src="images/no-picture.jpg">
+                                            </picture>
+                                        </div>
+
+                                        <div class="cart-product-desc">
+                                            <h5 class="cart-product-desc_name">${ response.results[0].productName }</h5>
+
+                                            <div class="quantities">
+                                                <div class="quantities-container">
+                                                    <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                                    <input class="quantities-input" type="number" value="${ response.results[0].quantity }" min="1" max="${ response.results[0].maxQuantity }" />
+                                                    <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                                </div>
+
+                                                <small class="quantities-price"><i class="fas fa-times"></i> <span>${ response.results[0].price } RSD</span></small>
+                                            </div>
+
+                                            <div class="functions">
+                                                <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                                <button type="button" value="${ response.remove_text }" class="functions_remove"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>`
+                    );
+                }
+
+                $(".js-cart").addClass('open');
 
                 $.alert({
+                    useBootstrap: false,
                     boxWidth: '350px',
                     title: response.title,
-                    content: response.message,
-                    buttons: 'OK'
+                    content: response.content,
+                    buttons: {
+                        OK: function () {
+                            // do nothing
+                        }
+                    }
                 });
             }
             else if (response.status == 'error') {
                 $.confirm({
                     title: response.title,
-                    content: response.message,
+                    content: response.content,
                     type: 'red',
                     typeAnimated: true,
                     buttons: {
-                        tryAgain: {
-                            text: 'OK',
-                            action: function(){
+                        OK: {
+                            action: function() {
                                 // do nothing
                             }
                         }

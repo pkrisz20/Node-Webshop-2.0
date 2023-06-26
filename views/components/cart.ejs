@@ -3,11 +3,11 @@
     <h4 class="cart-title"><i class="fas fa-shopping-cart"></i> <%= languageHandler('orders.your_cart', current_locale) %></h4>
 
     <% if (cart.items.length > 0) { %>
-        <h5 class="cart-counter js-cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span><%= cart.totalCount %></span></h5>
+        <h5 class="cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span class="js-cart-counter"><%= cart.totalCount %></span></h5>
         <div class="cart-container">
             <div class="cart-container-top">
                 <a href="/<%= current_locale %>/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= ('orders.order', current_locale) %></>
-                <strong class="cart-container-top_total js-total-price"><%= languageHandler('orders.total_price', current_locale) %>: <%= cart.totalPrice %> <small>RSD</small></strong>
+                <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-total-price"><%= cart.totalPrice %></span><small>RSD</small></strong>
             </div>
 
             <ul class="cart-container-list js-cart-list">
@@ -48,6 +48,6 @@
         </div>
 
     <% } else if (cart.items.length == 0) { %>
-        <h5 class="cart-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
+        <h5 class="cart-empty js-cart-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
     <% } %>
 </div>

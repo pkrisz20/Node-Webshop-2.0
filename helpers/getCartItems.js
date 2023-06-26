@@ -16,10 +16,8 @@ const getCartItems = (req, res) => {
 
         let countParams = Array(cartProductIds.length).fill("?").join(",");
 
-        // console.log('[...cartProductIds]', [...cartProductIds]);
-        // console.log(`SELECT id, name, price, image_thumbnail, discount_value FROM products WHERE id IN (${ countParams })`);
-
-        // TODO: Fix this cart issue
+        console.log('[...cartProductIds]', [...cartProductIds]);
+        console.log(`SELECT id, name, price, image_thumbnail, discount_value FROM products WHERE id IN (${ countParams })`);
 
         db.query(`SELECT id, name, price, image_thumbnail, discount_value FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
@@ -44,7 +42,7 @@ const getCartItems = (req, res) => {
 
                 req.session.cart = cartItems;
 
-                // console.log('there are items in cart');
+                console.log('req.session.cart', req.session.cart);
 
                 let cart = {
                     items: req.session.cart ?? [],
