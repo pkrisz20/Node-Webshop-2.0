@@ -6,13 +6,13 @@
         <h5 class="cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span class="js-cart-counter"><%= cart.totalCount %></span></h5>
         <div class="cart-container">
             <div class="cart-container-top">
-                <a href="/<%= current_locale %>/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= ('orders.order', current_locale) %></>
+                <a href="/<%= current_locale %>/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= languageHandler('orders.order', current_locale) %></a>
                 <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-total-price"><%= cart.totalPrice %></span><small>RSD</small></strong>
             </div>
 
             <ul class="cart-container-list js-cart-list">
                 <% cart.items.forEach(cartItem => { %>
-                    <li class="cart-container-list-item">
+                    <li class="cart-container-list-item js-cart-item">
                         <div class="cart-product">
                             <div class="cart-product-image">
                                 <picture>
@@ -38,7 +38,7 @@
 
                                 <div class="functions">
                                     <a href="/<%= current_locale %>/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                    <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" class="functions_remove"><i class="fas fa-times"></i></button>
+                                    <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" data-id="<%= cartItem.productId %>" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>
                         </div>

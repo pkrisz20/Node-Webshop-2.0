@@ -4,13 +4,22 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const { getCartItems } = require("../helpers/getCartItems");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getData = (req, res) => {
-    let cart = getCartItems(req, res);
-    // console.log("variable", cart);
-    // console.log("function", getCartItems(req, res))
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
     let products = [];
     let sliders = [];
     var galleries = [];
@@ -155,8 +164,6 @@ const getData = (req, res) => {
                                                 categories.push(tempObjectCategory);
                                             });
                                         }
-
-                                        console.log(cart);
 
                                         return res.render("home", {
                                             heros: sliders ?? [],

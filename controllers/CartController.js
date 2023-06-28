@@ -5,7 +5,8 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const deleteCartItem = (req, res) => {
-    const { productId } = req.body;
+    let { productId } = req.body;
+    productId = parseInt(productId);
 
     let isExists = req.session?.cart?.some(item => item.productId === productId);
 
@@ -16,10 +17,28 @@ const deleteCartItem = (req, res) => {
 
         req.session.cart = filteredSession;
 
-        return res.status(200).json({ status: 'success', cart: req.session.cart });
+        console.log(req.session.cart);
+
+        let cartItems = req.session.cart.map(item => {
+            return {
+                ...item,
+                quantity: parseInt(item.quantity)
+            }
+        });
+
+        let totalPrice = cartItems.reduce((total, product) => product.quantity * product.price + total, 0);
+
+        return res.status(200).json({
+            status: "success",
+            title: languageHandler('general.process_success'),
+            totalCount: req.session.cart.length,
+            totalPrice: numberWithCommas(totalPrice)
+        });
     }
 
-    return res.status(400).json({ status: 'error' });
+    else if ( !isExists ) {
+        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.common_error') });
+    }
 }
 
 const addCartItem = (req, res) => {
@@ -107,18 +126,19 @@ const addCartItem = (req, res) => {
     });
 }
 
+// TODO: Fix the cart update endpoint
 const updateCartItem = (req, res) => {
     let { productId } = req.body;
     let { quantity } = req.body;
 
     if (!quantity || quantity === 0 || !productId) {
-        return res.status(400).json({ status: 'error' });
+        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.unprocessable_data') });
     }
 
     const maxQuantityEnabled = req.session?.cart?.find(item => item.productId === productId).maxQuantity;
 
     if (quantity > maxQuantityEnabled) {
-        return res.status(400).json({ status: 'error' });
+        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
     }
 
     const objIndex = req.session?.cart?.findIndex(item => item.productId === productId);

@@ -184,7 +184,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                 if ($('.js-cart-list').length > 0) {
                     $.each(response.results, function (index, item) {
                         cartItems += `
-                            <li class="cart-container-list-item">
+                            <li class="cart-container-list-item js-cart-item">
                                 <div class="cart-product">
                                     <div class="cart-product-image">
                                         <picture>
@@ -208,7 +208,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
 
                                         <div class="functions">
                                             <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                            <button type="button" value="${ response.remove_text } %>" class="functions_remove"><i class="fas fa-times"></i></button>
+                                            <button type="button" value="${ response.remove_text } %>" data-id="${ item.productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -231,7 +231,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                             </div>
 
                             <ul class="cart-container-list js-cart-list">
-                                <li class="cart-container-list-item">
+                                <li class="cart-container-list-item js-cart-item">
                                     <div class="cart-product">
                                         <div class="cart-product-image">
                                             <picture>
@@ -255,7 +255,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
 
                                             <div class="functions">
                                                 <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                                <button type="button" value="${ response.remove_text }" class="functions_remove"><i class="fas fa-times"></i></button>
+                                                <button type="button" value="${ response.remove_text }" data-id="${ response.results[0].productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -281,10 +281,61 @@ $('body').on("click", ".js-add-to-cart", function (event) {
             }
             else if (response.status == 'error') {
                 $.confirm({
+                    useBootstrap: false,
+                    boxWidth: '350px',
                     title: response.title,
                     content: response.content,
-                    type: 'red',
-                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            action: function() {
+                                // do nothing
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
+
+$('body').on("click", ".js-remove-cart", function (event) {
+    var this_button = $(this);
+
+    $.ajax({
+        type: 'post',
+        url: "/api/cart/delete",
+        dataType: 'json',
+        data: { productId: this_button.data('id') },
+        beforeSend: function (jqXHR) {
+            this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+            this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                this_button.closest('.js-cart-item').remove();
+                $('span.js-cart-counter').text(response.totalCount);
+                $('span.js-total-price').text(response.totalPrice);
+
+                $.alert({
+                    useBootstrap: false,
+                    boxWidth: '350px',
+                    title: response.title,
+                    content: response.content,
+                    buttons: {
+                        OK: function () {
+                            // do nothing
+                        }
+                    }
+                });
+            }
+
+            else if (response.status == 'error') {
+                $.confirm({
+                    useBootstrap: false,
+                    boxWidth: '350px',
+                    title: response.title,
                     buttons: {
                         OK: {
                             action: function() {

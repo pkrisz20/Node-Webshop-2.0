@@ -167,14 +167,14 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         var cartItems = '';
         if ($('.js-cart-list').length > 0) {
           $.each(response.results, function (index, item) {
-            cartItems += "\n                            <li class=\"cart-container-list-item\">\n                                <div class=\"cart-product\">\n                                    <div class=\"cart-product-image\">\n                                        <picture>\n                                            <source srcset=\"".concat(item.image || '', "\">\n                                            <img class=\"cart-product-img\" alt=\"").concat(item.productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                        </picture>\n                                    </div>\n\n                                    <div class=\"cart-product-desc\">\n                                        <h5 class=\"cart-product-desc_name\">").concat(item.productName, "</h5>\n\n                                        <div class=\"quantities\">\n                                            <div class=\"quantities-container\">\n                                                <button type=\"button\" class=\"quantities-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                <input class=\"quantities-input\" type=\"number\" value=\"").concat(item.quantity, "\" min=\"1\" max=\"").concat(item.maxQuantity, "\" />\n                                                <button type=\"button\" class=\"quantities-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                            </div>\n\n                                            <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(item.price, " RSD</span></small>\n                                        </div>\n\n                                        <div class=\"functions\">\n                                            <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                            <button type=\"button\" value=\"").concat(response.remove_text, " %>\" class=\"functions_remove\"><i class=\"fas fa-times\"></i></button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </li>");
+            cartItems += "\n                            <li class=\"cart-container-list-item js-cart-item\">\n                                <div class=\"cart-product\">\n                                    <div class=\"cart-product-image\">\n                                        <picture>\n                                            <source srcset=\"".concat(item.image || '', "\">\n                                            <img class=\"cart-product-img\" alt=\"").concat(item.productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                        </picture>\n                                    </div>\n\n                                    <div class=\"cart-product-desc\">\n                                        <h5 class=\"cart-product-desc_name\">").concat(item.productName, "</h5>\n\n                                        <div class=\"quantities\">\n                                            <div class=\"quantities-container\">\n                                                <button type=\"button\" class=\"quantities-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                <input class=\"quantities-input\" type=\"number\" value=\"").concat(item.quantity, "\" min=\"1\" max=\"").concat(item.maxQuantity, "\" />\n                                                <button type=\"button\" class=\"quantities-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                            </div>\n\n                                            <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(item.price, " RSD</span></small>\n                                        </div>\n\n                                        <div class=\"functions\">\n                                            <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                            <button type=\"button\" value=\"").concat(response.remove_text, " %>\" data-id=\"").concat(item.productId, "\" class=\"functions_remove js-remove-cart\"><i class=\"fas fa-times\"></i></button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </li>");
           });
           $('.js-cart-list').html(cartItems);
           $('span.js-cart-counter').text(response.totalCount);
           $('span.js-total-price').text(response.totalPrice);
         } else {
           $('.js-cart-empty').hide();
-          $('.js-cart').append("<h5 class=\"cart-counter\">".concat(response.ordersCartCountText, ": <span class=\"js-cart-counter\">").concat(response.totalCount, "</span></h5>\n                        <div class=\"cart-container\">\n                            <div class=\"cart-container-top\">\n                                <a href=\"/").concat(response.current_locale, "/order\" aria-label=\"Navigation link to the orders page\" class=\"cart-container-top_ordering\">").concat(response.orderPageText, "</a>\n                                <strong class=\"cart-container-top_total\">").concat(response.totalPriceText, ": <span class=\"js-total-price\">").concat(response.totalPrice, "</span><small>RSD</small></strong>\n                            </div>\n\n                            <ul class=\"cart-container-list js-cart-list\">\n                                <li class=\"cart-container-list-item\">\n                                    <div class=\"cart-product\">\n                                        <div class=\"cart-product-image\">\n                                            <picture>\n                                                <source srcset=\"").concat(response.results[0].image || '', "\">\n                                                <img class=\"cart-product-img\" alt=\"").concat(response.results[0].productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                            </picture>\n                                        </div>\n\n                                        <div class=\"cart-product-desc\">\n                                            <h5 class=\"cart-product-desc_name\">").concat(response.results[0].productName, "</h5>\n\n                                            <div class=\"quantities\">\n                                                <div class=\"quantities-container\">\n                                                    <button type=\"button\" class=\"quantities-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                    <input class=\"quantities-input\" type=\"number\" value=\"").concat(response.results[0].quantity, "\" min=\"1\" max=\"").concat(response.results[0].maxQuantity, "\" />\n                                                    <button type=\"button\" class=\"quantities-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                                </div>\n\n                                                <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(response.results[0].price, " RSD</span></small>\n                                            </div>\n\n                                            <div class=\"functions\">\n                                                <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                                <button type=\"button\" value=\"").concat(response.remove_text, "\" class=\"functions_remove\"><i class=\"fas fa-times\"></i></button>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </li>\n                            </ul>\n                        </div>"));
+          $('.js-cart').append("<h5 class=\"cart-counter\">".concat(response.ordersCartCountText, ": <span class=\"js-cart-counter\">").concat(response.totalCount, "</span></h5>\n                        <div class=\"cart-container\">\n                            <div class=\"cart-container-top\">\n                                <a href=\"/").concat(response.current_locale, "/order\" aria-label=\"Navigation link to the orders page\" class=\"cart-container-top_ordering\">").concat(response.orderPageText, "</a>\n                                <strong class=\"cart-container-top_total\">").concat(response.totalPriceText, ": <span class=\"js-total-price\">").concat(response.totalPrice, "</span><small>RSD</small></strong>\n                            </div>\n\n                            <ul class=\"cart-container-list js-cart-list\">\n                                <li class=\"cart-container-list-item js-cart-item\">\n                                    <div class=\"cart-product\">\n                                        <div class=\"cart-product-image\">\n                                            <picture>\n                                                <source srcset=\"").concat(response.results[0].image || '', "\">\n                                                <img class=\"cart-product-img\" alt=\"").concat(response.results[0].productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                            </picture>\n                                        </div>\n\n                                        <div class=\"cart-product-desc\">\n                                            <h5 class=\"cart-product-desc_name\">").concat(response.results[0].productName, "</h5>\n\n                                            <div class=\"quantities\">\n                                                <div class=\"quantities-container\">\n                                                    <button type=\"button\" class=\"quantities-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                    <input class=\"quantities-input\" type=\"number\" value=\"").concat(response.results[0].quantity, "\" min=\"1\" max=\"").concat(response.results[0].maxQuantity, "\" />\n                                                    <button type=\"button\" class=\"quantities-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                                </div>\n\n                                                <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(response.results[0].price, " RSD</span></small>\n                                            </div>\n\n                                            <div class=\"functions\">\n                                                <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                                <button type=\"button\" value=\"").concat(response.remove_text, "\" data-id=\"").concat(response.results[0].productId, "\" class=\"functions_remove js-remove-cart\"><i class=\"fas fa-times\"></i></button>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </li>\n                            </ul>\n                        </div>"));
         }
         $(".js-cart").addClass('open');
         $.alert({
@@ -190,10 +190,58 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         });
       } else if (response.status == 'error') {
         $.confirm({
+          useBootstrap: false,
+          boxWidth: '350px',
           title: response.title,
           content: response.content,
-          type: 'red',
-          typeAnimated: true,
+          buttons: {
+            OK: {
+              action: function action() {
+                // do nothing
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+});
+$('body').on("click", ".js-remove-cart", function (event) {
+  var this_button = $(this);
+  $.ajax({
+    type: 'post',
+    url: "/api/cart/delete",
+    dataType: 'json',
+    data: {
+      productId: this_button.data('id')
+    },
+    beforeSend: function beforeSend(jqXHR) {
+      this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function complete(jqXHR, textStatus) {
+      this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function success(response) {
+      if (response.status == 'success') {
+        this_button.closest('.js-cart-item').remove();
+        $('span.js-cart-counter').text(response.totalCount);
+        $('span.js-total-price').text(response.totalPrice);
+        $.alert({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.content,
+          buttons: {
+            OK: function OK() {
+              // do nothing
+            }
+          }
+        });
+      } else if (response.status == 'error') {
+        $.confirm({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
           buttons: {
             OK: {
               action: function action() {
