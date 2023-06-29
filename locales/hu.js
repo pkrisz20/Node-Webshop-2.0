@@ -94,7 +94,7 @@ const hu = {
         order_form: "Megrendelő űrlap",
         order_form_sub: "Töltse ki az alábbi űrlapot, hogy elküldje a rendelését",
         order_succes_message: "A rendelését sikeresen feldolgoztuk. Elküldtünk egy összegzést az e-mail címére!",
-		added_to_cart: "Sikeresk hozzáadva a kosárhoz!"
+		added_to_cart: "Sikeresen hozzáadva a kosárhoz!"
     },
     about: {
         our_workers: "Csapatunk",

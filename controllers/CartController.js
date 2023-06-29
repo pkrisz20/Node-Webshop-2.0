@@ -8,6 +8,14 @@ const deleteCartItem = (req, res) => {
     let { productId } = req.body;
     productId = parseInt(productId);
 
+    if ( isNaN(productId) ) {
+        return res.status(400).json({
+            status: "error",
+            title: languageHandler('errors.error', req.session.lang),
+            message: languageHandler('errors.unprocessable_data', req.session.lang)
+        });
+    }
+
     let isExists = req.session?.cart?.some(item => item.productId === productId);
 
     if (isExists) {
@@ -16,8 +24,6 @@ const deleteCartItem = (req, res) => {
         });
 
         req.session.cart = filteredSession;
-
-        console.log(req.session.cart);
 
         let cartItems = req.session.cart.map(item => {
             return {
@@ -30,14 +36,18 @@ const deleteCartItem = (req, res) => {
 
         return res.status(200).json({
             status: "success",
-            title: languageHandler('general.process_success'),
+            title: languageHandler('general.process_success', req.session.lang),
             totalCount: req.session.cart.length,
             totalPrice: numberWithCommas(totalPrice)
         });
     }
 
     else if ( !isExists ) {
-        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.common_error') });
+        return res.status(400).json({
+            status: "error",
+            title: languageHandler('errors.error', req.session.lang),
+            message: languageHandler('errors.common_error', req.session.lang)
+        });
     }
 }
 
@@ -51,7 +61,11 @@ const addCartItem = (req, res) => {
             || !cartItem.quantity
         )
     {
-        return res.status(400).json({ status: 'error', title: languageHandler('errors.error'), message: languageHandler('errors.unprocessable_data') });
+        return res.status(400).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
+        });
     }
 
     const cartQuery = "SELECT id, name, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
@@ -67,12 +81,20 @@ const addCartItem = (req, res) => {
             let isAvailableEachProduct = data[0].is_active !== 0 && data[0].is_available !== 0;
 
             if ( !isAvailableEachProduct ) {
-                return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
+                return res.status(400).json({
+                    status: "error",
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.wrong_data', lang)
+                });
             }
 
             // Check if quantity is bigger than the max orderable quantity
             if ( cartItem.quantity > data[0].max_order_count ) {
-                return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
+                return res.status(400).json({
+                    status: "error",
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.wrong_data', lang)
+                });
             }
 
             let resultItem = {
@@ -130,15 +152,24 @@ const addCartItem = (req, res) => {
 const updateCartItem = (req, res) => {
     let { productId } = req.body;
     let { quantity } = req.body;
+    const lang = req.session.lang;
 
     if (!quantity || quantity === 0 || !productId) {
-        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.unprocessable_data') });
+        return res.status(400).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
+        });
     }
 
     const maxQuantityEnabled = req.session?.cart?.find(item => item.productId === productId).maxQuantity;
 
     if (quantity > maxQuantityEnabled) {
-        return res.status(400).json({ status: "error", title: languageHandler('errors.error'), message: languageHandler('errors.wrong_data') });
+        return res.status(400).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.wrong_data', lang)
+        });
     }
 
     const objIndex = req.session?.cart?.findIndex(item => item.productId === productId);

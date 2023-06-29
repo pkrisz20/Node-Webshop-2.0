@@ -197,10 +197,10 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                                         <h5 class="cart-product-desc_name">${ item.productName }</h5>
 
                                         <div class="quantities">
-                                            <div class="quantities-container">
-                                                <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                                <input class="quantities-input" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
-                                                <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                            <div class="quantities-container js-quantities">
+                                                <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                                <input class="quantities-input js-product-quantity" data-id="${ item.productId }" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
+                                                <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
                                             </div>
 
                                             <small class="quantities-price"><i class="fas fa-times"></i> <span>${ item.price } RSD</span></small>
@@ -244,10 +244,10 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                                             <h5 class="cart-product-desc_name">${ response.results[0].productName }</h5>
 
                                             <div class="quantities">
-                                                <div class="quantities-container">
-                                                    <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                                    <input class="quantities-input" type="number" value="${ response.results[0].quantity }" min="1" max="${ response.results[0].maxQuantity }" />
-                                                    <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                                <div class="quantities-container js-quantities">
+                                                    <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                                    <input class="quantities-input js-product-quantity" data-id="${ response.results[0].productId }" type="number" value="${ response.results[0].quantity }" min="1" max="${ response.results[0].maxQuantity }" />
+                                                    <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
                                                 </div>
 
                                                 <small class="quantities-price"><i class="fas fa-times"></i> <span>${ response.results[0].price } RSD</span></small>
@@ -299,6 +299,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
 });
 
 $('body').on("click", ".js-remove-cart", function (event) {
+    event.preventDefault();
     var this_button = $(this);
 
     $.ajax({
@@ -341,6 +342,92 @@ $('body').on("click", ".js-remove-cart", function (event) {
                             action: function() {
                                 // do nothing
                             }
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
+
+$('body').on("click", ".js-quantity-btn", function (event) {
+    event.preventDefault();
+    var quantity_wrapper = $(this).closest('.js-quantities');
+    var quantity = quantity_wrapper.find('.js-product-quantity');
+    var value = parseInt(quantity.val());
+    var maxValue = parseInt(quantity.attr("max"));
+
+    if ( $(this).hasClass('minus') && value > 1 ) {
+        value = value - 1;
+    }
+    else if ( $(this).hasClass('plus') && (value < maxValue) ) {
+        value = value + 1;
+    }
+    else if ( value == maxValue ) {
+        $.alert({
+            useBootstrap: false,
+            boxWidth: '350px',
+            title: "Ez nem lehetseges",
+            content: `Nem lehet nagyobb erteket kivalasztani mint: ${ maxValue }`,
+            buttons: {
+                OK: function () {
+                    // do nothing
+                }
+            }
+        });
+    }
+
+    quantity.val(value);
+    quantity.trigger('change');
+});
+
+$('body').on("change", ".js-product-quantity", function (event) {
+    event.preventDefault();
+    var quantity = $('.js-product-quantity').val();
+    var productId = $('.js-product-quantity').data("id");
+    quantity = parseInt(quantity);
+
+    if ( isNaN(quantity) ) {
+        $.alert({
+            useBootstrap: false,
+            boxWidth: '350px',
+            title: "Hiba",
+            content: "A mennyisegnek egesz szamnak kell lennie.",
+            buttons: {
+                OK: function () {
+                    // do nothing
+                }
+            }
+        });
+    }
+
+    $.ajax({
+        type: 'post',
+        url: "/api/cart/update",
+        dataType: 'json',
+        data: {
+            productId: productId,
+            quantity: quantity
+        },
+        beforeSend: function (jqXHR) {
+            this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+            this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                console.log('success');
+            }
+            else if (response.status == 'error') {
+                $.alert({
+                    useBootstrap: false,
+                    boxWidth: '350px',
+                    title: response.title,
+                    content: response.message,
+                    buttons: {
+                        OK: function () {
+                            // do nothing
                         }
                     }
                 });

@@ -22,15 +22,13 @@
                             </div>
 
                             <div class="cart-product-desc">
-                                <h5 class="cart-product-desc_name"><%= cartItem.productName %></h5>
+                                <strong class="cart-product-desc_name"><%= cartItem.productName %></strong>
 
                                 <div class="quantities">
-                                    <div class="quantities-container">
-                                        <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                        <%# setAmountQuantity(cartItem.productId, cartItem.maxQuantity, $event) %>
-                                        <%#  @keypress="isDigit($event)" %>
-                                        <input class="quantities-input" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
-                                        <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                    <div class="quantities-container js-quantities">
+                                        <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                        <input class="quantities-input js-product-quantity" data-id="<%= cartItem.productId %>" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
+                                        <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
                                     </div>
 
                                     <small class="quantities-price"><i class="fas fa-times"></i> <span><%= cartItem.price %> RSD</span></small>
