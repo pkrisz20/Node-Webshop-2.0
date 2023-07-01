@@ -63,10 +63,11 @@ const sr = {
         send: "Pošalji",
         required: "Polje je obavezno",
         must_have_at_most: "Ne može da bude više od {number} karaktera",
-        max_quantity: "Iz ova proizvoda maximalna naručena količina je {max}!",
+        max_quantity: "Iz ova proizvoda maximalna naručena količina je {0}!",
         invalid_email: "Netačno mejl adresu",
         accept_policy: "Slažem se, da sajt obrađuje moje podatke.",
-        accept_terms: "Mišljenja iznešena u komentarima su lična mišljenja autora. Komentari su moderirani i odobravani."
+        accept_terms: "Mišljenja iznešena u komentarima su lična mišljenja autora. Komentari su moderirani i odobravani.",
+		cart_updated: "Vrednosti su promenili!"
     },
     products: {
         all_products: "Svi proizvodi",
@@ -107,7 +108,8 @@ const sr = {
         common_error: "Došlo je do greške!",
         wrong_data: "Netačne podatke!",
         unprocessable_data: "Neobrađene podatke!",
-		not_found: "Stranica nije pronađena"
+		not_found: "Stranica nije pronađena",
+		has_to_be_number: "Samo brojevi prihvata!"
     }
 };
 

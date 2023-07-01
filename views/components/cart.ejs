@@ -44,8 +44,6 @@
                 <% }) %>
             </ul>
         </div>
-
-    <% } else if (cart.items.length == 0) { %>
-        <h5 class="cart-empty js-cart-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
     <% } %>
+    <h5 class="cart-empty js-cart-empty <%= cart.items.length > 0 ? 'hide' : 'show'%>"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
 </div>

@@ -220,7 +220,8 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                     $('span.js-total-price').text(response.totalPrice);
                 }
                 else {
-                    $('.js-cart-empty').hide();
+                    $('.js-cart-empty').removeClass('show');
+                    $('.js-cart-empty').addClass('hide');
 
                     $('.js-cart').append(
                         `<h5 class="cart-counter">${ response.ordersCartCountText }: <span class="js-cart-counter">${ response.totalCount }</span></h5>
@@ -319,11 +320,21 @@ $('body').on("click", ".js-remove-cart", function (event) {
                 $('span.js-cart-counter').text(response.totalCount);
                 $('span.js-total-price').text(response.totalPrice);
 
+                if (response.isEmpty) {
+                    $('.js-cart-empty').addClass('show');
+                    $('.js-cart-empty').removeClass('hide');
+                    $('.js-total-price').closest('.cart-container-top').remove();
+                    $('.js-cart-counter').closest('h5.cart-counter').remove();
+                }
+                else {
+                    $('.js-cart-empty').addClass('hide');
+                    $('.js-cart-empty').removeClass('show');
+                }
+
                 $.alert({
                     useBootstrap: false,
                     boxWidth: '350px',
                     title: response.title,
-                    content: response.content,
                     buttons: {
                         OK: function () {
                             // do nothing
@@ -337,6 +348,7 @@ $('body').on("click", ".js-remove-cart", function (event) {
                     useBootstrap: false,
                     boxWidth: '350px',
                     title: response.title,
+                    content: response.message,
                     buttons: {
                         OK: {
                             action: function() {
@@ -355,51 +367,34 @@ $('body').on("click", ".js-quantity-btn", function (event) {
     var quantity_wrapper = $(this).closest('.js-quantities');
     var quantity = quantity_wrapper.find('.js-product-quantity');
     var value = parseInt(quantity.val());
-    var maxValue = parseInt(quantity.attr("max"));
 
     if ( $(this).hasClass('minus') && value > 1 ) {
         value = value - 1;
     }
-    else if ( $(this).hasClass('plus') && (value < maxValue) ) {
+    else if ( $(this).hasClass('plus') ) {
         value = value + 1;
-    }
-    else if ( value == maxValue ) {
-        $.alert({
-            useBootstrap: false,
-            boxWidth: '350px',
-            title: "Ez nem lehetseges",
-            content: `Nem lehet nagyobb erteket kivalasztani mint: ${ maxValue }`,
-            buttons: {
-                OK: function () {
-                    // do nothing
-                }
-            }
-        });
     }
 
     quantity.val(value);
-    quantity.trigger('change');
+    quantity.trigger('change', quantity);
 });
 
-$('body').on("change", ".js-product-quantity", function (event) {
+$('body').on("change", ".js-product-quantity", function (event, targetInput) {
     event.preventDefault();
-    var quantity = $('.js-product-quantity').val();
-    var productId = $('.js-product-quantity').data("id");
-    quantity = parseInt(quantity);
+    var this_button = $('.js-quantity-btn');
+    var productId = null;
+    var quantity = null;
 
-    if ( isNaN(quantity) ) {
-        $.alert({
-            useBootstrap: false,
-            boxWidth: '350px',
-            title: "Hiba",
-            content: "A mennyisegnek egesz szamnak kell lennie.",
-            buttons: {
-                OK: function () {
-                    // do nothing
-                }
-            }
-        });
+    if ( targetInput ) {
+        quantity = $(targetInput).val();
+        productId = $(targetInput).data("id");
     }
+    else if ( !targetInput ) {
+        quantity = $(event.target).val();
+        productId = $(event.target).data("id");
+    }
+
+    quantity = parseInt(quantity);
 
     $.ajax({
         type: 'post',
@@ -417,9 +412,38 @@ $('body').on("change", ".js-product-quantity", function (event) {
         },
         success: function (response) {
             if (response.status == 'success') {
-                console.log('success');
+
+                if ( targetInput ) {
+                    $(targetInput).val(response.newValue);
+                }
+                else if ( !targetInput ) {
+                    $(event.target).val(response.newValue);
+                }
+
+                $('.js-total-price').text(response.totalPrice);
+
+                $.alert({
+                    useBootstrap: false,
+                    boxWidth: '350px',
+                    title: response.title,
+                    content: response.message,
+                    buttons: {
+                        OK: function () {
+                            // do nothing
+                        }
+                    }
+                });
             }
             else if (response.status == 'error') {
+                if (response.newValue) {
+                    if ( targetInput ) {
+                        $(targetInput).val(response.newValue);
+                    }
+                    else if ( !targetInput ) {
+                        $(event.target).val(response.newValue);
+                    }
+                }
+
                 $.alert({
                     useBootstrap: false,
                     boxWidth: '350px',

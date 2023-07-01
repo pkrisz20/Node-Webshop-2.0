@@ -63,10 +63,11 @@ const hu = {
         send: "Küldés",
         required: "A mező kitöltése kötelező",
         must_have_at_most: "Ez a mező legfeljebb {number} karaktert tartalmazhat",
-        max_quantity: "Ebből a termékből a maximális rendelhető mennyiség {max}!",
+        max_quantity: "Ebből a termékből a maximális rendelhető mennyiség {0}!",
         invalid_email: "Helytelen e-mail cím",
         accept_policy: "Beleegyezem, hogy az oldal kezelje az adataimat.",
-        accept_terms: "A megjegyzésekben kifejtett vélemények a hozzászólások szerzőinek magánvéleményei. A megjegyzéseket moderáljuk és jóváhagyjuk."
+        accept_terms: "A megjegyzésekben kifejtett vélemények a hozzászólások szerzőinek magánvéleményei. A megjegyzéseket moderáljuk és jóváhagyjuk.",
+		cart_updated: "A kosár tartalma frissült!"
     },
     products: {
         all_products: "Az összes termék",
@@ -107,7 +108,8 @@ const hu = {
         common_error: "Váratlan hiba lépett fel!",
         wrong_data: "Nem megfelelő adatok!",
         unprocessable_data: "Nem feldolgozható adatok!",
-		not_found: "Nem található"
+		not_found: "Nem található",
+        has_to_be_number: "Számnak kell lennie!"
     }
 };
 

@@ -63,10 +63,11 @@ const en = {
 		send: "Send",
 		required: "This field is required",
 		must_have_at_most: "This field must have at most {number} letters",
-		max_quantity: "The maximum orderable quantity is {max} from this product!",
+		max_quantity: "The maximum orderable quantity is {0} from this product!",
 		invalid_email: "Invalid email address",
 		accept_policy: "I agree that, the site handling my data.",
-		accept_terms: "The expressed opinions are personal opinions of the authors of the comments. Comments are moderated and approved."
+		accept_terms: "The expressed opinions are personal opinions of the authors of the comments. Comments are moderated and approved.",
+		cart_updated: "The cart has been updated!"
 	},
 	products: {
 		all_products: "All products",
@@ -107,7 +108,8 @@ const en = {
 		common_error: "Something went wrong during the processing!",
 		wrong_data: "Wrong datas!",
 		unprocessable_data: "Unprocessable data types!",
-		not_found: "Page not found"
+		not_found: "Page not found",
+		has_to_be_number: "Has to be number!"
 	}
 };
 
