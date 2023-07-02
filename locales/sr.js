@@ -81,7 +81,9 @@ const sr = {
         not_postable: "Ovaj proizvod se NE MOŽE poslati poštom",
         no_comment_yet: "Još nema komentara ispod ovog članka. Budite Vi prvi!",
         no_product_like_this: "Ne postoji takav proizvod",
-        no_category_like_this: "Ne postoji takva kategorija"
+        no_category_like_this: "Ne postoji takva kategorija",
+		no_gallery_like_this: "Ne postoji takva galerija.",
+		no_blogs_like_this: "Ne postoji takvi blogovi."
     },
     orders: {
         total_price: "Ukupno",

@@ -2,7 +2,8 @@ const { db } = require("../config/db-config");
 const moment = require("moment");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
+const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
+const languageHandler = require("../helpers/languageHandler");
 
 const getBlogDetails = (req, res) => {
     const { lang } = req.body;
@@ -102,34 +103,52 @@ const getBlogDetails = (req, res) => {
 }
 
 const getAllBlogs = (req, res) => {
-    const { lang } = req.body;
-    let { page } = req.query;
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+    const lang = req.session.lang;
+    let { page = 1 } = req.query;
     let result = [];
+    var metas = {
+        title: languageHandler("nav.blog", lang),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the blog list page",
+        // keywords: []
+    };
+
+    page = parseInt(page);
+
+    if ( isNaN(page) ) {
+        return res.status(400).render("400", { current_locale: req.session.lang });
+    }
+
     const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
 
-    try {
-        page = parseInt(page);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json({ status: "error" });
-    }
-
-    if (!lang || typeof page !== "number" || page <= 0) {
-        return res.status(400).json({ status: "error" });
+    if (typeof page !== "number" || page <= 0) {
+        return res.status(400).render("400", { current_locale: req.session.lang });
     }
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
+    setMomentLocale(lang);
 
     // Select limit - offset elements
     db.query(sqlQueryPaginatedBlogs, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
-            setMomentLocale(lang);
 
             data.forEach(element => {
                 let tempObject = {
@@ -157,7 +176,7 @@ const getAllBlogs = (req, res) => {
             db.query("SELECT COUNT(blogs.id) AS 'each_article_count' FROM blogs WHERE blogs.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).json({ status: "error" });
+                    return res.status(500).render("500", { current_locale: req.session.lang });
                 }
 
                 else if (elementsCount) {
@@ -166,7 +185,15 @@ const getAllBlogs = (req, res) => {
                     let pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
-                    return res.status(200).json({ status: 'success', pagination: pageCount, result: result ?? [] });
+                    return res.render("pages/blogs", {
+                        blogs: result ?? [],
+                        pagination: pageCount,
+                        meta: metas,
+                        current_locale: req.session.lang,
+                        cart: cart,
+                        locales: ['hu', 'sr', 'en'],
+                        languageHandler: languageHandler
+                    });
                 }
             });
         }

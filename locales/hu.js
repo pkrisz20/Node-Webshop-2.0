@@ -80,8 +80,10 @@ const hu = {
         postable: "Ez a termék postázható",
         not_postable: "Ez a termék NEM postázható",
         no_comment_yet: "Még nincsenek hozzászólások ezalatt a cikk alatt. Legyen Ön az első!",
-        no_product_like_this: "Nincs ilyen termék",
-        no_category_like_this: "Nincs ilyen kategória"
+        no_product_like_this: "Nincs ilyen termék.",
+        no_category_like_this: "Nincs ilyen kategória.",
+		no_gallery_like_this: "Nincs ilyen galléria.",
+		no_blogs_like_this: "Nincs ilyen blog."
     },
     orders: {
         total_price: "Összeg",

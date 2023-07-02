@@ -73,8 +73,12 @@ app.use("/:lang", employeesRouter);
 
 const productsRouter = require("./routes/products");
 app.use("/:lang", productsRouter);
-// const blogsRouter = require("./routes/blogs");
-// const galleryRouter = require("./routes/gallery");
+
+const galleryRouter = require("./routes/gallery");
+app.use("/:lang", galleryRouter);
+
+const blogsRouter = require("./routes/blogs");
+app.use("/:lang", blogsRouter);
 // const contactRouter = require("./routes/contact");
 // const ordersRouter = require("./routes/orders");
 // const searchRouter = require("./routes/search");
@@ -82,8 +86,6 @@ app.use("/:lang", productsRouter);
 // const staticContentsRouter = require("./routes/staticContents");
 
 // app.use("/api", staticContentsRouter);
-// app.use("/api", blogsRouter);
-// app.use("/api", galleryRouter);
 // app.use("/api", contactRouter);
 // app.use("/api", ordersRouter);
 // app.use("/api", searchRouter);

@@ -10,11 +10,11 @@
         </div>
         <figcaption class="caption">
             <% if (galleryItem.name) { %>
-                <h3 class="caption-name"><%= galleryItem.name %></h3>
+                <strong class="caption-name"><%= galleryItem.name %></strong>
             <% } %>
 
             <% if (galleryItem.category) { %>
-                <h4 class="caption-category"><span>|</span><%= galleryItem.category %><span>|</span></h4>
+                <div class="caption-category"><span>|</span><%= galleryItem.category %><span>|</span></div>
             <% } %>
         </figcaption>
     </figure>

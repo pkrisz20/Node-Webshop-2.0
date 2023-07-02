@@ -81,7 +81,9 @@ const en = {
 		not_postable: "This product CAN NOT be delivered by post",
 		no_comment_yet: "There is no any comment under this article yet. Be You the first!",
 		no_product_like_this: "There is no product like this",
-		no_category_like_this: "There is no category like this"
+		no_category_like_this: "There is no category like this",
+		no_gallery_like_this: "There is no gallery like this.",
+		no_blogs_like_this: "There is no blogs like this."
 	},
 	orders: {
 		total_price: "Total",

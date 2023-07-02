@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/gallery-list.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="list">
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('general.gallery', current_locale) %></h1>
+
+                <section class="listpage gallery-list">
+                    <% if (galleries.length > 0) { %>
+                        <div class="listpage-container">
+                            <% galleries.forEach(gallery => { %>
+                                <%- include("../components/gallery-card.ejs", { galleryItem: gallery }) %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="listpage-info">
+                            <strong class="listpage-info-no-content"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_gallery_like_this', current_locale) %></strong>
+                        </div>
+                    <% } %>
+                </section>
+            </div>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

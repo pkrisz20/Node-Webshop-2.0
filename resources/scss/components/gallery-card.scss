@@ -1,0 +1,113 @@
+.gallery-card {
+    width: 100%;
+    height: 100% !important;
+    border: none;
+    display: block;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 4px 5px 10px rgba($c-black, .75);
+    position: relative;
+    cursor: pointer;
+
+    &-date {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background-color: $c-yellow;
+        color: $c-dark-blue;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 7px 12px;
+        border-radius: 15px;
+        z-index: 10;
+    }
+
+    &-image {
+        width: 100%;
+        position: relative;
+
+        picture {
+            @include respImage(0.71);
+        }
+
+        .icon {
+            @include absoluteCenter();
+            display: inline-block;
+            z-index: 4;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility, opacity .3s ease-in-out;
+
+            & > i {
+                font-size: 35px;
+                color: $c-white;
+            }
+        }
+
+        &::before {
+            @include absoluteFullSize();
+            content: '';
+            z-index: 1;
+            transition: all .3s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+        }
+    }
+
+    .caption {
+        padding: 0 0 10px 0;
+        @include flexBox("flex-start", "center", 10px);
+        flex-direction: column;
+        position: absolute;
+        z-index: 4;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        visibility: hidden;
+        opacity: 0;
+        transition: all .3s ease-in-out;
+
+        &-name {
+            font-size: 20px;
+            line-height: 30px;
+            color: $c-white;
+            font-weight: 600;
+        }
+        &-category {
+            font-size: 16px;
+            color: $c-white;
+            font-weight: 600;
+
+            & > span {
+                color: $c-white;
+                height: 100%;
+
+                &:first-child {
+                    margin-right: 10px;
+                }
+                &:last-child {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+
+    &:hover {
+        .gallery-card-image {
+            &::before {
+                opacity: 1;
+                visibility: visible;
+                background-color: rgba($c-black, 0.6);
+            }
+
+            .icon {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        .caption {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}
