@@ -2,9 +2,8 @@ const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
-const { setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
+const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getData = (req, res) => {
     // Cart converting stuffs

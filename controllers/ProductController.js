@@ -1,8 +1,9 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale } = require("../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas } = require("../helpers/globalFunctions");
 const moment = require("moment");
+const languageHandler = require("../helpers/languageHandler");
 
 const getProductDetails = (req, res) => {
     const { lang } = req.body;
@@ -72,30 +73,44 @@ const getProductDetails = (req, res) => {
 }
 
 const getAllProducts = (req, res) => {
-    const { lang } = req.body;
-    let { category, page } = req.query;
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+    const lang  = req.session.lang;
+    let { category = 0, page = 1 } = req.query;
     let result = [];
+    var metas = {
+        title: languageHandler("general.products", lang),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the product list page",
+        // keywords: []
+    };
+
+    page = parseInt(page);
+    category = parseInt(category);
+
+    if ( isNaN(page) || isNaN(category) ) {
+        return res.status(400).render("400", { current_locale: req.session.lang });
+    }
+
     let sqlQuery = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ?";
 
-    try {
-        category = parseInt(category);
-        page = parseInt(page);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json({ status: "error" });
+    if (typeof page !== "number" || page <= 0) {
+        return res.status(400).render("400", { current_locale: req.session.lang });
     }
 
-    if (!lang || typeof page !== "number" || page <= 0) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    if (typeof category === "number" && category > 0) {
+    if (typeof category === "number" && category !== 0) {
         sqlQuery += " AND category_id = ?";
-    }
-
-    else if (typeof category !== "number") {
-        return res.status(422).json({ status: "error" });
     }
 
     sqlQuery += " LIMIT ? OFFSET ?";
@@ -104,7 +119,7 @@ const getAllProducts = (req, res) => {
     db.query(sqlQuery, (typeof category === "number" && category > 0) ? [1, category, parseInt(process.env.PAGINATION), pageOffset] : [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -134,7 +149,7 @@ const getAllProducts = (req, res) => {
             db.query(selectForPagination, (typeof category === "number" && category > 0) ? [1, category] : 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).json({ status: "error" });
+                    return res.status(500).render("500", { current_locale: req.session.lang });
                 }
 
                 else if (elementsCount) {
@@ -143,7 +158,15 @@ const getAllProducts = (req, res) => {
                     let pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
-                    return res.status(200).json({ status: 'success', pagination: pageCount, result: result ?? [] });
+                    return res.render("pages/products", {
+                        products: result ?? [],
+                        pagination: pageCount,
+                        meta: metas,
+                        current_locale: req.session.lang,
+                        cart: cart,
+                        locales: ['hu', 'sr', 'en'],
+                        languageHandler: languageHandler
+                    });
                 }
             });
         }

@@ -57,16 +57,36 @@ const addCartItem = (req, res) => {
     const lang = req.session.lang;
     var cart = req.session.cart ?? [];
 
-    if (
-            !cartItem.productId
-            || !cartItem.quantity
-        )
+    if ( !cartItem.productId || !cartItem.quantity )
     {
         return res.status(200).json({
             status: 'error',
             title: languageHandler('errors.error', lang),
             message: languageHandler('errors.unprocessable_data', lang)
         });
+    }
+
+    cartItem.productId = parseInt(cartItem.productId);
+    cartItem.quantity = parseInt(cartItem.quantity);
+
+    if ( isNaN(cartItem.productId) || isNaN(cartItem.quantity) ) {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
+        });
+    }
+
+    if ( cart.length > 0 ) {
+        let isAlreadyInCart = cart?.some(item => item.productId === cartItem.productId);
+
+        if ( isAlreadyInCart ) {
+            return res.status(200).json({
+                status: 'error',
+                title: languageHandler('general.information', lang),
+                message: languageHandler('orders.already_added', lang)
+            });
+        }
     }
 
     const cartQuery = "SELECT id, name, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";

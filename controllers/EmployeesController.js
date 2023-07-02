@@ -2,15 +2,26 @@ const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
-const { getCartItems } = require("../helpers/getCartItems");
+const { numberWithCommas } = require('../helpers/globalFunctions');
 
 const getEmployees = (req, res) => {
-    let cart = getCartItems(req, res);
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
     let employees = [];
     var lang = req.session.lang;
     var metas = {
         title: languageHandler("nav.about", lang),
-        type: "article",
+        type: "page",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the about page, here can the guests read about us"
     };
@@ -42,7 +53,7 @@ const getEmployees = (req, res) => {
             });
         }
 
-        return res.render("about", {
+        return res.render("pages/about", {
             employees: employees ?? [],
             pageData: {
                 shortDesc: "Short desc goes here",

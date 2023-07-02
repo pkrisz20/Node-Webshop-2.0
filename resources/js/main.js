@@ -119,16 +119,19 @@ $(document).ready(function() {
     });
 });
 
-$(window).on('scroll', function () {
-    var navbar = $(".js-header");
-    var sticky = navbar.offsetTop;
+$(function() {
+    var header = $(".js-header");
 
-    if (window.pageYOffset >= sticky) {
-        navbar.addClass("header-sticky");
-    }
-    else {
-        navbar.removeClass("header-sticky");
-    }
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+
+        if (scroll > 0) {
+            header.addClass('header-sticky');
+        }
+        else {
+            header.removeClass('header-sticky');
+        }
+    });
 });
 
 // Language dropdown
@@ -285,7 +288,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                     useBootstrap: false,
                     boxWidth: '350px',
                     title: response.title,
-                    content: response.content,
+                    content: response.message,
                     buttons: {
                         OK: {
                             action: function() {

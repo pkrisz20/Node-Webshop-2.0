@@ -2,7 +2,7 @@
     <div class="datetime">
         <time class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></time>
     </div>
-    <a class="image" href="/<%= current_locale %>/blog" aria-label="Navigation to the current blog article - <%= blog.title %>">
+    <a class="image" title="<%= blog.title %>" href="/<%= current_locale %>/blog" aria-label="Navigation to the current blog article - <%= blog.title %>">
         <picture>
             <source srcset="<%= blog.image %>">
             <img loading="lazy" alt="<%= blog.title %>" src="/images/no-picture.jpg">

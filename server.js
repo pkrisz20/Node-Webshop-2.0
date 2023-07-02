@@ -70,17 +70,18 @@ app.use("/:lang", homeRouter);
 
 const employeesRouter = require("./routes/employees");
 app.use("/:lang", employeesRouter);
-// const staticContentsRouter = require("./routes/staticContents");
-// app.use("/api", staticContentsRouter);
-// const productsRouter = require("./routes/products");
+
+const productsRouter = require("./routes/products");
+app.use("/:lang", productsRouter);
 // const blogsRouter = require("./routes/blogs");
 // const galleryRouter = require("./routes/gallery");
 // const contactRouter = require("./routes/contact");
 // const ordersRouter = require("./routes/orders");
 // const searchRouter = require("./routes/search");
 // const adminRouter = require("./routes/admin");
+// const staticContentsRouter = require("./routes/staticContents");
 
-// app.use("/api", productsRouter);
+// app.use("/api", staticContentsRouter);
 // app.use("/api", blogsRouter);
 // app.use("/api", galleryRouter);
 // app.use("/api", contactRouter);
