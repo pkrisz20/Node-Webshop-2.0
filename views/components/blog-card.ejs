@@ -8,7 +8,7 @@
             <img loading="lazy" alt="<%= blog.title %>" src="/images/no-picture.jpg">
         </picture>
     </a>
-    <a href="/<%= current_locale %>/blog" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
+    <a href="/<%= current_locale %>/blog" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
 
     <% if (blog.shortDescription) { %>
         <p class="short"><%= blog.shortDescription %></p>

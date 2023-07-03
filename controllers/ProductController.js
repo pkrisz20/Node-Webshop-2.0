@@ -103,7 +103,7 @@ const getAllProducts = (req, res) => {
         return res.status(400).render("400", { current_locale: req.session.lang });
     }
 
-    let sqlQuery = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ?";
+    let sqlQuery = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC";
 
     if (typeof page !== "number" || page <= 0) {
         return res.status(400).render("400", { current_locale: req.session.lang });
@@ -159,8 +159,10 @@ const getAllProducts = (req, res) => {
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
                     return res.render("pages/products", {
+                        pageCount: pageCount,
+                        currentPage: page,
+                        articleLink: "products",
                         products: result ?? [],
-                        pagination: pageCount,
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,

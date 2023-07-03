@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/faq.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="faq">
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('nav.FAQ', current_locale) %></h1>
+
+                <section class="faq-container">
+                    <% questions.forEach((item, index) => { %>
+                        <div class="faq-container-box js-faq-container">
+                            <header class="faq-header js-toggle-header">
+                                <h2 class="faq-header-question"><%= item.question %></h2>
+                                <i class="fas fa-plus"></i>
+                            </header>
+                            <div class="answer js-answer">
+                                <p class="answer-text"><%= item.answer %></p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </section>
+            </div>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript">
+        $('.js-toggle-header').on('click', function () {
+            var element = $( this ).closest('.js-faq-container').find('.js-answer');
+            element.slideToggle(200);
+            $( this ).toggleClass('active-header');
+        });
+    </script>
+</body>
+</html>

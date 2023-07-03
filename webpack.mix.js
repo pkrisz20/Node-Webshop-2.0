@@ -11,6 +11,7 @@ mix
     .sass("resources/scss/pages/product-list.scss", "public/css")
     .sass("resources/scss/pages/gallery-list.scss", "public/css")
     .sass("resources/scss/pages/blog-list.scss", "public/css")
+    .sass("resources/scss/pages/faq.scss", "public/css")
 
     .version();
 

@@ -1,0 +1,47 @@
+.pagination {
+    margin-bottom: 40px;
+    @include flexBox();
+
+    li {
+      background-color: $c-success;
+      transition: all .3s ease;
+      border-radius: 3px;
+      @include flexBox();
+      margin: 0 5px;
+
+      &.active {
+        background-color: $c-warning;
+      }
+
+      &:hover {
+        &:not(.active) {
+          background-color: $c-light-green2;
+        }
+      }
+
+      @media #{ $r-max-m } {
+        &:not(.arrow) {
+          display: none;
+        }
+      }
+
+      a {
+        padding: 10px;
+        color: $c-white;
+
+        i {
+          color: $c-white;
+          font-size: 18px;
+          margin: 0 5px;
+        }
+      }
+
+      &:first-child {
+        margin-right: 10px;
+      }
+
+      &:last-child {
+        margin-left: 10px;
+      }
+    }
+  }

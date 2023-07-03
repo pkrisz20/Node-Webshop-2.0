@@ -29,15 +29,7 @@
                     <% } %>
                 </section>
 
-                <%# if (pageCount > 1) {
-                    <section class="pagination">
-                         pagination.forEach((paginate, index) => {
-                            <a class="pagination-item" href="= proccess.env.">
-
-                            </a>
-                         })
-                    </section>
-                } #%>
+                <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
             </div>
         </main>
 

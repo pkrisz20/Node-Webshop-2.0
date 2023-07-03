@@ -186,8 +186,10 @@ const getAllBlogs = (req, res) => {
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
                     return res.render("pages/blogs", {
+                        pageCount: pageCount,
+                        currentPage: page,
+                        articleLink: "blogs",
                         blogs: result ?? [],
-                        pagination: pageCount,
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,

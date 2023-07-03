@@ -1,0 +1,79 @@
+@import "../variables.scss";
+@import "../mixins.scss";
+
+.faq {
+    margin: 50px 0;
+
+    .main-title {
+        margin: 0 0 35px;
+
+        @media #{ $r-min-m } {
+            margin: 0 0 75px;
+        }
+    }
+
+    &-container {
+        @include flexBox("center", "flex-start", 40px);
+        flex-direction: column;
+
+        @media #{ $r-min-xl } {
+            @include gridBox("center", 2);
+        }
+
+        &-box {
+            width: 100%;
+
+            .faq-header {
+                border: 1px solid $c-middleblue;
+                background-color: $c-e;
+                position: relative;
+                padding: 15px 35px 15px 15px;
+                cursor: pointer;
+                transition: all .3s ease-in-out;
+
+                &-question {
+                    transition: all .3s ease-in-out;
+                    line-height: 30px;
+                    color: $c-middleblue;
+                    @include resp('font-size', 18px, 20px);
+                }
+
+                &.active-header {
+                    background-color: $c-middleblue;
+
+                    h2 {
+                        color: $c-white;
+                    }
+
+                    i {
+                        transform: translateY(-50%) rotate(135deg);
+                        color: $c-white;
+                    }
+                }
+
+                i {
+                    position: absolute;
+                    top: 50%;
+                    right: 15px;
+                    transform: translateY(-50%);
+                    color: $c-middleblue;
+                    font-size: 20px;
+                    transition: all .3s ease-in-out;
+                }
+            }
+
+            .answer {
+                background-color: $c-d;
+                overflow: hidden;
+                display: none;
+
+                &-text {
+                    @include resp('font-size', 15px, 18px);
+                    @include resp('line-height', 24px, 28px);
+                    color: $c-dark;
+                    margin: 10px;
+                }
+            }
+        }
+    }
+}

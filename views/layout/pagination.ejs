@@ -1,0 +1,21 @@
+<% if (pageCount > 1) { %>
+    <ul class="pagination">
+        <% if ( currentPage > 1 ) { %>
+            <li class="pagination-item arrow">
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= link %>?page=<%= currentPage - 1 %>"><i class="fas fa-chevron-left"></i> <%= languageHandler('general.prev_page', current_locale) %></a>
+            </li>
+        <% } %>
+
+        <% for (var index = 0; index < pageCount; index++) { %>
+            <li class="pagination-item <%= currentPage == index + 1 ? 'active' : ''%>">
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= link %>?page=<%= index + 1 %>"><%= index + 1 %></a>
+            </li>
+        <% } %>
+
+        <% if ( currentPage < pageCount ) { %>
+            <li class="pagination-item arrow">
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= link %>?page=<%= currentPage + 1 %>"><%= languageHandler('general.next_page', current_locale) %> <i class="fas fa-chevron-right"></i></a>
+            </li>
+        <% } %>
+    </ul>
+<% } %>

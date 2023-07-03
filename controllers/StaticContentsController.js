@@ -1,19 +1,38 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
+const languageHandler = require("../helpers/languageHandler");
+const { numberWithCommas } = require("../helpers/globalFunctions");
 
 const getFAQ = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ?";
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
 
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
+    const lang = req.session.lang;
+    let result = [];
+    var metas = {
+        title: languageHandler("nav.FAQ", lang),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the FAQ page",
+        // keywords: []
+    };
+
+    const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ? ORDER BY id DESC";
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -28,7 +47,14 @@ const getFAQ = (req, res) => {
             });
         }
 
-        return res.status(200).json({ status: 'success', result: result ?? [] });
+        return res.render("pages/faq", {
+            questions: result ?? [],
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler
+        });
     });
 }
 

@@ -58,9 +58,12 @@ app.listen(process.env.PORT || 5000, () => {
 const cartRouter = require("./routes/cart");
 app.use("/api", cartRouter);
 
+app.get('/', (req, res) => {
+    res.redirect(`/${ process.env.FALLBACK_LANG }`);
+});
+
 app.use("/:lang", function (req, res, next) {
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
-    console.log(req.session.lang);
     next();
 });
 
@@ -79,13 +82,14 @@ app.use("/:lang", galleryRouter);
 
 const blogsRouter = require("./routes/blogs");
 app.use("/:lang", blogsRouter);
+
+const staticContentsRouter = require("./routes/staticContents");
+app.use("/:lang", staticContentsRouter);
 // const contactRouter = require("./routes/contact");
 // const ordersRouter = require("./routes/orders");
 // const searchRouter = require("./routes/search");
 // const adminRouter = require("./routes/admin");
-// const staticContentsRouter = require("./routes/staticContents");
 
-// app.use("/api", staticContentsRouter);
 // app.use("/api", contactRouter);
 // app.use("/api", ordersRouter);
 // app.use("/api", searchRouter);

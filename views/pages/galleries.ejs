@@ -28,6 +28,8 @@
                         </div>
                     <% } %>
                 </section>
+
+                <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
             </div>
         </main>
 
