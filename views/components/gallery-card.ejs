@@ -1,4 +1,4 @@
-<a class="gallery-card" href="/<%= current_locale %>/gallery">
+<a class="gallery-card" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= galleryItem.slug %>">
     <time class="gallery-card-date"><%= galleryItem.date %></time>
     <figure class="gallery-card-image">
         <picture>

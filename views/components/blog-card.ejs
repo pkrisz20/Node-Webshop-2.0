@@ -2,13 +2,13 @@
     <div class="datetime">
         <time class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></time>
     </div>
-    <a class="image" title="<%= blog.title %>" href="/<%= current_locale %>/blog" aria-label="Navigation to the current blog article - <%= blog.title %>">
+    <a class="image" title="<%= blog.title %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" aria-label="Navigation to the current blog article - <%= blog.title %>">
         <picture>
             <source srcset="<%= blog.image %>">
             <img loading="lazy" alt="<%= blog.title %>" src="/images/no-picture.jpg">
         </picture>
     </a>
-    <a href="/<%= current_locale %>/blog" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
+    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
 
     <% if (blog.shortDescription) { %>
         <p class="short"><%= blog.shortDescription %></p>
@@ -20,5 +20,5 @@
         <p class="bottom-count"><i class="fas fa-comment-dots"></i> <span><%= blog.commentsCount %></span></p>
     </div>
     <small class="blog-card-fulldate"><%= blog.fullDate %></small>
-    <a href="/<%= current_locale %>/blog" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link btn"><%= languageHandler('general.read_more', current_locale) %> <i class="far fa-angle-double-right"></i></a>
+    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link btn"><%= languageHandler('general.read_more', current_locale) %> <i class="far fa-angle-double-right"></i></a>
 </div>

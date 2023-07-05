@@ -12,8 +12,8 @@ productsRouter.route("/products")
 // productsRouter.route("/products/categories")
 //     .post(ProductController.getCategories);
 
-productsRouter.route("/products/:productId")
-    .get(ProductController.getProductDetails);
+productsRouter.route("/products/:slug")
+    .get(getCartItems, ProductController.getProductDetails);
 
 // productsRouter.route("/product/comments")
 //     .post(ProductController.getProductComments);

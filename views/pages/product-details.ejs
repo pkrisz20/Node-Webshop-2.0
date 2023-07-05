@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/product-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="product-details">
+            <div class="wrapper">
+
+                <section class="product-details-section">
+                    <h1 class="main-title"><%= productDetails.name %></h1>
+
+                    <div class="details">
+                        <div class="details-gallery">
+                            <picture>
+                                <source srcset="<%= productDetails.thumbnailImage %>" />
+                                <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg">
+                            </picture>
+                        </div>
+
+                        <div class="details-desc">
+                            <div class="details-desc-active <%= productDetails.isAvailable ? 'green' : 'red' %>">
+                                <% if (productDetails.isAvailable) { %>
+                                    <i class="fas fa-check-circle"></i>
+                                <% } else if (!productDetails.isAvailable) { %>
+                                    <i class="fas fa-times-circle"></i>
+                                <% } %>
+                                <%= productDetails.isAvailable ? languageHandler('products.available', current_locale) : languageHandler('products.out_of_stock', current_locale) %>
+                            </div>
+
+                            <div class="details-desc-active <%= productDetails.isPostable ? 'yellow' : 'black'%>">
+                                <% if (productDetails.isPostable) { %>
+                                    <i class="fas fa-truck"></i>
+                                <% } else if (!productDetails.isPostable) { %>
+                                    <i class="fas fa-exclamation-circle"></i>
+                                <% } %>
+                                <%= productDetails.isPostable ? languageHandler('products.postable', current_locale) : languageHandler('products.not_postable', current_locale) %>
+                            </div>
+
+                            <strong class="details-desc-price"><%= productDetails.isOnDiscount ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
+                            <% if (productDetails.isOnDiscount) { %>
+                                <del class="details-desc-discount-price"><%= productDetails.price %> RSD</del>
+                            <% } %>
+
+                            <div class="details-desc-functions">
+                                <%# v-if="productDetails.isAvailable && !checkInCart(productDetails.id)" %>
+                                <div class="quantities">
+                                    <button type="button" @click="decreaseQuantity()" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                    <input class="quantities-input" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
+                                    <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
+                                </div>
+
+                                <%# <div v-if="checkInCart(productDetails.id)" class="added-cart"><i class="fas fa-coins"></i> {{ $t('orders.already_added') }}</div> %>
+
+                                <%# <button v-if="productDetails.isAvailable && !checkInCart(productDetails.id)" class="details-desc-functions-cart" type="button" @click="addCart(productDetails.id)"><i class="fas fa-shopping-cart"></i> {{ $t('products.add_cart') }}</button> %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (productDetails.description) { %>
+                        <p class="paragraph"><%= productDetails.description %></p>
+                    <% } %>
+                </section>
+
+                <%# <Comments v-if="productDetails.isAllowed" :itemId="productDetails.id" articleType="product" /> %>
+
+                <% if (similarProducts.length > 0) { %>
+                    <section class="products-carousel">
+                        <%- include('../components/block-title.ejs', { title: languageHandler('products.similar_products', current_locale) }) %>
+
+                        <div class="js-featured-products">
+                            <% similarProducts.forEach(item => { %>
+                                <div class="slide">
+                                    <%- include("../components/product-card.ejs", { product: item }) %>
+                                </div>
+                            <% }) %>
+                        </div>
+
+                        <% if (similarProducts.length > 1) { %>
+                            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+                            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+                        <% } %>
+                    </section>
+                <% } %>
+            </div>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

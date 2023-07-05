@@ -14,7 +14,7 @@
                         <figcaption class="overlay_content">
                             <div class="icons">
                                 <i class="fas fa-link"></i>
-                                <a href="/<%= current_locale %>/gallery"><i class="far fa-eye"></i></a>
+                                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= item.slug %>"><i class="far fa-eye"></i></a>
                             </div>
                             <% if (item.name) { %>
                                 <h4 class="hover_title"><%= item.name %></h4>
@@ -29,6 +29,6 @@
         </div>
     </div>
     <div class="more">
-        <a class="more-button" href="/<%= current_locale %>/gallery"><i class="fas fa-arrow-right"></i> <%= languageHandler("nav.watch_gallery", current_locale) %></a>
+        <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><i class="fas fa-arrow-right"></i> <%= languageHandler("nav.watch_gallery", current_locale) %></a>
     </div>
 </section>

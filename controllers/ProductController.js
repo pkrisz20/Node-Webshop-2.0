@@ -6,23 +6,31 @@ const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 
 const getProductDetails = (req, res) => {
-    const { lang } = req.body;
-    let { productId } = req.params;
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+    const lang = req.session.lang;
+    let { slug } = req.params;
     let result = {};
     let similarProducts = [];
 
-    if (!lang || !productId) {
-        return res.status(400).json({ status: "error" });
-    }
+    const sqlQuery = "SELECT id, name, description, images, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count, comments_allowed, category_id FROM products WHERE is_active = ? AND slug = ?";
 
-    const sqlQuery = "SELECT id, name, description, images, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count, comments_allowed, category_id FROM products WHERE is_active = ? AND id = ?";
+    const similarProductsQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
 
-    const similarProductsQuery = "SELECT products.id, products.name, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
-
-    db.query(sqlQuery, [1, productId], (err, data) => {
+    db.query(sqlQuery, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -32,19 +40,19 @@ const getProductDetails = (req, res) => {
                 description: getValueByLanguage(data[0].description, lang),
                 thumbnailImage: imagePathConverter(data[0].image_thumbnail, "products"),
                 images: imagePathConverter(JSON.parse(data[0].images), "products"),
-                price: data[0].price,
+                price: numberWithCommas(data[0].price),
                 isOnDiscount: Boolean(data[0].discount_value),
-                discount: data[0].discount_value,
+                discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
                 isAvailable: Boolean(data[0].is_available),
                 isPostable: Boolean(data[0].is_delivered),
                 maxQuantity: parseInt(data[0].max_order_count),
                 isAllowed: Boolean(data[0].comments_allowed)
             }
 
-            db.query(similarProductsQuery, [1, data[0].category_id, productId], (err, similars) => {
+            db.query(similarProductsQuery, [1, data[0].category_id, data[0].id], (err, similars) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).json({ status: "error" });
+                    return res.status(500).render("500", { current_locale: req.session.lang });
                 }
 
                 else if (similars.length > 0) {
@@ -53,10 +61,11 @@ const getProductDetails = (req, res) => {
                         let tempObject = {
                             id: parseInt(element.id),
                             name: getValueByLanguage(element.name, lang),
+                            slug: element.slug,
                             image: imagePathConverter(element.image_thumbnail, "products"),
-                            price: element.price,
+                            price: numberWithCommas(element.price),
                             isOnDiscount: Boolean(element.discount_value),
-                            discount: element.discount_value,
+                            discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
                             isAvailable: Boolean(element.is_available),
                             isPostable: Boolean(element.is_delivered),
                             maxQuantity: parseInt(element.max_order_count)
@@ -66,7 +75,23 @@ const getProductDetails = (req, res) => {
                     });
                 }
 
-                return res.status(200).json({ status: 'success', result: result, similar: similarProducts ?? [] });
+                var metas = {
+                    title: result.name,
+                    type: "article",
+                    image: `${ process.env.APP_URL }/images/logo.png`,
+                    description: `This is the product details page for ${ result.name }`,
+                    // keywords: []
+                };
+
+                return res.render("pages/product-details", {
+                    productDetails: result,
+                    similarProducts: similarProducts ?? [],
+                    meta: metas,
+                    current_locale: req.session.lang,
+                    cart: cart,
+                    locales: ['hu', 'sr', 'en'],
+                    languageHandler: languageHandler
+                });
             });
         }
     });
@@ -103,7 +128,7 @@ const getAllProducts = (req, res) => {
         return res.status(400).render("400", { current_locale: req.session.lang });
     }
 
-    let sqlQuery = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC";
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC";
 
     if (typeof page !== "number" || page <= 0) {
         return res.status(400).render("400", { current_locale: req.session.lang });
@@ -127,10 +152,11 @@ const getAllProducts = (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.name, lang),
+                    slug: element.slug,
                     image: imagePathConverter(element.image_thumbnail, "products"),
-                    price: element.price,
+                    price: numberWithCommas(element.price),
                     isOnDiscount: Boolean(element.discount_value),
-                    discount: element.discount_value,
+                    discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
                     isAvailable: Boolean(element.is_available),
                     isPostable: Boolean(element.is_delivered),
                     maxQuantity: parseInt(element.max_order_count)

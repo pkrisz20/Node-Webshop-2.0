@@ -132,7 +132,7 @@ const getAllBlogs = (req, res) => {
         return res.status(400).render("400", { current_locale: req.session.lang });
     }
 
-    const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
+    const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
 
     if (typeof page !== "number" || page <= 0) {
         return res.status(400).render("400", { current_locale: req.session.lang });
@@ -154,6 +154,7 @@ const getAllBlogs = (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     title: getValueByLanguage(element.title, lang),
+                    slug: element.slug,
                     shortDescription: getValueByLanguage(element.short_description, lang),
                     image: imagePathConverter(element.image_thumbnail, "blogs"),
                     author: element.author,

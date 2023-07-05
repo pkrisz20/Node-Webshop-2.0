@@ -34,11 +34,11 @@ const getData = (req, res) => {
     };
 
     // PRODUCTS
-    const sqlQueryProducts = "SELECT id, name, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
+    const sqlQueryProducts = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
     // BLOGS
-    const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
+    const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
-    const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id ORDER BY galleries.gallery_date DESC";
+    const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id ORDER BY galleries.gallery_date DESC";
     // HEROS
     const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ? ORDER BY id DESC";
     // CATEGORIES
@@ -57,10 +57,11 @@ const getData = (req, res) => {
                 let tempObjectProduct = {
                     id: parseInt(product_element.id),
                     name: getValueByLanguage(product_element.name, lang),
+                    slug: product_element.slug,
                     image: imagePathConverter(product_element.image_thumbnail, "products"),
                     price: numberWithCommas(product_element.price),
                     isOnDiscount: Boolean(product_element.discount_value),
-                    discount: product_element.discount_value,
+                    discount: product_element.discount_value != null ? numberWithCommas(product_element.discount_value) : null,
                     isAvailable: Boolean(product_element.is_available),
                     isPostable: Boolean(product_element.is_delivered),
                     maxQuantity: parseInt(product_element.max_order_count)
@@ -81,6 +82,7 @@ const getData = (req, res) => {
                         let tempObjectBlog = {
                             id: parseInt(blog_element.id),
                             title: getValueByLanguage(blog_element.title, lang),
+                            slug: blog_element.slug,
                             shortDescription: getValueByLanguage(blog_element.short_description, lang),
                             image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
                             author: blog_element.author,
@@ -132,6 +134,7 @@ const getData = (req, res) => {
                                         let tempObjectGallery = {
                                             id: parseInt(gallery_element.id),
                                             name: getValueByLanguage(gallery_element.gallery_name, lang),
+                                            slug: gallery_element.slug,
                                             source: imagePathConverter(gallery_element.gallery_thumbnail, "gallery"),
                                             category: getValueByLanguage(gallery_element.category_name, lang)
                                         }

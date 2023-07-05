@@ -28,7 +28,7 @@ const getAllGallery = (req, res) => {
         description: "This is the gallery list page",
         // keywords: []
     };
-    const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.gallery_date, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE (galleries.is_active = ? AND galleries.category_id = categories.id) ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
+    const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE (galleries.is_active = ? AND galleries.category_id = categories.id) ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
 
     page = parseInt(page);
 
@@ -55,6 +55,7 @@ const getAllGallery = (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.gallery_name, lang),
+                    slug: element.slug,
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
                     date: moment(element.gallery_date).format("YYYY. MMMM DD."),
                     category: getValueByLanguage(element.category_name, lang)
