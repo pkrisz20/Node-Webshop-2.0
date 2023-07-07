@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div class="functions">
-                                    <a href="/<%= current_locale %>/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                     <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" data-id="<%= cartItem.productId %>" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>

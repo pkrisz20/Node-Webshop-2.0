@@ -22,6 +22,7 @@ const getProductDetails = (req, res) => {
     let { slug } = req.params;
     let result = {};
     let similarProducts = [];
+    let isAlreadyInCart = false;
 
     const sqlQuery = "SELECT id, name, description, images, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count, comments_allowed, category_id FROM products WHERE is_active = ? AND slug = ?";
 
@@ -39,7 +40,7 @@ const getProductDetails = (req, res) => {
                 name: getValueByLanguage(data[0].name, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 thumbnailImage: imagePathConverter(data[0].image_thumbnail, "products"),
-                images: imagePathConverter(JSON.parse(data[0].images), "products"),
+                images: imagePathConverter(JSON.parse(data[0].images), "products") ?? [],
                 price: numberWithCommas(data[0].price),
                 isOnDiscount: Boolean(data[0].discount_value),
                 discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
@@ -83,8 +84,11 @@ const getProductDetails = (req, res) => {
                     // keywords: []
                 };
 
+                isAlreadyInCart = cart.items?.some(cartItem => cartItem.productId == result.id);
+
                 return res.render("pages/product-details", {
                     productDetails: result,
+                    isAlreadyInCart: isAlreadyInCart ?? false,
                     similarProducts: similarProducts ?? [],
                     meta: metas,
                     current_locale: req.session.lang,
@@ -164,6 +168,20 @@ const getAllProducts = (req, res) => {
 
                 result.push(tempObject);
             });
+
+            // TODO: Finish the checking method
+            // Check for is the product already in the cart
+            cart?.items?.forEach(resultItem => {
+
+                result = result.map(cartItem => {
+
+                    if (cartItem.productId === resultItem.id) {
+                        isAlreadyInCart: cartItem.productId === resultItem.id
+                    }
+                });
+            });
+
+            isAlreadyInCart = cart.items?.some(cartItem => cartItem.productId == result.id);
 
             let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products WHERE products.is_active = ?";
 

@@ -118,6 +118,9 @@ const addCartItem = (req, res) => {
                 });
             }
 
+            console.log(getValueByLanguage(data[0].name, lang));
+            console.log(lang);
+
             let resultItem = {
                 productId: data[0].id,
                 productName: getValueByLanguage(data[0].name, lang),

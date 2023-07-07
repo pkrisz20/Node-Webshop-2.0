@@ -59,7 +59,7 @@ const cartRouter = require("./routes/cart");
 app.use("/api", cartRouter);
 
 app.get('/', (req, res) => {
-    res.redirect(`/${ process.env.FALLBACK_LANG }`);
+    res.redirect(`/${ req.session.lang ?? process.env.FALLBACK_LANG }`);
 });
 
 app.use("/:lang", function (req, res, next) {

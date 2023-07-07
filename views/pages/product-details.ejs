@@ -3,6 +3,7 @@
     <%- include('../layout/head.ejs') %>
 
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/product-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 
@@ -19,12 +20,25 @@
                     <h1 class="main-title"><%= productDetails.name %></h1>
 
                     <div class="details">
-                        <div class="details-gallery">
+                        <div class="details-gallery js-gallery-thumb">
                             <picture>
                                 <source srcset="<%= productDetails.thumbnailImage %>" />
                                 <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg">
                             </picture>
                         </div>
+
+                        <% if (productDetails.images.length > 0) { %>
+                            <div class="js-gallery hide">
+                                <div data-src="<%= productDetails.thumbnailImage %>">
+                                    <img src="<%= productDetails.thumbnailImage %>" alt="Image thumbnail">
+                                </div>
+                                <% productDetails.images.forEach((image, index) => { %>
+                                    <div data-src="<%= image %>">
+                                        <img src="<%= image %>" alt="<%= `Image ${ index }` %>">
+                                    </div>
+                                <% }) %>
+                            </div>
+                        <% } %>
 
                         <div class="details-desc">
                             <div class="details-desc-active <%= productDetails.isAvailable ? 'green' : 'red' %>">
@@ -51,16 +65,18 @@
                             <% } %>
 
                             <div class="details-desc-functions">
-                                <%# v-if="productDetails.isAvailable && !checkInCart(productDetails.id)" %>
-                                <div class="quantities">
-                                    <button type="button" @click="decreaseQuantity()" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                    <input class="quantities-input" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
+
+                                <div class="quantities js-quantities" style="display: <%= (productDetails.isAvailable && !isAlreadyInCart) ? 'inline-flex' : 'none' %>;">
+                                    <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
+                                    <input class="quantities-input js-product-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
                                     <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
                                 </div>
 
-                                <%# <div v-if="checkInCart(productDetails.id)" class="added-cart"><i class="fas fa-coins"></i> {{ $t('orders.already_added') }}</div> %>
+                                <div class="added-cart <%= isAlreadyInCart ? 'show' : 'hide' %>"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
 
-                                <%# <button v-if="productDetails.isAvailable && !checkInCart(productDetails.id)" class="details-desc-functions-cart" type="button" @click="addCart(productDetails.id)"><i class="fas fa-shopping-cart"></i> {{ $t('products.add_cart') }}</button> %>
+                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                    <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -99,6 +115,21 @@
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript">
+        var gallery = $('.js-gallery div').simpleLightbox({
+            focus: false,
+            doubleTapZoom: 2,
+            maxZoom: 6,
+            loop: true,
+            showCounter: true,
+            sourceAttr:'data-src'
+        });
+
+        $('body').on('click', '.js-gallery-thumb', function () {
+            gallery.open();
+        });
+    </script>
 </body>
 </html>
