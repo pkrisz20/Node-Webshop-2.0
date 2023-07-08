@@ -66,13 +66,17 @@
 
                             <div class="details-desc-functions">
 
-                                <div class="quantities js-quantities" style="display: <%= (productDetails.isAvailable && !isAlreadyInCart) ? 'inline-flex' : 'none' %>;">
-                                    <button type="button" class="quantities-btn minus"><i class="fas fa-minus"></i></button>
-                                    <input class="quantities-input js-product-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
-                                    <button type="button" class="quantities-btn plus"><i class="fas fa-plus"></i></button>
-                                </div>
+                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                    <div class="quantities js-quantities">
+                                        <button type="button" class="quantities-btn minus js-details-quantity-btn"><i class="fas fa-minus"></i></button>
+                                        <input class="quantities-input js-product-details-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
+                                        <button type="button" class="quantities-btn plus js-details-quantity-btn"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                <% } %>
 
-                                <div class="added-cart <%= isAlreadyInCart ? 'show' : 'hide' %>"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
+                                <% if (isAlreadyInCart) { %>
+                                    <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
+                                <% } %>
 
                                 <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
                                     <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
@@ -118,18 +122,45 @@
     <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript">
-        var gallery = $('.js-gallery div').simpleLightbox({
-            focus: false,
-            doubleTapZoom: 2,
-            maxZoom: 6,
-            loop: true,
-            showCounter: true,
-            sourceAttr:'data-src'
+        $('body').on("click", ".js-details-quantity-btn", function (event) {
+            event.preventDefault();
+            var quantity_wrapper = $(this).closest('.js-quantities');
+            var quantity = quantity_wrapper.find('.js-product-details-quantity');
+            var value = parseInt(quantity.val());
+
+            if ( $(this).hasClass('minus') && value > 1 ) {
+                value = value - 1;
+            }
+            else if ( $(this).hasClass('plus') ) {
+                value = value + 1;
+            }
+
+            quantity.val(value);
         });
 
-        $('body').on('click', '.js-gallery-thumb', function () {
-            gallery.open();
+        $('body').on("change", ".js-product-details-quantity", function (event) {
+            event.preventDefault();
+            var this_button = $('.js-details-quantity-btn');
+            var quantity = null;
+            quantity = $(event.target).val();
+            quantity = parseInt(quantity);
         });
     </script>
+    <% if (productDetails.images.length > 0) { %>
+        <script type="text/javascript">
+            var gallery = $('.js-gallery div').simpleLightbox({
+                focus: false,
+                doubleTapZoom: 2,
+                maxZoom: 6,
+                loop: true,
+                showCounter: true,
+                sourceAttr:'data-src'
+            });
+
+            $('body').on('click', '.js-gallery-thumb', function () {
+                gallery.open();
+            });
+        </script>
+    <% } %>
 </body>
 </html>

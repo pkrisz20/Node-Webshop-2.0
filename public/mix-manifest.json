@@ -1,10 +1,12 @@
 {
-    "/js/main.js": "/js/main.js?id=72f651f25d6062ec4e3ea0a9cefd5ad9",
+    "/js/main.js": "/js/main.js?id=725f45e2f968781db3b840dff4cf605f",
     "/css/gallery-list.css": "/css/gallery-list.css?id=e4cdf2b782b20e7c432e1114554d66b3",
     "/css/product-list.css": "/css/product-list.css?id=383e4c6536fd69913a5609ea54ec455b",
     "/css/about.css": "/css/about.css?id=ca6858dc112a0b12eb2a56ae85ffa269",
     "/css/home.css": "/css/home.css?id=2cfdbe20ea6c4fd3d5a70e2e7fd21220",
     "/css/main.css": "/css/main.css?id=8977548892e20e8e40bddad3d9d658f0",
+    "/css/blog-details.css": "/css/blog-details.css?id=444142b5069e4d5be3031e977e7c99af",
+    "/css/gallery-details.css": "/css/gallery-details.css?id=46e331c18e149213316d6dc20c9d6183",
     "/css/product-details.css": "/css/product-details.css?id=62f9b2d4fc997ff9a3064f96cd50dc19",
     "/css/faq.css": "/css/faq.css?id=89cf499cbc70e8669dea3cf8373e77c5",
     "/css/blog-list.css": "/css/blog-list.css?id=efcdfe4303da6a138b48c823df647f6c",
@@ -53,6 +55,5 @@
     "/images/worker2.jpg": "/images/worker2.jpg?id=68a0147849f2540ed9a2956679402d59",
     "/css/plugins/jquery-confirm.css": "/css/plugins/jquery-confirm.css?id=2537809298493b71ab153892bb037f59",
     "/css/plugins/lightbox.min.css": "/css/plugins/lightbox.min.css?id=d3f76864d49381a2b16cf4d8f29d3d57",
-    "/css/plugins/lightgallery.min.css": "/css/plugins/lightgallery.min.css?id=d3f76864d49381a2b16cf4d8f29d3d57",
     "/css/plugins/slick.min.css": "/css/plugins/slick.min.css?id=72bdc86c8d50acd5528c93d6bcb36d23"
 }

@@ -1,0 +1,96 @@
+@import "../variables.scss";
+@import "../mixins.scss";
+
+@import "../components/gallery-card.scss";
+
+.gallery-details {
+    padding: 40px 0;
+    background-color: $c-grayF9;
+
+    &-date {
+        display: block;
+        font-size: 22px;
+        color: $c-dark-blue;
+        font-weight: 600;
+        margin: 0 0 30px;
+    }
+
+    .main-title {
+        margin: 0 0 25px;
+
+        @media #{ $r-min-m } {
+            margin: 0 0 60px;
+        }
+    }
+
+    .gallery {
+        &-grid {
+            @include flexBox("center", "center", 25px);
+            flex-direction: column;
+
+            @media #{ $r-max-s } {
+                margin: 0 auto;
+                max-width: 350px;
+            }
+
+            @media #{ $r-min-s } {
+                @include gridBox("center", 2, 10px, 10px);
+            }
+
+            @media #{ $r-min-m } {
+                @include gridBox("center", 3, 10px, 10px);
+            }
+
+            @media #{ $r-min-l } {
+                @include gridBox("center", 4, 10px, 10px);
+            }
+
+            &-item {
+                @include flexBox();
+                cursor: pointer;
+                position: relative;
+                border-radius: 5px;
+                overflow: hidden;
+                width: 100%;
+
+                &::after {
+                    @include absoluteFullSize();
+                    content: "";
+                    background-color: rgba($c-black, .75);
+                    transition: all .3s ease-in-out;
+                    opacity: 0;
+                    visibility: hidden;
+                }
+
+                &:hover::after {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                &:hover {
+                    .icon {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+
+                picture {
+                    @include paddingBottom(200, 277);
+                }
+
+                .icon {
+                    @include absoluteCenter();
+                    z-index: 10;
+                    transition: all .3s ease-in-out;
+                    opacity: 0;
+                    visibility: hidden;
+
+                    i {
+                        color: $c-white;
+                        font-size: 40px;
+                    }
+                }
+            }
+        }
+    }
+}

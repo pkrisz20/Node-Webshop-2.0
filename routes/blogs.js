@@ -9,7 +9,7 @@ const { getCartItems } = require("../helpers/getCartItems");
 blogsRouter.route("/blogs")
     .get(getCartItems, BlogsController.getAllBlogs);
 
-blogsRouter.route("/blogs/:blogId")
+blogsRouter.route("/blog/:slug")
     .get(getCartItems, BlogsController.getBlogDetails);
 
 // blogsRouter.route("/blog/comments")

@@ -6,26 +6,34 @@ const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("..
 const languageHandler = require("../helpers/languageHandler");
 
 const getBlogDetails = (req, res) => {
-    const { lang } = req.body;
-    let { blogId } = req.params;
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+    const lang = req.session.lang;
+    let { slug } = req.params;
     let result = {};
     let newestBlogsArray = [];
     let incommingEvents = [];
 
-    if (!lang || !blogId) {
-        return res.status(400).json({ status: "error" });
-    }
+    const blogDetailsQuery = "SELECT id, title, description, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
-    const blogDetailsQuery = "SELECT id, title, description, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND id = ?";
+    const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND (blogs.date BETWEEN ? AND ?) AND blogs.id != ?";
 
-    const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND (blogs.date BETWEEN ? AND ?)";
+    const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ?";
 
-    const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ?";
-
-    db.query(blogDetailsQuery, [1, blogId], (err, data) => {
+    db.query(blogDetailsQuery, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -40,16 +48,25 @@ const getBlogDetails = (req, res) => {
                 date: moment(data[0].date).format("YYYY. MMMM DD.").toLocaleLowerCase()
             }
 
+            var metas = {
+                title: result.title,
+                type: "article",
+                image: `${ process.env.APP_URL }/images/logo.png`,
+                description: `This is the details blog page of ${ result.title }`,
+                // keywords: []
+            };
+
             db.query(newestBlogsQuery,
                 [
                     1,
                     moment(new Date()).subtract(3, 'months').format("YYYY-MM-DD"),
-                    moment(new Date()).format("YYYY-MM-DD")
+                    moment(new Date()).format("YYYY-MM-DD"),
+                    result.id
                 ], (err, newestBlog) => {
 
                 if (err) {
                     console.log(err);
-                    return res.status(500).json({ status: "error" });
+                    return res.status(500).render("500", { current_locale: req.session.lang });
                 }
 
                 else if (newestBlog.length > 0) {
@@ -57,6 +74,7 @@ const getBlogDetails = (req, res) => {
                         let tempObject = {
                             id: parseInt(element.id),
                             title: getValueByLanguage(element.title, lang),
+                            slug: element.slug,
                             shortDescription: getValueByLanguage(element.short_description, lang),
                             image: imagePathConverter(element.image_thumbnail, "blogs"),
                             author: element.author,
@@ -79,7 +97,7 @@ const getBlogDetails = (req, res) => {
                 db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD")], (err, incommingEvent) => {
                     if (err) {
                         console.log(err);
-                        return res.status(500).json({ status: "error" });
+                        return res.status(500).render("500", { current_locale: req.session.lang });
                     }
 
                     else if (incommingEvent.length > 0) {
@@ -87,6 +105,7 @@ const getBlogDetails = (req, res) => {
                             let tempObject = {
                                 id: parseInt(element.id),
                                 title: getValueByLanguage(element.title, lang),
+                                slug: element.slug,
                                 image: imagePathConverter(element.image_thumbnail, "blogs"),
                                 date: moment(element.date).fromNow(),
                             }
@@ -95,7 +114,16 @@ const getBlogDetails = (req, res) => {
                         });
                     }
 
-                    return res.status(200).json({ status: 'success', result: result, newestBlogs: newestBlogsArray ?? [], nextEvents: incommingEvents ?? [] });
+                    return res.render("pages/blog-details", {
+                        blogDetails: result,
+                        newestBlogs: newestBlogsArray ?? [],
+                        nextEvents: incommingEvents ?? [],
+                        meta: metas,
+                        current_locale: req.session.lang,
+                        cart: cart,
+                        locales: ['hu', 'sr', 'en'],
+                        languageHandler: languageHandler
+                    });
                 });
             });
         }

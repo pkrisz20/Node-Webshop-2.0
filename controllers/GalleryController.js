@@ -103,22 +103,30 @@ const getAllGallery = (req, res) => {
 }
 
 const getGalleryDetails = (req, res) => {
-    const { lang } = req.body;
-    let { galleryId } = req.params;
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+    const lang = req.session.lang;
+    let { slug } = req.params;
     let result = {};
 
-    if (!lang || !galleryId) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    const sqlGalleryDetails = "SELECT gallery_name, gallery_date, gallery_images FROM galleries WHERE is_active = ? AND id = ?";
+    const sqlGalleryDetails = "SELECT gallery_name, gallery_date, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
 
     setMomentLocale(lang);
 
-    db.query(sqlGalleryDetails, [1, galleryId], (err, data) => {
+    db.query(sqlGalleryDetails, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
         else if (data.length > 0) {
@@ -129,7 +137,22 @@ const getGalleryDetails = (req, res) => {
             }
         }
 
-        return res.status(200).json({ status: 'success', result: result ?? "" });
+        var metas = {
+            title: result.galleryName,
+            type: "article",
+            image: `${ process.env.APP_URL }/images/logo.png`,
+            description: `This is the ${ result.galleryName } gallery`,
+            // keywords: []
+        };
+
+        return res.render("pages/gallery-details", {
+            galleryData: result,
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler
+        });
     });
 }
 

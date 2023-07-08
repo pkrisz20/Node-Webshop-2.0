@@ -70,6 +70,13 @@ const getData = (req, res) => {
                 products.push(tempObjectProduct);
             });
 
+            let productIdsInCart = cart?.items?.map(item => item.productId);
+
+            products?.forEach(resultItem => {
+
+                resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
+            });
+
             db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
                 if (blog_err) {
                     console.log(blog_err);

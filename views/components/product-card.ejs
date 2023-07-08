@@ -18,7 +18,7 @@
             <del class="price old"><%= product.price %> RSD</del>
         <% } %>
         <% if (product.already_in_cart) { %>
-            <div class="added-cart"><i class="fas fa-coins"></i><% languageHandler('orders.already_added', current_locale) %></div>
+            <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
         <% } else if (product.isAvailable) { %>
             <button type="button" class="cart-btn js-add-to-cart" data-id="<%= product.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler("products.add_cart", current_locale) %></button>
         <% } else if (!product.isAvailable) { %>

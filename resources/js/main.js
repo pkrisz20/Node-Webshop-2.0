@@ -155,11 +155,12 @@ $('body').on("click", ".js-cart-close", function () {
 $('body').on("click", ".js-add-to-cart", function (event) {
     event.preventDefault();
     var this_button = $(this);
-    var quantity_wrapper = this_button.closest('.js-quantities');
+    // TODO: Fix this sh*t, cause does not work inside product details page
+    var quantity_wrapper = $(this).closest(".js-quantities");
     var quantity = null;
 
     if (quantity_wrapper.length > 0) {
-        quantity = ~~parseInt($('.js-product-quantity').val());
+        quantity = parseInt($('.js-product-details-quantity').val());
     } else {
         quantity = 1;
     }

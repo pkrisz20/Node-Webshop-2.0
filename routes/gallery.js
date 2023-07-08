@@ -6,7 +6,7 @@ const { getCartItems } = require("../helpers/getCartItems");
 galleryRouter.route("/gallery")
     .get(getCartItems, GalleryController.getAllGallery);
 
-galleryRouter.route("/gallery/:galleryId")
+galleryRouter.route("/gallery/:slug")
     .get(getCartItems, GalleryController.getGalleryDetails);
 
 module.exports = galleryRouter;

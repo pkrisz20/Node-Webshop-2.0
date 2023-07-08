@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="footer-top">
         <div class="wrapper">
-            <a class="footer-logo" href="/<%= current_locale %>" aria-label="Link to main page via logo image">
+            <a class="footer-logo" href="<%= process.env.APP_URL %>/<%= current_locale %>" aria-label="Link to main page via logo image">
                 <picture>
                     <source srcset="/images/logo.webp" type="image/webp" />
                     <img alt="Footer logo" loading="lazy" src="/images/logo.png" />
@@ -17,22 +17,22 @@
                     <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0611237896"><i class="fas fa-phone-alt"></i> +061 1237896</a>
                     <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0631234567"><i class="fas fa-phone-alt"></i> +063 1234567</a>
                     <a class="footer-title-link" aria-label="Link to send a mail" href="mail:example@gmail.com"><i class="fas fa-envelope"></i> email@gmail.com</a>
-                    <a class="footer-title-link" aria-label="Link to the map" href="/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> Name of the street, Tornjoš</a>
+                    <a class="footer-title-link" aria-label="Link to the map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> Name of the street, Tornjoš</a>
                 </div>
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.quick_links', current_locale) %></h3>
-                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="/<%= current_locale %>/about"><%= languageHandler('nav.about', current_locale) %></a>
-                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="/<%= current_locale %>/products"><%= languageHandler('general.products', current_locale) %></a>
-                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="/<%= current_locale %>/gallery"><%= languageHandler('nav.gallery', current_locale) %></a>
-                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="/<%= current_locale %>/blogs"><%= languageHandler('nav.blog', current_locale) %></a>
-                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="/<%= current_locale %>/contact"><%= languageHandler('nav.contact', current_locale) %></a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler('nav.about', current_locale) %></a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler('general.products', current_locale) %></a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler('nav.gallery', current_locale) %></a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler('nav.blog', current_locale) %></a>
+                    <a class="footer-title-link" aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/contact"><%= languageHandler('nav.contact', current_locale) %></a>
                 </div>
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.support', current_locale) %></h3>
-                    <a href="/<%= current_locale %>/faq" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-question-circle"></i> <%= languageHandler('nav.FAQ', current_locale) %></a>
-                    <a href="/<%= current_locale %>/termsofuse" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= languageHandler('nav.terms_of_use', current_locale) %></a>
-                    <a href="/<%= current_locale %>/policy" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= languageHandler('nav.privacy_policy', current_locale) %></a>
-                    <a href="/<%= current_locale %>/gdpr" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-database"></i> <%= languageHandler('nav.gdpr', current_locale) %></a>
+                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/faq" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-question-circle"></i> <%= languageHandler('nav.FAQ', current_locale) %></a>
+                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= languageHandler('nav.terms_of_use', current_locale) %></a>
+                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/policy" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= languageHandler('nav.privacy_policy', current_locale) %></a>
+                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/gdpr" aria-label="Navigation link inside the page" class="footer-title-link"><i class="fas fa-database"></i> <%= languageHandler('nav.gdpr', current_locale) %></a>
                 </div>
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('general.follow_us', current_locale) %></h3>

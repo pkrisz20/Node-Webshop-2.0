@@ -25,7 +25,7 @@
           <% locales.forEach(lang => { %>
             <% if(lang != current_locale) { %>
               <li class="dropdown-list-item">
-                <a href="/<%= lang %>">
+                <a href="<%= process.env.APP_URL %>/<%= lang %>">
                   <picture>
                     <source srcset="images/flag-<%= lang %>.webp" type="image/webp" />
                     <img alt="<%= lang %>" loading="egaer" src="images/flag-<%= lang %>.png"/>
@@ -42,7 +42,7 @@
 
   <div class="header-middle">
     <div class="wrapper">
-      <a href="/<%= current_locale %>" class="logo" aria-label="Link to main page via logo image">
+      <a href="<%= process.env.APP_URL %>/<%= current_locale %>" class="logo" aria-label="Link to main page via logo image">
         <picture>
           <source srcset="images/logo.webp" type="image/webp" />
           <img class="logo-img" loading="lazy" src="images/logo.png" alt="Header logo" />
@@ -51,12 +51,12 @@
 
       <nav class="nav">
         <ul>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>"><%= languageHandler("nav.home", current_locale) %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/about"><%= languageHandler("nav.about", current_locale) %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/products"><%= languageHandler("general.products", current_locale) %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery", current_locale) %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/blogs"><%= languageHandler("nav.blog", current_locale) %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/contact"><%= languageHandler("nav.contact", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>"><%= languageHandler("nav.home", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler("nav.about", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("general.products", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler("nav.blog", current_locale) %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/contact"><%= languageHandler("nav.contact", current_locale) %></a></li>
         </ul>
       </nav>
 
@@ -149,12 +149,12 @@
 
       <nav class="nav">
         <ul>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>"><%= languageHandler("nav.home") %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/about"><%= languageHandler("nav.about") %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/products"><%= languageHandler("general.products") %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery") %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/blogs"><%= languageHandler("nav.blog") %></a></li>
-          <li><a aria-label="Navigation link inside the page" href="/<%= current_locale %>/contact"><%= languageHandler("nav.contact") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>"><%= languageHandler("nav.home") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler("nav.about") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("general.products") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler("nav.blog") %></a></li>
+          <li><a aria-label="Navigation link inside the page" href="<%= process.env.APP_URL %>/<%= current_locale %>/contact"><%= languageHandler("nav.contact") %></a></li>
         </ul>
       </nav>
     </div>

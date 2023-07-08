@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/gallery-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="gallery-details">
+            <div class="wrapper">
+                <h1 class="main-title"><%= galleryData.galleryName %></h1>
+
+                <time class="gallery-details-date"><%= galleryData.date %></time>
+
+                <section class="gallery-grid js-gallery">
+                    <% galleryData.galleryImages.forEach((image, index) => { %>
+                        <figure class="gallery-grid-item" data-src="<%= image %>">
+                            <figcaption class="icon">
+                                <i class="far fa-eye"></i>
+                            </figcaption>
+
+                            <picture>
+                                <source srcset="<%= image %>">
+                                <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= galleryData.galleryName %> #<%= index + 1 %>" />
+                            </picture>
+                        </figure>
+                    <% }) %>
+                </section>
+            </div>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript">
+        var gallery = $('.js-gallery figure').simpleLightbox({
+            focus: false,
+            doubleTapZoom: 2,
+            maxZoom: 6,
+            loop: true,
+            showCounter: true,
+            sourceAttr:'data-src'
+        });
+    </script>
+</body>
+</html>

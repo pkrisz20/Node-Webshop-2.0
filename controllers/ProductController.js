@@ -84,7 +84,7 @@ const getProductDetails = (req, res) => {
                     // keywords: []
                 };
 
-                isAlreadyInCart = cart.items?.some(cartItem => cartItem.productId == result.id);
+                isAlreadyInCart = cart?.items?.some(cartItem => cartItem.productId == result.id);
 
                 return res.render("pages/product-details", {
                     productDetails: result,
@@ -169,19 +169,13 @@ const getAllProducts = (req, res) => {
                 result.push(tempObject);
             });
 
-            // TODO: Finish the checking method
             // Check for is the product already in the cart
-            cart?.items?.forEach(resultItem => {
+            let productIdsInCart = cart?.items?.map(item => item.productId);
 
-                result = result.map(cartItem => {
+            result?.forEach(resultItem => {
 
-                    if (cartItem.productId === resultItem.id) {
-                        isAlreadyInCart: cartItem.productId === resultItem.id
-                    }
-                });
+                resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
             });
-
-            isAlreadyInCart = cart.items?.some(cartItem => cartItem.productId == result.id);
 
             let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products WHERE products.is_active = ?";
 
