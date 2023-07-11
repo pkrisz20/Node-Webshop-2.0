@@ -55,7 +55,9 @@
                     </div>
                 </section>
 
-                <%# <Comments v-if="blogDetails.isAllowed" :itemId="blogDetails.id" articleType="blog" /> %>
+                <% if (blogDetails.isAllowed) { %>
+                    <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
+                <% } %>
 
                 <% if (newestBlogs.length > 0) { %>
                     <section class="featured-blogs">
@@ -85,5 +87,8 @@
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <% if (blogDetails.isAllowed) { %>
+        <script type="text/javascript" src="js/comments.js"></script>
+    <% } %>
 </body>
 </html>

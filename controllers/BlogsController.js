@@ -36,6 +36,13 @@ const getBlogDetails = (req, res) => {
             return res.status(500).render("500", { current_locale: req.session.lang });
         }
 
+        else if (data.length == 0) {
+            return res.status(404).render('404', {
+                current_locale: lang ?? process.env.FALLBACK_LANG,
+                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG)
+            });
+        }
+
         else if (data.length > 0) {
             setMomentLocale(lang);
 

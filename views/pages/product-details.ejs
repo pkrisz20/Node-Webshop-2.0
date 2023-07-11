@@ -90,7 +90,9 @@
                     <% } %>
                 </section>
 
-                <%# <Comments v-if="productDetails.isAllowed" :itemId="productDetails.id" articleType="product" /> %>
+                <% if (productDetails.isAllowed) { %>
+                    <%- include('../components/comments.ejs', { itemId: productDetails.id, articleType: "product" }) %>
+                <% } %>
 
                 <% if (similarProducts.length > 0) { %>
                     <section class="products-carousel">
@@ -121,6 +123,9 @@
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
     <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <% if (productDetails.isAllowed) { %>
+        <script type="text/javascript" src="js/comments.js"></script>
+    <% } %>
     <script type="text/javascript">
         $('body').on("click", ".js-details-quantity-btn", function (event) {
             event.preventDefault();
