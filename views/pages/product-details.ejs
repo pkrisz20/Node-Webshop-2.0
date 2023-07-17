@@ -118,14 +118,21 @@
         <%- include('../layout/footer.ejs') %>
     </div>
 
+    <% if (productDetails.isAllowed) { %>
+        <script type="text/javascript">
+            var translations = <%- JSON.stringify(frontTranslations) %>;
+        </script>
+    <% } %>
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
     <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+
     <% if (productDetails.isAllowed) { %>
-        <script type="text/javascript" src="js/comments.js"></script>
+        <script type="text/javascript" src="js/components/comments.js"></script>
     <% } %>
+
     <script type="text/javascript">
         $('body').on("click", ".js-details-quantity-btn", function (event) {
             event.preventDefault();
@@ -151,6 +158,7 @@
             quantity = parseInt(quantity);
         });
     </script>
+
     <% if (productDetails.images.length > 0) { %>
         <script type="text/javascript">
             var gallery = $('.js-gallery div').simpleLightbox({

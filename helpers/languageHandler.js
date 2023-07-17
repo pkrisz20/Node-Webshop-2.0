@@ -1,7 +1,6 @@
 const en = require("../locales/en");
 const sr = require("../locales/sr");
 const hu = require("../locales/hu");
-const frontTranslations = require("../locales/front-translations");
 
 function languageHandler ( key, lang = "en", ...params ) {
 
@@ -33,15 +32,6 @@ function languageHandler ( key, lang = "en", ...params ) {
     }
 
     return translatedText;
-}
-
-function getFrontTranslations (currentLang = "en") {
-
-    // TODO: Finish the front translations getter / setter functions
-    const translations = frontTranslations.filter(lang => lang == currentLang);
-    console.log('translations', translations);
-
-    // return translations;
 }
 
 module.exports = languageHandler;

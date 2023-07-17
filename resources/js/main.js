@@ -119,6 +119,150 @@ $(document).ready(function() {
     });
 });
 
+$('.js-form-validate').not('.inited').each(function () {
+    $(this).validate({
+        ignore: 'input[type=hidden], .select2-search__field, .dont-validate', // ignore hidden fields
+        errorClass: 'form__control--error',
+        focusInvalid: false,
+        normalizer: function (value) {
+            var elem = $(this);
+            var elem_id = elem.attr('id');
+            if (elem.hasClass('js-ck-text') && CKEDITOR && CKEDITOR.instances[elem_id]) {
+                CKEDITOR.instances[elem_id].updateElement();
+                value = CKEDITOR.instances[elem_id].getData();
+            }
+            return $.trim(value);
+        },
+        invalidHandler: function (form, validator) {
+            if (!validator.numberOfInvalids()) {
+                return;
+            }
+
+            var to_elem = $(validator.errorList[0].element).closest('.form__item');
+            if (to_elem.length > 0) {
+                var topY = to_elem.offset().top - $('.js-header').outerHeight() - 10;
+
+                var scrollElement =
+                    window.document.scrollingElement ||
+                    window.document.body ||
+                    window.document.documentElement;
+
+                $(scrollElement).animate({ scrollTop: topY }, 600, 'easeInOutQuad');
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass(errorClass);
+        },
+        // Different components require proper error label placement
+        errorPlacement: function (error, element) {
+            if (element.attr('type') == 'checkbox') {
+                error.insertBefore(element.closest('.form__label')).addClass('validation-invalid-label');
+            }
+            else {
+                error.insertBefore(element).addClass('validation-invalid-label');
+            }
+        },
+        submitHandler: function (form) {
+            // do we have a file uploading?
+            var currently_uploading = $('.file-input.is-locked', $(form));
+            if (currently_uploading.length > 0) {
+                // show a warning
+            }
+            else {
+                var this_button = $('button[type="submit"]', $(form));
+                $.ajax({
+                    type: $(form).prop('method'),
+                    url: $(form).prop('action'),
+                    dataType: 'json',
+                    data: $(form).serializeArray(),
+                    beforeSend: function (jqXHR) {
+                        this_button.addClass('disabled button--loading').attr('disabled', 'disabled').prop('disabled', true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        this_button.removeClass('disabled button--loading').removeAttr('disabled').prop('disabled', false);
+                    },
+                    success: function (response) {
+                        var silent_call = $(form).data('silent');
+                        var response_msg = response.message;
+                        if (response.errors) {
+                            response_msg += '<ul>';
+                            $.each(response.errors, function (key, value) {
+                                response_msg += '<li>' + ($.isArray(value) ? value.join('</li><li>') : value) + '</li>';
+                            });
+                            response_msg += '</ul>';
+                        }
+                        else if (response.status == 'success') {
+
+                            // Users to Trafify
+                            if (response.trafify && typeof tfyq != 'undefined') {
+                                window.tfyq('subtype', response.trafify.method, response.trafify.data);
+                            }
+                            // Subscription to Trafify
+                            if (response.trafify_subscription && typeof tfyq != 'undefined') {
+                                window.tfyq('subtype', response.trafify_subscription.method, response.trafify_subscription.data);
+                            }
+
+                            if (!$(form).data('noReset')) {
+                                form.reset();
+                            }
+                            var success_call = $(form).data('onSuccess');
+                            if (success_call && typeof window[success_call] == 'function') {
+                                window[success_call](response, form);
+                            }
+                            else if (success_call && typeof erdsoft[success_call] == 'function') {
+                                erdsoft[success_call](response, form);
+                            }
+                        }
+                        if (!silent_call) {
+                            erdsoft.openModal({
+                                type: 'alert',
+                                title: response.title || false,
+                                content: response_msg,
+                                buttons: 'Ok'
+                            });
+
+                            if (response.form_response) {
+                                $('.js-pay-form').after(response.form_response);
+                                setTimeout(function () {
+                                    $('form[name="pay_form"]').submit();
+                                }, 1000);
+                            }
+
+                            if (response.redirect_url) {
+                                setTimeout(function () {
+                                    window.location = response.redirect_url;
+                                }, 1000);
+                            }
+                        }
+                    },
+                    // error: function (jqXHR, textStatus, errorThrown) {
+                    //     handleAjaxError(jqXHR, textStatus, errorThrown);
+                    // }
+                });
+            }
+        },
+    });
+    $(this).addClass('inited');
+});
+
+window.translateText = function translateText(key, ...params) {
+
+    let translationText = '';
+    let keys = key.split(".");
+    translationText = translations[keys[0]][keys[1]];
+
+    if (params.length > 0) {
+        params.forEach((paramItem, index) => {
+            translationText = translationText.replace(`{${index}}`, paramItem);
+        });
+    }
+
+    return translationText;
+}
+
 $(function() {
     var header = $(".js-header");
 

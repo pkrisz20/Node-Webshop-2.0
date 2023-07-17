@@ -7,7 +7,7 @@
         <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
     </div>
 
-    <form class="form" @submit.prevent="submitComment()">
+    <form class="form">
         <div class="row">
             <div class="form-row">
                 <input id="full-name" name="full-name" type="text" placeholder="<%= languageHandler('validations.full_name', current_locale) %>" class="form-control" :class="{ 'is-invalid' : $v.fullName.$error }" @keypress="isLetter($event)" />
