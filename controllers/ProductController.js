@@ -23,6 +23,7 @@ const getProductDetails = (req, res) => {
     let { slug } = req.params;
     let result = {};
     let similarProducts = [];
+    let articleComments = [];
     let isAlreadyInCart = false;
 
     const sqlQuery = "SELECT id, name, description, images, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count, comments_allowed, category_id FROM products WHERE is_active = ? AND slug = ?";
@@ -56,6 +57,40 @@ const getProductDetails = (req, res) => {
                 isPostable: Boolean(data[0].is_delivered),
                 maxQuantity: parseInt(data[0].max_order_count),
                 isAllowed: Boolean(data[0].comments_allowed)
+            }
+
+            // Select article comments, if they are not disabled
+            if (result.isAllowed) {
+                const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
+
+                db.query(selectProductComments, [1, result.id], (comments_err, comments_data) => {
+                    if (comments_err) {
+                        console.log(comments_err);
+                        return res.status(500).render("500", { current_locale: lang });
+                    }
+
+                    else if (comments_data.length > 0) {
+                        setMomentLocale(lang);
+
+                        comments_data.forEach(element => {
+                            let tempObject = {
+                                id: parseInt(element.id),
+                                name: element.name,
+                                description: element.comment,
+                                date: element.date,
+                            }
+
+                            articleComments.push(tempObject);
+                        });
+
+                        articleComments = articleComments.map(item => {
+                            return {
+                                ...item,
+                                date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                            };
+                        });
+                    }
+                });
             }
 
             db.query(similarProductsQuery, [1, data[0].category_id, data[0].id], (err, similars) => {
@@ -99,6 +134,7 @@ const getProductDetails = (req, res) => {
                     isAlreadyInCart: isAlreadyInCart ?? false,
                     similarProducts: similarProducts ?? [],
                     frontTranslations: result.isAllowed ? getFrontTranslations(req.session.lang) : {},
+                    articleComments: articleComments ?? [],
                     meta: metas,
                     current_locale: req.session.lang,
                     cart: cart,
@@ -222,48 +258,6 @@ const getAllProducts = (req, res) => {
     });
 }
 
-const getProductComments = (req, res) => {
-    const { lang } = req.body;
-    const { itemId } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT product_comments.id, product_comments.name, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
-
-    if (!lang || !itemId) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, [1, itemId], (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ status: "error" });
-        }
-
-        else if (data.length > 0) {
-            setMomentLocale(lang);
-
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    name: element.name,
-                    description: element.comment,
-                    date: element.date,
-                }
-
-                result.push(tempObject);
-            });
-
-            result = result.map(item => {
-                return {
-                    ...item,
-                    date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
-                };
-            });
-        }
-
-        return res.status(200).json({ status: 'success', comments: result ?? [] });
-    });
-}
-
 const handleProductComment = (req, res) => {
     const { lang } = req.body;
     const { fullName } = req.body;
@@ -318,4 +312,4 @@ const getCategories = (req, res) => {
     });
 };
 
-module.exports = { getProductDetails, getAllProducts, getProductComments, handleProductComment, getCategories };
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategories };

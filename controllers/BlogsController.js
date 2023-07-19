@@ -23,6 +23,7 @@ const getBlogDetails = (req, res) => {
     let result = {};
     let newestBlogsArray = [];
     let incommingEvents = [];
+    let articleComments = [];
 
     const blogDetailsQuery = "SELECT id, title, description, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
@@ -53,6 +54,39 @@ const getBlogDetails = (req, res) => {
                 image: imagePathConverter(data[0].image_thumbnail, "blogs"),
                 isAllowed: Boolean(data[0].comments_allowed),
                 date: moment(data[0].date).format("YYYY. MMMM DD.").toLocaleLowerCase()
+            }
+
+            // Select article comments, if they are not disabled
+            if (result.isAllowed) {
+                const selectBlogComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
+
+                db.query(selectBlogComments, [1, result.id], (comments_err, comments_data) => {
+                    if (comments_err) {
+                        console.log(comments_err);
+                        return res.status(500).render("500", { current_locale: req.session.lang });
+                    }
+
+                    else if (comments_data.length > 0) {
+
+                        comments_data.forEach(element => {
+                            let tempObject = {
+                                id: parseInt(element.id),
+                                name: element.name,
+                                description: element.comment,
+                                date: element.date,
+                            }
+
+                            articleComments.push(tempObject);
+                        });
+
+                        articleComments = articleComments.map(item => {
+                            return {
+                                ...item,
+                                date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                            };
+                        });
+                    }
+                });
             }
 
             var metas = {
@@ -119,6 +153,7 @@ const getBlogDetails = (req, res) => {
                         blogDetails: result,
                         newestBlogs: newestBlogsArray ?? [],
                         nextEvents: incommingEvents ?? [],
+                        articleComments: articleComments ?? [],
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,
@@ -232,48 +267,6 @@ const getAllBlogs = (req, res) => {
     });
 }
 
-const getBlogsComments = (req, res) => {
-    const { lang } = req.body;
-    const { itemId } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
-
-    if (!lang || !itemId) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, [1, itemId], (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ status: "error" });
-        }
-
-        else if (data.length > 0) {
-            setMomentLocale(lang);
-
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    name: element.name,
-                    description: element.comment,
-                    date: element.date,
-                }
-
-                result.push(tempObject);
-            });
-
-            result = result.map(item => {
-                return {
-                    ...item,
-                    date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
-                };
-            });
-        }
-
-        return res.status(200).json({ status: 'success', comments: result ?? [] });
-    });
-}
-
 const handleBlogComment = (req, res) => {
     const { lang } = req.body;
     const { fullName } = req.body;
@@ -297,4 +290,4 @@ const handleBlogComment = (req, res) => {
     });
 }
 
-module.exports = { getAllBlogs, getBlogsComments, getBlogDetails, handleBlogComment };
+module.exports = { getAllBlogs, getBlogDetails, handleBlogComment };

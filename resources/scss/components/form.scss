@@ -29,8 +29,8 @@
         flex-direction: column;
 
         @media #{ $r-min-m } {
-          flex-direction: row;
-          gap: 25px;
+            flex-direction: row;
+            gap: 25px;
         }
     }
 
@@ -54,7 +54,7 @@
                 user-select: none;
 
                 @media #{ $r-min-m } {
-                  font-size: 16px;
+                    font-size: 16px;
                 }
 
                 .checkmark {
@@ -81,38 +81,38 @@
                 }
 
                 &:hover input ~ .checkmark {
-                  background-color: $c-9;
+                    background-color: $c-9;
                 }
 
                 input {
-                  position: absolute;
-                  opacity: 0;
-                  cursor: pointer;
-                  height: 0;
-                  width: 0;
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                    height: 0;
+                    width: 0;
 
-                  &:checked ~ .checkmark {
-                    background-color: $c-theme;
-                  }
+                    &:checked ~ .checkmark {
+                        background-color: $c-theme;
+                    }
 
-                  &:checked ~ .checkmark::after {
-                    display: block;
-                  }
-              }
+                    &:checked ~ .checkmark::after {
+                        display: block;
+                    }
+                }
             }
             span.gdpr-details {
                 color: $c-9;
                 font-size: 14px;
 
                 @media #{ $r-min-m } {
-                  font-size: 16px;
+                    font-size: 16px;
                 }
 
                 a {
                     font-weight: 600;
                     transition: .2s ease-in-out;
                     &:hover {
-                      color: $c-dark-blue;
+                        color: $c-dark-blue;
                     }
                 }
             }
@@ -263,29 +263,29 @@
         transition: all .3s ease-in-out;
 
         @media #{ $r-min-m } {
-          width: 250px;
-          font-size: 18px;
-          line-height: 16px;
-          padding: 20px 0;
+            width: 250px;
+            font-size: 18px;
+            line-height: 16px;
+            padding: 20px 0;
         }
 
         &.disabled {
-          opacity: .5;
-          cursor: not-allowed;
+            opacity: .5;
+            cursor: not-allowed;
         }
 
         &:hover {
-          background-color: $c-light-green;
+            background-color: $c-light-green;
         }
 
         &::after {
-          position: absolute;
-          content: '';
-          width: 100%;
-          height: 4px;
-          left: 0;
-          bottom: 0;
-          background-color: $c-light-green2;
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 4px;
+            left: 0;
+            bottom: 0;
+            background-color: $c-light-green2;
         }
 
         i {

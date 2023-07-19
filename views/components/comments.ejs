@@ -1,5 +1,5 @@
 <section class="comments">
-    <%- include('./block-title.ejs', { title: languageHandler('general.comments', current_locale), subtitle: title: languageHandler('general.comments_subtitle', current_locale) }) %>
+    <%- include('./block-title.ejs', { title: languageHandler('general.comments', current_locale), subtitle: languageHandler('general.comments_subtitle', current_locale) }) %>
 
     <div class="comments-information">
         <i class="fas fa-exclamation-triangle"></i>
@@ -7,33 +7,31 @@
         <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
     </div>
 
-    <form class="form">
+    <form class="form js-form-validate" method="post">
         <div class="row">
             <div class="form-row">
-                <input id="full-name" name="full-name" type="text" placeholder="<%= languageHandler('validations.full_name', current_locale) %>" class="form-control" :class="{ 'is-invalid' : $v.fullName.$error }" @keypress="isLetter($event)" />
-                <label for="full-name" :class="{ 'is-invalid' : $v.fullName.$error }"><%= languageHandler('validations.full_name', current_locale) %></label>
-                <i v-show="$v.fullName.$error" class="fas fa-times"></i>
+                <input id="full-name" name="full-name" type="text" placeholder="<%= languageHandler('validations.full_name', current_locale) %>" class="form-control" />
+                <label for="full-name"><%= languageHandler('validations.full_name', current_locale) %></label>
+                <%# <i class="fas fa-times"></i>
 
-                <div v-if="$v.fullName.$dirty" class="form-row-error">
-                    <span v-if="!$v.fullName.required">{{ $t('validations.required') }}</span>
-                </div>
+                <div class="form-row-error">
+                    <span>{{ $t('validations.required') }}</span>
+                </div> %>
             </div>
 
-            <%# TODO: CONVERT TO SERVER SIDE RENDERING TEMPLATE BELOW THIS LINE %>
-
             <div class="form-row">
-                <input id="comment-email" name="comment-email" type="text" :placeholder="$t('validations.email')" class="form-control" v-model.trim="$v.email.$model" :class="{ 'is-invalid' : $v.email.$error }" />
-                <label for="comment-email" :class="{ 'is-invalid' : $v.email.$error }">{{ $t('validations.email') }}</label>
-                <i v-show="$v.email.$error" class="fas fa-times"></i>
+                <input id="comment-email" name="comment-email" type="text" placeholder="<%= languageHandler('validations.email', current_locale) %>" class="form-control" />
+                <label for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
+                <%# <i v-show="$v.email.$error" class="fas fa-times"></i>
 
                 <div v-if="$v.email.$dirty" class="form-row-error">
                     <span v-if="!$v.email.email">{{ $t('validations.invalid_email') }}</span>
                     <span v-if="!$v.email.required">{{ $t('validations.required') }}</span>
-                </div>
+                </div> %>
             </div>
         </div>
 
-        <div class="form-row">
+        <%#<div class="form-row">
             <textarea id="comment-message" name="comment-message" :placeholder="$t('general.comment')" class="form-control--textarea" rows="10" maxlength="1000" v-model.trim="$v.commentMessage.$model" :class="{ 'is-invalid' : $v.commentMessage.$error }" />
             <label for="comment-message" class="textarea-label" :class="{ 'is-invalid' : $v.commentMessage.$error }">{{ $t('general.comment') }}</label>
             <i v-show="$v.commentMessage.$error" class="fas fa-times textarea-error"></i>
@@ -51,27 +49,32 @@
                 <span class="checkmark"></span>
             </label>
             <span class="gdpr-details">{{ $t('general.details_here') }}: <router-link :to="`/${this.$i18n.locale}/policy`">{{ $t('nav.privacy_policy') }}</router-link></span>
-        </div>
+        </div> %>
 
-        <button :disabled="this.$v.$invalid" :class="{ disabled : this.$v.$invalid }" type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> {{ $t('validations.send') }}</button>
+        <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
     </form>
 
-    <div class="comments-container" v-if="articleComments.length > 0">
-        <div class="comments-container-box" v-for="(comment, index) in articleComments" :key="index">
+    <% if (articleComments.length > 0) { %>
+        <div class="comments-container">
+            <% articleComments.forEach(comment => { %>
+                <div class="comments-container-box">
 
-            <div class="profile-icon">
-                <i class="fas fa-user-circle"></i>
-            </div>
+                    <div class="profile-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
 
-            <div class="content">
-                <strong class="content-name">{{ comment.name }}</strong>
-                <p class="content-comment">{{ comment.description }}</p>
-                <time class="content-date"><i class="fas fa-history"></i> {{ comment.date }}</time>
-            </div>
+                    <div class="content">
+                        <strong class="content-name"><%= comment.name %></strong>
+                        <p class="content-comment"><%= comment.description %></p>
+                        <time class="content-date"><i class="fas fa-history"></i> <%= comment.date %></time>
+                    </div>
+                </div>
+            <% }) %>
         </div>
-    </div>
-    <div class="comments-information no-comment" v-else-if="articleComments.length == 0">
-        <i class="fas fa-info-circle"></i>
-        <p class="comments-information-text">{{ $t('products.no_comment_yet') }}</p>
-    </div>
+    <% } else if (articleComments.length == 0) { %>
+        <div class="comments-information no-comment">
+            <i class="fas fa-info-circle"></i>
+            <p class="comments-information-text"><%= languageHandler('products.no_comment_yet', current_locale) %></p>
+        </div>
+    <% } %>
 </section>

@@ -1,0 +1,141 @@
+.comments {
+    padding: 0;
+
+    & > .header_title {
+        margin-bottom: 40px;
+    }
+
+    &-information {
+        width: 100%;
+        margin: 0 0 40px;
+        padding: 15px 15px 15px 50px;
+        border-radius: 10px;
+        background-color: $c-warning;
+        position: relative;
+
+        @media #{ $r-min-m } {
+            padding: 15px 15px 15px 65px;
+        }
+
+        &.no-comment {
+            margin: 40px 0 0;
+            background-color: $c-info;
+        }
+
+        i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            font-size: 20px;
+            color: $c-white;
+
+            @media #{ $r-min-m } {
+                font-size: 26px;
+            }
+        }
+
+        &-text {
+            color: $c-white;
+            font-size: 14px;
+            line-height: 21px;
+
+            @media #{ $r-min-m } {
+                font-size: 16px;
+                line-height: 26px;
+            }
+
+            a {
+                color: $c-dark-blue;
+                font-weight: 600;
+                transition: .2s ease-in-out;
+
+                &:hover {
+                    color: $c-yellow;
+                }
+            }
+        }
+    }
+
+    &-container {
+        border-top: 1px solid $c-a;
+        margin: 40px 0 0;
+        padding: 40px 0 0;
+
+        &-box {
+            padding: 10px;
+            position: relative;
+            background-color: $c-white;
+            box-shadow: 0 2px 8px rgba($c-black, .4);
+            border-radius: 15px;
+
+            @media #{ $r-min-m } {
+                padding: 15px;
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 30px;
+            }
+
+            .profile-icon {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                @include flexBox();
+
+                @media #{ $r-min-m } {
+                    left: 15px;
+                    top: 15px;
+                }
+
+                i {
+                    font-size: 40px;
+                    color: $c-gray71;
+
+                    @media #{ $r-min-m } {
+                        font-size: 60px;
+                    }
+                }
+            }
+
+            .content {
+                margin-left: 50px;
+
+                @media #{ $r-min-m } {
+                    margin-left: 80px;
+                }
+
+                &-name {
+                    font-size: 16px;
+                    color: $c-dark-blue;
+                    font-weight: 700;
+
+                    @media #{ $r-min-m } {
+                        font-size: 18px;
+                    }
+                }
+                &-comment {
+                    font-size: 14px;
+                    color: $c-2;
+                    line-height: 21px;
+                    font-weight: 400;
+                    margin: 10px 0;
+
+                    @media #{ $r-min-m } {
+                        font-size: 16px;
+                        line-height: 27px;
+                    }
+                }
+                &-date {
+                    color: $c-gray71;
+                    font-size: 15px;
+                    font-weight: 400;
+
+                    i {
+                        transform: translateY(2px);
+                    }
+                }
+            }
+        }
+    }
+}
