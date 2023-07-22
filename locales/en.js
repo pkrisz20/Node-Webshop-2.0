@@ -47,7 +47,8 @@ const en = {
 		gdpr_db_info: "You could make a request, that what kind of data is being stored about You in our database. We won't register this request.",
 		next_page: "Next",
 		prev_page: "Prev",
-		remove: "Remove"
+		remove: "Remove",
+		back_to_home: "Back to home page"
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

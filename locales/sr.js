@@ -47,7 +47,8 @@ const sr = {
         gdpr_db_info: "Možete nam poslati zahtev o tome, koji podaci o Vama čuvamo u našoj bazi podataka. Ne registrujemo ovaj zahtev.",
         next_page: "Sledeći",
         prev_page: "Predhodni",
-		remove: "Izbriši"
+		remove: "Izbriši",
+        back_to_home: "Nazad na naslovnu stranicu"
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

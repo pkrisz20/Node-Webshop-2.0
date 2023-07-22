@@ -98,6 +98,8 @@ app.use("/:lang", staticContentsRouter);
 app.get("*", (req, res) => {
     return res.status(404).render('404', {
         current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
         title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG)
     });
 });

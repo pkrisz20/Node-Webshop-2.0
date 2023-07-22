@@ -36,14 +36,18 @@ const getBlogDetails = (req, res) => {
             console.log(err);
             return res.status(500).render("500", {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
             });
         }
 
         else if (data.length == 0) {
             return res.status(404).render('404', {
                 current_locale: lang ?? process.env.FALLBACK_LANG,
-                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG)
+                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
             });
         }
 
@@ -68,7 +72,9 @@ const getBlogDetails = (req, res) => {
                         console.log(comments_err);
                         return res.status(500).render("500", {
                             title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                            current_locale: req.session.lang
+                            current_locale: req.session.lang,
+                            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
                         });
                     }
 
@@ -109,7 +115,9 @@ const getBlogDetails = (req, res) => {
                     console.log(err);
                     return res.status(500).render("500", {
                         title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang
+                        current_locale: req.session.lang,
+                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
                     });
                 }
 
@@ -143,7 +151,9 @@ const getBlogDetails = (req, res) => {
                         console.log(err);
                         return res.status(500).render("500", {
                             title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                            current_locale: req.session.lang
+                            current_locale: req.session.lang,
+                            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
                         });
                     }
 
@@ -207,7 +217,9 @@ const getAllBlogs = (req, res) => {
     if ( isNaN(page) ) {
         return res.status(400).render("400", {
             title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang
+            current_locale: req.session.lang,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -216,7 +228,9 @@ const getAllBlogs = (req, res) => {
     if (typeof page !== "number" || page <= 0) {
         return res.status(400).render("400", {
             title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang
+            current_locale: req.session.lang,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -229,7 +243,9 @@ const getAllBlogs = (req, res) => {
             console.log(err);
             return res.status(500).render("500", {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
             });
         }
 
@@ -276,7 +292,9 @@ const getAllBlogs = (req, res) => {
                     console.log(err);
                     return res.status(500).render("500", {
                         title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang
+                        current_locale: req.session.lang,
+                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
                     });
                 }
 

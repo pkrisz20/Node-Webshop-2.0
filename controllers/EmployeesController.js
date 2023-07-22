@@ -32,7 +32,9 @@ const getEmployees = (req, res) => {
             console.log(err);
             return res.status(500).render("500", {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
             });
         }
 
