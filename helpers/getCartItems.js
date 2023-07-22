@@ -18,7 +18,10 @@ const getCartItems = (req, res, next) => {
         db.query(`SELECT id, name, price, image_thumbnail, discount_value, max_order_count FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 console.log(err);
-                return res.status(500).render("500", { current_locale: req.session.lang });
+                return res.status(500).render("500", {
+                    title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                    current_locale: req.session.lang
+                });
             }
 
             else if (result.length > 0) {

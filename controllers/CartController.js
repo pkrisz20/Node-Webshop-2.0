@@ -94,7 +94,10 @@ const addCartItem = (req, res) => {
     db.query(cartQuery, cartItem.productId, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", { current_locale: req.session.lang });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang
+            });
         }
 
         else if (data.length > 0) {

@@ -108,6 +108,7 @@ const en = {
 	errors: {
 		error: "Error",
 		common_error: "Something went wrong during the processing!",
+		server_error: "Server error",
 		wrong_data: "Wrong datas!",
 		unprocessable_data: "Unprocessable data types!",
 		not_found: "Page not found",

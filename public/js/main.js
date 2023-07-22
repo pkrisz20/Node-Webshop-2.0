@@ -1,1 +1,753 @@
-(()=>{var t,s={277:()=>{$(document).ready((function(){$(".js-hero-slick").slick({inifinite:!0,slidesToShow:1,autoplay:!0,dots:!1,arrows:!0,appendDots:$(".hero .hero-dots"),prevArrow:$(".hero .slick-prev"),nextArrow:$(".hero .slick-next"),responsive:[{breakpoint:1200,settings:{dots:!0,arrows:!1}}]}),$(".js-categories-carousel").slick({inifinite:!0,slidesToShow:4,slidesToScroll:1,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".featured-categories .slick-prev"),nextArrow:$(".featured-categories .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3}},{breakpoint:768,settings:{slidesToShow:2}},{breakpoint:540,settings:{slidesToShow:1}}]}),$(".js-featured-products").slick({inifinite:!0,slidesToShow:4,slidesToScroll:4,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".products-carousel .slick-prev"),nextArrow:$(".products-carousel .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:768,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:540,settings:{slidesToShow:1,slidesToScroll:1}}]}),$(".js-featured-blogs").slick({inifinite:!0,slidesToShow:4,slidesToScroll:4,autoplay:!1,dots:!1,arrows:!0,prevArrow:$(".featured-blogs .slick-prev"),nextArrow:$(".featured-blogs .slick-next"),responsive:[{breakpoint:1200,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:768,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:540,settings:{slidesToShow:1,slidesToScroll:1}}]})})),$(".js-form-validate").not(".inited").each((function(){$(this).validate({ignore:"input[type=hidden], .dont-validate",errorClass:"is-invalid",focusInvalid:!1,invalidHandler:function(t,s){if(s.numberOfInvalids()){var e=$(s.errorList[0].element).closest(".form-row");if(e.length>0){var a=e.offset().top-$(".js-header").outerHeight()-10;$(scrollElement).scrollTo({top:a,behavior:"smooth"})}}},highlight:function(t,s,e){$(t).addClass(s)},unhighlight:function(t,s,e){$(t).removeClass(s)},submitHandler:function(t){var s=$('button[type="submit"]',$(t));$.ajax({type:$(t).prop("method"),url:$(t).prop("action"),dataType:"json",data:$(t).serializeArray(),beforeSend:function(t){s.addClass("disabled").attr("disabled","disabled").prop("disabled",!0)},complete:function(t,e){s.removeClass("disabled").removeAttr("disabled").prop("disabled",!1)},success:function(s){var e=$(t).data("silent");s.message;if(s.errors)"<ul>",$.each(s.errors,(function(t,s){"<li>"+($.isArray(s)?s.join("</li><li>"):s)+"</li>"})),"</ul>";else if("success"==s.status){$(t).data("noReset")||t.reset();var a=$(t).data("callback");a&&"function"==typeof window[a]&&window[a](s,t)}e||$.alert({useBootstrap:!1,boxWidth:"400px",title:s.title,content:s.content||!1,buttons:{OK:function(){s.redirect_url&&setTimeout((function(){window.location=s.redirect_url}),1e3)}}})}})}}),$(this).addClass("inited")})),window.translateText=function(t){var s="",e=t.split(".");s=translations[e[0]][e[1]];for(var a=arguments.length,n=new Array(a>1?a-1:0),o=1;o<a;o++)n[o-1]=arguments[o];return n.length>0&&n.forEach((function(t,e){s=s.replace("{".concat(e,"}"),t)})),s},$((function(){var t=$(".js-header");$(window).scroll((function(){$(window).scrollTop()>0?t.addClass("header-sticky"):t.removeClass("header-sticky")}))})),$("body").on("mouseenter",".js-lang-switcher",(function(){$(".js-langs-list").addClass("dropdown-list--open")})),$("body").on("mouseleave",".js-lang-switcher",(function(){$(".js-langs-list").removeClass("dropdown-list--open")})),$("body").on("click",".js-cart-btn",(function(){$(".js-cart").addClass("open")})),$("body").on("click",".js-cart-close",(function(){$(".js-cart").removeClass("open")})),$("body").on("click",".js-add-to-cart",(function(t){t.preventDefault();var s=$(this),e=$(this).prev(".js-quantities"),a=null;a=e.length>0?parseInt(e.find(".js-product-details-quantity").val()):1;var n={productId:s.data("id"),quantity:a};$.ajax({type:"post",url:"/api/cart/add",dataType:"json",data:{cartItem:n},beforeSend:function(t){s.addClass("disabled").attr("disabled","disabled").prop("disabled",!0)},complete:function(t,e){s.removeClass("disabled").removeAttr("disabled").prop("disabled",!1)},success:function(t){if("success"==t.status){var s="";$(".js-cart-list").length>0?($.each(t.results,(function(e,a){s+='\n                            <li class="cart-container-list-item js-cart-item">\n                                <div class="cart-product">\n                                    <div class="cart-product-image">\n                                        <picture>\n                                            <source srcset="'.concat(a.image||"",'">\n                                            <img class="cart-product-img" alt="').concat(a.productName,'" loading="lazy" src="images/no-picture.jpg">\n                                        </picture>\n                                    </div>\n\n                                    <div class="cart-product-desc">\n                                        <h5 class="cart-product-desc_name">').concat(a.productName,'</h5>\n\n                                        <div class="quantities">\n                                            <div class="quantities-container js-quantities">\n                                                <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>\n                                                <input class="quantities-input js-product-quantity" data-id="').concat(a.productId,'" type="number" value="').concat(a.quantity,'" min="1" max="').concat(a.maxQuantity,'" />\n                                                <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>\n                                            </div>\n\n                                            <small class="quantities-price"><i class="fas fa-times"></i> <span>').concat(a.price,' RSD</span></small>\n                                        </div>\n\n                                        <div class="functions">\n                                            <a href="/').concat(t.current_locale,'/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>\n                                            <button type="button" value="').concat(t.remove_text,' %>" data-id="').concat(a.productId,'" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </li>')})),$(".js-cart-list").html(s),$("span.js-cart-counter").text(t.totalCount),$("span.js-total-price").text(t.totalPrice)):($(".js-cart-empty").removeClass("show"),$(".js-cart-empty").addClass("hide"),$(".js-cart").append('<h5 class="cart-counter">'.concat(t.ordersCartCountText,': <span class="js-cart-counter">').concat(t.totalCount,'</span></h5>\n                        <div class="cart-container">\n                            <div class="cart-container-top">\n                                <a href="/').concat(t.current_locale,'/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">').concat(t.orderPageText,'</a>\n                                <strong class="cart-container-top_total">').concat(t.totalPriceText,': <span class="js-total-price">').concat(t.totalPrice,'</span><small>RSD</small></strong>\n                            </div>\n\n                            <ul class="cart-container-list js-cart-list">\n                                <li class="cart-container-list-item js-cart-item">\n                                    <div class="cart-product">\n                                        <div class="cart-product-image">\n                                            <picture>\n                                                <source srcset="').concat(t.results[0].image||"",'">\n                                                <img class="cart-product-img" alt="').concat(t.results[0].productName,'" loading="lazy" src="images/no-picture.jpg">\n                                            </picture>\n                                        </div>\n\n                                        <div class="cart-product-desc">\n                                            <h5 class="cart-product-desc_name">').concat(t.results[0].productName,'</h5>\n\n                                            <div class="quantities">\n                                                <div class="quantities-container js-quantities">\n                                                    <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>\n                                                    <input class="quantities-input js-product-quantity" data-id="').concat(t.results[0].productId,'" type="number" value="').concat(t.results[0].quantity,'" min="1" max="').concat(t.results[0].maxQuantity,'" />\n                                                    <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>\n                                                </div>\n\n                                                <small class="quantities-price"><i class="fas fa-times"></i> <span>').concat(t.results[0].price,' RSD</span></small>\n                                            </div>\n\n                                            <div class="functions">\n                                                <a href="/').concat(t.current_locale,'/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>\n                                                <button type="button" value="').concat(t.remove_text,'" data-id="').concat(t.results[0].productId,'" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </li>\n                            </ul>\n                        </div>'))),$(".js-cart").addClass("open"),$.alert({useBootstrap:!1,boxWidth:"350px",title:t.title,content:t.content,buttons:{OK:function(){}}})}else"error"==t.status&&$.confirm({useBootstrap:!1,boxWidth:"350px",title:t.title,content:t.message,buttons:{OK:{action:function(){}}}})}})})),$("body").on("click",".js-remove-cart",(function(t){t.preventDefault();var s=$(this);$.ajax({type:"post",url:"/api/cart/delete",dataType:"json",data:{productId:s.data("id")},beforeSend:function(t){s.addClass("disabled").attr("disabled","disabled").prop("disabled",!0)},complete:function(t,e){s.removeClass("disabled").removeAttr("disabled").prop("disabled",!1)},success:function(t){"success"==t.status?(s.closest(".js-cart-item").remove(),$("span.js-cart-counter").text(t.totalCount),$("span.js-total-price").text(t.totalPrice),t.isEmpty?($(".js-cart-empty").addClass("show"),$(".js-cart-empty").removeClass("hide"),$(".js-total-price").closest(".cart-container-top").remove(),$(".js-cart-counter").closest("h5.cart-counter").remove()):($(".js-cart-empty").addClass("hide"),$(".js-cart-empty").removeClass("show")),$.alert({useBootstrap:!1,boxWidth:"350px",title:t.title,buttons:{OK:function(){}}})):"error"==t.status&&$.confirm({useBootstrap:!1,boxWidth:"350px",title:t.title,content:t.message,buttons:{OK:{action:function(){}}}})}})})),$("body").on("click",".js-quantity-btn",(function(t){t.preventDefault();var s=$(this).closest(".js-quantities").find(".js-product-quantity"),e=parseInt(s.val());$(this).hasClass("minus")&&e>1?e-=1:$(this).hasClass("plus")&&(e+=1),s.val(e),s.trigger("change",s)})),$("body").on("change",".js-product-quantity",(function(t,s){t.preventDefault();var e=$(".js-quantity-btn"),a=null,n=null;s?(n=$(s).val(),a=$(s).data("id")):s||(n=$(t.target).val(),a=$(t.target).data("id")),n=parseInt(n),$.ajax({type:"post",url:"/api/cart/update",dataType:"json",data:{productId:a,quantity:n},beforeSend:function(t){e.addClass("disabled").attr("disabled","disabled").prop("disabled",!0)},complete:function(t,s){e.removeClass("disabled").removeAttr("disabled").prop("disabled",!1)},success:function(e){"success"==e.status?(s?$(s).val(e.newValue):s||$(t.target).val(e.newValue),$(".js-total-price").text(e.totalPrice),$.alert({useBootstrap:!1,boxWidth:"350px",title:e.title,content:e.message,buttons:{OK:function(){}}})):"error"==e.status&&(e.newValue&&(s?$(s).val(e.newValue):s||$(t.target).val(e.newValue)),$.alert({useBootstrap:!1,boxWidth:"350px",title:e.title,content:e.message,buttons:{OK:function(){}}}))}})})),$("body").on("click",".js-search-btn",(function(){$(".js-search-input").focus()}))},962:()=>{},599:()=>{},251:()=>{},459:()=>{},774:()=>{},679:()=>{},775:()=>{},689:()=>{},513:()=>{},724:()=>{}},e={};function a(t){var n=e[t];if(void 0!==n)return n.exports;var o=e[t]={exports:{}};return s[t](o,o.exports,a),o.exports}a.m=s,t=[],a.O=(s,e,n,o)=>{if(!e){var i=1/0;for(d=0;d<t.length;d++){for(var[e,n,o]=t[d],r=!0,c=0;c<e.length;c++)(!1&o||i>=o)&&Object.keys(a.O).every((t=>a.O[t](e[c])))?e.splice(c--,1):(r=!1,o<i&&(i=o));if(r){t.splice(d--,1);var l=n();void 0!==l&&(s=l)}}return s}o=o||0;for(var d=t.length;d>0&&t[d-1][2]>o;d--)t[d]=t[d-1];t[d]=[e,n,o]},a.o=(t,s)=>Object.prototype.hasOwnProperty.call(t,s),(()=>{var t={522:0,713:0,150:0,532:0,449:0,870:0,52:0,597:0,767:0,554:0,385:0};a.O.j=s=>0===t[s];var s=(s,e)=>{var n,o,[i,r,c]=e,l=0;if(i.some((s=>0!==t[s]))){for(n in r)a.o(r,n)&&(a.m[n]=r[n]);if(c)var d=c(a)}for(s&&s(e);l<i.length;l++)o=i[l],a.o(t,o)&&t[o]&&t[o][0](),t[o]=0;return a.O(d)},e=self.webpackChunkWebshop_Node=self.webpackChunkWebshop_Node||[];e.forEach(s.bind(null,0)),e.push=s.bind(null,e.push.bind(e))})(),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(277))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(679))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(775))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(689))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(513))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(724))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(962))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(599))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(251))),a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(459)));var n=a.O(void 0,[713,150,532,449,870,52,597,767,554,385],(()=>a(774)));n=a.O(n)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/main.js":
+/*!******************************!*\
+  !*** ./resources/js/main.js ***!
+  \******************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  $(".js-hero-slick").slick({
+    inifinite: true,
+    slidesToShow: 1,
+    autoplay: true,
+    dots: false,
+    arrows: true,
+    appendDots: $('.hero .hero-dots'),
+    prevArrow: $('.hero .slick-prev'),
+    nextArrow: $('.hero .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        dots: true,
+        arrows: false
+      }
+    }]
+  });
+  $(".js-categories-carousel").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.featured-categories .slick-prev'),
+    nextArrow: $('.featured-categories .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1
+      }
+    }]
+  });
+  $(".js-featured-products").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.products-carousel .slick-prev'),
+    nextArrow: $('.products-carousel .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }]
+  });
+  $(".js-featured-blogs").slick({
+    inifinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: false,
+    dots: false,
+    arrows: true,
+    prevArrow: $('.featured-blogs .slick-prev'),
+    nextArrow: $('.featured-blogs .slick-next'),
+    responsive: [{
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3
+      }
+    }, {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    }, {
+      breakpoint: 540,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }]
+  });
+});
+$('.js-form-validate').not('.inited').each(function () {
+  $(this).validate({
+    ignore: 'input[type=hidden], .dont-validate',
+    errorClass: 'is-invalid',
+    focusInvalid: false,
+    invalidHandler: function invalidHandler(form, validator) {
+      if (!validator.numberOfInvalids()) {
+        return;
+      }
+      var to_elem = $(validator.errorList[0].element).closest('.form-row');
+      if (to_elem.length > 0) {
+        var topY = to_elem.offset().top - $('.js-header').outerHeight() - 10;
+
+        // var scrollElement = window.document.scrollingElement || window.document.body || window.document.documentElement;
+
+        $(scrollElement).scrollTo({
+          top: topY,
+          behavior: "smooth"
+        });
+      }
+    },
+    highlight: function highlight(element, errorClass, validClass) {
+      $(element).addClass(errorClass);
+    },
+    unhighlight: function unhighlight(element, errorClass, validClass) {
+      $(element).removeClass(errorClass);
+    },
+    // errorPlacement: function (error, element) {
+    //     if (element.attr('type') == 'checkbox') {
+    //         error.insertBefore(element.closest('.form__label')).addClass('validation-invalid-label');
+    //     }
+    //     else {
+    //         error.insertBefore(element).addClass('validation-invalid-label');
+    //     }
+    // },
+    submitHandler: function submitHandler(form) {
+      var this_button = $('button[type="submit"]', $(form));
+      $.ajax({
+        type: $(form).prop('method'),
+        url: $(form).prop('action'),
+        dataType: 'json',
+        data: $(form).serializeArray(),
+        beforeSend: function beforeSend(jqXHR) {
+          this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function complete(jqXHR, textStatus) {
+          this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function success(response) {
+          var silent_call = $(form).data('silent');
+          var message = response.message;
+          if (response.errors) {
+            message += '<ul>';
+            $.each(response.errors, function (key, value) {
+              message += '<li>' + ($.isArray(value) ? value.join('</li><li>') : value) + '</li>';
+            });
+            message += '</ul>';
+          } else if (response.status == 'success') {
+            if (!$(form).data('noReset')) {
+              form.reset();
+            }
+            var callbackFunctionOnSuccess = $(form).data('callback');
+            if (callbackFunctionOnSuccess && typeof window[callbackFunctionOnSuccess] == 'function') {
+              window[callbackFunctionOnSuccess](response, form);
+            }
+          }
+          if (!silent_call) {
+            $.alert({
+              useBootstrap: false,
+              boxWidth: '400px',
+              title: response.title,
+              content: response.content || false,
+              buttons: {
+                OK: function OK() {
+                  if (response.redirect_url) {
+                    setTimeout(function () {
+                      window.location = response.redirect_url;
+                    }, 1000);
+                  }
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+  $(this).addClass('inited');
+});
+window.translateText = function translateText(key) {
+  var translationText = '';
+  var keys = key.split(".");
+  translationText = translations[keys[0]][keys[1]];
+  for (var _len = arguments.length, params = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    params[_key - 1] = arguments[_key];
+  }
+  if (params.length > 0) {
+    params.forEach(function (paramItem, index) {
+      translationText = translationText.replace("{".concat(index, "}"), paramItem);
+    });
+  }
+  return translationText;
+};
+$(function () {
+  var header = $(".js-header");
+  $(window).scroll(function () {
+    var scroll = $(window).scrollTop();
+    if (scroll > 0) {
+      header.addClass('header-sticky');
+    } else {
+      header.removeClass('header-sticky');
+    }
+  });
+});
+
+// Language dropdown
+$('body').on("mouseenter", ".js-lang-switcher", function () {
+  $(".js-langs-list").addClass('dropdown-list--open');
+});
+$('body').on("mouseleave", ".js-lang-switcher", function () {
+  $(".js-langs-list").removeClass("dropdown-list--open");
+});
+
+// Cart toggle
+$('body').on("click", ".js-cart-btn", function () {
+  $(".js-cart").addClass('open');
+});
+$('body').on("click", ".js-cart-close", function () {
+  $(".js-cart").removeClass('open');
+});
+$('body').on("click", ".js-add-to-cart", function (event) {
+  event.preventDefault();
+  var this_button = $(this);
+  var quantity_wrapper = $(this).prev(".js-quantities");
+  var quantity = null;
+  if (quantity_wrapper.length > 0) {
+    quantity = parseInt(quantity_wrapper.find('.js-product-details-quantity').val());
+  } else {
+    quantity = 1;
+  }
+  var item = {
+    productId: this_button.data('id'),
+    quantity: quantity
+  };
+  $.ajax({
+    type: 'post',
+    url: "/api/cart/add",
+    dataType: 'json',
+    data: {
+      cartItem: item
+    },
+    beforeSend: function beforeSend(jqXHR) {
+      this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function complete(jqXHR, textStatus) {
+      this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function success(response) {
+      if (response.status == 'success') {
+        var cartItems = '';
+        if ($('.js-cart-list').length > 0) {
+          $.each(response.results, function (index, item) {
+            cartItems += "\n                            <li class=\"cart-container-list-item js-cart-item\">\n                                <div class=\"cart-product\">\n                                    <div class=\"cart-product-image\">\n                                        <picture>\n                                            <source srcset=\"".concat(item.image || '', "\">\n                                            <img class=\"cart-product-img\" alt=\"").concat(item.productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                        </picture>\n                                    </div>\n\n                                    <div class=\"cart-product-desc\">\n                                        <h5 class=\"cart-product-desc_name\">").concat(item.productName, "</h5>\n\n                                        <div class=\"quantities\">\n                                            <div class=\"quantities-container js-quantities\">\n                                                <button type=\"button\" class=\"quantities-btn js-quantity-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                <input class=\"quantities-input js-product-quantity\" data-id=\"").concat(item.productId, "\" type=\"number\" value=\"").concat(item.quantity, "\" min=\"1\" max=\"").concat(item.maxQuantity, "\" />\n                                                <button type=\"button\" class=\"quantities-btn js-quantity-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                            </div>\n\n                                            <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(item.price, " RSD</span></small>\n                                        </div>\n\n                                        <div class=\"functions\">\n                                            <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                            <button type=\"button\" value=\"").concat(response.remove_text, " %>\" data-id=\"").concat(item.productId, "\" class=\"functions_remove js-remove-cart\"><i class=\"fas fa-times\"></i></button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </li>");
+          });
+          $('.js-cart-list').html(cartItems);
+          $('span.js-cart-counter').text(response.totalCount);
+          $('span.js-total-price').text(response.totalPrice);
+        } else {
+          $('.js-cart-empty').removeClass('show');
+          $('.js-cart-empty').addClass('hide');
+          $('.js-cart').append("<h5 class=\"cart-counter\">".concat(response.ordersCartCountText, ": <span class=\"js-cart-counter\">").concat(response.totalCount, "</span></h5>\n                        <div class=\"cart-container\">\n                            <div class=\"cart-container-top\">\n                                <a href=\"/").concat(response.current_locale, "/order\" aria-label=\"Navigation link to the orders page\" class=\"cart-container-top_ordering\">").concat(response.orderPageText, "</a>\n                                <strong class=\"cart-container-top_total\">").concat(response.totalPriceText, ": <span class=\"js-total-price\">").concat(response.totalPrice, "</span><small>RSD</small></strong>\n                            </div>\n\n                            <ul class=\"cart-container-list js-cart-list\">\n                                <li class=\"cart-container-list-item js-cart-item\">\n                                    <div class=\"cart-product\">\n                                        <div class=\"cart-product-image\">\n                                            <picture>\n                                                <source srcset=\"").concat(response.results[0].image || '', "\">\n                                                <img class=\"cart-product-img\" alt=\"").concat(response.results[0].productName, "\" loading=\"lazy\" src=\"images/no-picture.jpg\">\n                                            </picture>\n                                        </div>\n\n                                        <div class=\"cart-product-desc\">\n                                            <h5 class=\"cart-product-desc_name\">").concat(response.results[0].productName, "</h5>\n\n                                            <div class=\"quantities\">\n                                                <div class=\"quantities-container js-quantities\">\n                                                    <button type=\"button\" class=\"quantities-btn js-quantity-btn minus\"><i class=\"fas fa-minus\"></i></button>\n                                                    <input class=\"quantities-input js-product-quantity\" data-id=\"").concat(response.results[0].productId, "\" type=\"number\" value=\"").concat(response.results[0].quantity, "\" min=\"1\" max=\"").concat(response.results[0].maxQuantity, "\" />\n                                                    <button type=\"button\" class=\"quantities-btn js-quantity-btn plus\"><i class=\"fas fa-plus\"></i></button>\n                                                </div>\n\n                                                <small class=\"quantities-price\"><i class=\"fas fa-times\"></i> <span>").concat(response.results[0].price, " RSD</span></small>\n                                            </div>\n\n                                            <div class=\"functions\">\n                                                <a href=\"/").concat(response.current_locale, "/product\" class=\"functions_details\" aria-label=\"Link to product details\"><i class=\"fas fa-info-circle\"></i></a>\n                                                <button type=\"button\" value=\"").concat(response.remove_text, "\" data-id=\"").concat(response.results[0].productId, "\" class=\"functions_remove js-remove-cart\"><i class=\"fas fa-times\"></i></button>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </li>\n                            </ul>\n                        </div>"));
+        }
+        $(".js-cart").addClass('open');
+        $.alert({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.content,
+          buttons: {
+            OK: function OK() {
+              // do nothing
+            }
+          }
+        });
+      } else if (response.status == 'error') {
+        $.confirm({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.message,
+          buttons: {
+            OK: {
+              action: function action() {
+                // do nothing
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+});
+$('body').on("click", ".js-remove-cart", function (event) {
+  event.preventDefault();
+  var this_button = $(this);
+  $.ajax({
+    type: 'post',
+    url: "/api/cart/delete",
+    dataType: 'json',
+    data: {
+      productId: this_button.data('id')
+    },
+    beforeSend: function beforeSend(jqXHR) {
+      this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function complete(jqXHR, textStatus) {
+      this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function success(response) {
+      if (response.status == 'success') {
+        this_button.closest('.js-cart-item').remove();
+        $('span.js-cart-counter').text(response.totalCount);
+        $('span.js-total-price').text(response.totalPrice);
+        if (response.isEmpty) {
+          $('.js-cart-empty').addClass('show');
+          $('.js-cart-empty').removeClass('hide');
+          $('.js-total-price').closest('.cart-container-top').remove();
+          $('.js-cart-counter').closest('h5.cart-counter').remove();
+        } else {
+          $('.js-cart-empty').addClass('hide');
+          $('.js-cart-empty').removeClass('show');
+        }
+        $.alert({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          buttons: {
+            OK: function OK() {
+              // do nothing
+            }
+          }
+        });
+      } else if (response.status == 'error') {
+        $.confirm({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.message,
+          buttons: {
+            OK: {
+              action: function action() {
+                // do nothing
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+});
+$('body').on("click", ".js-quantity-btn", function (event) {
+  event.preventDefault();
+  var quantity_wrapper = $(this).closest('.js-quantities');
+  var quantity = quantity_wrapper.find('.js-product-quantity');
+  var value = parseInt(quantity.val());
+  if ($(this).hasClass('minus') && value > 1) {
+    value = value - 1;
+  } else if ($(this).hasClass('plus')) {
+    value = value + 1;
+  }
+  quantity.val(value);
+  quantity.trigger('change', quantity);
+});
+$('body').on("change", ".js-product-quantity", function (event, targetInput) {
+  event.preventDefault();
+  var this_button = $('.js-quantity-btn');
+  var productId = null;
+  var quantity = null;
+  if (targetInput) {
+    quantity = $(targetInput).val();
+    productId = $(targetInput).data("id");
+  } else if (!targetInput) {
+    quantity = $(event.target).val();
+    productId = $(event.target).data("id");
+  }
+  quantity = parseInt(quantity);
+  $.ajax({
+    type: 'post',
+    url: "/api/cart/update",
+    dataType: 'json',
+    data: {
+      productId: productId,
+      quantity: quantity
+    },
+    beforeSend: function beforeSend(jqXHR) {
+      this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function complete(jqXHR, textStatus) {
+      this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function success(response) {
+      if (response.status == 'success') {
+        if (targetInput) {
+          $(targetInput).val(response.newValue);
+        } else if (!targetInput) {
+          $(event.target).val(response.newValue);
+        }
+        $('.js-total-price').text(response.totalPrice);
+        $.alert({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.message,
+          buttons: {
+            OK: function OK() {
+              // do nothing
+            }
+          }
+        });
+      } else if (response.status == 'error') {
+        if (response.newValue) {
+          if (targetInput) {
+            $(targetInput).val(response.newValue);
+          } else if (!targetInput) {
+            $(event.target).val(response.newValue);
+          }
+        }
+        $.alert({
+          useBootstrap: false,
+          boxWidth: '350px',
+          title: response.title,
+          content: response.message,
+          buttons: {
+            OK: function OK() {
+              // do nothing
+            }
+          }
+        });
+      }
+    }
+  });
+});
+
+// Search
+$('body').on('click', '.js-search-btn', function () {
+  $('.js-search-input').focus();
+});
+
+/***/ }),
+
+/***/ "./resources/scss/pages/blog-list.scss":
+/*!*********************************************!*\
+  !*** ./resources/scss/pages/blog-list.scss ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/faq.scss":
+/*!***************************************!*\
+  !*** ./resources/scss/pages/faq.scss ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/product-details.scss":
+/*!***************************************************!*\
+  !*** ./resources/scss/pages/product-details.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/gallery-details.scss":
+/*!***************************************************!*\
+  !*** ./resources/scss/pages/gallery-details.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/blog-details.scss":
+/*!************************************************!*\
+  !*** ./resources/scss/pages/blog-details.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/main.scss":
+/*!**********************************!*\
+  !*** ./resources/scss/main.scss ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/home.scss":
+/*!****************************************!*\
+  !*** ./resources/scss/pages/home.scss ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/about.scss":
+/*!*****************************************!*\
+  !*** ./resources/scss/pages/about.scss ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/product-list.scss":
+/*!************************************************!*\
+  !*** ./resources/scss/pages/product-list.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/pages/gallery-list.scss":
+/*!************************************************!*\
+  !*** ./resources/scss/pages/gallery-list.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/js/main": 0,
+/******/ 			"css/gallery-list": 0,
+/******/ 			"css/product-list": 0,
+/******/ 			"css/about": 0,
+/******/ 			"css/home": 0,
+/******/ 			"css/main": 0,
+/******/ 			"css/blog-details": 0,
+/******/ 			"css/gallery-details": 0,
+/******/ 			"css/product-details": 0,
+/******/ 			"css/faq": 0,
+/******/ 			"css/blog-list": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkWebshop_Node"] = self["webpackChunkWebshop_Node"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/js/main.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/main.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/home.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/about.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/product-list.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/gallery-list.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/blog-list.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/faq.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/product-details.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/gallery-details.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/gallery-list","css/product-list","css/about","css/home","css/main","css/blog-details","css/gallery-details","css/product-details","css/faq","css/blog-list"], () => (__webpack_require__("./resources/scss/pages/blog-details.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;

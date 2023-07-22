@@ -108,6 +108,7 @@ const sr = {
     errors: {
         error: "Greška",
         common_error: "Došlo je do greške!",
+        server_error: "Greška na serveru",
         wrong_data: "Netačne podatke!",
         unprocessable_data: "Neobrađene podatke!",
 		not_found: "Stranica nije pronađena",

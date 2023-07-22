@@ -33,11 +33,17 @@ const getAllGallery = (req, res) => {
     page = parseInt(page);
 
     if ( isNaN(page) ) {
-        return res.status(400).render("400", { current_locale: req.session.lang });
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang
+        });
     }
 
     if (typeof page !== "number" || page <= 0) {
-        return res.status(400).render("400", { current_locale: req.session.lang });
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang
+        });
     }
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
@@ -46,7 +52,22 @@ const getAllGallery = (req, res) => {
     db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", { current_locale: req.session.lang });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang
+            });
+        }
+
+        else if (data.length == 0) {
+            return res.render("pages/galleries", {
+                pageCount: 0,
+                galleries: [],
+                meta: metas,
+                current_locale: req.session.lang,
+                cart: cart,
+                locales: ['hu', 'sr', 'en'],
+                languageHandler: languageHandler
+            });
         }
 
         else if (data.length > 0) {
@@ -76,7 +97,10 @@ const getAllGallery = (req, res) => {
             db.query("SELECT COUNT(galleries.id) AS 'each_article_count' FROM galleries WHERE galleries.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", { current_locale: req.session.lang });
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                        current_locale: req.session.lang
+                    });
                 }
 
                 else if (elementsCount) {
@@ -126,7 +150,10 @@ const getGalleryDetails = (req, res) => {
     db.query(sqlGalleryDetails, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", { current_locale: req.session.lang });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang
+            });
         }
 
         else if (data.length == 0) {

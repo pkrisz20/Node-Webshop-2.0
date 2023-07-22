@@ -33,7 +33,10 @@ const getProductDetails = (req, res) => {
     db.query(sqlQuery, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", { current_locale: req.session.lang });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang
+            });
         }
 
         else if (data.length == 0) {
@@ -66,7 +69,10 @@ const getProductDetails = (req, res) => {
                 db.query(selectProductComments, [1, result.id], (comments_err, comments_data) => {
                     if (comments_err) {
                         console.log(comments_err);
-                        return res.status(500).render("500", { current_locale: lang });
+                        return res.status(500).render("500", {
+                            title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                            current_locale: lang
+                        });
                     }
 
                     else if (comments_data.length > 0) {
@@ -96,7 +102,10 @@ const getProductDetails = (req, res) => {
             db.query(similarProductsQuery, [1, data[0].category_id, data[0].id], (err, similars) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", { current_locale: req.session.lang });
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                        current_locale: req.session.lang
+                    });
                 }
 
                 else if (similars.length > 0) {
@@ -174,26 +183,47 @@ const getAllProducts = (req, res) => {
     category = parseInt(category);
 
     if ( isNaN(page) || isNaN(category) ) {
-        return res.status(400).render("400", { current_locale: req.session.lang });
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang
+        });
     }
-
-    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC";
 
     if (typeof page !== "number" || page <= 0) {
-        return res.status(400).render("400", { current_locale: req.session.lang });
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang
+        });
     }
+
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ?";
 
     if (typeof category === "number" && category !== 0) {
         sqlQuery += " AND category_id = ?";
     }
 
-    sqlQuery += " LIMIT ? OFFSET ?";
+    sqlQuery += " ORDER BY id DESC LIMIT ? OFFSET ?";
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
     db.query(sqlQuery, (typeof category === "number" && category > 0) ? [1, category, parseInt(process.env.PAGINATION), pageOffset] : [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", { current_locale: req.session.lang });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang
+            });
+        }
+
+        else if (data.length == 0) {
+            return res.render("pages/products", {
+                pageCount: 0,
+                products: [],
+                meta: metas,
+                current_locale: req.session.lang,
+                cart: cart,
+                locales: ['hu', 'sr', 'en'],
+                languageHandler: languageHandler
+            });
         }
 
         else if (data.length > 0) {
@@ -232,7 +262,10 @@ const getAllProducts = (req, res) => {
             db.query(selectForPagination, (typeof category === "number" && category > 0) ? [1, category] : 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", { current_locale: req.session.lang });
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                        current_locale: req.session.lang
+                    });
                 }
 
                 else if (elementsCount) {

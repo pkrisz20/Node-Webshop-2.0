@@ -108,6 +108,7 @@ const hu = {
     errors: {
         error: "Hiba",
         common_error: "Váratlan hiba lépett fel!",
+        server_error: "Szerver hiba",
         wrong_data: "Nem megfelelő adatok!",
         unprocessable_data: "Nem feldolgozható adatok!",
 		not_found: "Nem található",
