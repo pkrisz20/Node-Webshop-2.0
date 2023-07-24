@@ -113,7 +113,8 @@ const en = {
 		wrong_data: "Wrong datas!",
 		unprocessable_data: "Unprocessable data types!",
 		not_found: "Page not found",
-		has_to_be_number: "Has to be number!"
+		has_to_be_number: "Has to be number!",
+		no_permission: "You do not have permission for this"
 	}
 };
 

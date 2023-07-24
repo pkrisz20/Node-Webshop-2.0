@@ -113,7 +113,8 @@ const hu = {
         wrong_data: "Nem megfelelő adatok!",
         unprocessable_data: "Nem feldolgozható adatok!",
 		not_found: "Nem található",
-        has_to_be_number: "Számnak kell lennie!"
+        has_to_be_number: "Számnak kell lennie!",
+		no_permission: "Nincs jogosultsága ehhez"
     }
 };
 

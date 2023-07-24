@@ -1,3 +1,5 @@
+const languageHandler = require("../helpers/languageHandler");
+
 const validationMiddleware = (schema) => async (req, res, next) => {
     const body = req.body;
 
@@ -6,7 +8,10 @@ const validationMiddleware = (schema) => async (req, res, next) => {
         return next();
     }
     catch (err) {
-        return res.status(422).json({ status: "error" });
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.wrong_data', req.session.lang ?? process.env.FALLBACK_LANG)
+        });
     }
 }
 

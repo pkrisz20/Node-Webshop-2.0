@@ -145,7 +145,7 @@
         }
     }
 
-    label {
+    &-label {
         position: absolute;
         z-index: 2;
         left: 15px;
@@ -156,11 +156,11 @@
         color: $c-9;
         pointer-events: none;
 
-        &.textarea-label {
+        &.form-textarea {
             top: 20px;
         }
 
-        &.is-invalid {
+        &.error {
             color: $c-red !important;
         }
     }

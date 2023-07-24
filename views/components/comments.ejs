@@ -7,49 +7,89 @@
         <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
     </div>
 
-    <form class="form js-form-validate" method="post">
+    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/product/comment/<%= itemId %>">
+        <div class="form-row">
+            <input
+                id="recaptcha"
+                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                name="fullName"
+                type="hidden"
+            />
+        </div>
         <div class="row">
             <div class="form-row">
-                <input id="full-name" name="full-name" type="text" placeholder="<%= languageHandler('validations.full_name', current_locale) %>" class="form-control" />
-                <label for="full-name"><%= languageHandler('validations.full_name', current_locale) %></label>
-                <%# <i class="fas fa-times"></i>
+                <input
+                    id="full-name"
+                    data-rule-required="true"
+                    name="fullName"
+                    type="text"
+                    placeholder="<%= languageHandler('validations.full_name', current_locale) %>"
+                    class="form-control"
+                />
+                <label class="form-label" for="full-name">
+                    <%= languageHandler('validations.full_name', current_locale) %>
+                </label>
 
-                <div class="form-row-error">
-                    <span>{{ $t('validations.required') }}</span>
-                </div> %>
+                <i class="error-icon fas fa-times"></i>
+                <div class="form-row-error"></div>
             </div>
 
             <div class="form-row">
-                <input id="comment-email" name="comment-email" type="text" placeholder="<%= languageHandler('validations.email', current_locale) %>" class="form-control" />
-                <label for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
-                <%# <i v-show="$v.email.$error" class="fas fa-times"></i>
+                <input
+                    id="comment-email"
+                    data-rule-required="true"
+                    data-rule-email="true"
+                    name="email"
+                    type="email"
+                    placeholder="<%= languageHandler('validations.email', current_locale) %>"
+                    class="form-control"
+                />
+                <label class="form-label" for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
 
-                <div v-if="$v.email.$dirty" class="form-row-error">
-                    <span v-if="!$v.email.email">{{ $t('validations.invalid_email') }}</span>
-                    <span v-if="!$v.email.required">{{ $t('validations.required') }}</span>
-                </div> %>
+                <i class="error-icon fas fa-times"></i>
+                <div class="form-row-error"></div>
             </div>
         </div>
 
-        <%#<div class="form-row">
-            <textarea id="comment-message" name="comment-message" :placeholder="$t('general.comment')" class="form-control--textarea" rows="10" maxlength="1000" v-model.trim="$v.commentMessage.$model" :class="{ 'is-invalid' : $v.commentMessage.$error }" />
-            <label for="comment-message" class="textarea-label" :class="{ 'is-invalid' : $v.commentMessage.$error }">{{ $t('general.comment') }}</label>
-            <i v-show="$v.commentMessage.$error" class="fas fa-times textarea-error"></i>
+        <div class="form-row">
+            <textarea
+                id="comment-message"
+                name="comment"
+                data-rule-required="true"
+                data-rule-max-length="1000"
+                placeholder="<%= languageHandler('general.comment', current_locale) %>"
+                class="form-control--textarea js-characters-count"
+                rows="10"
+                maxlength="1000"></textarea>
+            <label
+                for="comment-message"
+                class="form-label form-textarea">
+                <%= languageHandler('general.comment', current_locale) %>
+            </label>
 
-            <div v-if="$v.commentMessage.$dirty" class="form-row-error">
-                <span v-if="!$v.commentMessage.maxLength">{{ $t('validations.must_have_at_most', { number: $v.commentMessage.$params.maxLength.max }) }}</span>
-                <span v-if="!$v.commentMessage.required">{{ $t('validations.required') }}</span>
-            </div>
-            <small class="characters-count">{{ charactersLeft }} / 1000</small>
+            <i class="error-icon textarea-error fas fa-times"></i>
+            <div class="form-row-error"></div>
+
+            <small class="characters-count js-counter"><span>1000</span> / 1000</smal>
         </div>
 
         <div class="form-row gdpr">
-            <label for="data-handling">{{ $t('validations.accept_policy') }}
-                <input id="data-handling" name="data-handling" type="checkbox" :checked="acceptedDataHandling" class="form-row-checkbox" />
+            <label
+                class="form-label"
+                for="data-handling">
+                <%= languageHandler('validations.accept_policy', current_locale) %>
+
+                <input
+                    id="data-handling"
+                    name="accept"
+                    type="checkbox"
+                    checked="checked"
+                    class="form-row-checkbox"
+                />
                 <span class="checkmark"></span>
             </label>
-            <span class="gdpr-details">{{ $t('general.details_here') }}: <router-link :to="`/${this.$i18n.locale}/policy`">{{ $t('nav.privacy_policy') }}</router-link></span>
-        </div> %>
+            <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/policy"><%= languageHandler('nav.privacy_policy', current_locale) %></a></span>
+        </div>
 
         <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
     </form>

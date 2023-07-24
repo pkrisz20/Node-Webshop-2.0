@@ -113,7 +113,8 @@ const sr = {
         wrong_data: "Netačne podatke!",
         unprocessable_data: "Neobrađene podatke!",
 		not_found: "Stranica nije pronađena",
-		has_to_be_number: "Samo brojevi prihvata!"
+		has_to_be_number: "Samo brojevi prihvata!",
+		no_permission: "Nemate dozvolu za ovaj aktivnost"
     }
 };
 

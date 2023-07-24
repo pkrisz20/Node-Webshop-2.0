@@ -1,3 +1,5 @@
+const { error } = require("laravel-mix/src/Log");
+
 $(document).ready(function() {
     $(".js-hero-slick").slick({
         inifinite: true,
@@ -117,6 +119,70 @@ $(document).ready(function() {
             }
         ]
     });
+
+    // Is there any form to validate?
+    if ($.validator) {
+        // Custom validations cause of custom error message based on current lang
+        $.validator.addMethod('min-length', function (val, element) {
+            return this.optional(element) || val.length >= $(element).data('rule-min-length');
+        }, function(params, element) {
+            return translateText('validations.min', params);
+        });
+
+        $.validator.addMethod('max-length', function (val, element) {
+            return this.optional(element) || val.length <= $(element).data('rule-max-length');
+        }, function(params, element) {
+            return translateText('validations.must_have_at_most', params);
+        });
+
+        $.validator.addMethod('max-value', function (val, element) {
+            return this.optional(element) || val <= $(element).data('rule-max-value');
+        }, function(params, element) {
+            return translateText('validations.max_value', params);
+        });
+
+        $.validator.addMethod('min-value', function (val, element) {
+            return this.optional(element) || val >= $(element).data('rule-min-value');
+        }, function(params, element) {
+            return translateText('validations.min_value', params);
+        });
+
+        // Hide some error elements
+        $('.js-form-validate').find('.form-row-error').hide();
+        $('.js-form-validate').find('.error-icon').hide();
+
+        jQuery.extend(jQuery.validator.messages, {
+            required: translateText('validations.required'),
+            email: translateText('validations.invalid_email'),
+            url: translateText('validations.invalid_url'),
+            date: translateText('validations.date'),
+            number: translateText('validations.number'),
+            digits: translateText('validations.digits'),
+            equalTo: translateText('validations.equalTo')
+        });
+    }
+});
+
+window.translateText = function translateText(key, ...params) {
+
+    let translationText = '';
+    let keys = key.split(".");
+    translationText = translations[keys[0]][keys[1]];
+
+    if (params.length > 0) {
+        params.forEach((paramItem, index) => {
+            translationText = translationText.replace(`{${index}}`, paramItem);
+        });
+    }
+
+    return translationText;
+}
+
+$('body').on('keyup', '.js-characters-count', function () {
+    var characterCounter = $(this);
+    var counterElement = $('.js-characters-count').closest('.form-row').find('.js-counter');
+    var characters = characterCounter.val().length;
+    $(counterElement).find('span').text(1000 - characters);
 });
 
 $('.js-form-validate').not('.inited').each(function () {
@@ -125,40 +191,35 @@ $('.js-form-validate').not('.inited').each(function () {
         errorClass: 'is-invalid',
         focusInvalid: false,
         invalidHandler: function (form, validator) {
-            if (!validator.numberOfInvalids()) {
-                return;
-            }
-
-            var to_elem = $(validator.errorList[0].element).closest('.form-row');
-
-            if (to_elem.length > 0) {
+            if (validator.numberOfInvalids() > 0) {
+                form.preventDefault();
+                var to_elem = $(validator.errorList[0].element).closest('.form-row');
                 var topY = to_elem.offset().top - $('.js-header').outerHeight() - 10;
-
-                // var scrollElement = window.document.scrollingElement || window.document.body || window.document.documentElement;
-
-                $(scrollElement).scrollTo({ top: topY, behavior: "smooth" });
+                window.scroll({ top: topY, behavior: 'smooth' });
             }
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function (element, errorClass) {
             $(element).addClass(errorClass);
+            $(element).closest('.form-row').find('.form-label').addClass('error');
+            $(element).closest('.form-row').find('.form-row-error').show();
+            $(element).closest('.form-row').find('.error-icon').show();
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function (element, errorClass) {
             $(element).removeClass(errorClass);
+            $(element).closest('.form-row').find('.form-label').removeClass('error');
+            $(element).closest('.form-row').find('.form-row-error').hide();
+            $(element).closest('.form-row').find('.error-icon').hide();
         },
-        // errorPlacement: function (error, element) {
-        //     if (element.attr('type') == 'checkbox') {
-        //         error.insertBefore(element.closest('.form__label')).addClass('validation-invalid-label');
-        //     }
-        //     else {
-        //         error.insertBefore(element).addClass('validation-invalid-label');
-        //     }
-        // },
+        errorPlacement: function (error, element) {
+            var parent = $(element).closest('.form-row').find('.form-row-error');
+            parent.append(error);
+        },
         submitHandler: function (form) {
             var this_button = $('button[type="submit"]', $(form));
 
             $.ajax({
                 type: $(form).prop('method'),
-                url: $(form).prop('action'),
+                url: $(form).data('url'),
                 dataType: 'json',
                 data: $(form).serializeArray(),
                 beforeSend: function (jqXHR) {
@@ -168,17 +229,16 @@ $('.js-form-validate').not('.inited').each(function () {
                     this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
                 },
                 success: function (response) {
-                    var silent_call = $(form).data('silent');
-                    var message = response.message;
-
-                    if (response.errors) {
-                        message += '<ul>';
-                        $.each(response.errors, function (key, value) {
-                            message += '<li>' + ($.isArray(value) ? value.join('</li><li>') : value) + '</li>';
+                    if (response.status === 'error') {
+                        $.alert({
+                            useBootstrap: false,
+                            boxWidth: '400px',
+                            title: response.title,
+                            content: response.content || false,
+                            buttons: 'OK'
                         });
-                        message += '</ul>';
                     }
-                    else if (response.status == 'success') {
+                    else if (response.status === 'success') {
 
                         if (!$(form).data('noReset')) {
                             form.reset();
@@ -188,9 +248,7 @@ $('.js-form-validate').not('.inited').each(function () {
                         if (callbackFunctionOnSuccess && typeof window[callbackFunctionOnSuccess] == 'function') {
                             window[callbackFunctionOnSuccess](response, form);
                         }
-                    }
 
-                    if (!silent_call) {
                         $.alert({
                             useBootstrap: false,
                             boxWidth: '400px',
@@ -213,21 +271,6 @@ $('.js-form-validate').not('.inited').each(function () {
     });
     $(this).addClass('inited');
 });
-
-window.translateText = function translateText(key, ...params) {
-
-    let translationText = '';
-    let keys = key.split(".");
-    translationText = translations[keys[0]][keys[1]];
-
-    if (params.length > 0) {
-        params.forEach((paramItem, index) => {
-            translationText = translationText.replace(`{${index}}`, paramItem);
-        });
-    }
-
-    return translationText;
-}
 
 $(function() {
     var header = $(".js-header");
