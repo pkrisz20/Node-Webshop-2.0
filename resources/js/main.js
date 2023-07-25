@@ -160,6 +160,18 @@ $(document).ready(function() {
             digits: translateText('validations.digits'),
             equalTo: translateText('validations.equalTo')
         });
+
+        if (grecaptcha && $('.js-form-validate').find('.g-recaptcha').length > 0) {
+
+            var inputToken = $('.js-form-validate').find('.g-recaptcha');
+            var recaptchaToken = inputToken.val();
+
+            grecaptcha.ready(function () {
+                grecaptcha.execute(recaptchaToken).then(function (token) {
+                    inputToken.val(token);
+                });
+            });
+        }
     }
 });
 

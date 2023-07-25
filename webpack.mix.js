@@ -4,7 +4,6 @@ mix
     .setPublicPath('public')
 
     .js("resources/js/main.js", "public/js")
-    .js("resources/js/components/comments.js", "public/js/components")
 
     .sass("resources/scss/main.scss", "public/css")
     .sass("resources/scss/pages/home.scss", "public/css")

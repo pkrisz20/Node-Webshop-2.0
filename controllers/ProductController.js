@@ -320,7 +320,7 @@ const handleProductComment = (req, res) => {
             console.log(err);
             return res.status(200).json({
                 status: "error",
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
                 content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
             });
         }
@@ -328,7 +328,7 @@ const handleProductComment = (req, res) => {
         if (!result) {
             return res.status(200).json({
                 status: "error",
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
                 content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
             });
         }

@@ -4,6 +4,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
+const getFrontTranslations = require("../helpers/frontTranslations");
 
 const getBlogDetails = (req, res) => {
     // Cart converting stuffs
@@ -176,6 +177,7 @@ const getBlogDetails = (req, res) => {
                         newestBlogs: newestBlogsArray ?? [],
                         nextEvents: incommingEvents ?? [],
                         articleComments: articleComments ?? [],
+                        frontTranslations: result.isAllowed ? getFrontTranslations(req.session.lang) : {},
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,
@@ -322,25 +324,33 @@ const getAllBlogs = (req, res) => {
 }
 
 const handleBlogComment = (req, res) => {
-    const { lang } = req.body;
+    const lang = req.session.lang;
     const { fullName } = req.body;
     const { email } = req.body;
     const { comment } = req.body;
-    const { itemId } = req.body;
-
-    if (!lang || !fullName || !email || !comment || !itemId) {
-        return res.status(400).json({ status: "error" });
-    }
 
     const sqlQueryInsertComment = "INSERT INTO blog_comments (name, email, comment, date, blog_id) VALUES (?, ?, ?, ?, ?)";
 
-    db.query(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), itemId], (err, result) => {
+    db.query(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), req.params.itemId], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
+                content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
+            });
         }
 
-        return !result ? res.status(500).json({ status: 'error' }) : res.status(200).json({ status: 'success' });
+        if (!result) {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
+                content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
+            });
+        }
+        else if (result) {
+            return res.status(200).json({ status: "success", title: languageHandler("general.process_success", lang ?? process.env.FALLBACK_LANG) });
+        }
     });
 }
 

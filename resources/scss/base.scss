@@ -65,6 +65,11 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
+input[type=hidden] {
+    all: unset;
+    display: none;
+}
+
 .grecaptcha-badge {
     display: none !important;
 }

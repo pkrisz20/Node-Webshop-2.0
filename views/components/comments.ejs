@@ -7,15 +7,14 @@
         <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
     </div>
 
-    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/product/comment/<%= itemId %>">
-        <div class="form-row">
-            <input
-                id="recaptcha"
-                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                name="fullName"
-                type="hidden"
-            />
-        </div>
+    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/<%= articleType %>/comment/<%= itemId %>">
+        <input
+            id="recaptcha"
+            value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+            name="recaptcha"
+            type="hidden"
+            class="g-recaptcha"
+        />
         <div class="row">
             <div class="form-row">
                 <input
