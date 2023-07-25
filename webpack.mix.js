@@ -16,6 +16,7 @@ mix
     .sass("resources/scss/pages/gallery-details.scss", "public/css")
     .sass("resources/scss/pages/blog-details.scss", "public/css")
     .sass("resources/scss/pages/error.scss", "public/css")
+    .sass("resources/scss/pages/gdpr.scss", "public/css")
 
     .version();
 

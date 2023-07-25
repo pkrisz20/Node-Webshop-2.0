@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/gdpr.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="gdpr gdpr-site">
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('nav.gdpr', current_locale) %></h1>
+
+                <section class="gdpr-container">
+                    <p class="gdpr-container-information"><%= languageHandler('general.gdpr_db_info', current_locale) %></p>
+
+                    <form class="form form-gdpr js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/gdpr/handle">
+                        <input
+                            id="recaptcha"
+                            value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                            name="recaptcha"
+                            type="hidden"
+                            class="g-recaptcha"
+                        />
+                        <input
+                            type="hidden"
+                            name="_csrf"
+                            value="<%= csrfToken %>"
+                        />
+                        <div class="form-row">
+                            <input
+                                id="gdpr_email"
+                                name="gdpr_email"
+                                type="email"
+                                data-rule-required="true"
+                                data-rule-email="true"
+                                placeholder="<%= languageHandler('validations.email', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label for="gdpr_email" class="form-label">
+                                <%= languageHandler('validations.email', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times"></i>
+                            <div class="form-row-error"></div>
+                        </div>
+                        <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript">
+        var translations = <%- JSON.stringify(frontTranslations) %>;
+    </script>
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+    <script type="text/javascript" src="js/plugins/validate.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

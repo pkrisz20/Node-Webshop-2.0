@@ -2,6 +2,7 @@ const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
+const getFrontTranslations = require("../helpers/frontTranslations");
 
 const getFAQ = (req, res) => {
     // Cart converting stuffs
@@ -34,9 +35,9 @@ const getFAQ = (req, res) => {
             console.log(err);
             return res.status(500).render("500", {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                current_locale: lang ?? process.env.FALLBACK_LANG,
+                back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
                 csrfToken: req.csrfToken()
             });
         }
@@ -56,7 +57,7 @@ const getFAQ = (req, res) => {
         return res.render("pages/faq", {
             questions: result ?? [],
             meta: metas,
-            current_locale: req.session.lang,
+            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
@@ -65,4 +66,43 @@ const getFAQ = (req, res) => {
     });
 }
 
-module.exports = { getFAQ };
+const getGDPR = (req, res) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    var metas = {
+        title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the GDPR page",
+        // keywords: []
+    };
+
+    return res.render("pages/gdpr", {
+        meta: metas,
+        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        cart: cart,
+        locales: ['hu', 'sr', 'en'],
+        frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
+        languageHandler: languageHandler,
+        csrfToken: req.csrfToken()
+    });
+}
+
+const handleGDPR = (req, res) => {
+    const { gdpr_email } = req.body;
+
+    // TODO: Finish GDPR request handle
+}
+
+module.exports = { getFAQ, getGDPR, handleGDPR };
