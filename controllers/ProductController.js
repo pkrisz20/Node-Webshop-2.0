@@ -37,7 +37,8 @@ const getProductDetails = (req, res) => {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
                 current_locale: req.session.lang,
                 back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
             });
         }
 
@@ -46,7 +47,8 @@ const getProductDetails = (req, res) => {
                 current_locale: lang ?? process.env.FALLBACK_LANG,
                 title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
                 back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
             });
         }
 
@@ -77,7 +79,8 @@ const getProductDetails = (req, res) => {
                             title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
                             current_locale: lang,
                             back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                            csrfToken: req.csrfToken()
                         });
                     }
 
@@ -112,7 +115,8 @@ const getProductDetails = (req, res) => {
                         title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
                         current_locale: req.session.lang,
                         back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                        csrfToken: req.csrfToken()
                     });
                 }
 
@@ -156,7 +160,8 @@ const getProductDetails = (req, res) => {
                     current_locale: req.session.lang,
                     cart: cart,
                     locales: ['hu', 'sr', 'en'],
-                    languageHandler: languageHandler
+                    languageHandler: languageHandler,
+                    csrfToken: req.csrfToken()
                 });
             });
         }
@@ -195,7 +200,8 @@ const getAllProducts = (req, res) => {
             title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
             current_locale: req.session.lang,
             back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
         });
     }
 
@@ -204,7 +210,8 @@ const getAllProducts = (req, res) => {
             title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
             current_locale: req.session.lang,
             back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
         });
     }
 
@@ -224,7 +231,8 @@ const getAllProducts = (req, res) => {
                 title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
                 current_locale: req.session.lang,
                 back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
             });
         }
 
@@ -236,7 +244,8 @@ const getAllProducts = (req, res) => {
                 current_locale: req.session.lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
-                languageHandler: languageHandler
+                languageHandler: languageHandler,
+                csrfToken: req.csrfToken()
             });
         }
 
@@ -280,7 +289,8 @@ const getAllProducts = (req, res) => {
                         title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
                         current_locale: req.session.lang,
                         back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG)
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                        csrfToken: req.csrfToken()
                     });
                 }
 
@@ -299,7 +309,8 @@ const getAllProducts = (req, res) => {
                         current_locale: req.session.lang,
                         cart: cart,
                         locales: ['hu', 'sr', 'en'],
-                        languageHandler: languageHandler
+                        languageHandler: languageHandler,
+                        csrfToken: req.csrfToken()
                     });
                 }
             });

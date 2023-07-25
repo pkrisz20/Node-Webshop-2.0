@@ -338,7 +338,10 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         type: 'post',
         url: "/api/cart/add",
         dataType: 'json',
-        data: { cartItem: item },
+        data: {
+            cartItem: item,
+            _csrf: $("meta[name='csrf-token']").attr("content")
+        },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
         },
@@ -475,7 +478,10 @@ $('body').on("click", ".js-remove-cart", function (event) {
         type: 'post',
         url: "/api/cart/delete",
         dataType: 'json',
-        data: { productId: this_button.data('id') },
+        data: {
+            productId: this_button.data('id'),
+            _csrf: $("meta[name='csrf-token']").attr("content")
+        },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
         },
@@ -570,7 +576,8 @@ $('body').on("change", ".js-product-quantity", function (event, targetInput) {
         dataType: 'json',
         data: {
             productId: productId,
-            quantity: quantity
+            quantity: quantity,
+            _csrf: $("meta[name='csrf-token']").attr("content")
         },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);

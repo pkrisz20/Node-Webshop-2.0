@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require("express-session");
 const FileStore = require('session-file-store')(session);
 const fileStoreOptions = require("./config/session-config");
+const csrfProtection = require('csurf');
 const cron = require("node-cron");
 const { logger } = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errorHandler");
@@ -49,7 +50,8 @@ app.use(session({
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
-// app.use(csrfProtection());
+// CSRF
+app.use(csrfProtection({ cookie: true }));
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
@@ -100,7 +102,8 @@ app.get("*", (req, res) => {
         current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
         back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
         learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-        title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG)
+        title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG),
+        csrfToken: req.csrfToken()
     });
 });
 

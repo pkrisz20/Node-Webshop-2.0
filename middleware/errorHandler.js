@@ -8,7 +8,8 @@ const errorHandler = (err, req, res, next) => {
         title: languageHandler("errors.server_error", req.session.lang ?? process.env.FALLBACK_LANG),
         back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
         learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-        current_locale: req.session.lang ?? process.env.FALLBACK_LANG
+        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        csrfToken: req.csrfToken()
     });
 }
 
