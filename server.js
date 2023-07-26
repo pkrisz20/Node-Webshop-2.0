@@ -27,8 +27,8 @@ app.set("views", path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '/files')));
 app.use(express.static(path.join(__dirname, '/public')));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '300mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '300mb' }));
 app.use(express.json());
 
 // Cookies
@@ -65,8 +65,18 @@ app.get('/', (req, res) => {
 });
 
 app.use("/:lang", function (req, res, next) {
+
+    // if (
+    //     req.params.lang !== 'en'
+    //     || req.params.lang !== 'sr'
+    //     || req.params.lang !== 'hu'
+    // ) {
+    //     req.originalUrl = `/${ req.session.lang ?? process.env.FALLBACK_LANG }`;
+    //     req.params.lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    // }
+
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
-    next();
+    return next();
 });
 
 //Routes

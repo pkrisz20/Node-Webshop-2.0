@@ -3,6 +3,7 @@
     <%- include('../layout/head.ejs') %>
 
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/search-list.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 
 <body>
@@ -12,7 +13,60 @@
         <%- include('../components/cart.ejs') %>
 
         <main class="search-list">
-            <h1>Search page list</h1>
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('general.results_for', current_locale) %> <%= keywords %></h1>
+
+                <section class="search-list-listpage">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('general.products', current_locale) }) %>
+
+                    <% if (productsFound.results.length > 0) { %>
+                        <small class="search-list-listpage--counter"><%= productsFound.count %> <%= languageHandler('general.product', current_locale) %></small>
+                        <div class="container">
+                            <% productsFound.results.forEach(product => { %>
+                                <%- include("../components/product-card.ejs", { product: product }) %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="info">
+                            <strong class="info-no-content"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_product_like_this', current_locale) %></strong>
+                        </div>
+                    <% } %>
+                </section>
+
+                <section class="search-list-listpage">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('nav.blog', current_locale) }) %>
+
+                    <% if (blogsFound.results.length > 0) { %>
+                        <small class="search-list-listpage--counter"><%= blogsFound.count %> <%= languageHandler('nav.blog', current_locale) %></small>
+                        <div class="container">
+                            <% blogsFound.results.forEach(blog => { %>
+                                <%- include("../components/blog-card.ejs", { blog: blog }) %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="info">
+                            <strong class="info-no-content"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_blogs_like_this', current_locale) %></strong>
+                        </div>
+                    <% } %>
+                </section>
+
+                <section class="search-list-listpage">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('general.gallery', current_locale) }) %>
+
+                    <% if (galleryFound.results.length > 0) { %>
+                        <small class="search-list-listpage--counter"><%= blogsFound.count %> <%= languageHandler('general.gallery', current_locale) %></small>
+                        <div class="container gallery">
+                            <% galleryFound.results.forEach(gallery => { %>
+                                <%- include("../components/gallery-card.ejs", { galleryItem: gallery }) %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="info">
+                            <strong class="info-no-content"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_gallery_like_this', current_locale) %></strong>
+                        </div>
+                    <% } %>
+                </section>
+            </div>
         </main>
 
         <%- include('../layout/footer.ejs') %>

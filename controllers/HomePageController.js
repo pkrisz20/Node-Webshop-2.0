@@ -24,7 +24,7 @@ const getData = (req, res) => {
     var galleries = [];
     var blogs = [];
     var categories = [];
-    var lang = req.session.lang;
+    var lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
         title: languageHandler("nav.home", lang),
         type: "article",
