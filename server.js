@@ -87,14 +87,16 @@ app.use("/:lang", blogsRouter);
 
 const staticContentsRouter = require("./routes/staticContents");
 app.use("/:lang", staticContentsRouter);
+
+const searchRouter = require("./routes/search");
+app.use("/:lang", searchRouter);
+
 // const contactRouter = require("./routes/contact");
 // const ordersRouter = require("./routes/orders");
-// const searchRouter = require("./routes/search");
 // const adminRouter = require("./routes/admin");
 
 // app.use("/api", contactRouter);
 // app.use("/api", ordersRouter);
-// app.use("/api", searchRouter);
 // app.use("/api/admin", adminRouter);
 
 app.get("*", (req, res) => {

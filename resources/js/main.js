@@ -1,5 +1,3 @@
-const { error } = require("laravel-mix/src/Log");
-
 $(document).ready(function() {
     $(".js-hero-slick").slick({
         inifinite: true,
@@ -286,6 +284,7 @@ $('.js-form-validate').not('.inited').each(function () {
 
 $(function() {
     var header = $(".js-header");
+    var upscrollButton = $('.js-upscroll');
 
     $(window).scroll(function () {
         var scroll = $(window).scrollTop();
@@ -295,7 +294,16 @@ $(function() {
         }
         else {
             header.removeClass('header-sticky');
+            upscrollButton.removeClass('show');
         }
+
+        if (scroll > 350) {
+            upscrollButton.addClass('show');
+        }
+    });
+
+    $('body').on('click', '.js-upscroll', function () {
+        window.scroll({ top: 0, behavior: 'smooth' });
     });
 });
 
@@ -635,7 +643,40 @@ $('body').on("change", ".js-product-quantity", function (event, targetInput) {
     });
 });
 
-// Search
+// Search features
 $('body').on('click', '.js-search-btn', function () {
-    $('.js-search-input').focus();
+    if ($('.js-search-input').val().length > 0) {
+        var searchInputValue = $('.js-search-input').val();
+        var keywords = '';
+
+        keywords = searchInputValue.replaceAll(' ', '+');
+        window.location.href = `/${ window.location.pathname.split('/')[1] }/search?keywords=${ keywords }`;
+    }
+
+    else if ($('.js-search-input').val().length === 0) {
+        $('.js-search-input').focus();
+    }
+});
+
+$('body').on('click', '.js-search-close', function () {
+    $('.js-search-input').val('');
+    $(this).hide();
+});
+
+$('body').on('keyup', '.js-search-input', function (event) {
+    // Enter key pressed
+    if (event.keyCode === 13) {
+        var searchInputValue = $('.js-search-input').val();
+        var keywords = '';
+
+        keywords = searchInputValue.replaceAll(' ', '+');
+        window.location.href = `/${ window.location.pathname.split('/')[1] }/search?keywords=${ keywords }`;
+    }
+
+    if ($('.js-search-input').val().length > 0) {
+        $(this).next('.js-search-close').show();
+    }
+    else if ($('.js-search-input').val().length === 0) {
+        $(this).next('.js-search-close').hide();
+    }
 });

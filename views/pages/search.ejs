@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="<%= current_locale %>">
+    <%- include('../layout/head.ejs') %>
+
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <div class="site-wrap">
+        <%- include('../layout/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <main class="search-list">
+            <h1>Search page list</h1>
+        </main>
+
+        <%- include('../layout/footer.ejs') %>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

@@ -1,36 +1,93 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
+const { numberWithCommas } = require("../helpers/globalFunctions");
+const languageHandler = require("../helpers/languageHandler");
 
-const handleSearch = async (req, res) => {
-    let { lang, query } = req.body;
+const handleSearch = (req, res) => {
+    let { keywords } = req.query;
+    const lang = req.session.lang;
 
-    if ( !lang || typeof query !== "string" ) {
-        return res.status(400).json({ status: "error" });
+    // Redirect if something is fishy with the query param
+    if ( typeof keywords !== "string" || keywords.length === 0 ) {
+        return res.redirect(`/${ lang ?? process.env.FALLBACK_LANG }`);
+    }
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    var metas = {
+        title: languageHandler("general.search", lang),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the search page",
+        // keywords: []
+    };
+
+    let galleryFound = {
+        count: 0,
+        results: []
+    };
+    let productsFound = {
+        count: 0,
+        results: []
+    };
+    let blogsFound = {
+        count: 0,
+        results: []
+    };
+
+    const searchProductsQuery = "SELECT products.id, products.name, products.image_thumbnail, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND (";
+    let query = keywords.split(' ');
+    let formattedParams = '';
+
+    if (query.length === 1) {
+        searchProductsQuery += `json_extract(products.name, $.${ lang }) LIKE ?)`;
+    }
+    else if (query.length > 1) {
+        query.forEach((keyword, index) => {
+
+            formattedParams += index === query.length - 1 ? `json_extract(products.name, $.${ lang }) LIKE ?)` : `json_extract(products.name, $.${ lang }) LIKE ? OR`;
+        });
     }
 
-    if ( query === "" ) return;
-
-    let categoriesFound = [];
-    let productsFound = [];
-    let resultsCount = 0;
-
-    query = `%${query}%`;
-    let paramLanguage = `$.${ lang }`;
-
-    const searchProductsQuery = "SELECT products.id, products.name, products.image_thumbnail, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND json_extract(products.name, ?) LIKE ?";
+    // TODO: Finish search
 
     const searchCategoriesQuery = "SELECT categories.id, categories.name, categories.icon FROM categories WHERE json_extract(categories.name, ?) LIKE ?";
 
-    db.query(searchProductsQuery, [1, paramLanguage, query], (err, result) => {
+    return res.render("pages/search", {
+        meta: metas,
+        current_locale: req.session.lang,
+        cart: cart,
+        locales: ['hu', 'sr', 'en'],
+        languageHandler: languageHandler,
+        csrfToken: req.csrfToken()
+    });
+
+    db.query(searchProductsQuery, [1, paramLanguage, query], (err, product_result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: lang ?? process.env.FALLBACK_LANG,
+                back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
+            });
         }
 
-        else if (result) {
+        else if (product_result) {
 
-            result.forEach(element => {
+            product_result.forEach(element => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.name, lang),
@@ -38,10 +95,10 @@ const handleSearch = async (req, res) => {
                     category: getValueByLanguage(element.category_name, lang)
                 }
 
-                productsFound.push(tempObject);
+                productsFound.results.push(tempObject);
             });
 
-            resultsCount = productsFound.length;
+            productsFound.count = productsFound.results.length;
 
             db.query(searchCategoriesQuery, [paramLanguage, query], (err, categoryResult) => {
 
@@ -67,8 +124,6 @@ const handleSearch = async (req, res) => {
 
                 if (categoriesFound.length == 0) categoriesFound = null;
                 if (productsFound.length == 0) productsFound = null;
-
-                return res.status(200).json({ status: "success", categories: categoriesFound, products: productsFound, resultsCount: resultsCount });
             });
         }
     });
