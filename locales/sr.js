@@ -22,6 +22,7 @@ const sr = {
         read_more: "Saznajte više",
         search: "Pretraga",
         category: "Kategorija",
+		result: "Rezultat",
         results: "Rezultati",
 		results_for: "Rezultati za",
         follow_us: "Pratite nas",

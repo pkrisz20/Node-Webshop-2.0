@@ -22,6 +22,7 @@ const hu = {
         read_more: "Olvasson tovább",
         search: "Keresés",
         category: "Kategória",
+        result: "Találat",
         results: "Találatok",
 		results_for: "Találatok erre",
         follow_us: "Kövess minket",

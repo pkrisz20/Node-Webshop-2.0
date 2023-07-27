@@ -22,6 +22,7 @@ const en = {
 		read_more: "Read more",
 		search: "Search",
 		category: "Category",
+		result: "Result",
 		results: "Results",
 		results_for: "Results for",
 		follow_us: "Follow us",
