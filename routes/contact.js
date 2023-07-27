@@ -6,6 +6,9 @@ const contactSchema = require("../validations/contactValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 
 contactRouter.route("/contact")
+    .get(ContactController.getContactPage);
+
+contactRouter.route("/contact/handle")
     .post(validationMiddleware(contactSchema), recaptchaValidation, ContactController.handleContactMessage);
 
 module.exports = contactRouter;

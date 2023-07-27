@@ -1,34 +1,76 @@
 const { db } = require("../config/db-config");
 const nodemailer = require("nodemailer");
+// const xoauth2 = require('xoauth2');
+const languageHandler = require("../helpers/languageHandler");
+const { numberWithCommas } = require("../helpers/globalFunctions");
+const getFrontTranslations = require("../helpers/frontTranslations");
 const moment = require("moment");
 
+const getContactPage = (req, res) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    var metas = {
+        title: languageHandler("nav.contact", req.session.lang ?? process.env.FALLBACK_LANG),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the contact page",
+        // keywords: []
+    };
+
+    return res.render("pages/contact", {
+        meta: metas,
+        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        cart: cart,
+        locales: ['hu', 'sr', 'en'],
+        frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
+        languageHandler: languageHandler,
+        csrfToken: req.csrfToken()
+    });
+};
+
 const handleContactMessage = (req, res) => {
-    const { firstName, lastName, email, phone, clientMessage } = req.body;
+    const { firstName, lastName, email, phone, comment } = req.body;
     moment.locale("hu");
 
-    db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, client_message, date) VALUES (?,?,?,?,?,?)", [firstName, lastName, email, phone, clientMessage, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
+    db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, client_message, date) VALUES (?,?,?,?,?,?)", [firstName, lastName, email, phone, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ status: "error" });
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", req.session.lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
+            });
         }
 
         else if (result) {
 
-            var smtpTransport = nodemailer.createTransport("SMTP", {
-                service: "Gmail",
+            var smtpTransport = nodemailer.createTransport({
+                service: "gmail",
                 auth: {
-                    XOAuth2: {
-                        user: process.env.EMAIL_ADDRESS,
-                        clientId: process.env.EMAIL_CLIENT_ID,
-                        clientSecret: process.env.EMAIL_CLIENT_SECRET,
-                        refreshToken: process.env.EMAIL_REFRESH_TOKEN
-                    }
+                    user: process.env.INFO_EMAIL_ADDRESS,
+                    pass: process.env.MAIL_PASSWORD,
+                    clientId: process.env.EMAIL_CLIENT_ID,
+                    clientSecret: process.env.EMAIL_CLIENT_SECRET,
+                    refreshToken: process.env.EMAIL_REFRESH_TOKEN
                 }
             });
 
             var mailOptions = {
                 from: email,
-                to: process.env.EMAIL_ADDRESS,
+                to: process.env.ADMIN_EMAIL_ADDRESS,
                 subject: `Üzenet egy klienstől (${ firstName })`,
                 html: `
                 <html>
@@ -39,7 +81,7 @@ const handleContactMessage = (req, res) => {
                             <div style="height: 5px; background-color: #fff"></div>
                         </div>
                         <div style="padding: 50px 0; text-align: left;">
-                            <p style="font-size: 16px; margin-bottom: 10px;"><u>Üzenet:</u> ${ clientMessage }</p><br>
+                            <p style="font-size: 16px; margin-bottom: 10px;"><u>Üzenet:</u> ${ comment }</p><br>
                             <p style="font-size: 16px; margin-bottom: 10px;"><u>Elérhetőség:</u> <b>${ phone }</b> vagy <b>${ email }</b></p><br>
                             <p style="font-size: 16px;"><u>A küldés időpontja:</u> <b>${ moment(new Date()).format("YYYY. MMMM DD. HH:mm") }</b></p>
                         </div>
@@ -50,7 +92,13 @@ const handleContactMessage = (req, res) => {
             smtpTransport.sendMail(mailOptions, function(error, response) {
                 if (error) {
                     console.log(error);
-                    return res.status(500).json({ status: "error" });
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", req.session.lang ?? process.env.FALLBACK_LANG),
+                        current_locale: req.session.lang,
+                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                        csrfToken: req.csrfToken()
+                    });
                 }
                 else {
                     console.log(response);
@@ -58,10 +106,14 @@ const handleContactMessage = (req, res) => {
                 }
 
                 smtpTransport.close();
-                return res.status(200).json({ status: "success" });
+                return res.status(200).json({
+                    status: "success",
+                    title: languageHandler("general.process_success", req.session.lang ?? process.env.FALLBACK_LANG),
+                    content: languageHandler("general.contact_email_success_message", req.session.lang ?? process.env.FALLBACK_LANG)
+                });
             });
         }
     });
 }
 
-module.exports = { handleContactMessage };
+module.exports = { handleContactMessage, getContactPage };

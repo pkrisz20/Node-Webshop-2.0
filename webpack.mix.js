@@ -18,6 +18,7 @@ mix
     .sass("resources/scss/pages/error.scss", "public/css")
     .sass("resources/scss/pages/gdpr.scss", "public/css")
     .sass("resources/scss/pages/search-list.scss", "public/css")
+    .sass("resources/scss/pages/contact.scss", "public/css")
 
     .version();
 

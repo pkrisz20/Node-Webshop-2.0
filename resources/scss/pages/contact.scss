@@ -1,0 +1,53 @@
+@import "../variables.scss";
+@import "../mixins.scss";
+
+.contact {
+    margin: 50px 0 0;
+
+    .main-title {
+        margin: 0 0 60px;
+
+        @media #{ $r-min-m } {
+            margin: 0 0 100px;
+        }
+    }
+
+    &-map {
+        padding: 50px 0 0;
+        width: 100%;
+        height: 500px;
+    }
+
+    .container {
+        @include flexBox("space-between", "flex-start", 30px);
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+
+        @media #{ $r-min-m } {
+            flex-direction: row;
+        }
+
+        &-contact-links {
+            @include flexBox("flex-start", "flex-start", 20px);
+            flex-direction: column;
+
+            .data {
+                color: $c-9;
+                transition: color .2s ease-in-out;
+
+                &:hover {
+                    color: $c-dark2;
+                }
+            }
+        }
+
+        .header_title {
+            margin-bottom: 30px;
+        }
+
+        &-form {
+            width: 100%;
+        }
+    }
+}

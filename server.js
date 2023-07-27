@@ -101,11 +101,12 @@ app.use("/:lang", staticContentsRouter);
 const searchRouter = require("./routes/search");
 app.use("/:lang", searchRouter);
 
-// const contactRouter = require("./routes/contact");
+const contactRouter = require("./routes/contact");
+app.use("/:lang", contactRouter);
+
 // const ordersRouter = require("./routes/orders");
 // const adminRouter = require("./routes/admin");
 
-// app.use("/api", contactRouter);
 // app.use("/api", ordersRouter);
 // app.use("/api/admin", adminRouter);
 
