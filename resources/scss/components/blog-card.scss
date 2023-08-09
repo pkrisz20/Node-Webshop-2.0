@@ -1,6 +1,4 @@
 .blog-card {
-    @include flexBox("space-between", "flex-start");
-    flex-direction: column;
     width: 100%;
     height: 100% !important;
     background-color: $c-grayE6;
@@ -9,6 +7,27 @@
     position: relative;
     cursor: pointer;
     transition: box-shadow .3s ease;
+    @include flexBox("flex-start", "flex-start");
+    flex-direction: column;
+
+    &-content {
+        @include flexBox("flex-start", "flex-start");
+        flex-direction: column;
+        margin: 10px 10px 0;
+
+        & > .title {
+            transition: color .3s ease;
+            font-size: 18px;
+            line-height: 26px;
+            color: $c-dark;
+            font-weight: 700;
+            margin-bottom: 10px;
+
+            &:hover {
+                color: $c-warning;
+            }
+        }
+    }
 
     .datetime {
         position: absolute;
@@ -32,6 +51,7 @@
 
     & > .image {
         width: 100%;
+        display: block;
         position: relative;
         overflow: hidden;
 
@@ -41,31 +61,17 @@
         }
     }
 
-    & > .title {
-        transition: color .3s ease;
-        margin: 10px;
-        font-size: 18px;
-        line-height: 26px;
-        color: $c-dark;
-        font-weight: 700;
-
-        &:hover {
-            color: $c-warning;
-        }
-    }
-
     .short {
         font-size: 14px;
         color: $c-gray71;
         line-height: 21px;
-        margin: 0 10px 10px;
+        margin: 0 0 10px;
     }
 
     .bottom {
         @include flexBox("flex-start", "center");
         font-size: 14px;
         color: $c-3;
-        margin: 0 10px;
         flex-wrap: wrap;
         transition: color .3s ease-in-out;
 
@@ -78,12 +84,12 @@
         display: block;
         color: $c-3;
         transition: color .3s ease-in-out;
-        margin: 10px 0 10px 10px;
+        margin: 10px 0;
         font-weight: 600;
     }
 
     &-link {
-        margin: 0 0 10px 10px;
+        margin: auto 0 10px 10px;
         @include btn($c-white, $c-dark3, $c-theme);
         padding: 5px 12px;
         font-size: 13px;
@@ -91,6 +97,7 @@
 
         i {
             font-weight: 600;
+            transform: translateY(1px);
         }
     }
 

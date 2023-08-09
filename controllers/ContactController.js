@@ -1,6 +1,6 @@
 const { db } = require("../config/db-config");
 const nodemailer = require("nodemailer");
-// const xoauth2 = require('xoauth2');
+const xoauth2 = require('xoauth2');
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const getFrontTranslations = require("../helpers/frontTranslations");
@@ -60,11 +60,13 @@ const handleContactMessage = (req, res) => {
             var smtpTransport = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: process.env.INFO_EMAIL_ADDRESS,
-                    pass: process.env.MAIL_PASSWORD,
-                    clientId: process.env.EMAIL_CLIENT_ID,
-                    clientSecret: process.env.EMAIL_CLIENT_SECRET,
-                    refreshToken: process.env.EMAIL_REFRESH_TOKEN
+                    xoauth2: xoauth2.createXOAuth2Generator({
+                        user: process.env.INFO_EMAIL_ADDRESS,
+                        pass: process.env.MAIL_PASSWORD,
+                        clientId: process.env.EMAIL_CLIENT_ID,
+                        clientSecret: process.env.EMAIL_CLIENT_SECRET,
+                        refreshToken: process.env.EMAIL_REFRESH_TOKEN
+                    })
                 }
             });
 
@@ -103,14 +105,15 @@ const handleContactMessage = (req, res) => {
                 else {
                     console.log(response);
                     console.log("Email sent");
-                }
 
-                smtpTransport.close();
-                return res.status(200).json({
-                    status: "success",
-                    title: languageHandler("general.process_success", req.session.lang ?? process.env.FALLBACK_LANG),
-                    content: languageHandler("general.contact_email_success_message", req.session.lang ?? process.env.FALLBACK_LANG)
-                });
+                    smtpTransport.close();
+
+                    return res.status(200).json({
+                        status: "success",
+                        title: languageHandler("general.process_success", req.session.lang ?? process.env.FALLBACK_LANG),
+                        content: languageHandler("general.contact_email_success_message", req.session.lang ?? process.env.FALLBACK_LANG)
+                    });
+                }
             });
         }
     });
