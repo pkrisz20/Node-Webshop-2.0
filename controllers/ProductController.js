@@ -19,7 +19,7 @@ const getProductDetails = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { slug } = req.params;
     let result = {};
     let similarProducts = [];

@@ -1,8 +1,45 @@
 const { db } = require("../config/db-config");
 const { setMomentLocale, createUniqueID, numberWithCommas } = require("../helpers/globalFunctions");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
-const nodemailer = require("nodemailer");
+const imagePathConverter = require("../helpers/imagePathConverter");
+// const nodemailer = require("nodemailer");
 const moment = require("moment");
+const languageHandler = require("../helpers/languageHandler");
+const getFrontTranslations = require("../helpers/frontTranslations");
+
+const getOrderPage = (req, res) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    var metas = {
+        title: languageHandler('orders.order', lang),
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: `This is the order page`,
+        // keywords: []
+    };
+
+    return res.render("pages/order", {
+        frontTranslations: getFrontTranslations(lang),
+        meta: metas,
+        current_locale: lang,
+        cart: cart,
+        locales: ['hu', 'sr', 'en'],
+        languageHandler: languageHandler,
+        csrfToken: req.csrfToken()
+    });
+}
 
 const createOrder = (req, res) => {
     let { lang, firstName, lastName, email, phone, city, postcode, address, orderMessage, orderedProducts } = req.body;
@@ -203,43 +240,43 @@ const createOrder = (req, res) => {
             };
 
             // Sending the emails
-            var smtpTransport = nodemailer.createTransport("SMTP", {
-                service: "Gmail",
-                auth: {
-                    XOAuth2: {
-                        user: process.env.INFO_EMAIL_ADDRESS,
-                        clientId: process.env.EMAIL_CLIENT_ID,
-                        clientSecret: process.env.EMAIL_CLIENT_SECRET,
-                        refreshToken: process.env.EMAIL_REFRESH_TOKEN
-                    }
-                }
-            });
+            // var smtpTransport = nodemailer.createTransport("SMTP", {
+            //     service: "Gmail",
+            //     auth: {
+            //         XOAuth2: {
+            //             user: process.env.INFO_EMAIL_ADDRESS,
+            //             clientId: process.env.EMAIL_CLIENT_ID,
+            //             clientSecret: process.env.EMAIL_CLIENT_SECRET,
+            //             refreshToken: process.env.EMAIL_REFRESH_TOKEN
+            //         }
+            //     }
+            // });
 
-            smtpTransport.sendMail(mailToAdmin, function(error, response) {
-                if (error) {
-                    console.log(error);
-                    return res.status(500).json({ status: "error" });
-                }
-                else {
-                    console.log("Email sent successfully to the admin");
-                }
-            });
+            // smtpTransport.sendMail(mailToAdmin, function(error, response) {
+            //     if (error) {
+            //         console.log(error);
+            //         return res.status(500).json({ status: "error" });
+            //     }
+            //     else {
+            //         console.log("Email sent successfully to the admin");
+            //     }
+            // });
 
-            smtpTransport.sendMail(emailToClient[lang], function(error, response) {
-                if (error) {
-                    console.log(error);
-                    return res.status(500).json({ status: "error" });
-                }
-                else {
-                    console.log(response);
-                    console.log("Email have been sent successfully to the client");
-                }
-                smtpTransport.close();
-            });
+            // smtpTransport.sendMail(emailToClient[lang], function(error, response) {
+            //     if (error) {
+            //         console.log(error);
+            //         return res.status(500).json({ status: "error" });
+            //     }
+            //     else {
+            //         console.log(response);
+            //         console.log("Email have been sent successfully to the client");
+            //     }
+            //     smtpTransport.close();
+            // });
 
             return res.status(200).json({ status: "success" }).end();
         }
     });
 }
 
-module.exports = { createOrder };
+module.exports = { createOrder, getOrderPage };

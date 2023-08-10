@@ -89,7 +89,7 @@ const addCartItem = (req, res) => {
         }
     }
 
-    const cartQuery = "SELECT id, name, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
+    const cartQuery = "SELECT id, name, slug, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
 
     db.query(cartQuery, cartItem.productId, (err, data) => {
         if (err) {
@@ -127,6 +127,7 @@ const addCartItem = (req, res) => {
             let resultItem = {
                 productId: data[0].id,
                 productName: getValueByLanguage(data[0].name, lang),
+                slug: data[0].slug,
                 maxQuantity: data[0].max_order_count,
                 quantity: cartItem.quantity,
                 price: data[0].discount_value ? data[0].discount_value : data[0].price,

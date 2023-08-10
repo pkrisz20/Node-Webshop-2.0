@@ -231,7 +231,7 @@ $('.js-form-validate').not('.inited').each(function () {
                 type: $(form).prop('method'),
                 url: $(form).data('url'),
                 dataType: 'json',
-                data: $(form).serializeArray(),
+                data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
                 beforeSend: function (jqXHR) {
                     this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
                 },
@@ -386,7 +386,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                                         </div>
 
                                         <div class="functions">
-                                            <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                            <a href="/${ response.current_locale }/products/${ item.slug }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                             <button type="button" value="${ response.remove_text } %>" data-id="${ item.productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                         </div>
                                     </div>
@@ -434,7 +434,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
                                             </div>
 
                                             <div class="functions">
-                                                <a href="/${ response.current_locale }/product" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                                <a href="/${ response.current_locale }/products/${ response.results[0].slug }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                                 <button type="button" value="${ response.remove_text }" data-id="${ response.results[0].productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>

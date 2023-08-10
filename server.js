@@ -104,10 +104,10 @@ app.use("/:lang", searchRouter);
 const contactRouter = require("./routes/contact");
 app.use("/:lang", contactRouter);
 
-// const ordersRouter = require("./routes/orders");
-// const adminRouter = require("./routes/admin");
+const ordersRouter = require("./routes/orders");
+app.use("/:lang", ordersRouter);
 
-// app.use("/api", ordersRouter);
+// const adminRouter = require("./routes/admin");
 // app.use("/api/admin", adminRouter);
 
 app.get("*", (req, res) => {
