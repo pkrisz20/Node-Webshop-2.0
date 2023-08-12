@@ -100,7 +100,7 @@ const en = {
 		cart_contains_sub: "These products will be ordered",
 		order_form: "Ordering form",
 		order_form_sub: "Fill the form below to send your order",
-		order_succes_message: "Your order has been processed successfully. We sent a summary to your email address!",
+		order_succes_message: "Your order has been processed successfully. We are going to contact with You soon!",
 		added_to_cart: "Successfully added to cart!"
 	},
 	about: {

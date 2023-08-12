@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="<%= current_locale %>">
-    <%- include('layout/head.ejs') %>
+    <%- include('../layout/head.ejs') %>
 
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/order.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -9,9 +9,9 @@
 <body>
     <!-- TODO: Finish the front part in the order page -->
     <div class="site-wrap">
-        <%- include('layout/header.ejs') %>
+        <%- include('../layout/header.ejs') %>
 
-        <%- include('components/cart.ejs') %>
+        <%- include('../components/cart.ejs') %>
 
         <main class="order">
             <div class="wrapper">
@@ -20,13 +20,13 @@
                 <section class="order-container">
                     <%- include('../components/block-title.ejs', { title: languageHandler('orders.cart_contains', current_locale), subtitle: languageHandler('orders.cart_contains_sub', current_locale) }) %>
 
-                    <% if (cart.length > 0) { %>
+                    <% if (cart.items.length > 0) { %>
                         <div>
                             <h6 class="order-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <%= cart.totalCount %></h6>
 
-                            <div class="order-container-items">
-                                <% cart.forEach(cartItem => { %>
-                                    <div class="order-container-items-card">
+                            <div class="order-container-items js-order-items-container">
+                                <% cart.items.forEach(cartItem => { %>
+                                    <div class="order-container-items-card js-order-item">
                                         <div class="order-image">
                                             <picture>
                                                 <source srcset="<%= cartItem.image %>">
@@ -44,14 +44,14 @@
                                                     <button type="button" class="quantities-btn plus js-quantity-btn"><i class="fas fa-plus"></i></button>
                                                 </div>
 
-                                                <small class="quantities-price"><i class="fas fa-times"></i> <span><%= cartItem.price %> RSD</span></small>
+                                                <small class="quantities-price"><i class="fas fa-times"></i> <span><%= numberWithCommas(cartItem.price) %> RSD</span></small>
                                             </div>
                                         </div>
 
-                                        <strong class="order-price"><% cartItem.quantity * cartItem.price %> RSD</strong>
+                                        <strong class="order-price"><%= numberWithCommas(cartItem.quantity * cartItem.price) %> RSD</strong>
 
                                         <div class="order-functions">
-                                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= cartItem.slug %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                             <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" class="order-functions-remove js-remove-cart" data-id="<%= cartItem.productId %>"><i class="fas fa-times"></i></button>
                                         </div>
                                     </div>
@@ -59,12 +59,12 @@
                             </div>
                             <strong class="order-total_price"><%= languageHandler('orders.total_price', current_locale) %>: <%= cart.totalPrice %> RSD</strong>
                         </div>
-                    <% } else if (cart.length == 0) { %>
+                    <% } else if (cart.items.length === 0) { %>
                         <h5 class="order-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler("orders.cart_empty", current_locale) %></h5>
-                    <% %>
+                    <% } %>
                 </section>
 
-                <% if (cart.length > 0) { %>
+                <% if (cart.items.length > 0) { %>
                     <section class="order-form">
                         <%- include('../components/block-title.ejs', { title: languageHandler('orders.order_form', current_locale), subtitle: languageHandler('orders.order_form_sub', current_locale) }) %>
 
@@ -211,7 +211,6 @@
                                 <textarea
                                     id="order-note"
                                     name="comment"
-                                    data-rule-required="true"
                                     data-rule-max-length="1000"
                                     placeholder="<%= languageHandler('general.comment', current_locale) %>"
                                     class="form-control--textarea js-characters-count"
@@ -219,7 +218,7 @@
                                     maxlength="1000"></textarea>
 
                                 <label for="order-note" class="form-label form-textarea">
-                                    <%= languageHandler('validations.message', current_locale) %>
+                                    <%= languageHandler('general.comment', current_locale) %>
                                 </label>
 
                                 <i class="error-icon textarea-error fas fa-times"></i>
@@ -253,7 +252,7 @@
             </div>
         </main>
 
-        <%- include('layout/footer.ejs') %>
+        <%- include('../layout/footer.ejs') %>
     </div>
 
     <script type="text/javascript">

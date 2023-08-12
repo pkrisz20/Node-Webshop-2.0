@@ -100,7 +100,7 @@ const sr = {
         cart_contains_sub: "Ovi proizvodi će biti naručeni",
         order_form: "Narudžbenica",
         order_form_sub: "Popunite formular ispod da bi poslali svoju narudžbinu",
-        order_succes_message: "Vaša narudžbina je uspešno obrađeno. Poslali smo rezime na Vašu mejl adresu!",
+        order_succes_message: "Vaša narudžbina je uspešno obrađeno. Uskoro ćemo stupiti kontakt sa Vama!",
 		added_to_cart: "Dodatno u korpu!"
     },
     about: {

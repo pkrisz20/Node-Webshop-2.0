@@ -100,7 +100,7 @@ const hu = {
         cart_contains_sub: "Ezek a termékek kerülnek megrendelésre",
         order_form: "Megrendelő űrlap",
         order_form_sub: "Töltse ki az alábbi űrlapot, hogy elküldje a rendelését",
-        order_succes_message: "A rendelését sikeresen feldolgoztuk. Elküldtünk egy összegzést az e-mail címére!",
+        order_succes_message: "A rendelését sikeresen feldolgoztuk. Hamarosan felvesszük Önnel a kapcsolatot!",
 		added_to_cart: "Sikeresen hozzáadva a kosárhoz!"
     },
     about: {
