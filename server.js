@@ -66,14 +66,16 @@ app.get('/', (req, res) => {
 
 app.use("/:lang", function (req, res, next) {
 
-    // if (
-    //     req.params.lang !== 'en'
-    //     || req.params.lang !== 'sr'
-    //     || req.params.lang !== 'hu'
-    // ) {
-    //     req.originalUrl = `/${ req.session.lang ?? process.env.FALLBACK_LANG }`;
-    //     req.params.lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    // }
+    if ( req.params.lang !== 'en' && req.params.lang !== 'sr' && req.params.lang !== 'hu' )
+    {
+        return res.status(404).render('404', {
+            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
+        });
+    }
 
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
     return next();
