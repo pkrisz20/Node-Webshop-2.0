@@ -60,14 +60,17 @@
     .card {
         width: 210px;
         height: 210px;
-        @include flexBox("center", "center", 25px);
-        flex-direction: column;
-        padding: 50px;
         cursor: pointer;
-        transition: all .3s ease-in-out;
         overflow: hidden;
         border-radius: 50%;
-        color: $c-d;
+        position: relative;
+
+        &::before {
+            @include absoluteFullSize();
+            content: "";
+            z-index: 1;
+            background-color: rgba($c-black, .6);
+        }
 
         @media #{ $r-min-xl } {
             width: 260px;
@@ -75,51 +78,27 @@
             margin: 0;
         }
 
-        @media #{$r-max-m} {
-            padding: 60px 40px;
-        }
-        @media #{$r-max-s} {
-            padding: 50px 30px;
-        }
-
         &:hover {
-            .card-text, img {
-                transform: scale(1.3);
+            img {
+                transform: scale(1.1);
             }
         }
 
         img {
-            width: 55px;
-            height: 55px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
             transition: transform .3s ease-in-out;
-            filter: invert(97%) sepia(11%) saturate(17%) hue-rotate(60deg) brightness(109%) contrast(73%);
-
-            @media #{ $r-min-xl } {
-                width: 65px;
-                height: 65px;
-            }
-        }
-
-        &:nth-child(even) {
-            background-color: $c-theme;
-            border: 10px solid $c-dark-blue;
-        }
-
-        &:nth-child(odd) {
-            background-color: $c-dark-blue;
-            border: 10px solid $c-theme;
         }
 
         &-text {
-            font-weight: 700;
+            @include absoluteCenter();
+            color: $c-white;
+            z-index: 2;
+            font-weight: 500;
             text-align: center;
-            transition: transform .3s ease-in-out;
-
             @include resp('font-size', 16px, 20px);
-
-            @media #{$r-max-xl} {
-                padding: 15px 0;
-            }
         }
     }
 }

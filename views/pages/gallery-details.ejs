@@ -19,6 +19,10 @@
 
                 <time class="gallery-details-date"><%= galleryData.date %></time>
 
+                <% if (galleryData.description) { %>
+                    <p class="gallery-details-desc"><%= galleryData.description %></p>
+                <% } %>
+
                 <section class="gallery-grid js-gallery">
                     <% galleryData.galleryImages.forEach((image, index) => { %>
                         <figure class="gallery-grid-item" data-src="<%= image %>">

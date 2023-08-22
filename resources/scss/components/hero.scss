@@ -149,53 +149,10 @@
                     font-size: 50px;
                     @include resp('font-size', 25px, 50px);
                     color: $c-white;
+                    font-weight: 600;
                     pointer-events: none;
+                    margin-bottom: 20px;
                     text-transform: uppercase;
-                }
-
-                &-decoration {
-                    margin: 14px 0;
-                    position: relative;
-
-                    i {
-                        font-size: 15px;
-                        color: $c-white;
-
-                        @media #{ $r-min-l } {
-                            font-size: 18px;
-                        }
-                    }
-
-                    &::before, &::after {
-                        position: absolute;
-                        content: "";
-                        top: 50%;
-                        transform: translateY(-50%);
-                        background-color: $c-white;
-                        height: 2px;
-                        width: 50px;
-                        border-radius: 5px;
-
-                        @media #{ $r-min-l } {
-                            width: 90px;
-                        }
-                    }
-
-                    &::before {
-                        left: -60px;
-
-                        @media #{ $r-min-l } {
-                            left: -120px;
-                        }
-                    }
-
-                    &::after {
-                        right: -60px;
-
-                        @media #{ $r-min-l } {
-                            right: -120px;
-                        }
-                    }
                 }
 
                 &-subtitle {
@@ -203,28 +160,27 @@
                     color: $c-white;
                     pointer-events: none;
                     margin-bottom: 25px;
+                    font-weight: 400;
                 }
 
                 &-btn {
                     cursor: pointer;
                     text-decoration: none;
                     padding: 10px 24px;
-                    background-color: transparent;
+                    background-color: $c-red2;
                     color: $c-white;
                     @include resp('font-size', 16px, 20px);
                     font-weight: 600;
                     text-transform: uppercase;
-                    transition: all .3s ease;
-                    border: 3px solid $c-white;
+                    transition: background-color .3s ease;
+                    border-radius: 27px;
 
                     @media #{ $r-min-s } {
                         padding: 12px 30px;
                     }
 
                     &:hover {
-                        background-color: $c-theme;
-                        color: $c-dark-blue;
-                        border-color: $c-theme;
+                        background-color: $c-skyblue;
                     }
                 }
             }

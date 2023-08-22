@@ -22,7 +22,7 @@
       }
 
       &-button {
-        @include btn($c-white, $c-red, $c-theme);
+        @include btn($c-white, $c-red2, $c-theme);
         text-transform: uppercase;
         font-weight: 700;
 
@@ -106,7 +106,7 @@
               margin: 40px 15px;
               padding: 12px 30px;
               position: relative;
-              background-color: $c-red;
+              background-color: $c-red2;
               text-transform: uppercase;
 
               &.ad-btn {

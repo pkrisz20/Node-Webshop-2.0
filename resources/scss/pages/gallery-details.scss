@@ -12,7 +12,14 @@
         font-size: 22px;
         color: $c-dark-blue;
         font-weight: 600;
-        margin: 0 0 30px;
+        margin: 0 0 20px;
+    }
+
+    &-desc {
+        margin: 0 0 20px;
+        font-weight: 400;
+        font-size: 16px;
+        color: $c-dark3;
     }
 
     .main-title {
@@ -25,7 +32,8 @@
 
     .gallery {
         &-grid {
-            @include flexBox("center", "center", 25px);
+            padding: 0;
+            @include flexBox("center", "center", 0);
             flex-direction: column;
 
             @media #{ $r-max-s } {
@@ -34,22 +42,21 @@
             }
 
             @media #{ $r-min-s } {
-                @include gridBox("center", 2, 10px, 10px);
+                @include gridBox("center", 2, 0, 0);
             }
 
             @media #{ $r-min-m } {
-                @include gridBox("center", 3, 10px, 10px);
+                @include gridBox("center", 3, 0, 0);
             }
 
             @media #{ $r-min-l } {
-                @include gridBox("center", 4, 10px, 10px);
+                @include gridBox("center", 4, 0, 0);
             }
 
             &-item {
                 @include flexBox();
                 cursor: pointer;
                 position: relative;
-                border-radius: 5px;
                 overflow: hidden;
                 width: 100%;
 

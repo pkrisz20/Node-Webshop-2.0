@@ -34,10 +34,10 @@
         right: 5px;
         top: 5px;
         z-index: 2;
-        padding: 7px 12px;
+        padding: 4px 10px;
         @include flexBox();
-        background-color: $c-dark3;
-        border-radius: 15px;
+        background-color: $c-skyblue;
+        border-radius: 4px;
 
         &-value {
             font-size: 13px;

@@ -157,7 +157,7 @@ const getGalleryDetails = (req, res) => {
     let { slug } = req.params;
     let result = {};
 
-    const sqlGalleryDetails = "SELECT gallery_name, gallery_date, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
+    const sqlGalleryDetails = "SELECT gallery_name, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
 
     setMomentLocale(lang);
 
@@ -186,6 +186,7 @@ const getGalleryDetails = (req, res) => {
         else if (data.length > 0) {
             result = {
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
+                description: getValueByLanguage(data[0].description, lang),
                 galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "gallery"),
                 date: moment(data[0].gallery_date).format("YYYY. MMMM DD.")
             }

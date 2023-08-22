@@ -11,6 +11,7 @@
       width: 100%;
       height: auto;
       overflow: hidden;
+
       picture {
         @include paddingBottom(100, 130);
       }
@@ -18,22 +19,24 @@
       .badge {
         position: absolute;
         z-index: 2;
+        font-style: italic;
 
         &-discount {
           text-transform: uppercase;
           top: 5px;
           left: 5px;
+          font-size: 14px;
           font-weight: 700;
           background-color: $c-yellow;
           color: $c-black;
           border: 1px solid $c-black;
-          padding: 5px;
+          padding: 4px;
         }
 
         &-postable {
           top: 0;
           right: 10px;
-          padding: 10px;
+          padding: 7px;
           background-color: $c-info;
           color: $c-white;
           font-size: 17px;

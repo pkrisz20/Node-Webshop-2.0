@@ -2,10 +2,10 @@
     <div class="wrapper">
         <div class="featured-categories-carousel js-categories-carousel">
             <% categories.forEach(item => { %>
-                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/products?category=<%= item.id %>">
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/products?category=<%= item.id %>" title="<%= item.name %>">
                     <div class="card">
-                        <img src="<%= item.icon %>" class="card-icon" alt="<%= item.name %>" />
-                        <h3 class="card-text" title="<%= item.name %>"><%= item.name %></h3>
+                        <img src="<%= item.image %>" class="card-icon" alt="<%= item.name %>" />
+                        <h3 class="card-text"><%= item.name %></h3>
                     </div>
                 </a>
             <% }) %>
