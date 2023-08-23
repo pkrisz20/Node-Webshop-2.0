@@ -123,8 +123,8 @@ const getAllGallery = (req, res) => {
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
                     return res.render("pages/galleries", {
-                        pageCount: pageCount,
-                        currentPage: page,
+                        pageCount: parseInt(pageCount),
+                        currentPage: parseInt(page),
                         articleLink: "gallery",
                         galleries: result ?? [],
                         meta: metas,

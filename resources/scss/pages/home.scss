@@ -25,6 +25,7 @@
         @include btn($c-white, $c-red2, $c-theme);
         text-transform: uppercase;
         font-weight: 700;
+        border-radius: 27px;
 
         i {
           color: $c-white;

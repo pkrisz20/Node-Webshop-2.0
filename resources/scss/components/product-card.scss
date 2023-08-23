@@ -2,7 +2,7 @@
     height: 100% !important;
     @include flexBox("space-between");
     flex-direction: column;
-    background-color: rgba($c-light-gray, .3);
+    background-color: $c-grayE8;
     transition: all .2s ease-in-out;
     cursor: pointer;
 
@@ -77,6 +77,7 @@
 
         &.old {
           font-size: 14px;
+          font-weight: 600;
           color: $c-7;
           margin: 0 0 3px;
 

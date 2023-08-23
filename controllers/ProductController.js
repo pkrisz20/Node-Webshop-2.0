@@ -5,6 +5,7 @@ const { setMomentLocale, numberWithCommas } = require("../helpers/globalFunction
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const getFrontTranslations = require("../helpers/frontTranslations");
+const { name } = require("ejs");
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -42,7 +43,7 @@ const getProductDetails = (req, res) => {
             });
         }
 
-        else if (data.length == 0) {
+        else if (data.length === 0) {
             return res.status(404).render('404', {
                 current_locale: lang ?? process.env.FALLBACK_LANG,
                 title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
@@ -182,7 +183,7 @@ const getAllProducts = (req, res) => {
         }
     });
     const lang  = req.session.lang;
-    let { category = 0, page = 1 } = req.query;
+    let { page = 1 } = req.query;
     let result = [];
     var metas = {
         title: languageHandler("general.products", lang),
@@ -192,39 +193,11 @@ const getAllProducts = (req, res) => {
         // keywords: []
     };
 
-    page = parseInt(page);
-    category = parseInt(category);
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
-    if ( isNaN(page) || isNaN(category) ) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
-    }
-
-    if (typeof page !== "number" || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
-    }
-
-    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ?";
-
-    if (typeof category === "number" && category !== 0) {
-        sqlQuery += " AND category_id = ?";
-    }
-
-    sqlQuery += " ORDER BY id DESC LIMIT ? OFFSET ?";
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
-    db.query(sqlQuery, (typeof category === "number" && category > 0) ? [1, category, parseInt(process.env.PAGINATION), pageOffset] : [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
+    db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
             return res.status(500).render("500", {
@@ -239,6 +212,7 @@ const getAllProducts = (req, res) => {
         else if (data.length == 0) {
             return res.render("pages/products", {
                 pageCount: 0,
+                main_title: languageHandler('general.products', lang),
                 products: [],
                 meta: metas,
                 current_locale: req.session.lang,
@@ -277,12 +251,8 @@ const getAllProducts = (req, res) => {
 
             let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products WHERE products.is_active = ?";
 
-            if (typeof category === "number" && category > 0) {
-                selectForPagination += " AND products.category_id = ?";
-            }
-
             // Select for pagination count
-            db.query(selectForPagination, (typeof category === "number" && category > 0) ? [1, category] : 1, (err, elementsCount) => {
+            db.query(selectForPagination, 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
                     return res.status(500).render("500", {
@@ -301,10 +271,11 @@ const getAllProducts = (req, res) => {
                     pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
 
                     return res.render("pages/products", {
-                        pageCount: pageCount,
-                        currentPage: page,
+                        pageCount: parseInt(pageCount),
+                        currentPage: parseInt(page),
                         articleLink: "products",
                         products: result ?? [],
+                        main_title: languageHandler('general.products', lang),
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,
@@ -349,35 +320,158 @@ const handleProductComment = (req, res) => {
     });
 }
 
-const getCategories = (req, res) => {
-    const { lang } = req.body;
-    let result = [];
-    const sqlQuery = "SELECT id, name, icon FROM categories";
-
-    if (!lang) {
-        return res.status(400).json({ status: "error" });
-    }
-
-    db.query(sqlQuery, (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ status: "error" });
+const getCategoryProducts = (req, res) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
         }
+    });
+    const lang  = req.session.lang;
+    let { page = 1 } = req.query;
+    let { slug } = req.params;
+    let result = [];
 
-        else if (data.length > 0) {
-            data.forEach(element => {
-                let tempObject = {
-                    id: parseInt(element.id),
-                    name: getValueByLanguage(element.name, lang),
-                    icon: imagePathConverter(element.icon, "categories")
-                }
+    let checkForCategory = "SELECT name FROM categories WHERE slug = ?";
 
-                result.push(tempObject);
+    db.query(checkForCategory, slug, (checking_err, category_data) => {
+        if (checking_err) {
+            console.log(checking_err);
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
             });
         }
 
-        return res.status(200).json({ status: 'success', result: result ?? [] });
+        else if (category_data.length === 0) {
+            return res.status(404).render('404', {
+                current_locale: lang ?? process.env.FALLBACK_LANG,
+                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (category_data.length > 0) {
+            const selectedCategoryName = getValueByLanguage(category_data[0].name, lang);
+            var metas = {
+                title: selectedCategoryName,
+                type: "page",
+                image: `${ process.env.APP_URL }/images/logo.png`,
+                description: `This is the ${ selectedCategoryName } category list page`,
+                // keywords: []
+            };
+
+            let sqlQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+
+            let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
+
+            db.query(sqlQuery, [1, slug, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                        current_locale: req.session.lang,
+                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                else if (data.length === 0) {
+                    return res.render("pages/products", {
+                        pageCount: 0,
+                        main_title: selectedCategoryName,
+                        products: [],
+                        meta: metas,
+                        current_locale: req.session.lang,
+                        cart: cart,
+                        locales: ['hu', 'sr', 'en'],
+                        languageHandler: languageHandler,
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                else if (data.length > 0) {
+                    data.forEach(element => {
+                        let tempObject = {
+                            id: parseInt(element.id),
+                            name: getValueByLanguage(element.name, lang),
+                            slug: element.slug,
+                            image: imagePathConverter(element.image_thumbnail, "products"),
+                            price: numberWithCommas(element.price),
+                            isOnDiscount: Boolean(element.discount_value),
+                            discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
+                            isAvailable: Boolean(element.is_available),
+                            isPostable: Boolean(element.is_delivered),
+                            maxQuantity: parseInt(element.max_order_count)
+                        }
+
+                        result.push(tempObject);
+                    });
+
+                    // Check for is the product already in the cart
+                    let productIdsInCart = cart?.items?.map(item => item.productId);
+
+                    result?.forEach(resultItem => {
+
+                        resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
+                    });
+
+                    let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ?";
+
+                    // if (typeof category === "number" && category > 0) {
+                    //     selectForPagination += " AND products.category_id = ?";
+                    // }
+
+                    // Select for pagination count
+                    db.query(selectForPagination, [1, slug], (err_count, elementsCount) => {
+                        if (err_count) {
+                            console.log(err_count);
+                            return res.status(500).render("500", {
+                                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                                current_locale: req.session.lang,
+                                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                                csrfToken: req.csrfToken()
+                            });
+                        }
+
+                        else if (elementsCount) {
+
+                            let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
+                            let pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
+                            pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
+
+                            return res.render("pages/products", {
+                                pageCount: parseInt(pageCount),
+                                currentPage: parseInt(page),
+                                articleLink: `products/category/${ slug }`,
+                                products: result ?? [],
+                                main_title: selectedCategoryName,
+                                meta: metas,
+                                current_locale: req.session.lang,
+                                cart: cart,
+                                locales: ['hu', 'sr', 'en'],
+                                languageHandler: languageHandler,
+                                csrfToken: req.csrfToken()
+                            });
+                        }
+                    });
+                }
+            });
+        }
     });
 };
 
-module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategories };
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts };

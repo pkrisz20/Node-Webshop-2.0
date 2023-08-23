@@ -9,6 +9,9 @@ const recaptchaValidation = require("../validations/recaptchaValidation");
 productsRouter.route("/products")
     .get(getCartItems, ProductController.getAllProducts);
 
+productsRouter.route("/products/category/:slug")
+    .get(getCartItems, ProductController.getCategoryProducts);
+
 productsRouter.route("/products/:slug")
     .get(getCartItems, ProductController.getProductDetails);
 

@@ -42,7 +42,7 @@ const getData = (req, res) => {
     // HEROS
     const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ? ORDER BY id DESC";
     // CATEGORIES
-    const sqlQueryCategories = "SELECT id, name, image FROM categories";
+    const sqlQueryCategories = "SELECT id, name, slug, image FROM categories";
 
     setMomentLocale(lang);
 
@@ -197,6 +197,7 @@ const getData = (req, res) => {
                                                 let tempObjectCategory = {
                                                     id: parseInt(category_element.id),
                                                     name: getValueByLanguage(category_element.name, lang),
+                                                    slug: category_element.slug,
                                                     image: imagePathConverter(category_element.image, "categories")
                                                 }
 
