@@ -287,18 +287,18 @@ $(function() {
     var upscrollButton = $('.js-upscroll');
 
     $(window).scroll(function () {
+
         var scroll = $(window).scrollTop();
 
         if (scroll > 0) {
             header.addClass('header-sticky');
+            upscrollButton.css('opacity', '1');
+            upscrollButton.css('visibility', 'visible');
         }
         else {
             header.removeClass('header-sticky');
-            upscrollButton.removeClass('show');
-        }
-
-        if (scroll > 350) {
-            upscrollButton.addClass('show');
+            upscrollButton.css('opacity', '0');
+            upscrollButton.css('visibility', 'hidden');
         }
     });
 

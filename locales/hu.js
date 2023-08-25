@@ -77,6 +77,8 @@ const hu = {
         all_products: "Az összes termék",
         similar_products: "Hasonló termékek",
         discount: "Akció",
+		status: "Elérhetőség",
+		shipping: "Szállítás",
         special: "Kiemelt",
         available: "Elérhető",
         out_of_stock: "Nincs raktáron",

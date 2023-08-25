@@ -1,119 +1,122 @@
 <section class="comments">
-    <%- include('./block-title.ejs', { title: languageHandler('general.comments', current_locale), subtitle: languageHandler('general.comments_subtitle', current_locale) }) %>
+    <div class="wrapper">
 
-    <div class="comments-information">
-        <i class="fas fa-exclamation-triangle"></i>
-        <p class="comments-information-text"><%= languageHandler('validations.accept_terms', current_locale) %></p>
-        <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
-    </div>
+        <%- include('./block-title.ejs', { title: languageHandler('general.comments', current_locale), subtitle: languageHandler('general.comments_subtitle', current_locale) }) %>
 
-    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/<%= articleType %>/comment/<%= itemId %>">
-        <input
-            id="recaptcha"
-            value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-            name="recaptcha"
-            type="hidden"
-            class="g-recaptcha"
-        />
-        <div class="row">
+        <div class="comments-information">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p class="comments-information-text"><%= languageHandler('validations.accept_terms', current_locale) %></p>
+            <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse"><%= languageHandler('nav.terms_of_use', current_locale) %></a></p>
+        </div>
+
+        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/<%= articleType %>/comment/<%= itemId %>">
+            <input
+                id="recaptcha"
+                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                name="recaptcha"
+                type="hidden"
+                class="g-recaptcha"
+            />
+            <div class="row">
+                <div class="form-row">
+                    <input
+                        id="full-name"
+                        data-rule-required="true"
+                        name="fullName"
+                        type="text"
+                        placeholder="<%= languageHandler('validations.full_name', current_locale) %>"
+                        class="form-control"
+                    />
+                    <label class="form-label" for="full-name">
+                        <%= languageHandler('validations.full_name', current_locale) %>
+                    </label>
+
+                    <i class="error-icon fas fa-times"></i>
+                    <div class="form-row-error"></div>
+                </div>
+
+                <div class="form-row">
+                    <input
+                        id="comment-email"
+                        data-rule-required="true"
+                        data-rule-email="true"
+                        name="email"
+                        type="email"
+                        placeholder="<%= languageHandler('validations.email', current_locale) %>"
+                        class="form-control"
+                    />
+                    <label class="form-label" for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
+
+                    <i class="error-icon fas fa-times"></i>
+                    <div class="form-row-error"></div>
+                </div>
+            </div>
+
             <div class="form-row">
-                <input
-                    id="full-name"
+                <textarea
+                    id="comment-message"
+                    name="comment"
                     data-rule-required="true"
-                    name="fullName"
-                    type="text"
-                    placeholder="<%= languageHandler('validations.full_name', current_locale) %>"
-                    class="form-control"
-                />
-                <label class="form-label" for="full-name">
-                    <%= languageHandler('validations.full_name', current_locale) %>
+                    data-rule-max-length="1000"
+                    placeholder="<%= languageHandler('general.comment', current_locale) %>"
+                    class="form-control--textarea js-characters-count"
+                    rows="10"
+                    maxlength="1000"></textarea>
+                <label
+                    for="comment-message"
+                    class="form-label form-textarea">
+                    <%= languageHandler('general.comment', current_locale) %>
                 </label>
 
-                <i class="error-icon fas fa-times"></i>
+                <i class="error-icon textarea-error fas fa-times"></i>
                 <div class="form-row-error"></div>
+
+                <small class="characters-count js-counter"><span>1000</span> / 1000</small>
             </div>
 
-            <div class="form-row">
-                <input
-                    id="comment-email"
-                    data-rule-required="true"
-                    data-rule-email="true"
-                    name="email"
-                    type="email"
-                    placeholder="<%= languageHandler('validations.email', current_locale) %>"
-                    class="form-control"
-                />
-                <label class="form-label" for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
+            <div class="form-row gdpr">
+                <label
+                    class="form-label"
+                    for="data-handling">
+                    <%= languageHandler('validations.accept_policy', current_locale) %>
 
-                <i class="error-icon fas fa-times"></i>
-                <div class="form-row-error"></div>
+                    <input
+                        id="data-handling"
+                        name="accept"
+                        type="checkbox"
+                        checked="checked"
+                        class="form-row-checkbox"
+                    />
+                    <span class="checkmark"></span>
+                </label>
+                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/policy"><%= languageHandler('nav.privacy_policy', current_locale) %></a></span>
             </div>
-        </div>
 
-        <div class="form-row">
-            <textarea
-                id="comment-message"
-                name="comment"
-                data-rule-required="true"
-                data-rule-max-length="1000"
-                placeholder="<%= languageHandler('general.comment', current_locale) %>"
-                class="form-control--textarea js-characters-count"
-                rows="10"
-                maxlength="1000"></textarea>
-            <label
-                for="comment-message"
-                class="form-label form-textarea">
-                <%= languageHandler('general.comment', current_locale) %>
-            </label>
+            <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
+        </form>
 
-            <i class="error-icon textarea-error fas fa-times"></i>
-            <div class="form-row-error"></div>
+        <% if (articleComments.length > 0) { %>
+            <div class="comments-container">
+                <% articleComments.forEach(comment => { %>
+                    <div class="comments-container-box">
 
-            <small class="characters-count js-counter"><span>1000</span> / 1000</small>
-        </div>
+                        <div class="profile-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
 
-        <div class="form-row gdpr">
-            <label
-                class="form-label"
-                for="data-handling">
-                <%= languageHandler('validations.accept_policy', current_locale) %>
-
-                <input
-                    id="data-handling"
-                    name="accept"
-                    type="checkbox"
-                    checked="checked"
-                    class="form-row-checkbox"
-                />
-                <span class="checkmark"></span>
-            </label>
-            <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/policy"><%= languageHandler('nav.privacy_policy', current_locale) %></a></span>
-        </div>
-
-        <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
-    </form>
-
-    <% if (articleComments.length > 0) { %>
-        <div class="comments-container">
-            <% articleComments.forEach(comment => { %>
-                <div class="comments-container-box">
-
-                    <div class="profile-icon">
-                        <i class="fas fa-user-circle"></i>
+                        <div class="content">
+                            <strong class="content-name"><%= comment.name %></strong>
+                            <p class="content-comment"><%= comment.description %></p>
+                            <time class="content-date"><i class="fas fa-history"></i> <%= comment.date %></time>
+                        </div>
                     </div>
-
-                    <div class="content">
-                        <strong class="content-name"><%= comment.name %></strong>
-                        <p class="content-comment"><%= comment.description %></p>
-                        <time class="content-date"><i class="fas fa-history"></i> <%= comment.date %></time>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-    <% } else if (articleComments.length == 0) { %>
-        <div class="comments-information no-comment">
-            <i class="fas fa-info-circle"></i>
-            <p class="comments-information-text"><%= languageHandler('products.no_comment_yet', current_locale) %></p>
-        </div>
-    <% } %>
+                <% }) %>
+            </div>
+        <% } else if (articleComments.length == 0) { %>
+            <div class="comments-information no-comment">
+                <i class="fas fa-info-circle"></i>
+                <p class="comments-information-text"><%= languageHandler('products.no_comment_yet', current_locale) %></p>
+            </div>
+        <% } %>
+    </div>
 </section>

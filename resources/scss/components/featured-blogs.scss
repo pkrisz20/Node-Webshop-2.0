@@ -16,16 +16,13 @@
 
         &-slide {
             height: inherit !important;
-            margin: 0 12px;
-
-            @media #{ $r-min-xl } {
-                margin: 0 6px;
-            }
+            margin: 0 6px;
         }
 
         &-arrow {
             position: absolute;
-            top: 55%;
+            top: 50%;
+            transform: translateY(-50%);
             background-color: $c-theme;
             border-radius: 3px;
             padding: 8px !important;
@@ -46,19 +43,11 @@
         }
 
         &-prev {
-            left: 30px !important;
-
-            @media #{ $r-min-xl } {
-                left: -5px !important;
-            }
+            left: 5px !important;
         }
 
         &-next {
-            right: 30px !important;
-
-            @media #{ $r-min-xl } {
-                right: -5px !important;
-            }
+            right: 5px !important;
         }
     }
 }

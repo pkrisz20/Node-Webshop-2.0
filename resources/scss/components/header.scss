@@ -672,7 +672,10 @@
       }
     }
     .upscroller {
-      display: none;
+
+      @media #{$r-max-m} {
+        display: none !important;
+      }
 
       @media #{$r-min-m} {
         position: fixed;
@@ -686,13 +689,6 @@
         padding: 15px;
         cursor: pointer;
         transition: all .3s ease-in-out;
-        visibility: hidden;
-        opacity: 0;
-
-        &.show {
-          visibility: visible;
-          opacity: 1;
-        }
 
         i {
           font-size: 24px;

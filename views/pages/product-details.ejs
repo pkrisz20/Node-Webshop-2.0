@@ -14,80 +14,85 @@
         <%- include('../components/cart.ejs') %>
 
         <main class="product-details">
-            <div class="wrapper">
 
                 <section class="product-details-section">
-                    <h1 class="main-title"><%= productDetails.name %></h1>
+                    <div class="wrapper">
+                        <div class="details">
+                            <div class="details-gallery js-gallery-thumb">
+                                <picture>
+                                    <source srcset="<%= productDetails.thumbnailImage %>" />
+                                    <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg">
+                                </picture>
+                            </div>
 
-                    <div class="details">
-                        <div class="details-gallery js-gallery-thumb">
-                            <picture>
-                                <source srcset="<%= productDetails.thumbnailImage %>" />
-                                <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg">
-                            </picture>
-                        </div>
-
-                        <% if (productDetails.images.length > 0) { %>
-                            <div class="js-gallery hide">
-                                <div data-src="<%= productDetails.thumbnailImage %>">
-                                    <img src="<%= productDetails.thumbnailImage %>" alt="Image thumbnail">
-                                </div>
-                                <% productDetails.images.forEach((image, index) => { %>
-                                    <div data-src="<%= image %>">
-                                        <img src="<%= image %>" alt="<%= `Image ${ index }` %>">
+                            <% if (productDetails.images.length > 0) { %>
+                                <div class="js-gallery hide">
+                                    <div data-src="<%= productDetails.thumbnailImage %>">
+                                        <img src="<%= productDetails.thumbnailImage %>" alt="Image thumbnail">
                                     </div>
-                                <% }) %>
-                            </div>
-                        <% } %>
-
-                        <div class="details-desc">
-                            <div class="details-desc-active <%= productDetails.isAvailable ? 'green' : 'red' %>">
-                                <% if (productDetails.isAvailable) { %>
-                                    <i class="fas fa-check-circle"></i>
-                                <% } else if (!productDetails.isAvailable) { %>
-                                    <i class="fas fa-times-circle"></i>
-                                <% } %>
-                                <%= productDetails.isAvailable ? languageHandler('products.available', current_locale) : languageHandler('products.out_of_stock', current_locale) %>
-                            </div>
-
-                            <div class="details-desc-active <%= productDetails.isPostable ? 'yellow' : 'black'%>">
-                                <% if (productDetails.isPostable) { %>
-                                    <i class="fas fa-truck"></i>
-                                <% } else if (!productDetails.isPostable) { %>
-                                    <i class="fas fa-exclamation-circle"></i>
-                                <% } %>
-                                <%= productDetails.isPostable ? languageHandler('products.postable', current_locale) : languageHandler('products.not_postable', current_locale) %>
-                            </div>
-
-                            <strong class="details-desc-price"><%= productDetails.isOnDiscount ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
-                            <% if (productDetails.isOnDiscount) { %>
-                                <del class="details-desc-discount-price"><%= productDetails.price %> RSD</del>
+                                    <% productDetails.images.forEach((image, index) => { %>
+                                        <div data-src="<%= image %>">
+                                            <img src="<%= image %>" alt="<%= `Image ${ index }` %>">
+                                        </div>
+                                    <% }) %>
+                                </div>
                             <% } %>
 
-                            <div class="details-desc-functions">
+                            <div class="details-desc">
+                                <h1 class="details-desc-title"><%= productDetails.name %></h1>
 
-                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
-                                    <div class="quantities js-quantities">
-                                        <button type="button" class="quantities-btn minus js-details-quantity-btn"><i class="fas fa-minus"></i></button>
-                                        <input class="quantities-input js-product-details-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
-                                        <button type="button" class="quantities-btn plus js-details-quantity-btn"><i class="fas fa-plus"></i></button>
-                                    </div>
+                                <% if (productDetails.short) { %>
+                                    <p class="details-desc-short"><%= productDetails.short %></p>
                                 <% } %>
 
-                                <% if (isAlreadyInCart) { %>
-                                    <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
-                                <% } %>
+                                <div class="table">
+                                    <div class="table_label"><%= languageHandler('general.category', current_locale) %>: <strong><%= productDetails.category_name %></strong></div>
 
-                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
-                                    <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
-                                <% } %>
+                                    <% if (productDetails.isAvailable) { %>
+                                        <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="green"><i class="fas fa-check-circle"></i> <%= languageHandler('products.available', current_locale) %></strong></div>
+                                    <% } else if (!productDetails.isAvailable) { %>
+                                        <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="red"><i class="fas fa-times-circle"></i> <%= languageHandler('products.out_of_stock', current_locale) %></strong></div>
+                                    <% } %>
+
+                                    <% if (productDetails.isPostable) { %>
+                                        <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong class="yellow"><i class="fas fa-truck"></i> <%= languageHandler('products.postable', current_locale) %></strong></div>
+                                    <% } else if (!productDetails.isPostable) { %>
+                                        <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong><i class="fas fa-exclamation-circle"></i> <%= languageHandler('products.not_postable', current_locale) %></strong></div>
+                                    <% } %>
+                                </div>
+
+                                <div class="prices">
+                                    <strong class="prices-price"><%= productDetails.isOnDiscount ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
+                                    <% if (productDetails.isOnDiscount) { %>
+                                        <del class="prices-discount-price"><%= productDetails.price %> RSD</del>
+                                    <% } %>
+                                </div>
+
+                                <div class="details-desc-functions">
+
+                                    <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                        <div class="quantities js-quantities">
+                                            <button type="button" class="quantities-btn minus js-details-quantity-btn"><i class="fas fa-minus"></i></button>
+                                            <input class="quantities-input js-product-details-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
+                                            <button type="button" class="quantities-btn plus js-details-quantity-btn"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (isAlreadyInCart) { %>
+                                        <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
+                                    <% } %>
+
+                                    <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                        <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                     <% if (productDetails.description) { %>
                         <p class="paragraph"><%= productDetails.description %></p>
                     <% } %>
+                    </div>
                 </section>
 
                 <% if (productDetails.isAllowed) { %>
@@ -96,20 +101,22 @@
 
                 <% if (similarProducts.length > 0) { %>
                     <section class="products-carousel">
-                        <%- include('../components/block-title.ejs', { title: languageHandler('products.similar_products', current_locale) }) %>
+                        <div class="wrapper">
+                            <%- include('../components/block-title.ejs', { title: languageHandler('products.similar_products', current_locale) }) %>
 
-                        <div class="js-featured-products">
-                            <% similarProducts.forEach(item => { %>
-                                <div class="slide">
-                                    <%- include("../components/product-card.ejs", { product: item }) %>
-                                </div>
-                            <% }) %>
+                            <div class="js-featured-products">
+                                <% similarProducts.forEach(item => { %>
+                                    <div class="slide">
+                                        <%- include("../components/product-card.ejs", { product: item }) %>
+                                    </div>
+                                <% }) %>
+                            </div>
+
+                            <% if (similarProducts.length > 1) { %>
+                                <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+                                <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+                            <% } %>
                         </div>
-
-                        <% if (similarProducts.length > 1) { %>
-                            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-                            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
-                        <% } %>
                     </section>
                 <% } %>
             </div>

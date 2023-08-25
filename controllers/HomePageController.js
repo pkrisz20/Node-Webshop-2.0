@@ -2,7 +2,7 @@ const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
-const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
+const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 
 const getData = (req, res) => {
@@ -34,7 +34,7 @@ const getData = (req, res) => {
     };
 
     // PRODUCTS
-    const sqlQueryProducts = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
+    const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
     // BLOGS
     const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
@@ -64,6 +64,7 @@ const getData = (req, res) => {
                     id: parseInt(product_element.id),
                     name: getValueByLanguage(product_element.name, lang),
                     slug: product_element.slug,
+                    short: product_element.short_description ? limitText(getValueByLanguage(product_element.short_description, lang)) : null,
                     image: imagePathConverter(product_element.image_thumbnail, "products"),
                     price: numberWithCommas(product_element.price),
                     isOnDiscount: Boolean(product_element.discount_value),

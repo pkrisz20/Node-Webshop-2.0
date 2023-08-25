@@ -1,6 +1,6 @@
 .product {
     height: 100% !important;
-    @include flexBox("space-between");
+    display: flex;
     flex-direction: column;
     background-color: $c-grayE8;
     transition: all .2s ease-in-out;
@@ -9,8 +9,8 @@
     &_image {
       position: relative;
       width: 100%;
-      height: auto;
-      overflow: hidden;
+      height: 100%;
+      margin-bottom: 10px;
 
       picture {
         @include paddingBottom(100, 130);
@@ -44,45 +44,61 @@
       }
     }
     &_desc {
-      @include flexBox();
+      @include flexBox("flex-start", "center");
       flex-direction: column;
       padding: 0 8px 8px;
       width: 100%;
+      height: 100%;
+
+      &-short {
+        color: $c-gray71;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 19px;
+        word-break: break-word;
+        display: inline-block;
+        margin: 8px 0 4px;
+      }
 
       .title {
         font-weight: 700;
-        font-size: 16px;
-        color: $c-5;
-        margin: 5px 0 0;
+        font-size: 17px;
+        color: $c-3;
         text-align: center;
         transition: color .3s ease;
 
         @media #{ $r-min-m } {
-          font-size: 18px;
+          font-size: 20px;
         }
 
         &:hover {
           color: $c-warning;
         }
       }
-      .price {
-        font-size: 15px;
-        font-weight: 700;
-        color: $c-dark;
-        margin: 5px 0;
 
-        @media #{ $r-min-m } {
-          font-size: 17px;
-        }
+      .price__wrap {
+        width: 100%;
+        @include flexBox('center', 'baseline', 8px);
+        flex-wrap: wrap;
+        margin: 10px 0 auto;
 
-        &.old {
-          font-size: 14px;
-          font-weight: 600;
-          color: $c-7;
-          margin: 0 0 3px;
+        &-price {
+          font-size: 15px;
+          font-weight: 700;
+          color: $c-dark;
 
           @media #{ $r-min-m } {
-            font-size: 16px;
+            font-size: 17px;
+          }
+
+          &.old {
+            font-size: 15px;
+            font-weight: 600;
+            color: $c-7;
+
+            @media #{ $r-min-m } {
+              font-size: 16px;
+            }
           }
         }
       }

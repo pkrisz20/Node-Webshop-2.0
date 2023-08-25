@@ -21,7 +21,7 @@
 
             <% if (products.length > 0) { %>
                 <div class="more">
-                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><i class="fas fa-arrow-right"></i> <%= languageHandler("products.all_products", current_locale) %></a>
+                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("products.all_products", current_locale) %> <i class="far fa-angle-double-right"></i></a>
                 </div>
             <% } %>
 
@@ -44,7 +44,7 @@
 
             <% if (blogs.length > 0) { %>
                 <div class="more">
-                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><i class="fas fa-arrow-right"></i> <%= languageHandler("nav.visit_blog", current_locale) %></a>
+                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler("nav.visit_blog", current_locale) %> <i class="far fa-angle-double-right"></i></a>
                 </div>
             <% } %>
         </main>

@@ -1,11 +1,10 @@
 const { db } = require("../config/db-config");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, numberWithCommas } = require("../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const getFrontTranslations = require("../helpers/frontTranslations");
-const { name } = require("ejs");
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -27,9 +26,9 @@ const getProductDetails = (req, res) => {
     let articleComments = [];
     let isAlreadyInCart = false;
 
-    const sqlQuery = "SELECT id, name, description, images, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count, comments_allowed, category_id FROM products WHERE is_active = ? AND slug = ?";
+    const sqlQuery = "SELECT products.id, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND products.slug = ?";
 
-    const similarProductsQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
+    const similarProductsQuery = "SELECT products.id, products.name, products.short_description, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
 
     db.query(sqlQuery, [1, slug], (err, data) => {
         if (err) {
@@ -56,7 +55,9 @@ const getProductDetails = (req, res) => {
         else if (data.length > 0) {
             result = {
                 id: parseInt(data[0].id),
+                category_name: getValueByLanguage(data[0].category_name, lang),
                 name: getValueByLanguage(data[0].name, lang),
+                short: data[0].short_description ? limitText(getValueByLanguage(data[0].short_description, lang)) : null,
                 description: getValueByLanguage(data[0].description, lang),
                 thumbnailImage: imagePathConverter(data[0].image_thumbnail, "products"),
                 images: imagePathConverter(JSON.parse(data[0].images), "products") ?? [],
@@ -127,6 +128,7 @@ const getProductDetails = (req, res) => {
                         let tempObject = {
                             id: parseInt(element.id),
                             name: getValueByLanguage(element.name, lang),
+                            short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                             slug: element.slug,
                             image: imagePathConverter(element.image_thumbnail, "products"),
                             price: numberWithCommas(element.price),
@@ -193,7 +195,7 @@ const getAllProducts = (req, res) => {
         // keywords: []
     };
 
-    let sqlQuery = "SELECT id, name, slug, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -229,6 +231,7 @@ const getAllProducts = (req, res) => {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.name, lang),
                     slug: element.slug,
+                    short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                     image: imagePathConverter(element.image_thumbnail, "products"),
                     price: numberWithCommas(element.price),
                     isOnDiscount: Boolean(element.discount_value),
@@ -372,7 +375,7 @@ const getCategoryProducts = (req, res) => {
                 // keywords: []
             };
 
-            let sqlQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
             let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -408,6 +411,7 @@ const getCategoryProducts = (req, res) => {
                             id: parseInt(element.id),
                             name: getValueByLanguage(element.name, lang),
                             slug: element.slug,
+                            short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                             image: imagePathConverter(element.image_thumbnail, "products"),
                             price: numberWithCommas(element.price),
                             isOnDiscount: Boolean(element.discount_value),

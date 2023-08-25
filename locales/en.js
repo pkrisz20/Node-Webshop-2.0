@@ -77,6 +77,8 @@ const en = {
 		all_products: "All products",
 		similar_products: "Similar products",
 		discount: "Discount",
+		status: "Status",
+		shipping: "Shipping",
 		special: "Special",
 		available: "Available",
 		out_of_stock: "Out of stock",
