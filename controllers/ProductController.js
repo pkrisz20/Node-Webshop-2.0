@@ -280,6 +280,7 @@ const getAllProducts = (req, res) => {
                         articleLink: "products",
                         products: result ?? [],
                         main_title: languageHandler('general.products', lang),
+                        category_short_desc: null,
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,
