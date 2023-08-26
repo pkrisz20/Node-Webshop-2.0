@@ -71,7 +71,8 @@ const en = {
 		invalid_email: "Invalid email address",
 		accept_policy: "I agree that, the site handling my data.",
 		accept_terms: "The expressed opinions are personal opinions of the authors of the comments. Comments are moderated and approved.",
-		cart_updated: "The cart has been updated!"
+		cart_updated: "The cart has been updated!",
+		login: "Login"
 	},
 	products: {
 		all_products: "All products",

@@ -2,7 +2,24 @@ const { db } = require("../../config/db-config");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 // const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
+const getFrontTranslations = require("../../helpers/frontTranslations");
 const moment = require("moment");
+
+const getLoginPage = (req, res) => {
+    var metas = {
+        title: 'Admin belépés',
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the Admin login page",
+        // keywords: []
+    };
+
+    return res.render("admin/login", {
+        meta: metas,
+        csrfToken: req.csrfToken(),
+        frontTranslations: getFrontTranslations("hu")
+    });
+};
 
 // const getProductDetails = (req, res) => {
 //     const { lang } = req.body;
@@ -196,4 +213,4 @@ const getProducts = (req, res) => {
 //     });
 // };
 
-module.exports = { getProducts };
+module.exports = { getProducts, getLoginPage };

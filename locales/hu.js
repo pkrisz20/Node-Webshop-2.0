@@ -90,7 +90,8 @@ const hu = {
         no_product_like_this: "Nincs ilyen termék.",
         no_category_like_this: "Nincs ilyen kategória.",
 		no_gallery_like_this: "Nincs ilyen galléria.",
-		no_blogs_like_this: "Nincs ilyen blog."
+		no_blogs_like_this: "Nincs ilyen blog.",
+		login: "Bejelentkezés"
     },
     orders: {
         total_price: "Összeg",

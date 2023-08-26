@@ -1,0 +1,11 @@
+.login {
+    height: inherit;
+
+    .main-title {
+        margin: 0 0 110px;
+    }
+
+    & > .wrapper {
+        max-width: 650px;
+    }
+}

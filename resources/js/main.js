@@ -1,122 +1,131 @@
 $(document).ready(function() {
-    $(".js-hero-slick").slick({
-        inifinite: true,
-        slidesToShow: 1,
-        autoplay: true,
-        dots: false,
-        arrows: true,
-        appendDots: $('.hero .hero-dots'),
-        prevArrow: $('.hero .slick-prev'),
-        nextArrow: $('.hero .slick-next'),
-        responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    dots: true,
-                    arrows: false
-                }
-            }
-        ]
-    });
 
-    $(".js-categories-carousel").slick({
-        inifinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        autoplay: false,
-        dots: false,
-        arrows: true,
-        prevArrow: $('.featured-categories .slick-prev'),
-        nextArrow: $('.featured-categories .slick-next'),
-        responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 3
+    if ($(".js-hero-slick").length > 0) {
+        $(".js-hero-slick").slick({
+            inifinite: true,
+            slidesToShow: 1,
+            autoplay: true,
+            dots: false,
+            arrows: true,
+            appendDots: $('.hero .hero-dots'),
+            prevArrow: $('.hero .slick-prev'),
+            nextArrow: $('.hero .slick-next'),
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        dots: true,
+                        arrows: false
+                    }
                 }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2
-                }
-            },
-            {
-                breakpoint: 540,
-                settings: {
-                    slidesToShow: 1
-                }
-            }
-        ]
-    });
+            ]
+        });
+    }
 
-    $(".js-featured-products").slick({
-        inifinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        autoplay: false,
-        dots: false,
-        arrows: true,
-        prevArrow: $('.products-carousel .slick-prev'),
-        nextArrow: $('.products-carousel .slick-next'),
-        responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
+    if ($(".js-categories-carousel").length > 0) {
+        $(".js-categories-carousel").slick({
+            inifinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            autoplay: false,
+            dots: false,
+            arrows: true,
+            prevArrow: $('.featured-categories .slick-prev'),
+            nextArrow: $('.featured-categories .slick-next'),
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 540,
+                    settings: {
+                        slidesToShow: 1
+                    }
                 }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                }
-            },
-            {
-                breakpoint: 540,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                }
-            }
-        ]
-    });
+            ]
+        });
+    }
 
-    $(".js-featured-blogs").slick({
-        inifinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        autoplay: false,
-        dots: false,
-        arrows: true,
-        prevArrow: $('.featured-blogs .slick-prev'),
-        nextArrow: $('.featured-blogs .slick-next'),
-        responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
+    if ($(".js-featured-products").length > 0) {
+        $(".js-featured-products").slick({
+            inifinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            autoplay: false,
+            dots: false,
+            arrows: true,
+            prevArrow: $('.products-carousel .slick-prev'),
+            nextArrow: $('.products-carousel .slick-next'),
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 540,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
                 }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
+            ]
+        });
+    }
+
+    if ($(".js-featured-blogs").length > 0) {
+        $(".js-featured-blogs").slick({
+            inifinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            autoplay: false,
+            dots: false,
+            arrows: true,
+            prevArrow: $('.featured-blogs .slick-prev'),
+            nextArrow: $('.featured-blogs .slick-next'),
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 540,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
                 }
-            },
-            {
-                breakpoint: 540,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                }
-            }
-        ]
-    });
+            ]
+        });
+    }
 
     // Is there any form to validate?
     if ($.validator) {

@@ -71,7 +71,8 @@ const sr = {
         invalid_email: "Netačno mejl adresu",
         accept_policy: "Slažem se, da sajt obrađuje moje podatke.",
         accept_terms: "Mišljenja iznešena u komentarima su lična mišljenja autora. Komentari su moderirani i odobravani.",
-		cart_updated: "Vrednosti su promenili!"
+		cart_updated: "Vrednosti su promenili!",
+		login: "Prijava"
     },
     products: {
         all_products: "Svi proizvodi",

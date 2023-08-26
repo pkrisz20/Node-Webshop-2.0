@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('layout/head.ejs') %>
+
+    <link rel="preload" href="css/admin/login.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+</head>
+
+<body>
+    <main class="login">
+        <div class="wrapper">
+            <h1 class="main-title">Adminisztráció</h1>
+
+            <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/admin/login">
+                <input
+                    id="recaptcha"
+                    value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                    name="recaptcha"
+                    type="hidden"
+                    class="g-recaptcha"
+                />
+                <div class="form-row">
+                    <input
+                        id="admin_email"
+                        name="admin_email"
+                        type="email"
+                        data-rule-required="true"
+                        data-rule-email="true"
+                        placeholder="Email"
+                        class="form-control"
+                    />
+                    <label for="admin_email" class="form-label">
+                        Email
+                    </label>
+
+                    <i class="error-icon fas fa-times"></i>
+                    <div class="form-row-error"></div>
+                </div>
+                <div class="form-row">
+                    <input
+                        id="admin_password"
+                        name="admin_password"
+                        type="password"
+                        data-rule-required="true"
+                        placeholder="Jelszó"
+                        class="form-control"
+                    />
+                    <label for="admin_password" class="form-label">
+                        Jelszó
+                    </label>
+
+                    <i class="error-icon fas fa-times"></i>
+                    <div class="form-row-error"></div>
+                </div>
+                <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> Belépés</button>
+            </form>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+        var translations = <%- JSON.stringify(frontTranslations) %>;
+    </script>
+    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+    <script type="text/javascript" src="js/plugins/validate.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

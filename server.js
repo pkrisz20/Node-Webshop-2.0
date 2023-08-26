@@ -57,13 +57,20 @@ app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
 });
 
+// API routes
 const cartRouter = require("./routes/cart");
 app.use("/api", cartRouter);
 
+// Redirect to the lang slug version
 app.get('/', (req, res) => {
     res.redirect(`/${ req.session.lang ?? process.env.FALLBACK_LANG }`);
 });
 
+// Admin routes
+const adminRouter = require("./routes/admin");
+app.use("/admin", adminRouter);
+
+// Language slug handler
 app.use("/:lang", function (req, res, next) {
 
     if ( req.params.lang !== 'en' && req.params.lang !== 'sr' && req.params.lang !== 'hu' )
@@ -81,7 +88,7 @@ app.use("/:lang", function (req, res, next) {
     return next();
 });
 
-//Routes
+// Web routes
 const homeRouter = require("./routes/home");
 app.use("/:lang", homeRouter);
 
@@ -108,9 +115,6 @@ app.use("/:lang", contactRouter);
 
 const ordersRouter = require("./routes/orders");
 app.use("/:lang", ordersRouter);
-
-// const adminRouter = require("./routes/admin");
-// app.use("/api/admin", adminRouter);
 
 app.get("*", (req, res) => {
     return res.status(404).render('404', {
