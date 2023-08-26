@@ -15,6 +15,10 @@
             <div class="wrapper">
                 <h1 class="main-title"><%= main_title %></h1>
 
+                <% if (category_short_desc) { %>
+                    <p class="list__shorts"><%= category_short_desc %></p>
+                <% } %>
+
                 <section class="listpage products">
                     <% if (products.length > 0) { %>
                         <div class="listpage-container">

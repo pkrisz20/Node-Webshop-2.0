@@ -64,6 +64,7 @@ const getProductDetails = (req, res) => {
                 price: numberWithCommas(data[0].price),
                 isOnDiscount: Boolean(data[0].discount_value),
                 discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
+                savings: data[0].discount_value != null ? numberWithCommas(data[0].price - data[0].discount_value) : null,
                 isAvailable: Boolean(data[0].is_available),
                 isPostable: Boolean(data[0].is_delivered),
                 maxQuantity: parseInt(data[0].max_order_count),
@@ -341,7 +342,7 @@ const getCategoryProducts = (req, res) => {
     let { slug } = req.params;
     let result = [];
 
-    let checkForCategory = "SELECT name FROM categories WHERE slug = ?";
+    let checkForCategory = "SELECT name, short_description AS 'category_short_description' FROM categories WHERE slug = ?";
 
     db.query(checkForCategory, slug, (checking_err, category_data) => {
         if (checking_err) {
@@ -367,6 +368,7 @@ const getCategoryProducts = (req, res) => {
 
         else if (category_data.length > 0) {
             const selectedCategoryName = getValueByLanguage(category_data[0].name, lang);
+            const selectedCategoryShortDescription = category_data[0].category_short_description ? getValueByLanguage(category_data[0].category_short_description, lang) : null;
             var metas = {
                 title: selectedCategoryName,
                 type: "page",
@@ -375,7 +377,7 @@ const getCategoryProducts = (req, res) => {
                 // keywords: []
             };
 
-            let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
             let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -411,6 +413,7 @@ const getCategoryProducts = (req, res) => {
                             id: parseInt(element.id),
                             name: getValueByLanguage(element.name, lang),
                             slug: element.slug,
+                            category_short_description: element.category_short_description ? getValueByLanguage(element.category_short_description, lang) : null,
                             short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                             image: imagePathConverter(element.image_thumbnail, "products"),
                             price: numberWithCommas(element.price),
@@ -463,6 +466,7 @@ const getCategoryProducts = (req, res) => {
                                 articleLink: `products/category/${ slug }`,
                                 products: result ?? [],
                                 main_title: selectedCategoryName,
+                                category_short_desc: selectedCategoryShortDescription,
                                 meta: metas,
                                 current_locale: req.session.lang,
                                 cart: cart,

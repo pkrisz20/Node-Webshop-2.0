@@ -76,6 +76,7 @@ const sr = {
     products: {
         all_products: "Svi proizvodi",
         similar_products: "Slični proizvodi",
+		savings: "Ušteda",
         discount: "Popust",
 		status: "Dostupnost",
 		shipping: "Dostava",

@@ -75,7 +75,6 @@
             font-size: 23px;
             font-weight: 700;
             color: $c-3;
-            margin: 7px 0;
 
             @media #{ $r-min-l } {
               font-size: 26px;
@@ -86,7 +85,6 @@
             font-size: 17px;
             color: $c-9;
             font-weight: 600;
-            margin: 7px 0;
 
             @media #{ $r-min-l } {
               font-size: 20px;
@@ -99,12 +97,14 @@
           border-bottom: 1px solid $c-9;
           padding: 10px 0;
           margin-top: 10px;
+          width: 100%;
 
           &_label {
             font-size: 16px;
             color: $c-9;
             display: flex;
             flex-direction: column;
+            align-items: baseline;
 
             @media #{ $r-min-xl } {
               flex-direction: row;
@@ -139,6 +139,30 @@
               }
               &.yellow {
                 color: $c-warning;
+              }
+
+              &.savings {
+                display: flex;
+                align-items: center;
+                height: 30px;
+                padding: 0 12px;
+                position: relative;
+                background-color: $c-middleblue;
+                color: $c-white;
+                font-size: 16px;
+                font-weight: 500;
+
+                &::before {
+                  position: absolute;
+                  right: -30px;
+                  top: 0;
+                  content:"";
+                  width: 0;
+                  height: 0;
+                  border-style: solid;
+                  border-width: 15px 0 15px 30px;
+                  border-color: transparent transparent transparent $c-middleblue;
+                }
               }
             }
           }

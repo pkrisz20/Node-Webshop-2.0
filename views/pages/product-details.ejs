@@ -59,6 +59,10 @@
                                     <% } else if (!productDetails.isPostable) { %>
                                         <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong><i class="fas fa-exclamation-circle"></i> <%= languageHandler('products.not_postable', current_locale) %></strong></div>
                                     <% } %>
+
+                                    <% if (productDetails.savings) { %>
+                                        <div class="table_label"><%= languageHandler('products.savings', current_locale) %>: <strong class="savings"><%= productDetails.savings %> RSD</strong></div>
+                                    <% } %>
                                 </div>
 
                                 <div class="prices">

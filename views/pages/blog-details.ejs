@@ -13,8 +13,8 @@
         <%- include('../components/cart.ejs') %>
 
         <main class="blog-details">
-            <div class="wrapper">
-                <section class="blog-details-section">
+            <section class="blog-details-section">
+                <div class="wrapper">
                     <h1 class="main-title"><%= blogDetails.title %></h1>
 
                     <div class="blog-container">
@@ -53,14 +53,16 @@
                             </aside>
                         <% } %>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <% if (blogDetails.isAllowed) { %>
-                    <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
-                <% } %>
+            <% if (blogDetails.isAllowed) { %>
+                <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
+            <% } %>
 
-                <% if (newestBlogs.length > 0) { %>
-                    <section class="featured-blogs">
+            <% if (newestBlogs.length > 0) { %>
+                <section class="featured-blogs">
+                    <div class="wrapper">
                         <%- include('../components/block-title.ejs', { title: languageHandler('general.newest_blogs', current_locale) }) %>
 
                         <div class="js-featured-blogs">
@@ -75,9 +77,9 @@
                             <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
                             <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
                         <% } %>
-                    </section>
-                <% } %>
-            </div>
+                    </div>
+                </section>
+            <% } %>
         </main>
 
         <%- include('../layout/footer.ejs') %>
