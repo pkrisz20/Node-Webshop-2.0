@@ -100,7 +100,6 @@
     }
 }
 
-// TODO: Fix this mixin divide
 @mixin resp($property, $min, $max, $rangeMin: 320px, $rangeMax: 1920px) {
     $diff: $max - $min;
     $diff: math.div($diff, 1px);

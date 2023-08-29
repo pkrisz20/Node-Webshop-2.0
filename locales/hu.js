@@ -16,6 +16,12 @@ const hu = {
         watch_gallery: "Galléria meglátogatása",
         visit_blog: "Blogok megtekintése"
     },
+    counter: {
+		satisfied_clients: "Elégedett ügyfél",
+		cups_coffe: "Megivott kávé",
+		animals: "Fős állomány",
+		posted_products: "Elküldött termék",
+	},
     general: {
         newest_blogs: "A legfrissebb blogok",
         next_events: "Közelgő események",

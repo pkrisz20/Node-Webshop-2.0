@@ -314,6 +314,34 @@ $(function() {
     $('body').on('click', '.js-upscroll', function () {
         window.scroll({ top: 0, behavior: 'smooth' });
     });
+
+    if ($('.js-countup-section').length > 0) {
+        var alreadyExecuted = false;
+        var countUpOptions = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : ''
+        };
+
+        $('.js-countup-section').waypoint(function () {
+            if (!alreadyExecuted) {
+                const targetNumbers = $('.js-countup-section .js-countup-item');
+
+                $.each(targetNumbers, function (index, value) {
+                    var endValue = $(value).data('number');
+                    var counter = new CountUp(value, 0, parseInt(endValue), 0, 3.5, countUpOptions);
+                    counter.start();
+                });
+
+                alreadyExecuted = true;
+            }
+        }, {
+            offset: '100%'
+        });
+    }
 });
 
 // Language dropdown

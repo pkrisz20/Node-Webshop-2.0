@@ -16,6 +16,12 @@ const sr = {
         watch_gallery: "Poseti galeriju",
         visit_blog: "Poseti blog"
     },
+    counter: {
+		satisfied_clients: "Zadovoljni klijenti",
+		cups_coffe: "Popijena kafa",
+		animals: "Životinje u brojima",
+		posted_products: "Poslati proizvodi",
+	},
     general: {
         newest_blogs: "Najnoviji blogovi",
         next_events: "Predstojeći događaji",

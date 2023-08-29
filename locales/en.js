@@ -16,6 +16,12 @@ const en = {
 		watch_gallery: "Watch gallery",
 		visit_blog: "Visit blog"
 	},
+	counter: {
+		satisfied_clients: "Satisfied clients",
+		cups_coffe: "Cups of coffe",
+		animals: "Animals in numbers",
+		posted_products: "Posted products",
+	},
 	general: {
 		newest_blogs: "The newest blogs",
 		next_events: "Upcomming events",
