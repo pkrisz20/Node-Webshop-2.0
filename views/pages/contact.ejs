@@ -184,30 +184,28 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
-
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            var platform = new H.service.Platform({
-                'apikey': 'nbd0i1QUJ9Emy2PM6ptr9gDd-kpb50bVos1vEuUEvpk'
-            });
-
-            var defaultLayers = platform.createDefaultLayers();
-            var map = new H.Map(
-            document.getElementById('map'),
-            defaultLayers.vector.normal.map,
-            {
-                zoom: 11,
-                center: { lat: 45.878360927128206, lng: 19.832637565189028 },
-                pixelRatio: window.devicePixelRatio || 1
-            });
-
-            var cityMarker = new H.map.Marker({ lat: 45.878360927128206, lng: 19.832637565189028 });
-            map.addObject(cityMarker);
-
-            window.addEventListener('resize', function () {
-                map.getViewPort().resize();
-            });
+        var platform = new H.service.Platform({
+            apikey: 'BbrImBFdudPWuw_p4_-YDUzsq1ZzwhpZjqbuEtAD6AA'
         });
+        var defaultLayers = platform.createDefaultLayers();
+
+        var map = new H.Map(document.getElementById('map'),
+        defaultLayers.vector.normal.map, {
+            center: { lat: 45.878360927128206, lng: 19.832637565189028 },
+            zoom: 11,
+            pixelRatio: window.devicePixelRatio || 1
+        });
+
+        var cityMarker = new H.map.Marker({ lat: 45.878360927128206, lng: 19.832637565189028 });
+        map.addObject(cityMarker);
+
+        window.addEventListener('resize', function () {
+            map.getViewPort().resize();
+        });
+
+        var mapEvents = new H.mapevents.MapEvents(map);
+        var behavior = new H.mapevents.Behavior(mapEvents);
     </script>
 </body>
 </html>

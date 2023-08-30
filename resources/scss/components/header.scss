@@ -315,7 +315,7 @@
         @include flexBox("space-between");
 
         @media #{$r-max-xl} {
-          padding: 15px 30px;
+          padding: 10px 30px;
         }
 
         & > .functions {
@@ -421,6 +421,7 @@
     &-bottom {
       position: relative;
       background-color: $c-theme;
+      box-shadow: 0px 15px 10px -15px rgba($c-black, .4);
 
       & > .wrapper {
         padding: 10px 15px;
