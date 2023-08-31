@@ -34,6 +34,15 @@
         }
     }
 
+    &-eye {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 16px;
+        z-index: 1;
+        cursor: pointer;
+    }
+
     &-row {
         width: 100%;
         position: relative;
@@ -132,6 +141,11 @@
 
             &.textarea-error {
                 top: 20px;
+            }
+
+            &.fa-eye,
+            &.fa-eye-slash {
+                color: $c-dark;
             }
         }
 

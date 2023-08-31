@@ -342,6 +342,32 @@ $(function() {
             offset: '100%'
         });
     }
+
+    // Eye icon at password fields which toggles the type of input
+    if ($('body .js-password-toggle').length > 0) {
+        var slashedEye = $('body .js-password-toggle').find('i.fa-eye-slash');
+        var normalEye = $('body .js-password-toggle').find('i.fa-eye');
+        $(slashedEye).hide();
+
+        $('body .js-password-toggle').on('click', function() {
+            var input = $(this).closest('.form-row').find('input.form-control');
+            var inputType = $(input).attr("type");
+
+            if (inputType === 'password') {
+                $(input).attr('type', 'text');
+                $(slashedEye).show();
+                $(normalEye).hide();
+            }
+            else if (inputType === 'text') {
+                $(input).attr('type', 'password');
+                $(slashedEye).hide();
+                $(normalEye).show();
+            }
+            else {
+                return false;
+            }
+        });
+    }
 });
 
 // Language dropdown
