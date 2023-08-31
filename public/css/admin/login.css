@@ -1,1 +1,9 @@
-.login{height:inherit}.login .main-title{margin:0 0 110px}.login>.wrapper{max-width:650px}
+.login {
+  height: inherit;
+}
+.login .main-title {
+  margin: 0 0 110px;
+}
+.login > .wrapper {
+  max-width: 650px;
+}

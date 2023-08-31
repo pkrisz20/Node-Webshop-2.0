@@ -229,11 +229,6 @@
           align-items: center;
           text-transform: uppercase;
 
-          &:hover {
-            background-color: $c-warning;
-            color: $c-dark2;
-          }
-
           picture {
             display: inherit;
 
@@ -250,15 +245,16 @@
             border-radius: 5px;
             overflow: hidden;
             position: absolute;
-            top: 36px;
+            top: 32px;
             left: 50%;
-            transform: translateX(-50%);
             box-shadow: 0 1px 6px rgba($c-black, .75);
             width: 70px;
             z-index: 50;
             visibility: hidden;
             opacity: 0;
-            transition: all .3s ease-in-out;
+            transform: translate(-50%, -10px);
+            transition: opacity .25s, transform .25s, visibility 0s .25s;
+            transition-timing-function: cubic-bezier(.53,2,.36,.85);
 
             &-item {
               width: 100%;
@@ -301,6 +297,9 @@
             &--open {
               visibility: visible;
               opacity: 1;
+              transform: translate(-50%, 1px);
+              transition: opacity .25s, transform .25s;
+              transition-timing-function: cubic-bezier(.53, 2, .36, .85);
             }
         }
       }
