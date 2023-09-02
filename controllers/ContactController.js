@@ -113,7 +113,8 @@ const handleContactMessage = (req, res) => {
             return res.status(200).json({
                 status: "success",
                 title: languageHandler("general.process_success", req.session.lang ?? process.env.FALLBACK_LANG),
-                content: languageHandler("general.contact_email_success_message", req.session.lang ?? process.env.FALLBACK_LANG)
+                content: languageHandler("general.contact_email_success_message", req.session.lang ?? process.env.FALLBACK_LANG),
+                redirect_url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/contact`
             });
         }
     });
