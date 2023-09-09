@@ -117,7 +117,8 @@ const getData = (req, res) => {
                         return {
                             ...item,
                             fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
-                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
+                            shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                         };
                     });
 
@@ -142,7 +143,7 @@ const getData = (req, res) => {
                                     image: imagePathConverter(hero_element.image, "heros"),
                                     link: getValueByLanguage(hero_element.link, lang),
                                     button: getValueByLanguage(hero_element.button_text, lang),
-                                    targetPage: hero_element.target_page ?? "blank"
+                                    targetPage: hero_element.target_page ?? "_blank"
                                 }
 
                                 sliders.push(tempObjectSlider);

@@ -10,14 +10,10 @@
                     <% } %>
 
                     <% if (data.subText) { %>
-                        <% if (index == 0) { %>
-                            <h2 class="box-subtitle"><%= data.subText %></h2>
-                        <% } else { %>
-                            <h3 class="box-subtitle"><%= data.subText %></h3>
-                        <% } %>
+                        <p class="box-subtitle"><%= data.subText %></p>
                     <% } %>
-                    <% if (data.button) { %>
-                        <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button %></a>
+                    <% if (data.link) { %>
+                        <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button || languageHandler("general.read_more", current_locale) %></a>
                     <% } %>
                 </div>
                 <picture>

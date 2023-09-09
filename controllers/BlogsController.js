@@ -2,7 +2,7 @@ const { db } = require("../config/db-config");
 const moment = require("moment");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
+const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const getFrontTranslations = require("../helpers/frontTranslations");
 
@@ -294,7 +294,8 @@ const getAllBlogs = (req, res) => {
                 return {
                     ...item,
                     fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
-                    relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                    relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
+                    shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                 };
             });
 

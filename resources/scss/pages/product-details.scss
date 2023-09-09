@@ -56,10 +56,8 @@
 
         &-title {
           text-align: left;
-          text-transform: uppercase;
-          font-style: italic;
+          padding: 0;
           margin-bottom: 15px;
-          color: $c-dark;
           @include resp('font-size', 23px, 30px, 767px, 1200px);
         }
 
