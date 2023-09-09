@@ -1,11 +1,13 @@
 {
-    "/js/main.js": "/js/main.js?id=8ad38377ad36ad4a34c1dc2042ca1a31",
+    "/js/main.js": "/js/main.js?id=77ddcdbb6c40987ca07546281bdd222e",
+    "/admin/js/admin.js": "/admin/js/admin.js?id=95e692f0404e85262a32a64f57cb9f02",
     "/css/gallery-list.css": "/css/gallery-list.css?id=364d99169b6367136503c63023ca0536",
     "/css/product-list.css": "/css/product-list.css?id=f93c922f96e0e172e4bbee5e58563562",
     "/css/about.css": "/css/about.css?id=73f9f38bf4ffde8f49eaa8da665fcf84",
     "/css/home.css": "/css/home.css?id=6b953bdecfdd950beab330fad0048265",
     "/css/main.css": "/css/main.css?id=0b9f1d8894d04ce67f3e0c2d5ba68def",
-    "/css/admin/login.css": "/css/admin/login.css?id=c174145dab68ad51a687098fa31ba28d",
+    "/admin/css/admin-index.css": "/admin/css/admin-index.css?id=684b479411638045da6225afa477ba28",
+    "/css/login.css": "/css/login.css?id=c174145dab68ad51a687098fa31ba28d",
     "/css/order.css": "/css/order.css?id=d746affaaeaf2f349abbf1333f06539e",
     "/css/contact.css": "/css/contact.css?id=a23b35cdc5c7b7f5c3c2bff7cc8fffde",
     "/css/search-list.css": "/css/search-list.css?id=5ecc4890be6e89b91e5bdb6552a254d3",
@@ -35,5 +37,9 @@
     "/images/no-picture.jpg": "/images/no-picture.jpg?id=ef02d56f93f059e28b55aaa404c7d490",
     "/css/plugins/jquery-confirm.css": "/css/plugins/jquery-confirm.css?id=2537809298493b71ab153892bb037f59",
     "/css/plugins/lightbox.min.css": "/css/plugins/lightbox.min.css?id=d3f76864d49381a2b16cf4d8f29d3d57",
-    "/css/plugins/slick.min.css": "/css/plugins/slick.min.css?id=72bdc86c8d50acd5528c93d6bcb36d23"
+    "/css/plugins/slick.min.css": "/css/plugins/slick.min.css?id=72bdc86c8d50acd5528c93d6bcb36d23",
+    "/admin/css/simple-datatable.css": "/admin/css/simple-datatable.css?id=8bd871b1057ec92d925206ec8cb05022",
+    "/admin/js/plugins/bootstrap.min.js": "/admin/js/plugins/bootstrap.min.js?id=d6ee632ea071cfdc62c26c13db1d8b97",
+    "/admin/js/plugins/chart.min.js": "/admin/js/plugins/chart.min.js?id=5bdfbaaf4fd03f0e96ca24f7108bd055",
+    "/admin/js/plugins/simple-datatable.min.js": "/admin/js/plugins/simple-datatable.min.js?id=99dbbbc58ac3bb92618f02e4bd111ec3"
 }

@@ -20,9 +20,11 @@ mix
     .sass("resources/scss/pages/search-list.scss", "public/css")
     .sass("resources/scss/pages/contact.scss", "public/css")
     .sass("resources/scss/pages/order.scss", "public/css")
+    .sass("resources/scss/pages/login.scss", "public/css")
 
     // Admin setup
-    .sass("resources/scss/admin/login.scss", "public/css/admin")
+    .sass("resources/admin/scss/admin-index.scss", "public/admin/css")
+    .js("resources/admin/js/admin.js", "public/admin/js")
 
     .version();
 
@@ -32,3 +34,7 @@ mix
     .copyDirectory('resources/images', 'public/images')
 
     .copyDirectory('resources/scss/plugins', 'public/css/plugins')
+
+    // Admin assets
+    .copyDirectory('resources/admin/scss/simple-datatable.css', 'public/admin/css')
+    .copyDirectory('resources/admin/js/plugins', 'public/admin/js/plugins')

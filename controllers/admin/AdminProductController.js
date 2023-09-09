@@ -21,6 +21,22 @@ const getLoginPage = (req, res) => {
     });
 };
 
+const getDashboard = (req, res) => {
+    var metas = {
+        title: 'Admin dashboard',
+        type: "page",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the Admin dashboard page",
+        // keywords: []
+    };
+
+    return res.render("admin/dashboard", {
+        meta: metas,
+        csrfToken: req.csrfToken(),
+        frontTranslations: getFrontTranslations("hu")
+    });
+};
+
 // const getProductDetails = (req, res) => {
 //     const { lang } = req.body;
 //     let { productId } = req.params;
@@ -213,4 +229,4 @@ const getProducts = (req, res) => {
 //     });
 // };
 
-module.exports = { getProducts, getLoginPage };
+module.exports = { getProducts, getLoginPage, getDashboard };

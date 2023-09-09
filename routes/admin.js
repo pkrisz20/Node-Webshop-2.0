@@ -8,4 +8,7 @@ const AdminProductController = require("../controllers/admin/AdminProductControl
 adminRouter.route("/")
     .get(AdminProductController.getLoginPage);
 
+adminRouter.route("/dashboard")
+    .get(AdminProductController.getDashboard);
+
 module.exports = adminRouter;
