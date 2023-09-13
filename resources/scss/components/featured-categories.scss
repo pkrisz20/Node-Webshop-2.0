@@ -22,8 +22,9 @@
             top: 50%;
             transform: translateY(-50%);
             background-color: $c-theme;
-            border-radius: 3px;
-            padding: 8px !important;
+            border-radius: 50%;
+            height: 45px;
+            width: 45px;
             cursor: pointer;
 
             i {
@@ -33,10 +34,6 @@
                 @media #{ $r-min-m } {
                     font-size: 30px;
                 }
-            }
-
-            @media #{ $r-min-xl } {
-                padding: 10px !important;
             }
         }
 
