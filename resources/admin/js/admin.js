@@ -16,28 +16,9 @@ window.addEventListener('DOMContentLoaded', event => {
     //     document.body.classList.toggle('sb-sidenav-toggled');
     // }
     sidebarToggle.addEventListener('click', event => {
-        event.preventDefault();
-        document.body.classList.toggle('sb-sidenav-toggled');
-        localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-    });
-  }
-
-  // Simple-DataTables
-  // https://github.com/fiduswriter/Simple-DataTables/wiki
-
-  const datatablesSimple = document.getElementById('datatablesSimple');
-  if (datatablesSimple) {
-    new simpleDatatables.DataTable(datatablesSimple, {
-      labels: {
-        placeholder: "Keresés...",
-        searchTitle: "Keresés a táblázaton belül...",
-        pageTitle: "{page}. oldal",
-        perPage: "oldalaként",
-        noRows: "Nincs megjelenithető adat.",
-        info: "{start}. elemtől a {end}. elemig a(z) {rows} elemből",
-        noResults: "Nincs találat",
-      },
-      bPaginate: false,
+      event.preventDefault();
+      document.body.classList.toggle('sb-sidenav-toggled');
+      localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
     });
   }
 });
@@ -151,4 +132,58 @@ var myLineChart = new Chart(ctxAreChart, {
       display: false
     }
   }
+});
+
+// Delete data
+$('body').on('click', '.js-delete-data', function () {
+
+  Swal.fire({
+    title: 'Biztosan szeretné törölni?',
+    text: "Ez a folyamat visszafordíthatatlan!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#0d6efd',
+    cancelButtonColor: '#dc3545',
+    cancelButtonText: 'Mégsem',
+    confirmButtonText: 'Igen, törlöm!',
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      Swal.fire('Folyamatban...');
+      Swal.showLoading();
+
+        // $.ajax({
+        //   type: "POST",
+        //   url: $(this_button).data('url'),
+        //   dataType: 'json',
+        //   data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
+        //   beforeSend: function (jqXHR) {
+        //     this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        //   },
+        //   complete: function (jqXHR, textStatus) {
+        //     this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        //   },
+        //   success: function (response) {
+        //     if (response.status === 'error') {
+        //       $.alert({
+        //         useBootstrap: false,
+        //         boxWidth: '400px',
+        //         title: response.title,
+        //         content: response.content || false,
+        //         buttons: 'OK'
+        //       });
+        //     }
+        //     else if (response.status === 'success') {
+          // Swal.fire(
+          //   'Törölve!',
+          //   'Az adat sikeresen törölve.',
+          //   'success'
+          // );
+        //     }
+        //   }
+        // });
+    }
+  });
+
+  var this_button = $(this);
 });

@@ -36,5 +36,5 @@ mix
     .copyDirectory('resources/scss/plugins', 'public/css/plugins')
 
     // Admin assets
-    .copyDirectory('resources/admin/scss/simple-datatable.css', 'public/admin/css')
+    .copyDirectory('resources/admin/scss/plugins', 'public/admin/css/plugins')
     .copyDirectory('resources/admin/js/plugins', 'public/admin/js/plugins')

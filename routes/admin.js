@@ -1,14 +1,14 @@
 const express = require("express");
 const adminRouter = express.Router();
 // const AuthController = require("../controllers/admin/AuthController");
-const AdminProductController = require("../controllers/admin/AdminProductController");
+const AdminController = require("../controllers/admin/AdminController");
 // const verifyJWT = require("../middleware/verifyJWT");
 // const recaptchaValidation = require("../validations/recaptchaValidation");
 
 adminRouter.route("/")
-    .get(AdminProductController.getLoginPage);
+    .get(AdminController.getLoginPage);
 
 adminRouter.route("/dashboard")
-    .get(AdminProductController.getDashboard);
+    .get(AdminController.getDashboard);
 
 module.exports = adminRouter;

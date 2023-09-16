@@ -3,6 +3,7 @@ const getValueByLanguage = require("../../helpers/getValueByLanguage");
 // const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
 const getFrontTranslations = require("../../helpers/frontTranslations");
+const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const moment = require("moment");
 
 const getLoginPage = (req, res) => {
@@ -30,10 +31,46 @@ const getDashboard = (req, res) => {
         // keywords: []
     };
 
-    return res.render("admin/dashboard", {
-        meta: metas,
-        csrfToken: req.csrfToken(),
-        frontTranslations: getFrontTranslations("hu")
+    setMomentLocale("hu");
+    const selectLastOrders = "SELECT order_id, customer_firstname, customer_lastname, customer_city, customer_phone, order_status, order_sum_price, order_date FROM `orders` ORDER BY order_date DESC LIMIT ?";
+
+    db.query(selectLastOrders, 15, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).render("500", {
+                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                current_locale: req.session.lang,
+                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (data.length > 0) {
+            let lastOrders = [];
+
+            data.forEach(order => {
+                let result = {
+                    id: order.order_id,
+                    firstname: order.customer_firstname,
+                    lastname: order.customer_lastname,
+                    city: order.customer_city,
+                    phone: order.customer_phone,
+                    statusData: getOrderStatus(order.order_status),
+                    sumPrice: numberWithCommas(order.order_sum_price),
+                    orderDate: moment(order.order_date).format("YYYY. MMMM DD. HH:mm").toLocaleLowerCase()
+                }
+
+                lastOrders.push(result);
+            });
+
+            return res.render("admin/dashboard", {
+                meta: metas,
+                lastOrders: lastOrders,
+                csrfToken: req.csrfToken(),
+                frontTranslations: getFrontTranslations("hu")
+            });
+        }
     });
 };
 
