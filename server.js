@@ -61,14 +61,14 @@ app.listen(process.env.PORT || 5000, () => {
 const cartRouter = require("./routes/cart");
 app.use("/api", cartRouter);
 
+// Admin routes
+const adminRouter = require("./routes/admin");
+app.use("/admin", adminRouter);
+
 // Redirect to the lang slug version
 app.get('/', (req, res) => {
     res.redirect(`/${ req.session.lang ?? process.env.FALLBACK_LANG }`);
 });
-
-// Admin routes
-const adminRouter = require("./routes/admin");
-app.use("/admin", adminRouter);
 
 // Language slug handler
 app.use("/:lang", function (req, res, next) {

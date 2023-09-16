@@ -668,6 +668,11 @@ $('body').on("change", ".js-product-quantity", function (event, targetInput) {
 
                 $('.js-total-price').text(response.totalPrice);
 
+                if ($('body .js-order-total-price').length > 0 && $('body .js-order-alone-price').length > 0) {
+                    $('body .js-order-total-price').text(response.totalPrice);
+                    $(event.target).closest('.js-order-item').find('.js-order-alone-price').text(response.alonePrice);
+                }
+
                 $.alert({
                     useBootstrap: false,
                     boxWidth: '350px',

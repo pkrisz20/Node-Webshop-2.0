@@ -214,6 +214,9 @@ const updateCartItem = (req, res) => {
         return { ...item, quantity: parseInt(item.quantity) }
     });
 
+    // Calculate price for the product alone with the new quantity
+    let alonePrice = req.session.cart[objIndex].quantity * req.session.cart[objIndex].price;
+
     // Calculate total price
     let sum = req.session.cart.reduce((total, product) => product.quantity * product.price + total, 0);
 
@@ -222,7 +225,8 @@ const updateCartItem = (req, res) => {
         title: quantity > maxQuantityEnabled ? languageHandler('general.information', lang) : languageHandler('general.process_success', lang),
         message: quantity > maxQuantityEnabled ? languageHandler('validations.max_quantity', lang, maxQuantityEnabled) : languageHandler('validations.cart_updated', lang),
         newValue: quantity > maxQuantityEnabled ?  maxQuantityEnabled : quantity,
-        totalPrice: numberWithCommas(sum)
+        totalPrice: numberWithCommas(sum),
+        alonePrice: numberWithCommas(alonePrice)
     });
 }
 
