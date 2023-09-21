@@ -14,27 +14,29 @@
 
                         <!-- ORDER COUNTERS -->
                         <div class="row">
+                            <span class="mb-2 fs-4 color-dark fw-semibold">Összes rendelés: <%= orderCounts.totalOrders %></span>
+
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-secondary text-white mb-4">
-                                    <div class="card-body fs-2">14</div>
+                                    <div class="card-body fs-2"><%= orderCounts.new %></div>
                                     <div class="card-footer d-flex align-items-center">Új rendelés</div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body fs-2">53</div>
+                                    <div class="card-body fs-2"><%= orderCounts.in_process %></div>
                                     <div class="card-footer d-flex align-items-center">Folyamatban levő rendelés</div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-success text-white mb-4">
-                                    <div class="card-body fs-2">89</div>
+                                    <div class="card-body fs-2"><%= orderCounts.finished %></div>
                                     <div class="card-footer d-flex align-items-center">Lazárt rendelés</div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body fs-2">37</div>
+                                    <div class="card-body fs-2"><%= orderCounts.canceled %></div>
                                     <div class="card-footer d-flex align-items-center">Lemondott rendelés</div>
                                 </div>
                             </div>
@@ -118,5 +120,48 @@
         <script src="admin/js/plugins/chart.min.js"></script>
         <script src="admin/js/plugins/sweetalert.min.js"></script>
         <script src="admin/js/admin.js"></script>
+        <script type="text/javascript">
+            // Bar Chart Example
+            var ctxBarChart = document.getElementById("myBarChart");
+            var myLineChart = new Chart(ctxBarChart, {
+                type: 'bar',
+                data: {
+                    labels: ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
+                    datasets: [{
+                        backgroundColor: "rgba(2,117,216,1)",
+                        borderColor: "rgba(2,117,216,1)",
+                        data: [4215, 5312, 6251, 7841, 9821, 14984, 4215, 5312, 6251, 7841, 9821, 14984],
+                    }],
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            time: {
+                                unit: 'month'
+                            },
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: {
+                                maxTicksLimit: 12
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 15000,
+                                maxTicksLimit: 8
+                            },
+                            gridLines: {
+                                display: true
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

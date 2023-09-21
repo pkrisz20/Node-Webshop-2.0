@@ -4,6 +4,7 @@ const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
 const getFrontTranslations = require("../../helpers/frontTranslations");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
+const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 
 const getLoginPage = (req, res) => {
@@ -38,10 +39,10 @@ const getDashboard = (req, res) => {
         if (err) {
             console.log(err);
             return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                current_locale: process.env.ADMIN_LANG,
+                back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
                 csrfToken: req.csrfToken()
             });
         }
@@ -64,11 +65,39 @@ const getDashboard = (req, res) => {
                 lastOrders.push(result);
             });
 
-            return res.render("admin/dashboard", {
-                meta: metas,
-                lastOrders: lastOrders,
-                csrfToken: req.csrfToken(),
-                frontTranslations: getFrontTranslations("hu")
+            const selectStatusCounters = "SELECT count(*) AS total, sum(case when order_status = 'new' then 1 else 0 end) AS new_orders, sum(case when order_status = 'in process' then 1 else 0 end) AS in_process_orders, sum(case when order_status = 'done' then 1 else 0 end) AS finished_orders, sum(case when order_status = 'canceled' then 1 else 0 end) AS canceled_orders FROM orders";
+
+            // ["new", "in process", "done", "canceled"]
+            db.query(selectStatusCounters, (status_err, status_data) => {
+
+                if (status_err) {
+                    console.log(status_err);
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                        current_locale: process.env.ADMIN_LANG,
+                        back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                        learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                else if (status_data.length > 0) {
+                    let orderCounts = {
+                        totalOrders: status_data[0].total,
+                        new: status_data[0].new_orders,
+                        in_process: status_data[0].in_process_orders,
+                        finished: status_data[0].finished_orders,
+                        canceled: status_data[0].canceled_orders,
+                    };
+
+                    return res.render("admin/dashboard", {
+                        meta: metas,
+                        lastOrders: lastOrders,
+                        csrfToken: req.csrfToken(),
+                        orderCounts: orderCounts,
+                        frontTranslations: getFrontTranslations("hu")
+                    });
+                }
             });
         }
     });

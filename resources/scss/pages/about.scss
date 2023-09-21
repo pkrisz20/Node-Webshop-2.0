@@ -73,7 +73,7 @@
                 }
 
                 &:hover::before {
-                    background: radial-gradient(rgba($c-dark-blue, 0) 0, rgba($c-dark-blue, 1) 80%);
+                    background-color: rgba($c-dark-blue, .4);
                 }
 
                 &-box {
@@ -101,8 +101,10 @@
                     font-weight: 400;
                     margin-bottom: 10px;
                     @include resp('font-size', 17px, 26px, 767px);
+                    transition: color .2s ease;
                 }
                 &-position {
+                    transition: color .2s ease;
                     font-weight: 600;
                     text-transform: uppercase;
                     font-size: 18px;
@@ -119,13 +121,16 @@
                     @include flexBox("center", "center", 20px);
 
                     & > a {
-                        transition: color .3s ease-in-out;
-                        font-size: 24px;
-                        @include resp('font-size', 18px, 24px, 767px);
+                        transition: background-color .2s ease-in-out;
+                        @include resp('font-size', 18px, 20px, 767px);
                         color: $c-white;
+                        border-radius: 3px;
+                        width: 32px;
+                        height: 32px;
+                        @include flexBox();
 
                         &:hover {
-                            color: $c-theme;
+                            background-color: $c-theme;
                         }
                     }
                 }

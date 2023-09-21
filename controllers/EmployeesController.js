@@ -25,7 +25,7 @@ const getEmployees = (req, res) => {
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the about page, here can the guests read about us"
     };
-    const sqlQuery = "SELECT name, position, image, facebook, twitter, instagram, email, phone FROM employees WHERE is_active = ?";
+    const sqlQuery = "SELECT name, position, image, facebook, tiktok, instagram, email, phone FROM employees WHERE is_active = ?";
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
@@ -48,7 +48,7 @@ const getEmployees = (req, res) => {
                     position: getValueByLanguage(element.position, lang),
                     contact: {
                         facebook: element.facebook,
-                        twitter: element.twitter,
+                        tiktok: element.tiktok,
                         instagram: element.instagram,
                         email: element.email,
                         phone: element.phone
