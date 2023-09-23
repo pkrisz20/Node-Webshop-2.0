@@ -71,6 +71,7 @@ const en = {
 		postcode: "Postal code",
 		city: "City",
 		send: "Send",
+		login: "Login",
 		required: "This field is required",
 		must_have_at_most: "This field must have at most {number} letters",
 		max_quantity: "The maximum orderable quantity is {0} from this product!",
@@ -78,7 +79,6 @@ const en = {
 		accept_policy: "I agree that, the site handling my data.",
 		accept_terms: "The expressed opinions are personal opinions of the authors of the comments. Comments are moderated and approved.",
 		cart_updated: "The cart has been updated!",
-		login: "Login"
 	},
 	products: {
 		all_products: "All products",
@@ -127,7 +127,8 @@ const en = {
 		unprocessable_data: "Unprocessable data types!",
 		not_found: "Page not found",
 		has_to_be_number: "Has to be number!",
-		no_permission: "You do not have permission for this"
+		no_permission: "You do not have permission for this",
+		unauthorized: "Unauthorized user",
 	}
 };
 

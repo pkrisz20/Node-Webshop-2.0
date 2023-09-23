@@ -29,6 +29,13 @@
             color: $c-light-gray2;
         }
 
+        &__text {
+            color: $c-white;
+            font-size: 16px;
+            margin: 15px 0;
+            z-index: 2;
+        }
+
         &__code {
             position: relative;
             z-index: 2;

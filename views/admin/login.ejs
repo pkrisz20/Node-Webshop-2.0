@@ -12,24 +12,16 @@
                 <h1 class="main-title">Adminisztráció</h1>
 
                 <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/admin/login">
-                    <input
-                        id="recaptcha"
-                        value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                        name="recaptcha"
-                        type="hidden"
-                        class="g-recaptcha"
-                    />
                     <div class="form-row">
                         <input
-                            id="admin_email"
-                            name="admin_email"
-                            type="email"
+                            id="admin_username"
+                            name="admin_username"
+                            type="text"
                             data-rule-required="true"
-                            data-rule-email="true"
-                            placeholder="Email"
+                            placeholder="Felhasználónév"
                             class="form-control"
                         />
-                        <label for="admin_email" class="form-label">Email</label>
+                        <label for="admin_username" class="form-label">Felhasználónév</label>
 
                         <i class="error-icon fas fa-times"></i>
                         <div class="form-row-error"></div>
@@ -63,7 +55,6 @@
         var translations = <%- JSON.stringify(frontTranslations) %>;
     </script>
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
     <script type="text/javascript" src="js/plugins/validate.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>

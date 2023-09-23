@@ -8,6 +8,11 @@ const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 
 const getLoginPage = (req, res) => {
+
+    if ( req.session.authenticated === true ) {
+        return res.redirect("/admin/dashboard");
+    }
+
     var metas = {
         title: 'Admin belépés',
         type: "page",

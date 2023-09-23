@@ -71,6 +71,7 @@ const sr = {
         postcode: "Poštanski broj",
         city: "Grad",
         send: "Pošalji",
+        login: "Prijava",
         required: "Polje je obavezno",
         must_have_at_most: "Ne može da bude više od {number} karaktera",
         max_quantity: "Iz ova proizvoda maximalna naručena količina je {0}!",
@@ -78,7 +79,6 @@ const sr = {
         accept_policy: "Slažem se, da sajt obrađuje moje podatke.",
         accept_terms: "Mišljenja iznešena u komentarima su lična mišljenja autora. Komentari su moderirani i odobravani.",
 		cart_updated: "Vrednosti su promenili!",
-		login: "Prijava"
     },
     products: {
         all_products: "Svi proizvodi",
@@ -127,7 +127,8 @@ const sr = {
         unprocessable_data: "Neobrađene podatke!",
 		not_found: "Stranica nije pronađena",
 		has_to_be_number: "Samo brojevi prihvata!",
-		no_permission: "Nemate dozvolu za ovaj aktivnost"
+		no_permission: "Nemate dozvolu za ovaj aktivnost",
+		unauthorized: "Neovlašćeno korisnik",
     }
 };
 

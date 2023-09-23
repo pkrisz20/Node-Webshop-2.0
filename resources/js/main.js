@@ -168,7 +168,7 @@ $(document).ready(function() {
             equalTo: translateText('validations.equalTo')
         });
 
-        if (grecaptcha && $('.js-form-validate').find('.g-recaptcha').length > 0) {
+        if (typeof grecaptcha !== 'undefined' && $('.js-form-validate').find('.g-recaptcha').length > 0) {
 
             var inputToken = $('.js-form-validate').find('.g-recaptcha');
             var recaptchaToken = inputToken.val();
@@ -254,7 +254,11 @@ $('.js-form-validate').not('.inited').each(function () {
                             boxWidth: '400px',
                             title: response.title,
                             content: response.content || false,
-                            buttons: 'OK'
+                            buttons: {
+                                OK: function () {
+                                    // do nothing, and close modal
+                                }
+                            }
                         });
                     }
                     else if (response.status === 'success') {

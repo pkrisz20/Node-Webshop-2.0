@@ -71,6 +71,7 @@ const hu = {
         postcode: "Irányítószám",
         city: "Település",
         send: "Küldés",
+        login: "Bejelentkezés",
         required: "A mező kitöltése kötelező",
         must_have_at_most: "Ez a mező legfeljebb {number} karaktert tartalmazhat",
         max_quantity: "Ebből a termékből a maximális rendelhető mennyiség {0}!",
@@ -97,7 +98,6 @@ const hu = {
         no_category_like_this: "Nincs ilyen kategória.",
 		no_gallery_like_this: "Nincs ilyen galléria.",
 		no_blogs_like_this: "Nincs ilyen blog.",
-		login: "Bejelentkezés"
     },
     orders: {
         total_price: "Összeg",
@@ -127,7 +127,8 @@ const hu = {
         unprocessable_data: "Nem feldolgozható adatok!",
 		not_found: "Nem található",
         has_to_be_number: "Számnak kell lennie!",
-		no_permission: "Nincs jogosultsága ehhez"
+		no_permission: "Nincs jogosultsága ehhez",
+		unauthorized: "Azonosítatlan felhasználó",
     }
 };
 
