@@ -131,7 +131,8 @@ const addCartItem = (req, res) => {
                 maxQuantity: data[0].max_order_count,
                 quantity: cartItem.quantity,
                 price: data[0].discount_value ? data[0].discount_value : data[0].price,
-                image: imagePathConverter(data[0].image_thumbnail, "products") ?? null
+                image: imagePathConverter(data[0].image_thumbnail, "products") ?? null,
+                is_available: parseInt(data[0].is_available),
             };
 
             cart.push(resultItem);

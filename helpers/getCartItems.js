@@ -15,7 +15,7 @@ const getCartItems = (req, res, next) => {
 
         let countParams = Array(cartProductIds.length).fill("?").join(",");
 
-        db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, max_order_count FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
+        db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, max_order_count, is_available FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 console.log(err);
                 return res.status(500).render("500", {
@@ -38,10 +38,14 @@ const getCartItems = (req, res, next) => {
                             cartItem.slug = databaseItem.slug,
                             cartItem.maxQuantity = parseInt(databaseItem.max_order_count),
                             cartItem.price = databaseItem.discount_value != null ? parseInt(databaseItem.discount_value) : parseInt(databaseItem.price),
-                            cartItem.image = imagePathConverter(databaseItem.image_thumbnail, "products")
+                            cartItem.image = imagePathConverter(databaseItem.image_thumbnail, "products"),
+                            cartItem.is_available = databaseItem.is_available
                         }
                     });
                 });
+
+                // Filter the not available products from cart by fresh database data
+                cartItems = cartItems?.filter(item => item.is_available !== 0);
 
                 cartItems = cartItems?.map(item => {
                     return {
