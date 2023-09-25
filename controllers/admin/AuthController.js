@@ -46,8 +46,7 @@ const handleAdminLogout = (req, res) => {
 
     return res.status(200).json({
         status: "success",
-        title: "Sikeres kijelentkezés",
-        content: "Csak egy pillanat és átirányítjuk!",
+        text: "Hamarosan átirányítjuk!",
         redirect_url: `${ process.env.APP_URL }/admin`
     });
 }

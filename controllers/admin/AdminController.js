@@ -95,12 +95,41 @@ const getDashboard = (req, res) => {
                         canceled: status_data[0].canceled_orders,
                     };
 
-                    return res.render("admin/dashboard", {
-                        meta: metas,
-                        lastOrders: lastOrders,
-                        csrfToken: req.csrfToken(),
-                        orderCounts: orderCounts,
-                        frontTranslations: getFrontTranslations("hu")
+                    // Select finances per month
+                    const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(order_date) as month FROM orders WHERE order_status = 'done' AND YEAR(order_date) = ? GROUP BY MONTH(order_date) ASC";
+
+                    db.query(selectFinancesPerMonth, moment(new Date()).year(), (finance_err, monthly_finance_data) => {
+
+                        if (finance_err) {
+                            console.log(finance_err);
+                            return res.status(500).render("500", {
+                                title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                                current_locale: process.env.ADMIN_LANG,
+                                back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                                learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                                csrfToken: req.csrfToken()
+                            });
+                        }
+
+                        else if (monthly_finance_data.length > 0) {
+                            // Initialize the array with 0 values
+                            let financesPerMonth = Array(12).fill(0);
+
+                            // Overwrite the data where has value for that month
+                            monthly_finance_data.forEach(finance_data => {
+                                financesPerMonth[finance_data.month - 1] = finance_data.total;
+                            });
+
+                            return res.render("admin/dashboard", {
+                                meta: metas,
+                                lastOrders: lastOrders,
+                                financesPerMonth: financesPerMonth,
+                                maxValueFromMonths: Math.max.apply(null, financesPerMonth),
+                                csrfToken: req.csrfToken(),
+                                orderCounts: orderCounts,
+                                frontTranslations: getFrontTranslations("hu")
+                            });
+                        }
                     });
                 }
             });

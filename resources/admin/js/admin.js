@@ -7,15 +7,15 @@
 // Scripts
 //
 
-window.addEventListener('DOMContentLoaded', event => {
+window.addEventListener('DOMContentLoaded', function (event) {
   // Toggle the side navigation
   const sidebarToggle = document.querySelector('#sidebarToggle');
   if (sidebarToggle) {
-    // Uncomment Below to persist sidebar toggle between refreshes
-    // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-    //     document.body.classList.toggle('sb-sidenav-toggled');
-    // }
-    sidebarToggle.addEventListener('click', event => {
+    // Persist sidebar toggle between refreshes
+    if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+      document.body.classList.toggle('sb-sidenav-toggled');
+    }
+    sidebarToggle.addEventListener('click', function (event) {
       event.preventDefault();
       document.body.classList.toggle('sb-sidenav-toggled');
       localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
@@ -94,6 +94,8 @@ var myLineChart = new Chart(ctxAreChart, {
 // Delete data
 $('body').on('click', '.js-delete-data', function () {
 
+  var this_button = $(this);
+
   Swal.fire({
     title: 'Biztosan szeretné törölni?',
     text: "Ez a folyamat visszafordíthatatlan!",
@@ -103,44 +105,106 @@ $('body').on('click', '.js-delete-data', function () {
     cancelButtonColor: '#dc3545',
     cancelButtonText: 'Mégsem',
     confirmButtonText: 'Igen, törlöm!',
-  }).then((result) => {
+  })
+  .then(function (result) {
     if (result.isConfirmed) {
 
-      Swal.fire('Folyamatban...');
-      Swal.showLoading();
+      $.ajax({
+        type: "POST",
+        url: $(this_button).data('url'),
+        dataType: 'json',
+        data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
+        beforeSend: function (jqXHR) {
+          Swal.fire('Folyamatban...');
+          Swal.showLoading();
+          this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+          this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+          if (response.status === 'error') {
+            setTimeout(function () {
+              Swal.fire({
+                icon: 'error',
+                title: 'Hoppá!',
+                text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+              });
+            }, 1000);
+          }
+          else if (response.status === 'success') {
+            setTimeout(function () {
+              Swal.fire({
+                title: 'Sikeresen törölve!',
+                icon: 'success',
+                confirmButtonText: "OK",
+              })
+              .then(function (result) {
+                if (result.isConfirmed) {
 
-        // $.ajax({
-        //   type: "POST",
-        //   url: $(this_button).data('url'),
-        //   dataType: 'json',
-        //   data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
-        //   beforeSend: function (jqXHR) {
-        //     this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
-        //   },
-        //   complete: function (jqXHR, textStatus) {
-        //     this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
-        //   },
-        //   success: function (response) {
-        //     if (response.status === 'error') {
-        //       $.alert({
-        //         useBootstrap: false,
-        //         boxWidth: '400px',
-        //         title: response.title,
-        //         content: response.content || false,
-        //         buttons: 'OK'
-        //       });
-        //     }
-        //     else if (response.status === 'success') {
-          // Swal.fire(
-          //   'Törölve!',
-          //   'Az adat sikeresen törölve.',
-          //   'success'
-          // );
-        //     }
-        //   }
-        // });
+                  if (response.redirect_url) {
+                    setTimeout(function () {
+                      window.location = response.redirect_url;
+                    }, 500);
+                  }
+                }
+              });
+            }, 1000);
+          }
+        }
+      });
     }
   });
+});
 
-  var this_button = $(this);
+// Simple ajax request
+$('body').on('click', '.js-simple-ajax', function (event) {
+  event.preventDefault();
+
+  $.ajax({
+    type: "POST",
+    url: $(this).data("url"),
+    dataType: 'json',
+    data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
+    beforeSend: function (jqXHR) {
+      Swal.fire('Folyamatban...');
+      Swal.showLoading();
+      $(this).addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function (jqXHR, textStatus) {
+      $(this).removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function (response) {
+      if (response.status === 'error') {
+        setTimeout(function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hoppá!',
+            text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+          });
+        }, 1000);
+      }
+      else if (response.status === 'success') {
+
+        setTimeout(function () {
+          Swal.fire({
+            title: 'Sikeresen feldolgozva!',
+            icon: 'success',
+            text: response.text ? response.text : false,
+            confirmButtonText: "OK",
+          })
+          .then(function (result) {
+            if (result.isConfirmed) {
+
+              if (response.redirect_url) {
+                setTimeout(function () {
+                  window.location = response.redirect_url;
+                }, 500);
+              }
+            }
+          });
+        }, 1000);
+      }
+    }
+  });
 });
