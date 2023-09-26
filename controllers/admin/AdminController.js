@@ -96,7 +96,7 @@ const getDashboard = (req, res) => {
                     };
 
                     // Select finances per month
-                    const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(order_date) as month FROM orders WHERE order_status = 'done' AND YEAR(order_date) = ? GROUP BY MONTH(order_date) ASC";
+                    const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(closed_order_at) as month FROM orders WHERE order_status = 'done' AND YEAR(closed_order_at) = '2023' GROUP BY MONTH(closed_order_at) ASC;";
 
                     db.query(selectFinancesPerMonth, moment(new Date()).year(), (finance_err, monthly_finance_data) => {
 
