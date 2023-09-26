@@ -120,14 +120,43 @@ const getDashboard = (req, res) => {
                                 financesPerMonth[finance_data.month - 1] = finance_data.total;
                             });
 
-                            return res.render("admin/dashboard", {
-                                meta: metas,
-                                lastOrders: lastOrders,
-                                financesPerMonth: financesPerMonth,
-                                maxValueFromMonths: Math.max.apply(null, financesPerMonth),
-                                csrfToken: req.csrfToken(),
-                                orderCounts: orderCounts,
-                                frontTranslations: getFrontTranslations("hu")
+                            // Select orders count per month
+                            const selectOrdersCountPerMonth = "SELECT COUNT(order_id) as total_order, MONTH(order_date) as month FROM orders WHERE YEAR(order_date) = ? GROUP BY MONTH(order_date) ASC";
+
+                            db.query(selectOrdersCountPerMonth, moment(new Date()).year(), (order_count_err, order_count_data) => {
+
+                                if (order_count_err) {
+                                    console.log(order_count_err);
+                                    return res.status(500).render("500", {
+                                        title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                                        current_locale: process.env.ADMIN_LANG,
+                                        back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                                        learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                                        csrfToken: req.csrfToken()
+                                    });
+                                }
+
+                                else if (order_count_data.length > 0) {
+                                    // Initialize the array with 0 values
+                                    let ordersCountPerMonth = Array(12).fill(0);
+
+                                    // Overwrite the data where has value for that month
+                                    order_count_data.forEach(order_data => {
+                                        ordersCountPerMonth[order_data.month - 1] = order_data.total_order;
+                                    });
+
+                                    return res.render("admin/dashboard", {
+                                        meta: metas,
+                                        lastOrders: lastOrders,
+                                        ordersCountPerMonth: ordersCountPerMonth,
+                                        maxValueordersCount: Math.max.apply(null, ordersCountPerMonth),
+                                        financesPerMonth: financesPerMonth,
+                                        maxValueFromMonths: Math.max.apply(null, financesPerMonth),
+                                        csrfToken: req.csrfToken(),
+                                        orderCounts: orderCounts,
+                                        frontTranslations: getFrontTranslations("hu")
+                                    });
+                                }
                             });
                         }
                     });

@@ -15,14 +15,14 @@
             <div class="wrapper">
                 <h1 class="main-title"><%= languageHandler('nav.about', current_locale) %></h1>
 
-                <% if (pageData.shortDesc) { %>
-                    <section class="about-short">
-                        <p class="about-short-text"><%= pageData.shortDesc %></p>
-                    </section>
-                <% } %>
-
                 <% if (employees.length > 0) { %>
                     <section class="about-content">
+                        <% if (pageData.shortDesc) { %>
+                            <div class="about-short">
+                                <p class="about-short-text"><%= pageData.shortDesc %></p>
+                            </div>
+                        <% } %>
+
                         <%- include('../components/block-title.ejs', { title: languageHandler('about.our_workers', current_locale), subtitle: languageHandler('about.our_workers_subtitle', current_locale) }) %>
 
                         <div class="workers">
@@ -74,7 +74,7 @@
                         </article>
                     </section>
                 <% } %>
-            </div>
+            </d>
         </main>
 
         <%- include('../layout/footer.ejs') %>

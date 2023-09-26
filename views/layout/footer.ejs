@@ -46,7 +46,7 @@
     <div class="footer-bottom">
         <div class="wrapper">
             <div class="footer-bottom-row">
-                <strong><%= process.env.SITE_NAME %> &copy; 2023. All rights reserved.</strong>
+                <strong><%= process.env.SITE_NAME %> &copy; <%= new Date().getFullYear() %>. <%= languageHandler('validations.rights_reserved', current_locale) %>.</strong>
             </div>
         </div>
     </div>
