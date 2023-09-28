@@ -13,15 +13,17 @@
     </a>
     <div class="product_desc">
         <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
-        <% if (product.short) { %>
-            <p class="product_desc-short"><%= product.short %></p>
-        <% } %>
+
         <div class="price__wrap">
             <strong class="price__wrap-price"><%= product.isOnDiscount ? product.discount : product.price %> <small>RSD</small></strong>
             <% if (product.isOnDiscount) { %>
                 <del class="price__wrap-price old"><%= product.price %> RSD</del>
             <% } %>
         </div>
+        <% if (product.short) { %>
+            <p class="product_desc-short"><%= product.short %></p>
+        <% } %>
+
         <% if (product.already_in_cart) { %>
             <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
         <% } else if (product.isAvailable) { %>

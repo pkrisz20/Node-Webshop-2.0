@@ -80,7 +80,7 @@
         width: 100%;
         @include flexBox('center', 'baseline', 8px);
         flex-wrap: wrap;
-        margin: 10px 0 auto;
+        margin: 6px 0;
 
         &-price {
           font-size: 15px;
@@ -107,6 +107,7 @@
         @include btn($c-a, $c-dark);
         width: 100%;
         text-transform: uppercase;
+        margin-top: auto;
 
         i {
           margin-right: 5px;
@@ -125,6 +126,7 @@
         width: 100%;
         text-align: center;
         border-radius: 3px;
+        margin-top: auto;
 
         @media #{ $r-min-m } {
           font-size: 16px;
@@ -149,6 +151,7 @@
         width: 100%;
         text-align: center;
         border-radius: 3px;
+        margin-top: auto;
 
         @media #{ $r-min-m } {
           font-size: 16px;

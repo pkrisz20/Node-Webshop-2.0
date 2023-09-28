@@ -2,7 +2,7 @@
     width: 100%;
     height: 100% !important;
     background-color: $c-grayE6;
-    border-radius: 8px;
+    border-radius: 3px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
@@ -69,7 +69,7 @@
     }
 
     .bottom {
-        @include flexBox("flex-start", "center");
+        @include flexBox("flex-start", "center", 10px);
         font-size: 14px;
         color: $c-3;
         flex-wrap: wrap;
