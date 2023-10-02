@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const moment = require("moment");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
@@ -107,7 +107,8 @@ const getBlogDetails = (req, res) => {
 
             var metas = {
                 title: result.title,
-                type: "article",
+                type: "website",
+                url: `${ process.env.APP_URL }/${ lang }/blog/${ slug }`,
                 image: `${ process.env.APP_URL }/images/logo.png`,
                 description: `This is the details blog page of ${ result.title }`,
                 // keywords: []
@@ -214,7 +215,8 @@ const getAllBlogs = (req, res) => {
     let result = [];
     var metas = {
         title: languageHandler("nav.blog", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/blogs`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the blog list page",
         // keywords: []

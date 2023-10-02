@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const { createUniqueID, numberWithCommas } = require("../helpers/globalFunctions");
 // const getValueByLanguage = require("../helpers/getValueByLanguage"); -> for the email translations
 // const nodemailer = require("nodemailer"); -> for the mail sending
@@ -17,7 +17,8 @@ const getOrderPage = (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
         title: languageHandler('orders.order', lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/order`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: `This is the order page`,
         // keywords: []

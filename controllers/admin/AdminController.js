@@ -1,4 +1,4 @@
-const { db } = require("../../config/db-config");
+const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 // const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
@@ -15,7 +15,8 @@ const getLoginPage = (req, res) => {
 
     var metas = {
         title: 'Admin belépés',
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/admin/login`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the Admin login page",
         // keywords: []
@@ -31,7 +32,7 @@ const getLoginPage = (req, res) => {
 const getDashboard = (req, res) => {
     var metas = {
         title: 'Admin dashboard',
-        type: "page",
+        type: "website",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the Admin dashboard page",
         // keywords: []

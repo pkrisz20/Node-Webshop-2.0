@@ -1,5 +1,5 @@
 const languageHandler = require("../helpers/languageHandler");
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');

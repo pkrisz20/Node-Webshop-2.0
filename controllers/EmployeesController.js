@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
@@ -21,7 +21,8 @@ const getEmployees = (req, res) => {
     var lang = req.session.lang;
     var metas = {
         title: languageHandler("nav.about", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/about`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the about page, here can the guests read about us"
     };

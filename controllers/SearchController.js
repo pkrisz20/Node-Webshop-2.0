@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas, setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
@@ -28,7 +28,8 @@ const handleSearch = (req, res) => {
 
     var metas = {
         title: languageHandler("general.search", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/search?keywords=${ keywords }`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the search page",
         // keywords: []

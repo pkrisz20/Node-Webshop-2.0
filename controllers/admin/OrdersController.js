@@ -1,4 +1,4 @@
-const { db } = require("../../config/db-config");
+const { db } = require("../../config/db-connection");
 // const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 // const moment = require("moment");
 

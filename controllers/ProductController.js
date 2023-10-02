@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
@@ -146,7 +146,8 @@ const getProductDetails = (req, res) => {
 
                 var metas = {
                     title: result.name,
-                    type: "article",
+                    type: "website",
+                    url: `${ process.env.APP_URL }/${ lang }/products/${ slug }`,
                     image: `${ process.env.APP_URL }/images/logo.png`,
                     description: `This is the product details page for ${ result.name }`,
                     // keywords: []
@@ -190,7 +191,8 @@ const getAllProducts = (req, res) => {
     let result = [];
     var metas = {
         title: languageHandler("general.products", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/poducts`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the product list page",
         // keywords: []
@@ -372,7 +374,8 @@ const getCategoryProducts = (req, res) => {
             const selectedCategoryShortDescription = category_data[0].category_short_description ? getValueByLanguage(category_data[0].category_short_description, lang) : null;
             var metas = {
                 title: selectedCategoryName,
-                type: "page",
+                type: "website",
+                url: `${ process.env.APP_URL }/${ lang }/products/category/${ slug }`,
                 image: `${ process.env.APP_URL }/images/logo.png`,
                 description: `This is the ${ selectedCategoryName } category list page`,
                 // keywords: []

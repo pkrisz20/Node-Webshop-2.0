@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
@@ -23,7 +23,8 @@ const getAllGallery = (req, res) => {
     let result = [];
     var metas = {
         title: languageHandler("nav.gallery", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/gallery`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the gallery list page",
         // keywords: []
@@ -194,7 +195,8 @@ const getGalleryDetails = (req, res) => {
 
         var metas = {
             title: result.galleryName,
-            type: "article",
+            type: "website",
+            url: `${ process.env.APP_URL }/${ lang }/gallery/${ slug }`,
             image: `${ process.env.APP_URL }/images/logo.png`,
             description: `This is the ${ result.galleryName } gallery`,
             // keywords: []

@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 // const nodemailer = require("nodemailer");
 // const xoauth2 = require('xoauth2');
 const languageHandler = require("../helpers/languageHandler");
@@ -22,7 +22,8 @@ const getContactPage = (req, res) => {
 
     var metas = {
         title: languageHandler("nav.contact", req.session.lang ?? process.env.FALLBACK_LANG),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/contact`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the contact page",
         // keywords: []

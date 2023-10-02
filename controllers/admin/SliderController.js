@@ -1,4 +1,4 @@
-const { db } = require("../../config/db-config");
+const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const { setMomentLocale } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');

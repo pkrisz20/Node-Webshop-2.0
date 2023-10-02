@@ -1,4 +1,4 @@
-const { db } = require("../config/db-config");
+const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
@@ -22,7 +22,8 @@ const getFAQ = (req, res) => {
     let result = [];
     var metas = {
         title: languageHandler("nav.FAQ", lang),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/faq`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the FAQ page",
         // keywords: []
@@ -82,7 +83,8 @@ const getGDPR = (req, res) => {
 
     var metas = {
         title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
-        type: "page",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/gdpr`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the GDPR page",
         // keywords: []
