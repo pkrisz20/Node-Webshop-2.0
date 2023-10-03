@@ -4,6 +4,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas, setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const moment = require("moment");
+const formatDateByLang = require("../helpers/formatDateByLocale");
 
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
@@ -151,7 +152,7 @@ const handleSearch = (req, res) => {
                     blogsFound.results = blogsFound.results.map(item => {
                         return {
                             ...item,
-                            fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
+                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                             relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
                         };
                     });
@@ -193,7 +194,7 @@ const handleSearch = (req, res) => {
                                     name: getValueByLanguage(element.gallery_name, lang),
                                     slug: element.slug,
                                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
-                                    date: moment(element.gallery_date).format("YYYY. MMMM DD."),
+                                    date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                                     category: getValueByLanguage(element.category_name, lang)
                                 }
 

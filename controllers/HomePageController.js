@@ -4,6 +4,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
+const formatDateByLang = require("../helpers/formatDateByLocale");
 
 const getData = (req, res) => {
     // Cart converting stuffs
@@ -117,7 +118,7 @@ const getData = (req, res) => {
                     blogs = blogs.map(item => {
                         return {
                             ...item,
-                            fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
+                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                             relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
                             shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                         };

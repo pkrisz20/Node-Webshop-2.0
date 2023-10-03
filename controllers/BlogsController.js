@@ -5,6 +5,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const getFrontTranslations = require("../helpers/frontTranslations");
+const formatDateByLang = require('../helpers/formatDateByLocale');
 
 const getBlogDetails = (req, res) => {
     // Cart converting stuffs
@@ -63,7 +64,7 @@ const getBlogDetails = (req, res) => {
                 description: getValueByLanguage(data[0].description, lang),
                 image: imagePathConverter(data[0].image_thumbnail, "blogs"),
                 isAllowed: Boolean(data[0].comments_allowed),
-                date: moment(data[0].date).format("YYYY. MMMM DD.").toLocaleLowerCase()
+                date: formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
             }
 
             // Select article comments, if they are not disabled
@@ -146,7 +147,7 @@ const getBlogDetails = (req, res) => {
                     newestBlogsArray = newestBlogsArray.map(item => {
                         return {
                             ...item,
-                            fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
+                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                             relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
                         };
                     });
@@ -295,7 +296,7 @@ const getAllBlogs = (req, res) => {
             result = result.map(item => {
                 return {
                     ...item,
-                    fullDate: moment(item.fullDate).format("YYYY MMMM DD."),
+                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
                     shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                 };

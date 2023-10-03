@@ -3,6 +3,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
 const moment = require("moment");
+const formatDateByLang = require("../helpers/formatDateByLocale");
 const languageHandler = require("../helpers/languageHandler");
 
 const getAllGallery = (req, res) => {
@@ -89,7 +90,7 @@ const getAllGallery = (req, res) => {
                     name: getValueByLanguage(element.gallery_name, lang),
                     slug: element.slug,
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
-                    date: moment(element.gallery_date).format("YYYY. MMMM DD."),
+                    date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                     category: getValueByLanguage(element.category_name, lang)
                 }
 
@@ -189,7 +190,7 @@ const getGalleryDetails = (req, res) => {
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "gallery"),
-                date: moment(data[0].gallery_date).format("YYYY. MMMM DD.")
+                date: formatDateByLang(data[0].gallery_date, lang ?? process.env.FALLBACK_LANG)
             }
         }
 
