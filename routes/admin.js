@@ -8,6 +8,8 @@ const AdminOrdersController = require("../controllers/admin/AdminOrdersControlle
 const SliderController = require("../controllers/admin/SliderController");
 const webshopCategoryController = require("../controllers/admin/WebshopCategoryController");
 const AdminProductController = require("../controllers/admin/AdminProductController");
+const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
+const AdminContactController = require("../controllers/admin/AdminContactController");
 // const recaptchaValidation = require("../validations/recaptchaValidation");
 
 adminRouter.route("/")
@@ -27,6 +29,12 @@ adminRouter.route("/category/list")
 
 adminRouter.route("/products/list")
     .get(checkAuthentication, AdminProductController.getWebshopProductList);
+
+adminRouter.route("/gallery/list")
+    .get(checkAuthentication, AdminGalleryController.getGalleryList);
+
+adminRouter.route("/messages/list")
+    .get(checkAuthentication, AdminContactController.getIncomingMessagesList);
 
 adminRouter.route("/logout")
     .post(checkAuthentication, handleAdminLogout);

@@ -41,10 +41,10 @@ const getContactPage = (req, res) => {
 };
 
 const handleContactMessage = (req, res) => {
-    const { firstName, lastName, email, phone, comment } = req.body;
+    const { firstName, lastName, email, phone, city, comment } = req.body;
     moment.locale("hu");
 
-    db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, client_message, date) VALUES (?,?,?,?,?,?)", [firstName, lastName, email, phone, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
+    db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, city, client_message, date) VALUES (?,?,?,?,?,?,?)", [firstName, lastName, email, phone, city, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
         if (err) {
             console.log(err);
             return res.status(500).render("500", {

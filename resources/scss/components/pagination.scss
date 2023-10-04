@@ -1,13 +1,14 @@
 .pagination {
     margin-bottom: 40px;
     @include flexBox();
+    flex-wrap: wrap;
 
     li {
       background-color: $c-success;
       transition: all .3s ease;
       border-radius: 3px;
       @include flexBox();
-      margin: 0 5px;
+      margin: 0 5px 5px;
 
       &.active {
         background-color: $c-warning;
@@ -25,7 +26,7 @@
         }
       }
 
-      a {
+      a, span {
         padding: 10px;
         color: $c-white;
 
