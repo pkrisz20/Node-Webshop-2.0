@@ -2,8 +2,6 @@ function formatJSONByLanguage (newData, lang = "en", oldData = null) {
 
     var availableLanguages = ['en', 'sr', 'hu'];
 
-    let otherLanguages = availableLanguages.filter(item => item !== lang);
-
     // There is already data in the json (WHEN UPDATE)
     if (oldData != null) {
         let dataObject = JSON.parse(oldData);
@@ -15,6 +13,8 @@ function formatJSONByLanguage (newData, lang = "en", oldData = null) {
     else if (oldData == null) {
         let newObjectValue = {};
         newObjectValue[lang] = newData;
+
+        let otherLanguages = availableLanguages.filter(item => item !== lang);
 
         otherLanguages.forEach(item => {
             newObjectValue[item] = null;
