@@ -19,6 +19,7 @@ const getAllGallery = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+    var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { page = 1 } = req.query;
     let result = [];
@@ -134,6 +135,7 @@ const getAllGallery = (req, res) => {
                         cart: cart,
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
+                        DB_CONFIG: DB_CONFIG,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -155,6 +157,7 @@ const getGalleryDetails = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+    var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { slug } = req.params;
     let result = {};
@@ -210,6 +213,7 @@ const getGalleryDetails = (req, res) => {
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
             csrfToken: req.csrfToken()
         });
     });

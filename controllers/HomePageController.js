@@ -20,6 +20,7 @@ const getData = (req, res) => {
         }
     });
 
+    var { DB_CONFIG } = req;
     let products = [];
     let sliders = [];
     var galleries = [];
@@ -220,6 +221,7 @@ const getData = (req, res) => {
                                             cart: cart,
                                             locales: ['hu', 'sr', 'en'],
                                             languageHandler: languageHandler,
+                                            DB_CONFIG: DB_CONFIG,
                                             csrfToken: req.csrfToken()
                                         });
                                     });

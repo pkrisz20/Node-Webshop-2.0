@@ -20,6 +20,7 @@ const getContactPage = (req, res) => {
         }
     });
 
+    var { DB_CONFIG } = req;
     var metas = {
         title: languageHandler("nav.contact", req.session.lang ?? process.env.FALLBACK_LANG),
         type: "website",
@@ -36,6 +37,7 @@ const getContactPage = (req, res) => {
         locales: ['hu', 'sr', 'en'],
         frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
         languageHandler: languageHandler,
+        DB_CONFIG: DB_CONFIG,
         csrfToken: req.csrfToken()
     });
 };

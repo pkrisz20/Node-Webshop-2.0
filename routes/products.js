@@ -5,15 +5,16 @@ const { getCartItems } = require("../helpers/getCartItems");
 const validationMiddleware = require("../middleware/validationMiddleware");
 const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
+const getConfigFromDb = require("../helpers/getConfigFromDb");
 
 productsRouter.route("/products")
-    .get(getCartItems, ProductController.getAllProducts);
+    .get(getConfigFromDb, getCartItems, ProductController.getAllProducts);
 
 productsRouter.route("/products/category/:slug")
-    .get(getCartItems, ProductController.getCategoryProducts);
+    .get(getConfigFromDb, getCartItems, ProductController.getCategoryProducts);
 
 productsRouter.route("/products/:slug")
-    .get(getCartItems, ProductController.getProductDetails);
+    .get(getConfigFromDb, getCartItems, ProductController.getProductDetails);
 
 productsRouter.route("/product/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, ProductController.handleProductComment);

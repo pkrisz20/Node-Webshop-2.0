@@ -14,6 +14,7 @@ const getOrderPage = (req, res) => {
         totalPrice: numberWithCommas(req.session.totalPrice)
     };
 
+    var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
         title: languageHandler('orders.order', lang),
@@ -32,6 +33,7 @@ const getOrderPage = (req, res) => {
         locales: ['hu', 'sr', 'en'],
         languageHandler: languageHandler,
         numberWithCommas: numberWithCommas,
+        DB_CONFIG: DB_CONFIG,
         csrfToken: req.csrfToken()
     });
 }

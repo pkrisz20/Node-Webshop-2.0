@@ -18,6 +18,7 @@ const getFAQ = (req, res) => {
         }
     });
 
+    var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let result = [];
     var metas = {
@@ -62,6 +63,7 @@ const getFAQ = (req, res) => {
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
             csrfToken: req.csrfToken()
         });
     });
@@ -81,6 +83,7 @@ const getGDPR = (req, res) => {
         }
     });
 
+    var { DB_CONFIG } = req;
     var metas = {
         title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
         type: "website",
@@ -97,6 +100,7 @@ const getGDPR = (req, res) => {
         locales: ['hu', 'sr', 'en'],
         frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
         languageHandler: languageHandler,
+        DB_CONFIG: DB_CONFIG,
         csrfToken: req.csrfToken()
     });
 }

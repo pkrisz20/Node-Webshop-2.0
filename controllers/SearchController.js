@@ -9,6 +9,7 @@ const formatDateByLang = require("../helpers/formatDateByLocale");
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
     const lang = req.session.lang;
+    var { DB_CONFIG } = req;
 
     // Redirect if something is fishy with the query param
     if ( typeof keywords !== "string" || keywords.length === 0 ) {
@@ -224,6 +225,7 @@ const handleSearch = (req, res) => {
                                 cart: cart,
                                 locales: ['hu', 'sr', 'en'],
                                 languageHandler: languageHandler,
+                                DB_CONFIG: DB_CONFIG,
                                 csrfToken: req.csrfToken()
                             });
                         }

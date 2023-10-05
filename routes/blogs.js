@@ -5,12 +5,13 @@ const { getCartItems } = require("../helpers/getCartItems");
 const validationMiddleware = require("../middleware/validationMiddleware");
 const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
+const getConfigFromDb = require("../helpers/getConfigFromDb");
 
 blogsRouter.route("/blogs")
-    .get(getCartItems, BlogsController.getAllBlogs);
+    .get(getConfigFromDb, getCartItems, BlogsController.getAllBlogs);
 
 blogsRouter.route("/blog/:slug")
-    .get(getCartItems, BlogsController.getBlogDetails);
+    .get(getConfigFromDb, getCartItems, BlogsController.getBlogDetails);
 
 blogsRouter.route("/blog/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, BlogsController.handleBlogComment);

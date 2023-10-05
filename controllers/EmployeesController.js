@@ -17,6 +17,7 @@ const getEmployees = (req, res) => {
         }
     });
 
+    var { DB_CONFIG } = req;
     let employees = [];
     var lang = req.session.lang;
     var metas = {
@@ -68,6 +69,7 @@ const getEmployees = (req, res) => {
             },
             meta: metas,
             current_locale: req.session.lang,
+            DB_CONFIG: DB_CONFIG,
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,

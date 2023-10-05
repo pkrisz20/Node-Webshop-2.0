@@ -2,15 +2,15 @@
   <div class="header-top">
     <div class="wrapper">
       <div class="header-top-contacts">
-        <a href="mailto:krisztianpasztor11@gmail.com" aria-label="Link to send a mail"><i class="fas fa-envelope"></i> example@gmail.com</a>
-        <a href="tel:061 5051095" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> 061 5051095</a>
-        <a href="tel:061 5051095" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> 061 5051095</a>
+        <a href="mailto:<%= DB_CONFIG["email"] %>" aria-label="Link to send a mail"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+        <a href="tel:<%= DB_CONFIG["phone_1"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+        <a href="tel:<%= DB_CONFIG["phone_2"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
       </div>
       <div class="header-top-socials">
         <h5 class="text"><%= languageHandler("general.follow_us", current_locale) %>:</h5>
-        <a href="/facebook" aria-label="Link to social media platform" target="blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
-        <a href="/instagram" aria-label="Link to social media platform" target="blank" class="icon instagram"><i class="fab fa-instagram"></i></a>
-        <a href="/tiktok" aria-label="Link to social media platform" target="blank" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
+        <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media platform" target="blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
+        <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media platform" target="blank" class="icon instagram"><i class="fab fa-instagram"></i></a>
+        <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media platform" target="blank" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
       </div>
       <div class="lang dropdown js-lang-switcher">
         <div type="button" class="dropdown-link">

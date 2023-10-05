@@ -3,12 +3,13 @@ const staticContentsRouter = express.Router();
 const StaticContentsController = require("../controllers/StaticContentsController");
 const { getCartItems } = require("../helpers/getCartItems");
 const recaptchaValidation = require("../validations/recaptchaValidation");
+const getConfigFromDb = require("../helpers/getConfigFromDb");
 
 staticContentsRouter.route("/faq")
-    .get(getCartItems, StaticContentsController.getFAQ);
+    .get(getConfigFromDb, getCartItems, StaticContentsController.getFAQ);
 
 staticContentsRouter.route("/gdpr")
-    .get(getCartItems, StaticContentsController.getGDPR);
+    .get(getConfigFromDb, getCartItems, StaticContentsController.getGDPR);
 
 staticContentsRouter.route("/gdpr/handle")
     .post(recaptchaValidation, StaticContentsController.handleGDPR);
