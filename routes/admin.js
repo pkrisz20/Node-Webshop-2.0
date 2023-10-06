@@ -10,6 +10,7 @@ const webshopCategoryController = require("../controllers/admin/WebshopCategoryC
 const AdminProductController = require("../controllers/admin/AdminProductController");
 const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
 const AdminContactController = require("../controllers/admin/AdminContactController");
+const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
 // const recaptchaValidation = require("../validations/recaptchaValidation");
 
 adminRouter.route("/")
@@ -17,6 +18,9 @@ adminRouter.route("/")
 
 adminRouter.route("/login")
     .post(loginRateLimit, handleAdminLogin);
+
+adminRouter.route("/logout")
+    .post(checkAuthentication, handleAdminLogout);
 
 adminRouter.route("/dashboard")
     .get(checkAuthentication, AdminController.getDashboard);
@@ -36,8 +40,11 @@ adminRouter.route("/gallery/list")
 adminRouter.route("/messages/list")
     .get(checkAuthentication, AdminContactController.getIncomingMessagesList);
 
-adminRouter.route("/logout")
-    .post(checkAuthentication, handleAdminLogout);
+adminRouter.route("/faq/list")
+    .get(checkAuthentication, AdminStaticContentsController.getFAQListPage);
+
+adminRouter.route("/orders/list")
+    .get(checkAuthentication, AdminOrdersController.getOrdersListPage);
 
 adminRouter.route("/order/delete/:orderId")
     .post(checkAuthentication, AdminOrdersController.deleteOrder);

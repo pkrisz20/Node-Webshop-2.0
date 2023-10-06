@@ -1,11 +1,33 @@
+@import '../variables';
+@import '../mixins';
+
+body {
+    background-image: url('/images/admin-login.jpg');
+    background-position: center;
+    background-size: cover;
+    position: relative;
+
+    &::before {
+        @include absoluteFullSize();
+        content: "";
+        background-color: rgba($c-black, .6);
+    }
+}
+
 .login {
     height: inherit;
 
     .main-title {
-        margin: 0 0 110px;
+        margin: 0 0 30px;
     }
 
     & > .wrapper {
-        max-width: 650px;
+        position: relative;
+        z-index: 10;
+        max-width: 500px;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: $c-white;
+        padding: 20px;
     }
 }

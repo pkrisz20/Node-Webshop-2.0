@@ -43,7 +43,7 @@
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="<%= process.env.APP_URL %>/admin/category/list"><i class="fas fa-layer-group me-2"></i>Kategóriák</a>
                                 <a class="nav-link" href="<%= process.env.APP_URL %>/admin/products/list"><i class="fas fa-box-open me-2"></i>Termékek</a>
-                                <a class="nav-link" href="layout-sidenav-light.html"><i class="fas fa-coins me-2"></i>Rendelések</a>
+                                <a class="nav-link" href="<%= process.env.APP_URL %>/admin/orders/list"><i class="fas fa-coins me-2"></i>Rendelések</a>
                                 <a class="nav-link" href="layout-sidenav-light.html"><i class="fas fa-comment-alt me-2"></i>Hozzászólások</a>
                             </nav>
                         </div>
@@ -71,7 +71,7 @@
                             Forgók
                         </a>
 
-                        <a class="nav-link" href="charts.html">
+                        <a class="nav-link" href="<%= process.env.APP_URL %>/admin/faq/list">
                             <div class="sb-nav-link-icon"><i class="fas fa-question-circle"></i></div>
                             Gyakori kérdések
                         </a>

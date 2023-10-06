@@ -8,7 +8,7 @@ const moment = require("moment");
 const getSlidersListPage = (req, res) => {
     var metas = {
         title: 'Admin sliders list',
-        type: "page",
+        type: "website",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the Slider list page page",
         // keywords: []
