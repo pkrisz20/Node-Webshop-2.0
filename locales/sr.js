@@ -57,7 +57,8 @@ const sr = {
         next_page: "Sledeći",
         prev_page: "Predhodni",
 		remove: "Izbriši",
-        back_to_home: "Nazad na naslovnu stranicu"
+        back_to_home: "Nazad na naslovnu stranicu",
+		no_content: "Nema sadržaja",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

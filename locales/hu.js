@@ -57,7 +57,8 @@ const hu = {
         next_page: "Következő",
         prev_page: "Előző",
 		remove: "Törlés",
-        back_to_home: "Vissza a főoldalra"
+        back_to_home: "Vissza a főoldalra",
+		no_content: "Nincs tartalom",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

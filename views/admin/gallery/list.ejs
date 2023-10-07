@@ -20,7 +20,7 @@
                                         <thead class="table-dark">
                                             <tr>
                                                 <th scope="col">Galléria neve</th>
-                                                <th scope="col">Státusz</th>
+                                                <th scope="col">Látható</th>
                                                 <th scope="col">Kategória</th>
                                                 <th scope="col">Dátum (utoljára módosítva)</th>
                                                 <th scope="col">Műveletek</th>
@@ -43,6 +43,10 @@
                                     </table>
                                 </div>
                             </div>
+                        <% } %>
+
+                        <% if (pageCount > 1) { %>
+                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
                         <% } %>
                     </div>
                 </main>

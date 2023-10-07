@@ -57,7 +57,8 @@ const en = {
 		next_page: "Next",
 		prev_page: "Prev",
 		remove: "Remove",
-		back_to_home: "Back to home page"
+		back_to_home: "Back to home page",
+		no_content: "No content",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

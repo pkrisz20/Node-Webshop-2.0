@@ -191,6 +191,18 @@ const getAllProducts = (req, res) => {
     var { DB_CONFIG } = req;
     const lang  = req.session.lang;
     let { page = 1 } = req.query;
+    page = parseInt(page);
+
+    if (isNaN(page) || page <= 0) {
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
+        });
+    }
+
     let result = [];
     var metas = {
         title: languageHandler("general.products", lang),
@@ -223,6 +235,8 @@ const getAllProducts = (req, res) => {
                 main_title: languageHandler('general.products', lang),
                 products: [],
                 meta: metas,
+                main_title: languageHandler('general.products', lang),
+                category_short_desc: null,
                 current_locale: req.session.lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
@@ -348,6 +362,17 @@ const getCategoryProducts = (req, res) => {
     var { DB_CONFIG } = req;
     const lang  = req.session.lang;
     let { page = 1 } = req.query;
+    page = parseInt(page);
+
+    if (isNaN(page) || page <= 0) {
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
+        });
+    }
     let { slug } = req.params;
     let result = [];
 
@@ -409,6 +434,7 @@ const getCategoryProducts = (req, res) => {
                         main_title: selectedCategoryName,
                         products: [],
                         meta: metas,
+                        category_short_desc: null,
                         current_locale: req.session.lang,
                         cart: cart,
                         locales: ['hu', 'sr', 'en'],
@@ -447,10 +473,6 @@ const getCategoryProducts = (req, res) => {
                     });
 
                     let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ?";
-
-                    // if (typeof category === "number" && category > 0) {
-                    //     selectForPagination += " AND products.category_id = ?";
-                    // }
 
                     // Select for pagination count
                     db.query(selectForPagination, [1, slug], (err_count, elementsCount) => {

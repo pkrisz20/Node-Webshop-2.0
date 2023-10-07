@@ -22,6 +22,18 @@ const getAllGallery = (req, res) => {
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { page = 1 } = req.query;
+    page = parseInt(page);
+
+    if (isNaN(page) || page <= 0) {
+        return res.status(400).render("400", {
+            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
+            current_locale: req.session.lang,
+            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
+        });
+    }
+
     let result = [];
     var metas = {
         title: languageHandler("nav.gallery", lang),
@@ -32,28 +44,6 @@ const getAllGallery = (req, res) => {
         // keywords: []
     };
     const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE (galleries.is_active = ? AND galleries.category_id = categories.id) ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
-
-    page = parseInt(page);
-
-    if ( isNaN(page) ) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
-    }
-
-    if (typeof page !== "number" || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
-    }
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
@@ -75,6 +65,7 @@ const getAllGallery = (req, res) => {
                 pageCount: 0,
                 galleries: [],
                 meta: metas,
+                DB_CONFIG: DB_CONFIG,
                 current_locale: req.session.lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],

@@ -1,0 +1,17 @@
+<% if (pageCount > 1) { %>
+    <ul class="pagination justify-content-center">
+        <% if ( currentPage > 1 ) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= currentPage - 1 %>"><i class="fas fa-chevron-left"></i> Előző oldal</a>
+            </li>
+        <% } %>
+
+        <div class="d-flex align-items-center fw-medium text-bg-dark px-3 rounded"><%= currentPage %> / <%= pageCount %></div>
+
+        <% if ( currentPage < pageCount ) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= currentPage + 1 %>">Következő oldal <i class="fas fa-chevron-right"></i></a>
+            </li>
+        <% } %>
+    </ul>
+<% } %>

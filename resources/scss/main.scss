@@ -17,3 +17,20 @@
     padding-top: 110px;
   }
 }
+
+.system-info {
+  width: 100%;
+  background-color: $c-info;
+  padding: 10px;
+  border-radius: 5px;
+
+  &-text {
+      color: $c-white;
+      font-size: 20px;
+
+      i {
+          font-size: 20px;
+          margin-right: 10px;
+      }
+  }
+}

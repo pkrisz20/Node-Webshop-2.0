@@ -36,7 +36,7 @@
                                                     <td><%= order.lastname %></td>
                                                     <td><%= order.city %></td>
                                                     <td><%= order.phone %></td>
-                                                    <td><span class="badge <%= order.statusData.statusClass %>"><%= order.statusData.statusText %></span></td>
+                                                    <td><span class="badge fw-medium <%= order.statusData.statusClass %>"><%= order.statusData.statusText %></span></td>
                                                     <td><%= order.sumPrice %> RSD</td>
                                                     <td><%= order.orderDate %></td>
                                                     <td>
@@ -50,6 +50,10 @@
                                     </table>
                                 </div>
                             </div>
+                        <% } %>
+
+                        <% if (pageCount > 1) { %>
+                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
                         <% } %>
                     </div>
                 </main>

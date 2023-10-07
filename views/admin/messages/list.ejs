@@ -46,6 +46,10 @@
                                 </div>
                             </div>
                         <% } %>
+
+                        <% if (pageCount > 1) { %>
+                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
+                        <% } %>
                     </div>
                 </main>
             </div>

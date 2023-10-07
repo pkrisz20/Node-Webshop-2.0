@@ -228,7 +228,7 @@ const getAllBlogs = (req, res) => {
 
     page = parseInt(page);
 
-    if ( isNaN(page) ) {
+    if ( isNaN(page) || page <= 0 ) {
         return res.status(400).render("400", {
             title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
             current_locale: req.session.lang,
@@ -239,16 +239,6 @@ const getAllBlogs = (req, res) => {
     }
 
     const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
-
-    if (typeof page !== "number" || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
-    }
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
@@ -273,6 +263,7 @@ const getAllBlogs = (req, res) => {
                 meta: metas,
                 current_locale: req.session.lang,
                 cart: cart,
+                DB_CONFIG: DB_CONFIG,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 csrfToken: req.csrfToken()
