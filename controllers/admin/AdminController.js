@@ -6,6 +6,7 @@ const getFrontTranslations = require("../../helpers/frontTranslations");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
+const { parse } = require("path");
 
 const getLoginPage = (req, res) => {
 
@@ -38,15 +39,20 @@ const getDashboard = (req, res) => {
         // keywords: []
     };
 
+    const lang = req.session.lang ?? process.env.ADMIN_LANG;
     let lastOrders = [];
     let orderCounts = {};
     let financesPerMonth = Array(12).fill(0);
     let ordersCountPerMonth = Array(12).fill(0);
 
     setMomentLocale("hu");
-    const selectLastOrders = "SELECT order_id, customer_firstname, customer_lastname, customer_city, customer_phone, order_status, order_sum_price, order_date FROM `orders` ORDER BY order_date DESC LIMIT ?";
+    // const selectLastOrders = "SELECT order_id, customer_firstname, customer_lastname, customer_city, customer_phone, order_status, order_sum_price, order_date FROM `orders` ORDER BY order_date DESC LIMIT ?";
 
-    db.query(selectLastOrders, 15, (err, data) => {
+    const selectLastOrderDetails = "SELECT DISTINCT orders.order_id, orders.customer_email, orders.customer_address, orders.customer_postal_code, orders.customer_note, orders.customer_firstname, orders.customer_lastname, orders.customer_city, orders.customer_phone, orders.order_status, orders.order_sum_price, orders.order_date, orders.closed_order_at, (SELECT COUNT(order_details.product_id) FROM order_details WHERE order_details.order_id = orders.order_id) AS 'ordered_products_number' FROM orders INNER JOIN order_details ON orders.order_id = order_details.order_id ORDER BY orders.order_date DESC LIMIT ?";
+
+    const selectProductDetailsByOrder = "SELECT products.id, products.name, products.price, products.discount_value, products.is_available, order_details.quantity AS 'ordered_quantity' FROM products INNER JOIN order_details ON products.id = order_details.product_id INNER JOIN orders ON order_details.order_id = orders.order_id WHERE orders.order_id = ?";
+
+    db.query(selectLastOrderDetails, 15, (err, data) => {
         if (err) {
             console.log(err);
             return res.status(500).render("500", {
@@ -64,73 +70,28 @@ const getDashboard = (req, res) => {
                     id: order.order_id,
                     firstname: order.customer_firstname,
                     lastname: order.customer_lastname,
+                    customer_email: order.customer_email,
+                    customer_postal_code: order.customer_postal_code,
+                    customer_note: order.customer_note,
+                    customer_address: order.customer_address,
                     city: order.customer_city,
                     phone: order.customer_phone,
                     statusData: getOrderStatus(order.order_status),
                     sumPrice: numberWithCommas(order.order_sum_price),
-                    orderDate: moment(order.order_date).format("YYYY. MMMM DD. HH:mm").toLocaleLowerCase()
+                    orderDate: moment(order.order_date).format("YYYY. MMMM DD. HH:mm").toLocaleLowerCase(),
+                    closedOrderDate: moment(order.closed_order_at).format("YYYY. MMMM DD. HH:mm").toLocaleLowerCase(),
+                    orderedProductsCount: parseInt(order.ordered_products_number),
+                    productsDetails: []
                 }
 
                 lastOrders.push(result);
             });
-        }
 
-        const selectStatusCounters = "SELECT count(*) AS total, sum(case when order_status = 'new' then 1 else 0 end) AS new_orders, sum(case when order_status = 'in process' then 1 else 0 end) AS in_process_orders, sum(case when order_status = 'done' then 1 else 0 end) AS finished_orders, sum(case when order_status = 'canceled' then 1 else 0 end) AS canceled_orders FROM orders";
-
-        // ["new", "in process", "done", "canceled"]
-        db.query(selectStatusCounters, (status_err, status_data) => {
-
-            if (status_err) {
-                console.log(status_err);
-                return res.status(500).render("500", {
-                    title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                    current_locale: process.env.ADMIN_LANG,
-                    back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                    learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                    csrfToken: req.csrfToken()
-                });
-            }
-
-            else if (status_data.length > 0) {
-                orderCounts = {
-                    totalOrders: status_data[0].total,
-                    new: status_data[0].new_orders,
-                    in_process: status_data[0].in_process_orders,
-                    finished: status_data[0].finished_orders,
-                    canceled: status_data[0].canceled_orders,
-                };
-            }
-
-            // Select finances per month
-            const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(closed_order_at) as month FROM orders WHERE order_status = 'done' AND YEAR(closed_order_at) = '2023' GROUP BY MONTH(closed_order_at) ASC;";
-
-            db.query(selectFinancesPerMonth, moment(new Date()).year(), (finance_err, monthly_finance_data) => {
-
-                if (finance_err) {
-                    console.log(finance_err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                        current_locale: process.env.ADMIN_LANG,
-                        back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
-                }
-
-                else if (monthly_finance_data.length > 0) {
-                    // Overwrite the data where has value for that month
-                    monthly_finance_data.forEach(finance_data => {
-                        financesPerMonth[finance_data.month - 1] = finance_data.total;
-                    });
-                }
-
-                // Select orders count per month
-                const selectOrdersCountPerMonth = "SELECT COUNT(order_id) as total_order, MONTH(order_date) as month FROM orders WHERE YEAR(order_date) = ? GROUP BY MONTH(order_date) ASC";
-
-                db.query(selectOrdersCountPerMonth, moment(new Date()).year(), (order_count_err, order_count_data) => {
-
-                    if (order_count_err) {
-                        console.log(order_count_err);
+            // Handle selected products which belongs to the current order by ID
+            lastOrders.forEach(lastOrderItem => {
+                db.query(selectProductDetailsByOrder, lastOrderItem.id, (err_details, order_details_data) => {
+                    if (err_details) {
+                        console.log(err_details);
                         return res.status(500).render("500", {
                             title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
                             current_locale: process.env.ADMIN_LANG,
@@ -140,29 +101,111 @@ const getDashboard = (req, res) => {
                         });
                     }
 
-                    else if (order_count_data.length > 0) {
-                        // Overwrite the data where has value for that month
-                        order_count_data.forEach(order_data => {
-                            ordersCountPerMonth[order_data.month - 1] = order_data.total_order;
+                    else if (order_details_data.length > 0) {
+
+                        order_details_data.forEach(productData => {
+
+                            lastOrderItem.productsDetails.push({
+                                productId: parseInt(productData.id),
+                                productName: getValueByLanguage(productData.name, lang ?? process.env.ADMIN_LANG),
+                                productPrice: numberWithCommas(productData.discount_value != null ? productData.discount_value : productData.price),
+                                isAvailable: productData.is_available,
+                                orderedQuantity: parseInt(productData.ordered_quantity)
+                            });
+                        });
+                    }
+                });
+            });
+
+            const selectStatusCounters = "SELECT count(*) AS total, sum(case when order_status = 'new' then 1 else 0 end) AS new_orders, sum(case when order_status = 'in process' then 1 else 0 end) AS in_process_orders, sum(case when order_status = 'done' then 1 else 0 end) AS finished_orders, sum(case when order_status = 'canceled' then 1 else 0 end) AS canceled_orders FROM orders";
+
+            // ["new", "in process", "done", "canceled"]
+            db.query(selectStatusCounters, (status_err, status_data) => {
+
+                if (status_err) {
+                    console.log(status_err);
+                    return res.status(500).render("500", {
+                        title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                        current_locale: process.env.ADMIN_LANG,
+                        back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                        learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                else if (status_data.length > 0) {
+                    orderCounts = {
+                        totalOrders: status_data[0].total,
+                        new: status_data[0].new_orders,
+                        in_process: status_data[0].in_process_orders,
+                        finished: status_data[0].finished_orders,
+                        canceled: status_data[0].canceled_orders,
+                    };
+                }
+
+                // Select finances per month
+                const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(closed_order_at) as month FROM orders WHERE order_status = 'done' AND YEAR(closed_order_at) = '2023' GROUP BY MONTH(closed_order_at) ASC;";
+
+                db.query(selectFinancesPerMonth, moment(new Date()).year(), (finance_err, monthly_finance_data) => {
+
+                    if (finance_err) {
+                        console.log(finance_err);
+                        return res.status(500).render("500", {
+                            title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                            current_locale: process.env.ADMIN_LANG,
+                            back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                            learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                            csrfToken: req.csrfToken()
                         });
                     }
 
-                    return res.render("admin/dashboard", {
-                        meta: metas,
-                        lastOrders: lastOrders ?? [],
-                        ordersCountPerMonth: ordersCountPerMonth ?? [],
-                        maxValueordersCount: Math.max.apply(null, ordersCountPerMonth ?? []),
-                        financesPerMonth: financesPerMonth ?? [],
-                        maxValueFromMonths: Math.max.apply(null, financesPerMonth ?? []),
-                        showFinances: financesPerMonth.some(item => item > 0),
-                        showOrdersCount: ordersCountPerMonth.some(item => item > 0),
-                        csrfToken: req.csrfToken(),
-                        orderCounts: orderCounts,
-                        frontTranslations: getFrontTranslations("hu")
+                    else if (monthly_finance_data.length > 0) {
+                        // Overwrite the data where has value for that month
+                        monthly_finance_data.forEach(finance_data => {
+                            financesPerMonth[finance_data.month - 1] = finance_data.total;
+                        });
+                    }
+
+                    // Select orders count per month
+                    const selectOrdersCountPerMonth = "SELECT COUNT(order_id) as total_order, MONTH(order_date) as month FROM orders WHERE YEAR(order_date) = ? GROUP BY MONTH(order_date) ASC";
+
+                    db.query(selectOrdersCountPerMonth, moment(new Date()).year(), (order_count_err, order_count_data) => {
+
+                        if (order_count_err) {
+                            console.log(order_count_err);
+                            return res.status(500).render("500", {
+                                title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
+                                current_locale: process.env.ADMIN_LANG,
+                                back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
+                                learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
+                                csrfToken: req.csrfToken()
+                            });
+                        }
+
+                        else if (order_count_data.length > 0) {
+                            // Overwrite the data where has value for that month
+                            order_count_data.forEach(order_data => {
+                                ordersCountPerMonth[order_data.month - 1] = order_data.total_order;
+                            });
+                        }
+
+                        return res.render("admin/dashboard", {
+                            meta: metas,
+                            lastOrders: lastOrders ?? [],
+                            ordersCountPerMonth: ordersCountPerMonth ?? [],
+                            maxValueordersCount: Math.max.apply(null, ordersCountPerMonth ?? []),
+                            financesPerMonth: financesPerMonth ?? [],
+                            maxValueFromMonths: Math.max.apply(null, financesPerMonth ?? []),
+                            showFinances: financesPerMonth.some(item => item > 0),
+                            showOrdersCount: ordersCountPerMonth.some(item => item > 0),
+                            csrfToken: req.csrfToken(),
+                            orderCounts: orderCounts,
+                            frontTranslations: getFrontTranslations("hu")
+                        });
                     });
                 });
             });
-        });
+        }
     });
 };
 

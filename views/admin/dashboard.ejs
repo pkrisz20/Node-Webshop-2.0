@@ -102,8 +102,17 @@
                                                     <td>
                                                         <i data-url="<%= process.env.APP_URL %>/admin/order/delete/<%= order.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
                                                         <i role=button class="fas fa-edit link-dark mx-1"></i>
-                                                        <i role=button class="fas fa-info-circle link-primary"></i>
+                                                        <button class="btn py-1 px-2 btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<%= order.id %>" aria-expanded="false"><i class="fas fa-chevron-up"></i></button>
                                                     </td>
+                                                    <tr>
+                                                        <td colspan="8">
+                                                            <div class="collapse" id="<%= order.id %>">
+                                                                <p class="card card-body">
+                                                                    <%= order.customer_note %>
+                                                                </p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 </tr>
                                             <% }) %>
                                         </tbody>

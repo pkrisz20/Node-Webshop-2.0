@@ -1760,6 +1760,12 @@ progress {
   border-color: var(--bs-table-border-color);
 }
 .table > :not(caption) > * > *, .datatable-table > :not(caption) > * > * {
+
+  // TODO: Fix the padding
+  td[colspan] {
+    padding: 0 !important;
+  }
+
   padding: 0.5rem 0.5rem;
   background-color: var(--bs-table-bg);
   border-bottom-width: 1px;
