@@ -91,7 +91,7 @@
                                         </thead>
                                         <tbody>
                                             <% lastOrders.forEach(order => { %>
-                                                <tr>
+                                                <tr class="<%= order.customer_note ? 'js-tooltip-order' : ''%>">
                                                     <td><%= order.firstname %></td>
                                                     <td><%= order.lastname %></td>
                                                     <td><%= order.city %></td>
@@ -102,17 +102,7 @@
                                                     <td>
                                                         <i data-url="<%= process.env.APP_URL %>/admin/order/delete/<%= order.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
                                                         <i role=button class="fas fa-edit link-dark mx-1"></i>
-                                                        <button class="btn py-1 px-2 btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<%= order.id %>" aria-expanded="false"><i class="fas fa-chevron-up"></i></button>
                                                     </td>
-                                                    <tr>
-                                                        <td colspan="8">
-                                                            <div class="collapse" id="<%= order.id %>">
-                                                                <p class="card card-body">
-                                                                    <%= order.customer_note %>
-                                                                </p>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
                                                 </tr>
                                             <% }) %>
                                         </tbody>
@@ -130,6 +120,7 @@
         <script src="admin/js/plugins/bootstrap.min.js"></script>
         <script src="admin/js/plugins/chart.min.js"></script>
         <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/plugins/tooltipster.min.js"></script>
         <script src="admin/js/admin.js"></script>
         <% if (showOrdersCount) { %>
             <script type="text/javascript">

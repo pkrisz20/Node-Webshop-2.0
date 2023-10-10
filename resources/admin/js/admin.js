@@ -40,6 +40,11 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 //   },
 // });
 
+// TODO: Tooltipster for order details or find any other way to show info without new route page
+$('body .js-tooltip-order').tooltipster({
+  content: $('<strong>This text is in bold case !</strong>')
+});
+
 // Delete data
 $('body').on('click', '.js-delete-data', function () {
 
