@@ -91,7 +91,7 @@
                                         </thead>
                                         <tbody>
                                             <% lastOrders.forEach(order => { %>
-                                                <tr class="<%= order.customer_note ? 'js-tooltip-order' : ''%>">
+                                                <tr>
                                                     <td><%= order.firstname %></td>
                                                     <td><%= order.lastname %></td>
                                                     <td><%= order.city %></td>
@@ -102,6 +102,7 @@
                                                     <td>
                                                         <i data-url="<%= process.env.APP_URL %>/admin/order/delete/<%= order.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
                                                         <i role=button class="fas fa-edit link-dark mx-1"></i>
+                                                        <i data-url="<%= process.env.APP_URL %>/admin/order/get-info/<%= order.id %>" role=button class="fas fa-info-circle link-primary js-get-order-info"></i>
                                                     </td>
                                                 </tr>
                                             <% }) %>
@@ -120,7 +121,6 @@
         <script src="admin/js/plugins/bootstrap.min.js"></script>
         <script src="admin/js/plugins/chart.min.js"></script>
         <script src="admin/js/plugins/sweetalert.min.js"></script>
-        <script src="admin/js/plugins/tooltipster.min.js"></script>
         <script src="admin/js/admin.js"></script>
         <% if (showOrdersCount) { %>
             <script type="text/javascript">

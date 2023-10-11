@@ -248,6 +248,11 @@ $('.js-form-validate').not('.inited').each(function () {
                     this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
                 },
                 success: function (response) {
+                    // Set the new XSRF token
+                    if (typeof response.csrfToken !== 'undefined') {
+                        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                    }
+
                     if (response.status === 'error') {
                         $.alert({
                             useBootstrap: false,

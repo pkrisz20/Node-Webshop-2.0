@@ -40,11 +40,6 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 //   },
 // });
 
-// TODO: Tooltipster for order details or find any other way to show info without new route page
-$('body .js-tooltip-order').tooltipster({
-  content: $('<strong>This text is in bold case !</strong>')
-});
-
 // Delete data
 $('body').on('click', '.js-delete-data', function () {
 
@@ -115,8 +110,8 @@ $('body').on('click', '.js-delete-data', function () {
   });
 });
 
-// Simple ajax request
-$('body').on('click', '.js-simple-ajax', function (event) {
+// Get order details info
+$('body').on('click', '.js-get-order-info', function (event) {
   event.preventDefault();
 
   $.ajax({
@@ -125,7 +120,7 @@ $('body').on('click', '.js-simple-ajax', function (event) {
     dataType: 'json',
     data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
     beforeSend: function (jqXHR) {
-      Swal.fire('Folyamatban...');
+      Swal.fire('Adatok lekérése folyamatban...');
       Swal.showLoading();
       $(this).addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
     },
@@ -133,6 +128,11 @@ $('body').on('click', '.js-simple-ajax', function (event) {
       $(this).removeClass('disabled').removeAttr('disabled').prop('disabled', false);
     },
     success: function (response) {
+      // Set the new XSRF token
+      if (typeof response.csrfToken !== 'undefined') {
+        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+      }
+
       if (response.status === 'error') {
         setTimeout(function () {
           Swal.fire({
@@ -143,23 +143,11 @@ $('body').on('click', '.js-simple-ajax', function (event) {
         }, 1000);
       }
       else if (response.status === 'success') {
-
         setTimeout(function () {
           Swal.fire({
-            title: 'Sikeresen feldolgozva!',
-            icon: 'success',
-            text: response.text ? response.text : false,
-            confirmButtonText: "OK",
-          })
-          .then(function (result) {
-            if (result.isConfirmed) {
-
-              if (response.redirect_url) {
-                setTimeout(function () {
-                  window.location = response.redirect_url;
-                }, 500);
-              }
-            }
+            title: 'Részletes adatok',
+            icon: 'info',
+            html: response.htmlResponse,
           });
         }, 1000);
       }

@@ -42,7 +42,7 @@
                                                     <td>
                                                         <i data-url="<%= process.env.APP_URL %>/admin/order/delete/<%= order.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
                                                         <i role=button class="fas fa-edit link-dark mx-1"></i>
-                                                        <i role=button class="fas fa-info-circle link-primary"></i>
+                                                        <i data-url="<%= process.env.APP_URL %>/admin/order/get-info/<%= order.id %>" role=button class="fas fa-info-circle link-primary js-get-order-info"></i>
                                                     </td>
                                                 </tr>
                                             <% }) %>

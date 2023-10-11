@@ -49,4 +49,7 @@ adminRouter.route("/orders/list")
 adminRouter.route("/order/delete/:orderId")
     .post(checkAuthentication, AdminOrdersController.deleteOrder);
 
+adminRouter.route("/order/get-info/:orderId")
+    .post(checkAuthentication, AdminOrdersController.getOrderDetails);
+
 module.exports = adminRouter;
