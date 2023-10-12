@@ -40,6 +40,12 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 //   },
 // });
 
+$(document).ready(function() {
+  $('.jquery-tooltip').tooltipster({
+    position: 'left'
+  });
+});
+
 // Delete data
 $('body').on('click', '.js-delete-data', function () {
 

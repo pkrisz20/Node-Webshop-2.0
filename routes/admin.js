@@ -34,6 +34,9 @@ adminRouter.route("/category/list")
 adminRouter.route("/products/list")
     .get(checkAuthentication, AdminProductController.getWebshopProductList);
 
+adminRouter.route("/products/comments/list")
+    .get(checkAuthentication, AdminProductController.getProductCommentsList);
+
 adminRouter.route("/gallery/list")
     .get(checkAuthentication, AdminGalleryController.getGalleryList);
 
