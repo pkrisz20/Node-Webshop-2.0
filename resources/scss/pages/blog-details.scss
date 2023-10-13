@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import "../variables.scss";
 @import "../mixins.scss";
 
@@ -32,25 +33,35 @@
                 }
             }
             &-thumbnail {
-                @include respImage(0.71);
+                @include respImage(math.div(500, 820));
                 margin-bottom: 30px;
+
                 img {
                     border-radius: 3px;
                 }
             }
             &-article {
                 width: 100%;
+                margin: 0 0 30px;
 
-                @media #{ $r-min-m } {
-                    width: calc(100% - 320px);
+                &__header {
+                    @include flexBox("space-between", "center", 10px);
+                    margin-bottom: 15px;
+                    border-bottom: 1px solid $c-dark-blue;
                 }
 
-                &__date {
-                    display: block;
-                    font-size: 22px;
-                    color: $c-dark-blue;
+                &.has-sidebar {
+                    @media #{ $r-min-m } {
+                        width: calc(100% - 320px);
+                    }
+                }
+
+                &__date, &__author {
+                    @include resp('font-size', 15px, 18px);
+                    background-color: $c-dark-blue;
+                    color: $c-white;
+                    padding: 2px;
                     font-weight: 600;
-                    margin: 0 0 30px;
                 }
             }
             &-aside {
@@ -83,6 +94,8 @@
                         height: 80px;
                         flex-shrink: 0;
                         overflow: hidden;
+                        border-radius: 3px;
+
                         img {
                             transition: transform .2s ease-in-out;
                             @include imageCover();
@@ -91,13 +104,9 @@
 
                     .texts {
                         &-title {
-                            font-size: 14px;
+                            @include resp('font-size', 14px, 17px);
                             margin-bottom: 7px;
                             transition: all .2s ease-in-out;
-
-                            @media #{ $r-min-xl } {
-                                font-size: 16px;
-                            }
                         }
                         &-time {
                             font-size: 13px;

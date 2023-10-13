@@ -59,6 +59,7 @@ const hu = {
 		remove: "Törlés",
         back_to_home: "Vissza a főoldalra",
 		no_content: "Nincs tartalom",
+		related_galleries: "Kapcsolódó gallériák",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

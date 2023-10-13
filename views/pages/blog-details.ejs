@@ -18,18 +18,21 @@
                     <h1 class="main-title"><%= blogDetails.title %></h1>
 
                     <div class="blog-container">
-                        <div class="blog-article">
-                            <time class="blog-article__date"><%= blogDetails.date %></time>
+                        <article class="blog-article <%= nextEvents.length > 0 ? 'has-sidebar' : '' %>">
+                            <header class="blog-article__header">
+                                <time class="blog-article__date"><%= blogDetails.date %></time>
+                                <strong class="blog-article__author"><%= blogDetails.author %></strong>
+                            </header>
                             <div class="blog-thumbnail">
                                 <picture>
                                     <source srcset="<%= blogDetails.image %>">
                                     <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= blogDetails.title %>" />
                                 </picture>
                             </div>
-                            <article v-if="blogDetails.description">
+                            <div>
                                 <%= blogDetails.description %>
-                            </article>
-                        </div>
+                            </div>
+                        </article>
 
                         <% if (nextEvents.length > 0) { %>
                             <aside class="blog-aside">

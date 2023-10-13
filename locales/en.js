@@ -59,6 +59,7 @@ const en = {
 		remove: "Remove",
 		back_to_home: "Back to home page",
 		no_content: "No content",
+		related_galleries: "Related galleries",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

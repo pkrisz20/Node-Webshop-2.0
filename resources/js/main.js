@@ -127,6 +127,35 @@ $(document).ready(function() {
         });
     }
 
+    if ($(".js-featured-galleries").length > 0) {
+        $(".js-featured-galleries").slick({
+            inifinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            autoplay: false,
+            dots: false,
+            arrows: true,
+            prevArrow: $('.featured-galleries .slick-prev'),
+            nextArrow: $('.featured-galleries .slick-next'),
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 540,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
+                }
+            ]
+        });
+    }
+
     // Is there any form to validate?
     if ($.validator) {
         // Custom validations cause of custom error message based on current lang

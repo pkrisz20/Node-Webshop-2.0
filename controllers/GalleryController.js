@@ -43,7 +43,7 @@ const getAllGallery = (req, res) => {
         description: "This is the gallery list page",
         // keywords: []
     };
-    const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE (galleries.is_active = ? AND galleries.category_id = categories.id) ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
+    const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
@@ -83,7 +83,6 @@ const getAllGallery = (req, res) => {
                     slug: element.slug,
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
                     date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
-                    category: getValueByLanguage(element.category_name, lang)
                 }
 
                 result.push(tempObject);
@@ -93,7 +92,6 @@ const getAllGallery = (req, res) => {
                 return {
                     ...item,
                     date: item.date.toLowerCase(),
-                    category: capitalizeFirstLetter(item.category)
                 };
             });
 
@@ -152,8 +150,11 @@ const getGalleryDetails = (req, res) => {
     const lang = req.session.lang;
     let { slug } = req.params;
     let result = {};
+    let relatedGalleries = [];
 
-    const sqlGalleryDetails = "SELECT gallery_name, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
+    const sqlGalleryDetails = "SELECT id, gallery_name, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
+
+    const relatedGalleriesQuery = "SELECT id, gallery_name, slug, gallery_thumbnail, gallery_date FROM galleries WHERE is_active = ? AND id != ? ORDER BY id DESC LIMIT ?";
 
     setMomentLocale(lang);
 
@@ -197,15 +198,44 @@ const getGalleryDetails = (req, res) => {
             // keywords: []
         };
 
-        return res.render("pages/gallery-details", {
-            galleryData: result,
-            meta: metas,
-            current_locale: req.session.lang,
-            cart: cart,
-            locales: ['hu', 'sr', 'en'],
-            languageHandler: languageHandler,
-            DB_CONFIG: DB_CONFIG,
-            csrfToken: req.csrfToken()
+        db.query(relatedGalleriesQuery, [1, data[0].id, 15], (related_err, related_galleries) => {
+
+            if (related_err) {
+                console.log(related_err);
+                return res.status(500).render("500", {
+                    title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
+                    current_locale: req.session.lang,
+                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+                    csrfToken: req.csrfToken()
+                });
+            }
+
+            else if (related_galleries.length > 0) {
+
+                related_galleries.forEach(item => {
+                    let tempObject = {
+                        name: getValueByLanguage(item.gallery_name, lang),
+                        slug: item.slug,
+                        thumbnailImage: imagePathConverter(item.gallery_thumbnail, "gallery"),
+                        date: formatDateByLang(item.gallery_date, lang ?? process.env.FALLBACK_LANG),
+                    }
+
+                    relatedGalleries.push(tempObject);
+                });
+            }
+
+            return res.render("pages/gallery-details", {
+                galleryData: result,
+                meta: metas,
+                relatedGalleries: relatedGalleries ?? [],
+                current_locale: req.session.lang,
+                cart: cart,
+                locales: ['hu', 'sr', 'en'],
+                languageHandler: languageHandler,
+                DB_CONFIG: DB_CONFIG,
+                csrfToken: req.csrfToken()
+            });
         });
     });
 }

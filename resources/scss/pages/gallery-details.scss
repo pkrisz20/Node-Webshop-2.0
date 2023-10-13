@@ -2,15 +2,18 @@
 @import "../mixins.scss";
 
 @import "../components/gallery-card.scss";
+@import "../components/gallery-carousel.scss";
 
 .gallery-details {
     padding: 40px 0;
     background-color: $c-grayF9;
 
     &-date {
-        display: block;
-        font-size: 22px;
-        color: $c-dark-blue;
+        display: inline-block;
+        @include resp('font-size', 15px, 18px);
+        background-color: $c-dark-blue;
+        color: $c-white;
+        padding: 2px;
         font-weight: 600;
         margin: 0 0 20px;
     }

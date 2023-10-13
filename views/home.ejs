@@ -38,25 +38,25 @@
                 <div class="wrapper">
                     <div class="countup__item">
                         <i class="fas fa-users countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="569">0</div>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["satisfied_clients_number"] %>">0</div>
                         <span class="countup__item-title"><%= languageHandler("counter.satisfied_clients", current_locale) %></strong>
                     </div>
 
                     <div class="countup__item">
                         <i class="fas fa-mug-hot countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="3287">0</div>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["cups_of_coffe_number"] %>">0</div>
                         <span class="countup__item-title"><%= languageHandler("counter.cups_coffe", current_locale) %></strong>
                     </div>
 
                     <div class="countup__item">
                         <i class="far fa-chart-bar countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="4950">0</div>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["animals_in_numbers"] %></div>">0</div>
                         <span class="countup__item-title"><%= languageHandler("counter.animals", current_locale) %></strong>
                     </div>
 
                     <div class="countup__item">
                         <i class="fas fa-shipping-fast countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="862">0</div>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["posted_products_number"] %></div>">0</div>
                         <span class="countup__item-title"><%= languageHandler("counter.posted_products", current_locale) %></strong>
                     </div>
                 </div>

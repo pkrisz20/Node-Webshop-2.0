@@ -37,17 +37,21 @@
 
     .countup {
       background-color: $c-theme;
-      padding: 20px 0;
+      padding: 0;
+
+      @media (min-width: 600px) {
+        margin-top: -75px;
+        background-color: rgba($c-d, .5);
+      }
 
       & > .wrapper {
-        display: flex;
+        @include flexBox();
         flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
 
         @media (min-width: 600px) {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(2, auto);
+          gap: 20px;
         }
 
         @media #{ $r-min-xl } {
@@ -58,7 +62,11 @@
       }
 
       &__item {
-        padding: 25px 40px;
+        @include flexBox();
+        flex-direction: column;
+        background-color: $c-theme;
+        width: 270px;
+        height: 180px;
         text-align: center;
         position: relative;
 
@@ -67,7 +75,7 @@
           content: "";
           left: 50%;
           transform: translateX(-50%);
-          bottom: 0;
+          bottom: 15px;
           width: 30px;
           height: 2px;
           background-color: $c-white;
@@ -89,7 +97,6 @@
           text-transform: uppercase;
           color: $c-white;
           font-weight: 400;
-          margin: 10px;
         }
       }
   }

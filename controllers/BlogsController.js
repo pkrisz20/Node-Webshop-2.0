@@ -28,7 +28,7 @@ const getBlogDetails = (req, res) => {
     let incommingEvents = [];
     let articleComments = [];
 
-    const blogDetailsQuery = "SELECT id, title, description, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
+    const blogDetailsQuery = "SELECT id, title, description, author, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
     const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
@@ -63,6 +63,7 @@ const getBlogDetails = (req, res) => {
                 id: parseInt(data[0].id),
                 title: getValueByLanguage(data[0].title, lang),
                 description: getValueByLanguage(data[0].description, lang),
+                author: data[0].author,
                 image: imagePathConverter(data[0].image_thumbnail, "blogs"),
                 isAllowed: Boolean(data[0].comments_allowed),
                 date: formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
@@ -154,7 +155,7 @@ const getBlogDetails = (req, res) => {
                     });
                 }
 
-                db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), 8], (err, incommingEvent) => {
+                db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), 12], (err, incommingEvent) => {
                     if (err) {
                         console.log(err);
                         return res.status(500).render("500", {

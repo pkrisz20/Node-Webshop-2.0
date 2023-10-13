@@ -59,6 +59,7 @@ const sr = {
 		remove: "Izbriši",
         back_to_home: "Nazad na naslovnu stranicu",
 		no_content: "Nema sadržaja",
+		related_galleries: "Povezane galerije",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

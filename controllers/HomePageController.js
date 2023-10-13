@@ -41,7 +41,7 @@ const getData = (req, res) => {
     // BLOGS
     const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
-    const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE galleries.is_active = ? AND galleries.is_featured = ? AND galleries.id = categories.id ORDER BY galleries.gallery_date DESC";
+    const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND galleries.is_featured = ? ORDER BY galleries.gallery_date DESC";
     // HEROS
     const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ? ORDER BY id DESC";
     // CATEGORIES
@@ -172,17 +172,9 @@ const getData = (req, res) => {
                                             name: getValueByLanguage(gallery_element.gallery_name, lang),
                                             slug: gallery_element.slug,
                                             source: imagePathConverter(gallery_element.gallery_thumbnail, "gallery"),
-                                            category: getValueByLanguage(gallery_element.category_name, lang)
                                         }
 
                                         galleries.push(tempObjectGallery);
-                                    });
-
-                                    galleries = galleries.map(item => {
-                                        return {
-                                            ...item,
-                                            category: capitalizeFirstLetter(item.category)
-                                        };
                                     });
 
                                     db.query(sqlQueryCategories, (category_err, category_data) => {
