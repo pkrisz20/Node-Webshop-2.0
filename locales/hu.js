@@ -60,6 +60,9 @@ const hu = {
         back_to_home: "Vissza a főoldalra",
 		no_content: "Nincs tartalom",
 		related_galleries: "Kapcsolódó gallériák",
+        share_on_facebook: "Megosztás facebook-on",
+		send_via_email: "Küldés emailen",
+		copy_to_clipboard: "Vágólapra másolás",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

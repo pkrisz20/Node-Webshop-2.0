@@ -61,6 +61,7 @@ const getBlogDetails = (req, res) => {
 
             result = {
                 id: parseInt(data[0].id),
+                slug: slug,
                 title: getValueByLanguage(data[0].title, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 author: data[0].author,

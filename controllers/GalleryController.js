@@ -182,6 +182,7 @@ const getGalleryDetails = (req, res) => {
 
         else if (data.length > 0) {
             result = {
+                slug: slug,
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "gallery"),

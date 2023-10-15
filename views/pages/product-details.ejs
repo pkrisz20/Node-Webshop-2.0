@@ -2,9 +2,9 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/product-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="css/product-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -96,6 +96,8 @@
                     <% if (productDetails.description) { %>
                         <p class="paragraph"><%= productDetails.description %></p>
                     <% } %>
+
+                        <%- include('../components/sharing-buttons.ejs', { page_url: `products/${ productDetails.slug }`, mail_subject: productDetails.name }) %>
                     </div>
                 </section>
 

@@ -60,6 +60,9 @@ const sr = {
         back_to_home: "Nazad na naslovnu stranicu",
 		no_content: "Nema sadržaja",
 		related_galleries: "Povezane galerije",
+        share_on_facebook: "Podeli na facebook",
+		send_via_email: "Poslati putem e-pošte",
+		copy_to_clipboard: "Kopiraj u međuspremnik",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

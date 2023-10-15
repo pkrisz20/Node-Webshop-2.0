@@ -1,0 +1,24 @@
+.sharing {
+    @include flexBox("flex-start", "center", 10px);
+    margin: 10px 0;
+
+    &-button {
+        @include flexBox();
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        border-radius: 5px;
+        color: $c-white;
+        cursor: pointer;
+
+        &--facebook {
+            background-color: $c-facebook;
+        }
+        &--email {
+            background-color: $c-github;
+        }
+        &--clipboard {
+            background-color: $c-warning;
+        }
+    }
+}

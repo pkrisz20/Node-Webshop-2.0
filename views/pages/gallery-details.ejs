@@ -2,9 +2,9 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/gallery-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="css/gallery-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -37,6 +37,8 @@
                         </figure>
                     <% }) %>
                 </section>
+
+                <%- include('../components/sharing-buttons.ejs', { page_url: `gallery/${ galleryData.slug }`, mail_subject: galleryData.galleryName }) %>
             </div>
 
             <% if (relatedGalleries.length > 0) { %>

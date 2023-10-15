@@ -60,6 +60,9 @@ const en = {
 		back_to_home: "Back to home page",
 		no_content: "No content",
 		related_galleries: "Related galleries",
+		share_on_facebook: "Share on facebook",
+		send_via_email: "Send via email",
+		copy_to_clipboard: "Copy to clipboard",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

@@ -2,8 +2,8 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/blog-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="css/blog-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -32,6 +32,8 @@
                             <div>
                                 <%= blogDetails.description %>
                             </div>
+
+                            <%- include('../components/sharing-buttons.ejs', { page_url: `blog/${ blogDetails.slug }`, mail_subject: blogDetails.title }) %>
                         </article>
 
                         <% if (nextEvents.length > 0) { %>

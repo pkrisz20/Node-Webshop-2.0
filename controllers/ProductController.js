@@ -56,6 +56,7 @@ const getProductDetails = (req, res) => {
         else if (data.length > 0) {
             result = {
                 id: parseInt(data[0].id),
+                slug: slug,
                 category_name: getValueByLanguage(data[0].category_name, lang),
                 name: getValueByLanguage(data[0].name, lang),
                 short: data[0].short_description ? limitText(getValueByLanguage(data[0].short_description, lang)) : null,
