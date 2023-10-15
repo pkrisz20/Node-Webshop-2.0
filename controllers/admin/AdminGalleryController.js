@@ -31,7 +31,7 @@ const getGalleryList = (req, res) => {
     setMomentLocale("hu");
     let galleriesList = [];
 
-    const selectGalleryList = "SELECT galleries.id, galleries.is_active, galleries.gallery_name, galleries.created_at, galleries.updated_at, categories.name AS 'category_name' FROM galleries INNER JOIN categories ON galleries.category_id = categories.id ORDER BY galleries.id DESC LIMIT ? OFFSET ?";
+    const selectGalleryList = "SELECT galleries.id, galleries.is_active, galleries.gallery_name, galleries.created_at, galleries.updated_at FROM galleries ORDER BY galleries.id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.ADMIN_PAGINATION);
 
@@ -65,7 +65,6 @@ const getGalleryList = (req, res) => {
                     galleryName: getValueByLanguage(gallery.gallery_name, lang),
                     is_active: getIconByActivity(gallery.is_active ?? 0),
                     date: gallery.updated_at != null ? gallery.updated_at : gallery.created_at,
-                    galleryCategory: getValueByLanguage(gallery.category_name, lang),
                 }
 
                 galleriesList.push(tempObject);

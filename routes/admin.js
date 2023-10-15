@@ -11,6 +11,7 @@ const AdminProductController = require("../controllers/admin/AdminProductControl
 const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
 const AdminContactController = require("../controllers/admin/AdminContactController");
 const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
+const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
 // const recaptchaValidation = require("../validations/recaptchaValidation");
 
 adminRouter.route("/")
@@ -39,6 +40,9 @@ adminRouter.route("/products/comments/list")
 
 adminRouter.route("/gallery/list")
     .get(checkAuthentication, AdminGalleryController.getGalleryList);
+
+adminRouter.route("/blogs/list")
+    .get(checkAuthentication, AdminBlogsController.getBlogsList);
 
 adminRouter.route("/messages/list")
     .get(checkAuthentication, AdminContactController.getIncomingMessagesList);

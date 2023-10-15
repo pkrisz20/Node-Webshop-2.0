@@ -4,7 +4,6 @@ const { createUniqueID, numberWithCommas } = require("../helpers/globalFunctions
 // const nodemailer = require("nodemailer"); -> for the mail sending
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
-const getFrontTranslations = require("../helpers/frontTranslations");
 
 const getOrderPage = (req, res) => {
     // Cart converting stuffs
@@ -26,7 +25,6 @@ const getOrderPage = (req, res) => {
     };
 
     return res.render("pages/order", {
-        frontTranslations: getFrontTranslations(lang),
         meta: metas,
         current_locale: lang,
         cart: cart,
@@ -181,7 +179,7 @@ const createOrder = (req, res) => {
                         status: 'success',
                         title: languageHandler('general.process_success', lang),
                         content: languageHandler('orders.order_succes_message', lang),
-                        redirect_url: `${ process.env.APP_URL }/${ lang }`
+                        redirect_url: `${ process.env.APP_URL }/${ lang }/products`
                     });
 
                     // var HTMLproductListToClient = "";

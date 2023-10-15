@@ -90,11 +90,6 @@
         <%- include('../layout/footer.ejs') %>
     </div>
 
-    <% if (blogDetails.isAllowed) { %>
-        <script type="text/javascript">
-            var translations = <%- JSON.stringify(frontTranslations) %>;
-        </script>
-    <% } %>
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
@@ -102,6 +97,10 @@
     <% if (blogDetails.isAllowed) { %>
         <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
         <script type="text/javascript" src="js/plugins/validate.min.js"></script>
+    <% } %>
+
+    <% if ((current_locale == 'sr' || current_locale == 'hu') && blogDetails.isAllowed) { %>
+        <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
     <% } %>
 
     <script type="text/javascript" src="js/main.js"></script>

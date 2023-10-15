@@ -140,7 +140,7 @@ const getProductCommentsList = (req, res) => {
         });
     }
 
-    const selectProductComments = "SELECT product_comments.id AS 'comment_id', product_comments.name AS 'author_name', product_comments.email, product_comments.comment AS 'comment_text', product_comments.is_active, product_comments.date, products.name AS 'product_name', products.slug AS 'product_slug' FROM product_comments INNER JOIN products ON product_comments.product_id = products.id ORDER BY product_comments.id DESC LIMIT ? OFFSET ?";
+    const selectProductComments = "SELECT product_comments.id AS 'comment_id', product_comments.name AS 'author_name', product_comments.email, product_comments.comment AS 'comment_text', product_comments.is_active, product_comments.date, products.name AS 'product_name', products.slug AS 'product_slug', products.is_active AS 'product_is_active' FROM product_comments INNER JOIN products ON product_comments.product_id = products.id ORDER BY product_comments.id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.ADMIN_PAGINATION);
 
@@ -173,6 +173,7 @@ const getProductCommentsList = (req, res) => {
                 return {
                     ...item,
                     isActive: getIconByActivity(item.is_active ?? 0),
+                    productIsActive: item.product_is_active,
                     productName: getValueByLanguage(item.product_name, lang ?? process.env.ADMIN_LANG),
                     date: moment(item.date).format("YYYY. MMMM DD. HH:mm:ss"),
                 };

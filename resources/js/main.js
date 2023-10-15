@@ -158,44 +158,9 @@ $(document).ready(function() {
 
     // Is there any form to validate?
     if ($.validator) {
-        // Custom validations cause of custom error message based on current lang
-        $.validator.addMethod('min-length', function (val, element) {
-            return this.optional(element) || val.length >= $(element).data('rule-min-length');
-        }, function(params, element) {
-            return translateText('validations.min', params);
-        });
-
-        $.validator.addMethod('max-length', function (val, element) {
-            return this.optional(element) || val.length <= $(element).data('rule-max-length');
-        }, function(params, element) {
-            return translateText('validations.must_have_at_most', params);
-        });
-
-        $.validator.addMethod('max-value', function (val, element) {
-            return this.optional(element) || val <= $(element).data('rule-max-value');
-        }, function(params, element) {
-            return translateText('validations.max_value', params);
-        });
-
-        $.validator.addMethod('min-value', function (val, element) {
-            return this.optional(element) || val >= $(element).data('rule-min-value');
-        }, function(params, element) {
-            return translateText('validations.min_value', params);
-        });
-
         // Hide some error elements
         $('.js-form-validate').find('.form-row-error').hide();
         $('.js-form-validate').find('.error-icon').hide();
-
-        jQuery.extend(jQuery.validator.messages, {
-            required: translateText('validations.required'),
-            email: translateText('validations.invalid_email'),
-            url: translateText('validations.invalid_url'),
-            date: translateText('validations.date'),
-            number: translateText('validations.number'),
-            digits: translateText('validations.digits'),
-            equalTo: translateText('validations.equalTo')
-        });
 
         if (typeof grecaptcha !== 'undefined' && $('.js-form-validate').find('.g-recaptcha').length > 0) {
 
@@ -210,21 +175,6 @@ $(document).ready(function() {
         }
     }
 });
-
-window.translateText = function translateText(key, ...params) {
-
-    let translationText = '';
-    let keys = key.split(".");
-    translationText = translations[keys[0]][keys[1]];
-
-    if (params.length > 0) {
-        params.forEach((paramItem, index) => {
-            translationText = translationText.replace(`{${index}}`, paramItem);
-        });
-    }
-
-    return translationText;
-}
 
 $('body').on('keyup', '.js-characters-count', function () {
     var characterCounter = $(this);

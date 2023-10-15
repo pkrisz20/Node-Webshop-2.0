@@ -41,9 +41,12 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 // });
 
 $(document).ready(function() {
-  $('.jquery-tooltip').tooltipster({
-    position: 'left'
-  });
+
+  if ( $('.jquery-tooltip').length > 0 ) {
+    $('.jquery-tooltip').tooltipster({
+      position: 'left'
+    });
+  }
 });
 
 // Delete data

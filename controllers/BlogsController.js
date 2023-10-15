@@ -4,7 +4,6 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const getFrontTranslations = require("../helpers/frontTranslations");
 const formatDateByLang = require('../helpers/formatDateByLocale');
 
 const getBlogDetails = (req, res) => {
@@ -187,7 +186,6 @@ const getBlogDetails = (req, res) => {
                         newestBlogs: newestBlogsArray ?? [],
                         nextEvents: incommingEvents ?? [],
                         articleComments: articleComments ?? [],
-                        frontTranslations: result.isAllowed ? getFrontTranslations(req.session.lang) : {},
                         meta: metas,
                         current_locale: req.session.lang,
                         cart: cart,

@@ -2,7 +2,6 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
-const getFrontTranslations = require("../helpers/frontTranslations");
 
 const getFAQ = (req, res) => {
     // Cart converting stuffs
@@ -98,7 +97,6 @@ const getGDPR = (req, res) => {
         current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
         cart: cart,
         locales: ['hu', 'sr', 'en'],
-        frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
         csrfToken: req.csrfToken()

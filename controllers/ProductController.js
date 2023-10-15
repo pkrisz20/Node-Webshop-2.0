@@ -4,7 +4,6 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
-const getFrontTranslations = require("../helpers/frontTranslations");
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -161,7 +160,6 @@ const getProductDetails = (req, res) => {
                     productDetails: result,
                     isAlreadyInCart: isAlreadyInCart ?? false,
                     similarProducts: similarProducts ?? [],
-                    frontTranslations: result.isAllowed ? getFrontTranslations(req.session.lang) : {},
                     articleComments: articleComments ?? [],
                     meta: metas,
                     current_locale: req.session.lang,

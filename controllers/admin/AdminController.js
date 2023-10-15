@@ -2,7 +2,6 @@ const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 // const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
-const getFrontTranslations = require("../../helpers/frontTranslations");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
@@ -25,7 +24,7 @@ const getLoginPage = (req, res) => {
     return res.render("admin/login", {
         meta: metas,
         csrfToken: req.csrfToken(),
-        frontTranslations: getFrontTranslations("hu")
+        current_locale: process.env.ADMIN_LANG,
     });
 };
 
@@ -158,7 +157,6 @@ const getDashboard = (req, res) => {
                         showOrdersCount: ordersCountPerMonth.some(item => item > 0),
                         csrfToken: req.csrfToken(),
                         orderCounts: orderCounts,
-                        frontTranslations: getFrontTranslations("hu")
                     });
                 });
             });

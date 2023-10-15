@@ -3,7 +3,6 @@ const { db } = require("../config/db-connection");
 // const xoauth2 = require('xoauth2');
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
-const getFrontTranslations = require("../helpers/frontTranslations");
 const moment = require("moment");
 
 const getContactPage = (req, res) => {
@@ -35,7 +34,6 @@ const getContactPage = (req, res) => {
         current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
         cart: cart,
         locales: ['hu', 'sr', 'en'],
-        frontTranslations: getFrontTranslations(req.session.lang ?? process.env.FALLBACK_LANG),
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
         csrfToken: req.csrfToken()

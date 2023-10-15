@@ -47,13 +47,16 @@
                                                             <td><%= comment.date %></td>
                                                             <td>
                                                                 <i data-url="<%= process.env.APP_URL %>/admin/product/comments/delete/<%= comment.comment_id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                                <a
-                                                                    class="link-dark mx-1"
-                                                                    target="_blank"
-                                                                    href="<%= process.env.APP_URL %>/hu/products/<%= comment.product_slug %>"
-                                                                >
-                                                                    <i class="fas fa-external-link-alt"></i>
-                                                                </a>
+
+                                                                <% if (comment.productIsActive === 1) { %>
+                                                                    <a
+                                                                        class="link-dark mx-1"
+                                                                        target="_blank"
+                                                                        href="<%= process.env.APP_URL %>/hu/products/<%= comment.product_slug %>"
+                                                                    >
+                                                                        <i class="fas fa-external-link-alt"></i>
+                                                                    </a>
+                                                                <% } %>
                                                                 <i class="far fa-comment-dots link-primary jquery-tooltip" title="<%= comment.comment_text %>"></i>
                                                             </td>
                                                         </tr>
@@ -85,7 +88,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <% activeComments.forEach(comment => { %>
-                                                        <tr title="<%= comment.comment_text %>">
+                                                        <tr>
                                                             <td><%= comment.author_name %></td>
                                                             <td><%- comment.email %></td>
                                                             <td><%- comment.isActive %></td>
@@ -93,13 +96,16 @@
                                                             <td><%= comment.date %></td>
                                                             <td>
                                                                 <i data-url="<%= process.env.APP_URL %>/admin/product/comments/delete/<%= comment.comment_id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                                <a
-                                                                    class="link-dark mx-1"
-                                                                    target="_blank"
-                                                                    href="<%= process.env.APP_URL %>/hu/products/<%= comment.product_slug %>"
-                                                                >
-                                                                    <i class="fas fa-external-link-alt"></i>
-                                                                </a>
+
+                                                                <% if (comment.productIsActive === 1) { %>
+                                                                    <a
+                                                                        class="link-dark mx-1"
+                                                                        target="_blank"
+                                                                        href="<%= process.env.APP_URL %>/hu/products/<%= comment.product_slug %>"
+                                                                    >
+                                                                        <i class="fas fa-external-link-alt"></i>
+                                                                    </a>
+                                                                <% } %>
                                                                 <i class="far fa-comment-dots link-primary jquery-tooltip" title="<%= comment.comment_text %>"></i>
                                                             </td>
                                                         </tr>
