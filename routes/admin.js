@@ -44,6 +44,12 @@ adminRouter.route("/gallery/list")
 adminRouter.route("/blogs/list")
     .get(checkAuthentication, AdminBlogsController.getBlogsList);
 
+adminRouter.route("/blogs/comments/list")
+    .get(checkAuthentication, AdminBlogsController.getBlogsCommentsList);
+
+adminRouter.route("/events/list")
+    .get(checkAuthentication, AdminBlogsController.getEventsList);
+
 adminRouter.route("/messages/list")
     .get(checkAuthentication, AdminContactController.getIncomingMessagesList);
 

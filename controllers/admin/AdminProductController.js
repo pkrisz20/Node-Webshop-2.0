@@ -1,13 +1,13 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
-const { setMomentLocale } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
     var metas = {
-        title: 'Admin products list page',
+        title: 'Admin products',
         type: "webiste",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the products list page",
@@ -74,6 +74,7 @@ const getWebshopProductList = (req, res) => {
             webshopProducts = webshopProducts.map(item => {
                 return {
                     ...item,
+                    productName: limitText(item.productName, 40),
                     date: moment(item.date).format("YYYY. MMMM DD. HH:mm:ss"),
                 };
             });
@@ -174,7 +175,7 @@ const getProductCommentsList = (req, res) => {
                     ...item,
                     isActive: getIconByActivity(item.is_active ?? 0),
                     productIsActive: item.product_is_active,
-                    productName: getValueByLanguage(item.product_name, lang ?? process.env.ADMIN_LANG),
+                    productName: limitText(getValueByLanguage(item.product_name, lang ?? process.env.ADMIN_LANG), 40),
                     date: moment(item.date).format("YYYY. MMMM DD. HH:mm:ss"),
                 };
             });

@@ -34,7 +34,7 @@
                                                     <td><%= blog.author %></td>
                                                     <td><%= blog.date %></td>
                                                     <td>
-                                                        <i data-url="<%= process.env.APP_URL %>/admin/product/delete/<%= blog.blogId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
+                                                        <i data-url="<%= process.env.APP_URL %>/admin/blog/delete/<%= blog.blogId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
                                                         <i role=button class="fas fa-edit link-dark mx-1"></i>
                                                         <% if (blog.is_active === 1) { %>
                                                             <a

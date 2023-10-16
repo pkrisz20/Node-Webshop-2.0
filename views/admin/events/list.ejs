@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('../layout/head.ejs') %>
+    </head>
+        <%- include('../layout/sidebar-navs.ejs') %>
+
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Események</h1>
+
+                        <% if (eventsList.length > 0) { %>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    Események
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th scope="col">Esemény címe</th>
+                                                <th scope="col">Látható</th>
+                                                <th scope="col">Esemény dátuma</th>
+                                                <th scope="col">Szerző</th>
+                                                <th scope="col">Dátum (utoljára módosítva)</th>
+                                                <th scope="col">Műveletek</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% eventsList.forEach(event => { %>
+                                                <tr>
+                                                    <td><%= event.eventTitle %></td>
+                                                    <td><%- event.isActiveIcon %></td>
+                                                    <td><%= event.eventDate %></td>
+                                                    <td><%= event.author %></td>
+                                                    <td><%= event.date %></td>
+                                                    <td>
+                                                        <i data-url="<%= process.env.APP_URL %>/admin/events/delete/<%= event.eventId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
+                                                        <i role=button class="fas fa-edit link-dark mx-1"></i>
+                                                        <% if (event.is_active === 1) { %>
+                                                            <a
+                                                                class="link-dark"
+                                                                target="_blank"
+                                                                href="<%= process.env.APP_URL %>/hu/blog/<%= event.slug %>"
+                                                            >
+                                                                <i class="fas fa-external-link-alt"></i>
+                                                            </a>
+                                                        <% } %>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <% if (pageCount > 1) { %>
+                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
+                        <% } %>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/admin.js"></script>
+    </body>
+</html>

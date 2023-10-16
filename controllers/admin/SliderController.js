@@ -1,6 +1,6 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
-const { setMomentLocale } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
@@ -48,6 +48,7 @@ const getSlidersListPage = (req, res) => {
             sliders = sliders.map(item => {
                 return {
                     ...item,
+                    title: limitText(item.title, 40),
                     date: moment(item.date).format("YYYY. MMMM DD. HH:mm:ss"),
                 };
             });

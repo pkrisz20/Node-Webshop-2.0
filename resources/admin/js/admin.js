@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function (event) {
 });
 
 // Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+Chart.defaults.global.defaultFontFamily = 'Poppins, sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 // Pie Chart Example
@@ -157,6 +157,60 @@ $('body').on('click', '.js-get-order-info', function (event) {
             title: 'Részletes adatok',
             icon: 'info',
             html: response.htmlResponse,
+          });
+        }, 1000);
+      }
+    }
+  });
+});
+
+// Simple ajax
+$('body').on('click', '.js-simple-ajax', function (event) {
+  event.preventDefault();
+
+  $.ajax({
+    type: "POST",
+    url: $(this).data("url"),
+    dataType: 'json',
+    data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
+    beforeSend: function (jqXHR) {
+      Swal.fire('Feldolgozás folyamatban...');
+      Swal.showLoading();
+      $(this).addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function (jqXHR, textStatus) {
+      $(this).removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function (response) {
+      // Set the new XSRF token
+      if (typeof response.csrfToken !== 'undefined') {
+        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+      }
+
+      if (response.status === 'success') {
+        setTimeout(function () {
+          Swal.fire({
+            title: response.title || false,
+            icon: response.icon || 'success',
+            text: response.text,
+          }).then(function() {
+            var callbackFunction = $(this).data("callback");
+
+            if (response.redirect_url) {
+              window.location = response.redirect_url;
+            }
+            else if (callbackFunction && typeof window[callbackFunction] == 'function') {
+              window[callbackFunction](response);
+            }
+          });
+        }, 1000);
+      }
+      else if (response.status === 'error') {
+        setTimeout(function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hoppá!',
+            text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
           });
         }, 1000);
       }

@@ -1,13 +1,13 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
-const { setMomentLocale } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
 const getGalleryList = (req, res) => {
     var metas = {
-        title: 'Admin gallery list page',
+        title: 'Admin gallery',
         type: "webiste",
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the gallery list page",
@@ -73,6 +73,7 @@ const getGalleryList = (req, res) => {
             galleriesList = galleriesList.map(item => {
                 return {
                     ...item,
+                    galleryName: limitText(item.galleryName, 40),
                     date: moment(item.date).format("YYYY. MMMM DD. HH:mm:ss"),
                 };
             });
