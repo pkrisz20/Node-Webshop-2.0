@@ -1,9 +1,7 @@
 const { db } = require("../../config/db-connection");
-const getValueByLanguage = require("../../helpers/getValueByLanguage");
-// const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
-const languageHandler = require('../../helpers/languageHandler');
+const { showServerErrorPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
 
 const getLoginPage = (req, res) => {
@@ -48,13 +46,7 @@ const getDashboard = (req, res) => {
     db.query(selectLastOrders, 15, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                current_locale: process.env.ADMIN_LANG,
-                back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length > 0) {
@@ -81,13 +73,7 @@ const getDashboard = (req, res) => {
 
             if (status_err) {
                 console.log(status_err);
-                return res.status(500).render("500", {
-                    title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                    current_locale: process.env.ADMIN_LANG,
-                    back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                    learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                    csrfToken: req.csrfToken()
-                });
+                return showServerErrorPage(req, res);
             }
 
             else if (status_data.length > 0) {
@@ -107,13 +93,7 @@ const getDashboard = (req, res) => {
 
                 if (finance_err) {
                     console.log(finance_err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                        current_locale: process.env.ADMIN_LANG,
-                        back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (monthly_finance_data.length > 0) {
@@ -130,13 +110,7 @@ const getDashboard = (req, res) => {
 
                     if (order_count_err) {
                         console.log(order_count_err);
-                        return res.status(500).render("500", {
-                            title: languageHandler("errors.server_error", process.env.ADMIN_LANG),
-                            current_locale: process.env.ADMIN_LANG,
-                            back_to_home: languageHandler("general.back_to_home", process.env.ADMIN_LANG),
-                            learn_more: languageHandler("general.information", process.env.ADMIN_LANG),
-                            csrfToken: req.csrfToken()
-                        });
+                        return showServerErrorPage(req, res);
                     }
 
                     else if (order_count_data.length > 0) {

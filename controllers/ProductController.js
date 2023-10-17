@@ -4,6 +4,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
+const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -33,23 +34,11 @@ const getProductDetails = (req, res) => {
     db.query(sqlQuery, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length === 0) {
-            return res.status(404).render('404', {
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showNotFoundPage(req, res);
         }
 
         else if (data.length > 0) {
@@ -79,13 +68,7 @@ const getProductDetails = (req, res) => {
                 db.query(selectProductComments, [1, result.id], (comments_err, comments_data) => {
                     if (comments_err) {
                         console.log(comments_err);
-                        return res.status(500).render("500", {
-                            title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                            current_locale: lang,
-                            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                            csrfToken: req.csrfToken()
-                        });
+                        return showServerErrorPage(req, res);
                     }
 
                     else if (comments_data.length > 0) {
@@ -115,13 +98,7 @@ const getProductDetails = (req, res) => {
             db.query(similarProductsQuery, [1, data[0].category_id, data[0].id], (err, similars) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (similars.length > 0) {
@@ -162,7 +139,7 @@ const getProductDetails = (req, res) => {
                     similarProducts: similarProducts ?? [],
                     articleComments: articleComments ?? [],
                     meta: metas,
-                    current_locale: req.session.lang,
+                    current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                     cart: cart,
                     locales: ['hu', 'sr', 'en'],
                     languageHandler: languageHandler,
@@ -188,18 +165,12 @@ const getAllProducts = (req, res) => {
         }
     });
     var { DB_CONFIG } = req;
-    const lang  = req.session.lang;
+    const lang  = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     let result = [];
@@ -219,13 +190,7 @@ const getAllProducts = (req, res) => {
     db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length == 0) {
@@ -236,7 +201,7 @@ const getAllProducts = (req, res) => {
                 meta: metas,
                 main_title: languageHandler('general.products', lang),
                 category_short_desc: null,
-                current_locale: req.session.lang,
+                current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
@@ -278,13 +243,7 @@ const getAllProducts = (req, res) => {
             db.query(selectForPagination, 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {
@@ -301,7 +260,7 @@ const getAllProducts = (req, res) => {
                         main_title: languageHandler('general.products', lang),
                         category_short_desc: null,
                         meta: metas,
-                        current_locale: req.session.lang,
+                        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                         cart: cart,
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
@@ -315,7 +274,7 @@ const getAllProducts = (req, res) => {
 }
 
 const handleProductComment = (req, res) => {
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     const { fullName } = req.body;
     const { email } = req.body;
     const { comment } = req.body;
@@ -359,18 +318,12 @@ const getCategoryProducts = (req, res) => {
         }
     });
     var { DB_CONFIG } = req;
-    const lang  = req.session.lang;
+    const lang  = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
     let { slug } = req.params;
     let result = [];
@@ -380,23 +333,11 @@ const getCategoryProducts = (req, res) => {
     db.query(checkForCategory, slug, (checking_err, category_data) => {
         if (checking_err) {
             console.log(checking_err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (category_data.length === 0) {
-            return res.status(404).render('404', {
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showNotFoundPage(req, res);
         }
 
         else if (category_data.length > 0) {
@@ -418,13 +359,7 @@ const getCategoryProducts = (req, res) => {
             db.query(sqlQuery, [1, slug, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (data.length === 0) {
@@ -434,7 +369,7 @@ const getCategoryProducts = (req, res) => {
                         products: [],
                         meta: metas,
                         category_short_desc: null,
-                        current_locale: req.session.lang,
+                        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                         cart: cart,
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
@@ -477,13 +412,7 @@ const getCategoryProducts = (req, res) => {
                     db.query(selectForPagination, [1, slug], (err_count, elementsCount) => {
                         if (err_count) {
                             console.log(err_count);
-                            return res.status(500).render("500", {
-                                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                                current_locale: req.session.lang,
-                                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                                csrfToken: req.csrfToken()
-                            });
+                            return showServerErrorPage(req, res);
                         }
 
                         else if (elementsCount) {
@@ -500,7 +429,7 @@ const getCategoryProducts = (req, res) => {
                                 main_title: selectedCategoryName,
                                 category_short_desc: selectedCategoryShortDescription,
                                 meta: metas,
-                                current_locale: req.session.lang,
+                                current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                                 cart: cart,
                                 locales: ['hu', 'sr', 'en'],
                                 languageHandler: languageHandler,

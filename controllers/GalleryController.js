@@ -1,10 +1,10 @@
 const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, capitalizeFirstLetter, numberWithCommas } = require("../helpers/globalFunctions");
-const moment = require("moment");
+const { setMomentLocale, numberWithCommas } = require("../helpers/globalFunctions");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const languageHandler = require("../helpers/languageHandler");
+const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 
 const getAllGallery = (req, res) => {
     // Cart converting stuffs
@@ -25,13 +25,7 @@ const getAllGallery = (req, res) => {
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     let result = [];
@@ -51,13 +45,7 @@ const getAllGallery = (req, res) => {
     db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length == 0) {
@@ -99,13 +87,7 @@ const getAllGallery = (req, res) => {
             db.query("SELECT COUNT(galleries.id) AS 'each_article_count' FROM galleries WHERE galleries.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {
@@ -161,23 +143,11 @@ const getGalleryDetails = (req, res) => {
     db.query(sqlGalleryDetails, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length == 0) {
-            return res.status(404).render('404', {
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showNotFoundPage(req, res);
         }
 
         else if (data.length > 0) {
@@ -203,13 +173,7 @@ const getGalleryDetails = (req, res) => {
 
             if (related_err) {
                 console.log(related_err);
-                return res.status(500).render("500", {
-                    title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                    current_locale: req.session.lang,
-                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                    csrfToken: req.csrfToken()
-                });
+                return showServerErrorPage(req, res);
             }
 
             else if (related_galleries.length > 0) {

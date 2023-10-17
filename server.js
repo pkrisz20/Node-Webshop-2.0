@@ -12,9 +12,9 @@ const csrfProtection = require('csurf');
 const cron = require("node-cron");
 const { logger } = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errorHandler");
-const deleteLogs = require("./middleware/deleteLogs");
+const deleteLogs = require("./jobs/deleteLogs");
 const corsOptions = require("./config/cors");
-const languageHandler = require("./helpers/languageHandler");
+const { showNotFoundPage } = require("./helpers/showErrorPages");
 
 // Custom middleware logger
 app.use(logger);
@@ -75,13 +75,7 @@ app.use("/:lang", function (req, res, next) {
 
     if ( req.params.lang !== 'en' && req.params.lang !== 'sr' && req.params.lang !== 'hu' )
     {
-        return res.status(404).render('404', {
-            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showNotFoundPage(req, res);
     }
 
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
@@ -117,13 +111,7 @@ const ordersRouter = require("./routes/orders");
 app.use("/:lang", ordersRouter);
 
 app.get("*", (req, res) => {
-    return res.status(404).render('404', {
-        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
-        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-        title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG),
-        csrfToken: req.csrfToken()
-    });
+    return showNotFoundPage(req, res);
 });
 
 // Crons

@@ -47,12 +47,10 @@ const handleContactMessage = (req, res) => {
     db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, city, client_message, date) VALUES (?,?,?,?,?,?,?)", [firstName, lastName, email, phone, city, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", req.session.lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', req.session.lang),
+                message: languageHandler('errors.common_error', req.session.lang)
             });
         }
 

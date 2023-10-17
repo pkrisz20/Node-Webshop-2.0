@@ -5,10 +5,11 @@ const { numberWithCommas, setMomentLocale, capitalizeFirstLetter } = require("..
 const languageHandler = require("../helpers/languageHandler");
 const moment = require("moment");
 const formatDateByLang = require("../helpers/formatDateByLocale");
+const { showServerErrorPage } = require("../helpers/showErrorPages");
 
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var { DB_CONFIG } = req;
 
     // Redirect if something is fishy with the query param
@@ -73,13 +74,7 @@ const handleSearch = (req, res) => {
     db.query(searchProductsQuery, [1, ...words], (err_product, product_result) => {
         if (err_product) {
             console.log(err_product);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (product_result) {
@@ -122,13 +117,7 @@ const handleSearch = (req, res) => {
             db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
                 if (err_blog) {
                     console.log(err_blog);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: lang ?? process.env.FALLBACK_LANG,
-                        back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (blog_result) {
@@ -179,13 +168,7 @@ const handleSearch = (req, res) => {
                     db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
                         if (err_gallery) {
                             console.log(err_gallery);
-                            return res.status(500).render("500", {
-                                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                                current_locale: lang ?? process.env.FALLBACK_LANG,
-                                back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
-                                learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
-                                csrfToken: req.csrfToken()
-                            });
+                            return showServerErrorPage(req, res);
                         }
 
                         else if (gallery_result) {
@@ -221,7 +204,7 @@ const handleSearch = (req, res) => {
                                 galleryFound: galleryFound,
                                 keywords: words.join(' '),
                                 meta: metas,
-                                current_locale: req.session.lang,
+                                current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                                 cart: cart,
                                 locales: ['hu', 'sr', 'en'],
                                 languageHandler: languageHandler,

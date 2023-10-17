@@ -1,6 +1,7 @@
 const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
+const { showServerErrorPage } = require("../helpers/showErrorPages");
 
 const getCartItems = (req, res, next) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
@@ -18,13 +19,7 @@ const getCartItems = (req, res, next) => {
         db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, max_order_count, is_available FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 console.log(err);
-                return res.status(500).render("500", {
-                    title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                    current_locale: req.session.lang,
-                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                    csrfToken: req.csrfToken()
-                });
+                return showServerErrorPage(req, res);
             }
 
             else if (result.length > 0) {

@@ -1,6 +1,6 @@
 const { db } = require("../../config/db-connection");
 const { setMomentLocale } = require("../../helpers/globalFunctions");
-const languageHandler = require("../../helpers/languageHandler");
+const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
 
 const getIncomingMessagesList = (req, res) => {
@@ -17,13 +17,7 @@ const getIncomingMessagesList = (req, res) => {
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.ADMIN_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     setMomentLocale("hu");
@@ -37,13 +31,7 @@ const getIncomingMessagesList = (req, res) => {
 
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                current_locale: req.session.lang ?? process.env.ADMIN_LANG,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (messages_list.length == 0) {
@@ -84,13 +72,7 @@ const getIncomingMessagesList = (req, res) => {
                 if (err_pagination) {
                     console.log(err_pagination);
 
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {

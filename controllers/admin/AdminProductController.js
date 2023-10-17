@@ -2,7 +2,7 @@ const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
-const languageHandler = require("../../helpers/languageHandler");
+const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
@@ -21,13 +21,7 @@ const getWebshopProductList = (req, res) => {
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.ADMIN_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     const selectWebshopProducts = "SELECT products.id, products.name, products.discount_value, products.is_active, products.created_at, products.updated_at, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id ORDER BY products.id DESC LIMIT ? OFFSET ?";
@@ -38,13 +32,7 @@ const getWebshopProductList = (req, res) => {
 
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                current_locale: req.session.lang ?? process.env.ADMIN_LANG,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (products_list.length == 0) {
@@ -86,13 +74,7 @@ const getWebshopProductList = (req, res) => {
                 if (err_pagination) {
                     console.log(err_pagination);
 
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {
@@ -132,13 +114,7 @@ const getProductCommentsList = (req, res) => {
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.ADMIN_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     const selectProductComments = "SELECT product_comments.id AS 'comment_id', product_comments.name AS 'author_name', product_comments.email, product_comments.comment AS 'comment_text', product_comments.is_active, product_comments.date, products.name AS 'product_name', products.slug AS 'product_slug', products.is_active AS 'product_is_active' FROM product_comments INNER JOIN products ON product_comments.product_id = products.id ORDER BY product_comments.id DESC LIMIT ? OFFSET ?";
@@ -149,13 +125,7 @@ const getProductCommentsList = (req, res) => {
 
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                current_locale: req.session.lang ?? process.env.ADMIN_LANG,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (product_comments_list.length == 0) {
@@ -190,13 +160,7 @@ const getProductCommentsList = (req, res) => {
                 if (err_pagination) {
                     console.log(err_pagination);
 
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {

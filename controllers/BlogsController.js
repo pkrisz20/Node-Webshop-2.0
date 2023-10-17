@@ -5,6 +5,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require('../helpers/formatDateByLocale');
+const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 
 const getBlogDetails = (req, res) => {
     // Cart converting stuffs
@@ -36,23 +37,11 @@ const getBlogDetails = (req, res) => {
     db.query(blogDetailsQuery, [1, slug], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length == 0) {
-            return res.status(404).render('404', {
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                title: languageHandler("errors.not_found", lang ?? process.env.FALLBACK_LANG),
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showNotFoundPage(req, res);
         }
 
         else if (data.length > 0) {
@@ -76,13 +65,7 @@ const getBlogDetails = (req, res) => {
                 db.query(selectBlogComments, [1, result.id], (comments_err, comments_data) => {
                     if (comments_err) {
                         console.log(comments_err);
-                        return res.status(500).render("500", {
-                            title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                            current_locale: req.session.lang,
-                            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                            csrfToken: req.csrfToken()
-                        });
+                        return showServerErrorPage(req, res);
                     }
 
                     else if (comments_data.length > 0) {
@@ -121,13 +104,7 @@ const getBlogDetails = (req, res) => {
 
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (newestBlog.length > 0) {
@@ -158,13 +135,7 @@ const getBlogDetails = (req, res) => {
                 db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), 12], (err, incommingEvent) => {
                     if (err) {
                         console.log(err);
-                        return res.status(500).render("500", {
-                            title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                            current_locale: req.session.lang,
-                            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                            csrfToken: req.csrfToken()
-                        });
+                        return showServerErrorPage(req, res);
                     }
 
                     else if (incommingEvent.length > 0) {
@@ -229,13 +200,7 @@ const getAllBlogs = (req, res) => {
     page = parseInt(page);
 
     if ( isNaN(page) || page <= 0 ) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
@@ -247,13 +212,7 @@ const getAllBlogs = (req, res) => {
     db.query(sqlQueryPaginatedBlogs, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length == 0) {
@@ -300,13 +259,7 @@ const getAllBlogs = (req, res) => {
             db.query("SELECT COUNT(blogs.id) AS 'each_article_count' FROM blogs WHERE blogs.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {

@@ -11,8 +11,8 @@ const deleteCartItem = (req, res) => {
     if ( isNaN(productId) ) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', req.session.lang),
-            message: languageHandler('errors.unprocessable_data', req.session.lang)
+            title: languageHandler('errors.error', req.session.lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.unprocessable_data', req.session.lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -36,7 +36,7 @@ const deleteCartItem = (req, res) => {
 
         return res.status(200).json({
             status: "success",
-            title: languageHandler('general.process_success', req.session.lang),
+            title: languageHandler('general.process_success', req.session.lang ?? process.env.FALLBACK_LANG),
             totalCount: req.session.cart.length,
             totalPrice: numberWithCommas(totalPrice),
             isEmpty: req.session.cart.length == 0
@@ -46,8 +46,8 @@ const deleteCartItem = (req, res) => {
     else if ( !isExists ) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', req.session.lang),
-            message: languageHandler('errors.common_error', req.session.lang)
+            title: languageHandler('errors.error', req.session.lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.common_error', req.session.lang ?? process.env.FALLBACK_LANG)
         });
     }
 }
@@ -61,8 +61,8 @@ const addCartItem = (req, res) => {
     {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('errors.error', lang),
-            message: languageHandler('errors.unprocessable_data', lang)
+            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -72,8 +72,8 @@ const addCartItem = (req, res) => {
     if ( isNaN(cartItem.productId) || isNaN(cartItem.quantity) ) {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('errors.error', lang),
-            message: languageHandler('errors.unprocessable_data', lang)
+            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -83,8 +83,8 @@ const addCartItem = (req, res) => {
         if ( isAlreadyInCart ) {
             return res.status(200).json({
                 status: 'error',
-                title: languageHandler('general.information', lang),
-                message: languageHandler('orders.already_added', lang)
+                title: languageHandler('general.information', lang ?? process.env.FALLBACK_LANG),
+                message: languageHandler('orders.already_added', lang ?? process.env.FALLBACK_LANG)
             });
         }
     }
@@ -94,12 +94,10 @@ const addCartItem = (req, res) => {
     db.query(cartQuery, cartItem.productId, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+                message: languageHandler('errors.server_error', lang ?? process.env.FALLBACK_LANG)
             });
         }
 
@@ -110,8 +108,8 @@ const addCartItem = (req, res) => {
             if ( !isAvailableEachProduct ) {
                 return res.status(200).json({
                     status: "error",
-                    title: languageHandler('errors.error', lang),
-                    message: languageHandler('errors.wrong_data', lang)
+                    title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+                    message: languageHandler('errors.wrong_data', lang ?? process.env.FALLBACK_LANG)
                 });
             }
 
@@ -119,14 +117,14 @@ const addCartItem = (req, res) => {
             if ( cartItem.quantity > data[0].max_order_count ) {
                 return res.status(200).json({
                     status: "error",
-                    title: languageHandler('errors.error', lang),
-                    message: languageHandler('errors.wrong_data', lang)
+                    title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+                    message: languageHandler('errors.wrong_data', lang ?? process.env.FALLBACK_LANG)
                 });
             }
 
             let resultItem = {
                 productId: data[0].id,
-                productName: getValueByLanguage(data[0].name, lang),
+                productName: getValueByLanguage(data[0].name, lang ?? process.env.FALLBACK_LANG),
                 slug: data[0].slug,
                 maxQuantity: data[0].max_order_count,
                 quantity: cartItem.quantity,
@@ -148,29 +146,29 @@ const addCartItem = (req, res) => {
             if (req.session.cart.length > 1) {
                 return res.status(200).json({
                     status: 'success',
-                    title: languageHandler('general.process_success', lang),
-                    content: languageHandler('orders.added_to_cart', lang),
+                    title: languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
+                    content: languageHandler('orders.added_to_cart', lang ?? process.env.FALLBACK_LANG),
                     totalPrice: numberWithCommas(totalPrice),
                     totalCount: totalCount,
                     results: formattedCart,
-                    current_locale: lang,
-                    remove_text: languageHandler('general.remove', lang)
+                    current_locale: lang ?? process.env.FALLBACK_LANG,
+                    remove_text: languageHandler('general.remove', lang ?? process.env.FALLBACK_LANG)
                 });
             }
 
             else if (req.session.cart.length == 1) {
                 return res.status(200).json({
                     status: 'success',
-                    title: languageHandler('general.process_success', lang),
-                    content: languageHandler('orders.added_to_cart', lang),
+                    title: languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
+                    content: languageHandler('orders.added_to_cart', lang ?? process.env.FALLBACK_LANG),
                     totalPrice: numberWithCommas(totalPrice),
                     totalCount: totalCount,
                     results: formattedCart,
-                    current_locale: lang,
-                    remove_text: languageHandler('general.remove', lang),
-                    ordersCartCountText: languageHandler('orders.cart_count', lang),
-                    orderPageText: languageHandler('orders.order', lang),
-                    totalPriceText: languageHandler('orders.total_price', lang)
+                    current_locale: lang ?? process.env.FALLBACK_LANG,
+                    remove_text: languageHandler('general.remove', lang ?? process.env.FALLBACK_LANG),
+                    ordersCartCountText: languageHandler('orders.cart_count', lang ?? process.env.FALLBACK_LANG),
+                    orderPageText: languageHandler('orders.order', lang ?? process.env.FALLBACK_LANG),
+                    totalPriceText: languageHandler('orders.total_price', lang ?? process.env.FALLBACK_LANG)
                 });
             }
         }
@@ -180,13 +178,13 @@ const addCartItem = (req, res) => {
 const updateCartItem = (req, res) => {
     let { productId } = req.body;
     let { quantity } = req.body;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     if (!quantity || !productId) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', lang),
-            message: languageHandler('errors.unprocessable_data', lang)
+            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -196,8 +194,8 @@ const updateCartItem = (req, res) => {
     if ( isNaN(quantity) || isNaN(productId) ) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', lang),
-            message: languageHandler('errors.has_to_be_number', lang)
+            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler('errors.has_to_be_number', lang ?? process.env.FALLBACK_LANG)
         });
     }
 
@@ -223,8 +221,8 @@ const updateCartItem = (req, res) => {
 
     return res.status(200).json({
         status: 'success',
-        title: quantity > maxQuantityEnabled ? languageHandler('general.information', lang) : languageHandler('general.process_success', lang),
-        message: quantity > maxQuantityEnabled ? languageHandler('validations.max_quantity', lang, maxQuantityEnabled) : languageHandler('validations.cart_updated', lang),
+        title: quantity > maxQuantityEnabled ? languageHandler('general.information', lang ?? process.env.FALLBACK_LANG) : languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
+        message: quantity > maxQuantityEnabled ? languageHandler('validations.max_quantity', lang ?? process.env.FALLBACK_LANG, maxQuantityEnabled) : languageHandler('validations.cart_updated', lang ?? process.env.FALLBACK_LANG),
         newValue: quantity > maxQuantityEnabled ?  maxQuantityEnabled : quantity,
         totalPrice: numberWithCommas(sum),
         alonePrice: numberWithCommas(alonePrice)

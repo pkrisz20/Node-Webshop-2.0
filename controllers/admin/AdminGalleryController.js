@@ -2,7 +2,7 @@ const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
-const languageHandler = require("../../helpers/languageHandler");
+const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
 
 const getGalleryList = (req, res) => {
@@ -19,13 +19,7 @@ const getGalleryList = (req, res) => {
     page = parseInt(page);
 
     if (isNaN(page) || page <= 0) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.ADMIN_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     setMomentLocale("hu");
@@ -39,13 +33,7 @@ const getGalleryList = (req, res) => {
 
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                current_locale: req.session.lang ?? process.env.ADMIN_LANG,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (gallery_list.length == 0) {
@@ -85,13 +73,7 @@ const getGalleryList = (req, res) => {
                 if (err_pagination) {
                     console.log(err_pagination);
 
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.ADMIN_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.ADMIN_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.ADMIN_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (elementsCount) {

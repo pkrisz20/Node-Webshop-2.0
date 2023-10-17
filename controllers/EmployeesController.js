@@ -3,6 +3,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require('../helpers/globalFunctions');
+const { showServerErrorPage } = require("../helpers/showErrorPages");
 
 const getEmployees = (req, res) => {
     var cart = {
@@ -19,11 +20,11 @@ const getEmployees = (req, res) => {
 
     var { DB_CONFIG } = req;
     let employees = [];
-    var lang = req.session.lang;
+    var lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
-        title: languageHandler("nav.about", lang),
+        title: languageHandler("nav.about", lang ?? process.env.FALLBACK_LANG),
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/about`,
+        url: `${ process.env.APP_URL }/${ lang ?? process.env.FALLBACK_LANG }/about`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the about page, here can the guests read about us"
     };
@@ -32,13 +33,7 @@ const getEmployees = (req, res) => {
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length > 0) {
@@ -47,7 +42,7 @@ const getEmployees = (req, res) => {
                 let tempObject = {
                     name: element.name,
                     image: imagePathConverter(element.image, "employees"),
-                    position: getValueByLanguage(element.position, lang),
+                    position: getValueByLanguage(element.position, lang ?? process.env.FALLBACK_LANG),
                     contact: {
                         facebook: element.facebook,
                         tiktok: element.tiktok,
@@ -68,7 +63,7 @@ const getEmployees = (req, res) => {
                 longDesc: "Long desc goes here",
             },
             meta: metas,
-            current_locale: req.session.lang,
+            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
             DB_CONFIG: DB_CONFIG,
             cart: cart,
             locales: ['hu', 'sr', 'en'],

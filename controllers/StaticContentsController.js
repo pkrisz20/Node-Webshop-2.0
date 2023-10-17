@@ -2,6 +2,7 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
+const { showServerErrorPage } = require("../helpers/showErrorPages");
 
 const getFAQ = (req, res) => {
     // Cart converting stuffs
@@ -18,7 +19,7 @@ const getFAQ = (req, res) => {
     });
 
     var { DB_CONFIG } = req;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let result = [];
     var metas = {
         title: languageHandler("nav.FAQ", lang),
@@ -34,13 +35,7 @@ const getFAQ = (req, res) => {
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: lang ?? process.env.FALLBACK_LANG,
-                back_to_home: languageHandler("general.back_to_home", lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (data.length > 0) {

@@ -4,6 +4,7 @@ const { createUniqueID, numberWithCommas } = require("../helpers/globalFunctions
 // const nodemailer = require("nodemailer"); -> for the mail sending
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
+const { showBadRequestPage, showServerErrorPage } = require("../helpers/showErrorPages");
 
 const getOrderPage = (req, res) => {
     // Cart converting stuffs
@@ -38,13 +39,7 @@ const getOrderPage = (req, res) => {
 
 const createOrder = (req, res) => {
     if (!req.session.cart) {
-        return res.status(400).render("400", {
-            title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-            current_locale: req.session.lang,
-            back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-            learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-            csrfToken: req.csrfToken()
-        });
+        return showBadRequestPage(req, res);
     }
 
     // Cart converting stuffs
@@ -74,13 +69,7 @@ const createOrder = (req, res) => {
     db.query(`SELECT id, name, price, discount_value, is_active, is_available, max_order_count FROM products WHERE id IN (${ countParams })`, productIds, (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).render("500", {
-                title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                current_locale: req.session.lang,
-                back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                csrfToken: req.csrfToken()
-            });
+            return showServerErrorPage(req, res);
         }
 
         else if (result) {
@@ -89,13 +78,7 @@ const createOrder = (req, res) => {
             isAvailableEachProduct = result.every(product => product.is_active !== 0 && product.is_available !== 0);
 
             if ( !isAvailableEachProduct ) {
-                return res.status(400).render("400", {
-                    title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-                    current_locale: req.session.lang,
-                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                    csrfToken: req.csrfToken()
-                });
+                return showBadRequestPage(req, res);
             }
 
             // Check if any quantity is bigger than the max orderable quantity
@@ -109,13 +92,7 @@ const createOrder = (req, res) => {
             });
 
             if ( isAnyBiggerThanMaximum ) {
-                return res.status(400).render("400", {
-                    title: languageHandler("errors.wrong_data", lang ?? process.env.FALLBACK_LANG),
-                    current_locale: req.session.lang,
-                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                    csrfToken: req.csrfToken()
-                });
+                return showBadRequestPage(req, res);
             }
 
             // Calculate total price for order
@@ -145,13 +122,7 @@ const createOrder = (req, res) => {
             db.query(SQLInsertOrder, bindingParams, (err, order_result) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).render("500", {
-                        title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                        current_locale: req.session.lang,
-                        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                        csrfToken: req.csrfToken()
-                    });
+                    return showServerErrorPage(req, res);
                 }
 
                 else if (order_result) {
@@ -161,13 +132,7 @@ const createOrder = (req, res) => {
 
                             if (err) {
                                 console.log(err);
-                                return res.status(500).render("500", {
-                                    title: languageHandler("errors.server_error", lang ?? process.env.FALLBACK_LANG),
-                                    current_locale: req.session.lang,
-                                    back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
-                                    learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
-                                    csrfToken: req.csrfToken()
-                                });
+                                return showServerErrorPage(req, res);
                             }
                         });
                     });
