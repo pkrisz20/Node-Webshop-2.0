@@ -27,19 +27,6 @@ window.addEventListener('DOMContentLoaded', function (event) {
 Chart.defaults.global.defaultFontFamily = 'Poppins, sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
-// Pie Chart Example
-// var ctxPieChart = document.getElementById("myPieChart");
-// var myPieChart = new Chart(ctxPieChart, {
-//   type: 'pie',
-//   data: {
-//     labels: ["Blue", "Red", "Yellow", "Green"],
-//     datasets: [{
-//       data: [12.21, 15.58, 11.25, 8.32],
-//       backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
-//     }],
-//   },
-// });
-
 $(document).ready(function() {
 
   if ( $('.jquery-tooltip').length > 0 ) {

@@ -61,6 +61,11 @@
                         visibility: hidden;
                         pointer-events: none;
 
+                        button {
+                            cursor: pointer;
+                            background-color: transparent;
+                        }
+
                         i {
                             transition: .3s;
                             border-radius: 50%;

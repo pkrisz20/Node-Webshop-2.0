@@ -12,6 +12,7 @@ const AdminGalleryController = require("../controllers/admin/AdminGalleryControl
 const AdminContactController = require("../controllers/admin/AdminContactController");
 const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
 const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
+const StatisticsController = require("../controllers/admin/StatisticsController");
 // const recaptchaValidation = require("../validations/recaptchaValidation");
 
 adminRouter.route("/")
@@ -25,6 +26,9 @@ adminRouter.route("/logout")
 
 adminRouter.route("/dashboard")
     .get(checkAuthentication, AdminController.getDashboard);
+
+adminRouter.route("/statistics")
+    .get(checkAuthentication, StatisticsController.getStatistics);
 
 adminRouter.route("/sliders/list")
     .get(checkAuthentication, SliderController.getSlidersListPage);

@@ -32,22 +32,29 @@
             flex-direction: row;
         }
 
-        &-contact-links {
-            @include flexBox("flex-start", "flex-start", 20px);
-            flex-direction: column;
+        &-contacts {
 
-            .data {
-                color: $c-9;
-                transition: color .2s ease-in-out;
+            &-links {
+                @include flexBox("flex-start", "flex-start", 20px);
+                flex-direction: column;
 
-                &:hover {
-                    color: $c-dark2;
+                .data {
+                    color: $c-9;
+                    transition: color .2s ease-in-out;
+
+                    &:hover {
+                        color: $c-dark2;
+                    }
                 }
             }
         }
 
         .header_title {
             margin-bottom: 30px;
+
+            &-main {
+                @include resp('font-size', 20px, 24px, 768px, 1920px);
+            }
         }
 
         &-form {

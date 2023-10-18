@@ -13,7 +13,14 @@
                     <div class="overlay">
                         <figcaption class="overlay_content">
                             <div class="icons">
-                                <i class="fas fa-link"></i>
+                                <button
+                                    type="button"
+                                    onclick="navigator.clipboard.writeText('<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= item.slug %>');"
+                                    aria-label="<%= languageHandler('general.copy_to_clipboard', current_locale) %>"
+                                    title="<%= languageHandler('general.copy_to_clipboard', current_locale) %>"
+                                >
+                                    <i class="fas fa-link"></i>
+                                </button>
                                 <a href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= item.slug %>"><i class="far fa-eye"></i></a>
                             </div>
                             <% if (item.name) { %>
