@@ -86,6 +86,7 @@ const en = {
 		cart_updated: "The cart has been updated!",
 	},
 	products: {
+		categories: "Categories",
 		all_products: "All products",
 		similar_products: "Similar products",
 		savings: "Savings",

@@ -4,12 +4,13 @@ const StaticContentsController = require("../controllers/StaticContentsControlle
 const { getCartItems } = require("../helpers/getCartItems");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
+const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 staticContentsRouter.route("/faq")
-    .get(getConfigFromDb, getCartItems, StaticContentsController.getFAQ);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, StaticContentsController.getFAQ);
 
 staticContentsRouter.route("/gdpr")
-    .get(getConfigFromDb, getCartItems, StaticContentsController.getGDPR);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, StaticContentsController.getGDPR);
 
 staticContentsRouter.route("/gdpr/handle")
     .post(recaptchaValidation, StaticContentsController.handleGDPR);

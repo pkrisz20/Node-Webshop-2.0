@@ -6,9 +6,10 @@ const validationMiddleware = require("../middleware/validationMiddleware");
 const orderSchema = require("../validations/orderValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
+const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 ordersRouter.route("/order")
-    .get(getConfigFromDb, getCartItems, OrdersController.getOrderPage);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, OrdersController.getOrderPage);
 
 ordersRouter.route("/order/handle")
     .post(validationMiddleware(orderSchema), recaptchaValidation, OrdersController.createOrder);

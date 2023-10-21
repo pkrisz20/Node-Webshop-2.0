@@ -26,7 +26,6 @@ const getData = (req, res) => {
     let sliders = [];
     var galleries = [];
     var blogs = [];
-    var categories = [];
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
         title: languageHandler("nav.home", lang),
@@ -45,8 +44,6 @@ const getData = (req, res) => {
     const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND galleries.is_featured = ? ORDER BY galleries.gallery_date DESC";
     // HEROS
     const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ? ORDER BY id DESC";
-    // CATEGORIES
-    const sqlQueryCategories = "SELECT id, name, slug, image FROM categories";
 
     setMomentLocale(lang);
 
@@ -154,39 +151,19 @@ const getData = (req, res) => {
                                         galleries.push(tempObjectGallery);
                                     });
 
-                                    db.query(sqlQueryCategories, (category_err, category_data) => {
-                                        if (category_err) {
-                                            console.log(category_err);
-                                            return showServerErrorPage(req, res);
-                                        }
-
-                                        else if (category_data.length > 0) {
-                                            category_data.forEach(category_element => {
-                                                let tempObjectCategory = {
-                                                    id: parseInt(category_element.id),
-                                                    name: getValueByLanguage(category_element.name, lang),
-                                                    slug: category_element.slug,
-                                                    image: imagePathConverter(category_element.image, "categories")
-                                                }
-
-                                                categories.push(tempObjectCategory);
-                                            });
-                                        }
-
-                                        return res.render("home", {
-                                            heros: sliders ?? [],
-                                            galleries: galleries ?? [],
-                                            blogs: blogs ?? [],
-                                            products: products ?? [],
-                                            categories: categories ?? [],
-                                            meta: metas,
-                                            current_locale: req.session.lang,
-                                            cart: cart,
-                                            locales: ['hu', 'sr', 'en'],
-                                            languageHandler: languageHandler,
-                                            DB_CONFIG: DB_CONFIG,
-                                            csrfToken: req.csrfToken()
-                                        });
+                                    return res.render("home", {
+                                        heros: sliders ?? [],
+                                        galleries: galleries ?? [],
+                                        blogs: blogs ?? [],
+                                        products: products ?? [],
+                                        meta: metas,
+                                        current_locale: req.session.lang,
+                                        cart: cart,
+                                        locales: ['hu', 'sr', 'en'],
+                                        languageHandler: languageHandler,
+                                        DB_CONFIG: DB_CONFIG,
+                                        webshopCategories: req.webshopCategories ?? [],
+                                        csrfToken: req.csrfToken()
                                     });
                                 }
                             });

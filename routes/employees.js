@@ -3,8 +3,9 @@ const employeesRouter = express.Router();
 const EmployeesController = require("../controllers/EmployeesController");
 const { getCartItems } = require("../helpers/getCartItems");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
+const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 employeesRouter.route("/about")
-    .get(getConfigFromDb, getCartItems, EmployeesController.getEmployees);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, EmployeesController.getEmployees);
 
 module.exports = employeesRouter;

@@ -86,6 +86,7 @@ const sr = {
 		cart_updated: "Vrednosti su promenili!",
     },
     products: {
+		categories: "Kategorije",
         all_products: "Svi proizvodi",
         similar_products: "Slični proizvodi",
 		savings: "Ušteda",

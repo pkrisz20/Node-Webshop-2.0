@@ -6,12 +6,13 @@ const validationMiddleware = require("../middleware/validationMiddleware");
 const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
+const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 blogsRouter.route("/blogs")
-    .get(getConfigFromDb, getCartItems, BlogsController.getAllBlogs);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, BlogsController.getAllBlogs);
 
 blogsRouter.route("/blog/:slug")
-    .get(getConfigFromDb, getCartItems, BlogsController.getBlogDetails);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, BlogsController.getBlogDetails);
 
 blogsRouter.route("/blog/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, BlogsController.handleBlogComment);

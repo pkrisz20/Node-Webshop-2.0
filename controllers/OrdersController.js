@@ -33,6 +33,7 @@ const getOrderPage = (req, res) => {
         languageHandler: languageHandler,
         numberWithCommas: numberWithCommas,
         DB_CONFIG: DB_CONFIG,
+        webshopCategories: req.webshopCategories,
         csrfToken: req.csrfToken()
     });
 }

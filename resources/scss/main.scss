@@ -2,6 +2,7 @@
 @import "./mixins.scss";
 @import "./base.scss";
 @import "./utilities.scss";
+@import "./animations.scss";
 
 @import "./components/header.scss";
 @import "./components/footer.scss";
@@ -12,6 +13,10 @@
 .site-wrap {
   padding-top: 200px;
   min-height: 100vh;
+
+  @media #{$r-max-xl} {
+    padding-top: 190px;
+  }
 
   @media #{$r-max-l} {
     padding-top: 110px;

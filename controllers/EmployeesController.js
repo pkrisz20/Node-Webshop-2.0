@@ -68,6 +68,7 @@ const getEmployees = (req, res) => {
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
+            webshopCategories: req.webshopCategories,
             csrfToken: req.csrfToken()
         });
     });

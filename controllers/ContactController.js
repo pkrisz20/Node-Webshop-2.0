@@ -36,6 +36,7 @@ const getContactPage = (req, res) => {
         locales: ['hu', 'sr', 'en'],
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
+        webshopCategories: req.webshopCategories,
         csrfToken: req.csrfToken()
     });
 };

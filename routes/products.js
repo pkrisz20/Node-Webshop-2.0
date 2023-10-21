@@ -6,15 +6,16 @@ const validationMiddleware = require("../middleware/validationMiddleware");
 const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
+const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 productsRouter.route("/products")
-    .get(getConfigFromDb, getCartItems, ProductController.getAllProducts);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getAllProducts);
 
 productsRouter.route("/products/category/:slug")
-    .get(getConfigFromDb, getCartItems, ProductController.getCategoryProducts);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getCategoryProducts);
 
 productsRouter.route("/products/:slug")
-    .get(getConfigFromDb, getCartItems, ProductController.getProductDetails);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getProductDetails);
 
 productsRouter.route("/product/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, ProductController.handleProductComment);

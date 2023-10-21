@@ -144,6 +144,7 @@ const getProductDetails = (req, res) => {
                     locales: ['hu', 'sr', 'en'],
                     languageHandler: languageHandler,
                     DB_CONFIG: DB_CONFIG,
+                    webshopCategories: req.webshopCategories,
                     csrfToken: req.csrfToken()
                 });
             });
@@ -206,6 +207,7 @@ const getAllProducts = (req, res) => {
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
+                webshopCategories: req.webshopCategories,
                 csrfToken: req.csrfToken()
             });
         }
@@ -265,6 +267,7 @@ const getAllProducts = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
+                        webshopCategories: req.webshopCategories,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -374,6 +377,7 @@ const getCategoryProducts = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
+                        webshopCategories: req.webshopCategories,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -434,6 +438,7 @@ const getCategoryProducts = (req, res) => {
                                 locales: ['hu', 'sr', 'en'],
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
+                                webshopCategories: req.webshopCategories,
                                 csrfToken: req.csrfToken()
                             });
                         }

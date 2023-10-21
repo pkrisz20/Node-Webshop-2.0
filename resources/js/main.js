@@ -303,6 +303,14 @@ $(function() {
         window.scroll({ top: 0, behavior: 'smooth' });
     });
 
+    $('body').on('click', '.js-hamburger-menu', function () {
+        $('.js-mobile-menu').addClass('nav-opened');
+    });
+
+    $('body').on('click', '.js-close-mobile-menu', function () {
+        $('.js-mobile-menu').removeClass('nav-opened');
+    });
+
     if ($('.js-countup-section').length > 0) {
         var alreadyExecuted = false;
         var countUpOptions = {
@@ -356,15 +364,50 @@ $(function() {
             }
         });
     }
+
+    // Tabs functionality
+    if ($('.js-tabs').length > 0) {
+
+        $('.js-tab-link').on('click', function (event) {
+            event.preventDefault();
+            var tab = $(this);
+            var tabContent = tab.closest('.js-tabs');
+            var tabAnchor = tab.data('tab-link');
+            var currentTab = $('.js-tabs-content ' + tabAnchor, tabContent);
+
+            if (currentTab.length === 1) {
+                $('.js-tab-link', tabContent).removeClass('selected');
+                currentTab.siblings().hide();
+                tab.addClass('selected');
+            }
+        });
+
+        $('.js-tabs').each(function() {
+            if ($(this).find('.selected').length == 0) {
+                $(this).find('.js-tab-link').eq(0).addClass('selected');
+            }
+        });
+
+        $('.selected').trigger('click');
+    }
+
+    // Mobile categories slide
+    $('body').on('click', '.js-slide-toggle', function () {
+        var icon = $(this).find('i');
+        var toggleItem = $(this).closest('.js-toggle-container').find('.js-toggle-content');
+
+        toggleItem.slideToggle();
+        icon.toggleClass('rotate');
+    });
 });
 
-// Language dropdown
-$('body').on("mouseenter", ".js-lang-switcher", function () {
-    $(".js-langs-list").addClass('dropdown-list--open');
+// Dropdowns handle
+$('body').on("mouseenter", ".js-dropdown-opener", function () {
+    $(this).find('.js-dropdown-list').addClass('dropdown-list--open');
 });
 
-$('body').on("mouseleave", ".js-lang-switcher", function () {
-    $(".js-langs-list").removeClass("dropdown-list--open");
+$('body').on("mouseleave", ".js-dropdown-opener", function () {
+    $(this).find('.js-dropdown-list').removeClass('dropdown-list--open');
 });
 
 // Cart toggle

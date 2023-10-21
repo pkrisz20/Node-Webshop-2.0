@@ -86,6 +86,7 @@ const hu = {
 		cart_updated: "A kosár tartalma frissült!"
     },
     products: {
+		categories: "Kategóriák",
         all_products: "Az összes termék",
         similar_products: "Hasonló termékek",
 		savings: "Megtakarítás",
