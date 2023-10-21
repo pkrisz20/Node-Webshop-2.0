@@ -77,7 +77,7 @@ const handleSearch = (req, res) => {
             return showServerErrorPage(req, res);
         }
 
-        else if (product_result) {
+        else if (product_result.length > 0) {
 
             product_result.forEach(element => {
                 let tempObject = {
@@ -97,126 +97,124 @@ const handleSearch = (req, res) => {
             });
 
             productsFound.count = productsFound.results.length;
+        }
 
-            let blogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND (";
+        let blogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND (";
+
+        // clear the formatting
+        formattedParams = '';
+
+        if (words.length === 1) {
+            blogsQuery += `json_extract(blogs.title, '$.${ lang }') LIKE ?)`;
+        }
+        else if (words.length > 1) {
+            for (let index = 0; index < words.length; index++) {
+                formattedParams += index === words.length - 1 ? `json_extract(blogs.title, '$.${ lang }') LIKE ?)` : `json_extract(blogs.title, '$.${ lang }') LIKE ? OR `;
+            }
+
+            blogsQuery += formattedParams;
+        }
+
+        db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
+            if (err_blog) {
+                console.log(err_blog);
+                return showServerErrorPage(req, res);
+            }
+
+            else if (blog_result.length > 0) {
+
+                blog_result.forEach(element => {
+                    let tempObject = {
+                        id: parseInt(element.id),
+                        title: getValueByLanguage(element.title, lang),
+                        slug: element.slug,
+                        shortDescription: getValueByLanguage(element.short_description, lang),
+                        image: imagePathConverter(element.image_thumbnail, "blogs"),
+                        author: element.author,
+                        fullDate: element.date,
+                        commentsCount: element.comments_count
+                    }
+
+                    blogsFound.results.push(tempObject);
+                });
+
+                setMomentLocale(lang);
+
+                blogsFound.results = blogsFound.results.map(item => {
+                    return {
+                        ...item,
+                        fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                        relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                    };
+                });
+
+                blogsFound.count = blogsFound.results.length;
+            }
+
+            let galleryQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND (";
 
             // clear the formatting
             formattedParams = '';
 
             if (words.length === 1) {
-                blogsQuery += `json_extract(blogs.title, '$.${ lang }') LIKE ?)`;
+                galleryQuery += `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)`;
             }
             else if (words.length > 1) {
                 for (let index = 0; index < words.length; index++) {
-                    formattedParams += index === words.length - 1 ? `json_extract(blogs.title, '$.${ lang }') LIKE ?)` : `json_extract(blogs.title, '$.${ lang }') LIKE ? OR `;
+                    formattedParams += index === words.length - 1 ? `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)` : `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ? OR `;
                 }
 
-                blogsQuery += formattedParams;
+                galleryQuery += formattedParams;
             }
 
-            db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
-                if (err_blog) {
-                    console.log(err_blog);
+            db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
+                if (err_gallery) {
+                    console.log(err_gallery);
                     return showServerErrorPage(req, res);
                 }
 
-                else if (blog_result) {
-
-                    blog_result.forEach(element => {
+                else if (gallery_result.length > 0) {
+                    gallery_result.forEach(element => {
                         let tempObject = {
                             id: parseInt(element.id),
-                            title: getValueByLanguage(element.title, lang),
+                            name: getValueByLanguage(element.gallery_name, lang ?? process.env.FALLBACK_LANG),
                             slug: element.slug,
-                            shortDescription: getValueByLanguage(element.short_description, lang),
-                            image: imagePathConverter(element.image_thumbnail, "blogs"),
-                            author: element.author,
-                            fullDate: element.date,
-                            commentsCount: element.comments_count
+                            thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
+                            date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                         }
 
-                        blogsFound.results.push(tempObject);
+                        galleryFound.results.push(tempObject);
                     });
 
-                    setMomentLocale(lang);
-
-                    blogsFound.results = blogsFound.results.map(item => {
+                    galleryFound.results = galleryFound.results.map(item => {
                         return {
                             ...item,
-                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
-                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                            date: item.date.toLowerCase(),
                         };
                     });
 
-                    blogsFound.count = blogsFound.results.length;
-
-                    let galleryQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail, categories.name AS 'category_name' FROM galleries, categories WHERE (galleries.is_active = ? AND galleries.category_id = categories.id) AND (";
-
-                    // clear the formatting
-                    formattedParams = '';
-
-                    if (words.length === 1) {
-                        galleryQuery += `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)`;
-                    }
-                    else if (words.length > 1) {
-                        for (let index = 0; index < words.length; index++) {
-                            formattedParams += index === words.length - 1 ? `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)` : `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ? OR `;
-                        }
-
-                        galleryQuery += formattedParams;
-                    }
-
-                    db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
-                        if (err_gallery) {
-                            console.log(err_gallery);
-                            return showServerErrorPage(req, res);
-                        }
-
-                        else if (gallery_result) {
-                            gallery_result.forEach(element => {
-                                let tempObject = {
-                                    id: parseInt(element.id),
-                                    name: getValueByLanguage(element.gallery_name, lang),
-                                    slug: element.slug,
-                                    thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
-                                    date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
-                                    category: getValueByLanguage(element.category_name, lang)
-                                }
-
-                                galleryFound.results.push(tempObject);
-                            });
-
-                            galleryFound.results = galleryFound.results.map(item => {
-                                return {
-                                    ...item,
-                                    date: item.date.toLowerCase(),
-                                    category: capitalizeFirstLetter(item.category)
-                                };
-                            });
-
-                            galleryFound.count = galleryFound.results.length;
-
-                            // Remove percentage from the keywords
-                            words = words.map(item => item.replaceAll('%', ''));
-
-                            return res.render("pages/search", {
-                                productsFound: productsFound,
-                                blogsFound: blogsFound,
-                                galleryFound: galleryFound,
-                                keywords: words.join(' '),
-                                meta: metas,
-                                current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
-                                cart: cart,
-                                locales: ['hu', 'sr', 'en'],
-                                languageHandler: languageHandler,
-                                DB_CONFIG: DB_CONFIG,
-                                webshopCategories: req.webshopCategories,
-                                csrfToken: req.csrfToken()
-                            });
-                        }
-                    });
+                    galleryFound.count = galleryFound.results.length;
                 }
+
+                // Remove percentage from the keywords
+                words = words.map(item => item.replaceAll('%', ''));
+
+                return res.render("pages/search", {
+                    productsFound: productsFound,
+                    blogsFound: blogsFound,
+                    galleryFound: galleryFound,
+                    keywords: words.join(' '),
+                    meta: metas,
+                    current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+                    cart: cart,
+                    locales: ['hu', 'sr', 'en'],
+                    languageHandler: languageHandler,
+                    DB_CONFIG: DB_CONFIG,
+                    webshopCategories: req.webshopCategories,
+                    csrfToken: req.csrfToken()
+                });
             });
-        }
+        });
     });
 }
 
