@@ -2,6 +2,7 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
+    <link rel="canonical" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs" />
     <link rel="preload" href="css/blog-list.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 

@@ -2,6 +2,7 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
+    <link rel="canonical" href="<%= process.env.APP_URL %>/<%= current_locale %>/products" />
     <link rel="preload" href="css/product-list.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
@@ -20,6 +21,10 @@
                 <% } %>
 
                 <section class="listpage products">
+                    <% if (productsTotalCount > 0) { %>
+                        <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                    <% } %>
+
                     <% if (products.length > 0) { %>
                         <div class="listpage-container">
                             <% products.forEach(product => { %>

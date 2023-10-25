@@ -69,8 +69,6 @@ const handleSearch = (req, res) => {
     // Add percentage to the keywords
     words = words.map(item => `%${ item }%`);
 
-    // const searchCategoriesQuery = "SELECT categories.id, categories.name, categories.icon FROM categories WHERE json_extract(categories.name, ?) LIKE ?";
-
     db.query(searchProductsQuery, [1, ...words], (err_product, product_result) => {
         if (err_product) {
             console.log(err_product);
@@ -218,4 +216,168 @@ const handleSearch = (req, res) => {
     });
 }
 
-module.exports = { handleSearch };
+const ajaxSearch = (req, res) => {
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    const { keywords } = req.body;
+    let productsHtml = "";
+    let blogsHtml = "";
+    let galleriesHtml = "";
+
+    let searchProductsQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND (";
+    let words = keywords.split(' ');
+    let formattedParams = '';
+
+    if (words.length === 1) {
+        searchProductsQuery += `json_extract(products.name, '$.${ lang }') LIKE ?)`;
+    }
+    else if (words.length > 1) {
+        for (let index = 0; index < words.length; index++) {
+            formattedParams += index === words.length - 1 ? `json_extract(products.name, '$.${ lang }') LIKE ?)` : `json_extract(products.name, '$.${ lang }') LIKE ? OR `;
+        }
+
+        searchProductsQuery += formattedParams;
+    }
+
+    // Add percentage to the keywords
+    words = words.map(item => `%${ item }%`);
+
+    db.query(searchProductsQuery, [1, ...words], (err_product, product_result) => {
+        if (err_product) {
+            console.log(err_product);
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.common_error', lang),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (product_result.length === 0) {
+            productsHtml = `<div class="search__not-found" style="margin-bottom: 20px;">${ languageHandler('products.no_product_like_this', lang) }</div>`;
+        }
+
+        else if (product_result.length > 0) {
+
+            product_result.forEach(element => {
+                productsHtml += `
+                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/products/${ element.slug }" aria-label="${ getValueByLanguage(element.name, lang) }">
+                        <div class="container_box--image">
+                            <picture>
+                                <source srcset="${ imagePathConverter(element.image_thumbnail, "products") }">
+                                <img class="img" loading="lazy" alt="${ getValueByLanguage(element.name, lang) }" src="images/no-picture.jpg" />
+                            </picture>
+                        </div>
+                        <strong class="container_box--title">${ getValueByLanguage(element.name, lang) }</strong>
+                        <strong class="container_box--category">${ getValueByLanguage(element.category_name, lang) }</strong>
+                    </a>`;
+            });
+        }
+
+        let blogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail FROM blogs WHERE blogs.is_active = ? AND (";
+
+        // clear the formatting
+        formattedParams = '';
+
+        if (words.length === 1) {
+            blogsQuery += `json_extract(blogs.title, '$.${ lang }') LIKE ?)`;
+        }
+        else if (words.length > 1) {
+            for (let index = 0; index < words.length; index++) {
+                formattedParams += index === words.length - 1 ? `json_extract(blogs.title, '$.${ lang }') LIKE ?)` : `json_extract(blogs.title, '$.${ lang }') LIKE ? OR `;
+            }
+
+            blogsQuery += formattedParams;
+        }
+
+        db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
+            if (err_blog) {
+                console.log(err_blog);
+                return res.status(200).json({
+                    status: "error",
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.common_error', lang),
+                    csrfToken: req.csrfToken()
+                });
+            }
+
+            else if (blog_result.length === 0) {
+                blogsHtml = `<div class="search__not-found" style="margin-bottom: 20px;">${ languageHandler('products.no_blogs_like_this', lang) }</div>`;
+            }
+
+            else if (blog_result.length > 0) {
+
+                blog_result.forEach(element => {
+                    blogsHtml += `
+                        <div style="margin-bottom: 10px;">
+                            <a class="container_box" href="${ process.env.APP_URL }/${ lang }/blog/${ element.slug }" aria-label="${ getValueByLanguage(element.title, lang) }">
+                                <picture class="container_box--image">
+                                    <source srcset="${ imagePathConverter(element.image_thumbnail, "blogs") }">
+                                    <img src="images/no-picture.jpg" loading="lazy" class="icon" alt="${ getValueByLanguage(element.title, lang) }" />
+                                </picture>
+                                <strong class="container_box--title">${ getValueByLanguage(element.title, lang) }</strong>
+                            </a>
+                        </div>
+                    `;
+                });
+            }
+
+            let galleryQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND (";
+
+            // clear the formatting
+            formattedParams = '';
+
+            if (words.length === 1) {
+                galleryQuery += `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)`;
+            }
+            else if (words.length > 1) {
+                for (let index = 0; index < words.length; index++) {
+                    formattedParams += index === words.length - 1 ? `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ?)` : `json_extract(galleries.gallery_name, '$.${ lang }') LIKE ? OR `;
+                }
+
+                galleryQuery += formattedParams;
+            }
+
+            db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
+                if (err_gallery) {
+                    console.log(err_gallery);
+                    return res.status(200).json({
+                        status: "error",
+                        title: languageHandler('errors.error', lang),
+                        message: languageHandler('errors.common_error', lang),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                else if (gallery_result.length === 0) {
+                    galleriesHtml = `<div class="search__not-found" style="margin-bottom: 20px;">${ languageHandler('products.no_gallery_like_this', lang) }</div>`;
+                }
+
+                else if (gallery_result.length > 0) {
+                    gallery_result.forEach(element => {
+                        galleriesHtml += `
+                            <div style="margin-bottom: 10px;">
+                                <a class="container_box" href="${ process.env.APP_URL }/${ lang }/gallery/${ element.slug }" aria-label="${ getValueByLanguage(element.gallery_name, lang) }">
+                                    <picture class="container_box--image">
+                                        <source srcset="${ imagePathConverter(element.gallery_thumbnail, "gallery") }">
+                                        <img src="images/no-picture.jpg" loading="lazy" class="icon" alt="${ getValueByLanguage(element.gallery_name, lang) }" />
+                                    </picture>
+                                    <strong class="container_box--title">${ getValueByLanguage(element.gallery_name, lang) }</strong>
+                                </a>
+                            </div>
+                        `;
+                    });
+                }
+
+                return res.status(200).json({
+                    status: "success",
+                    galleriesHtml: galleriesHtml,
+                    blogsHtml: blogsHtml,
+                    productsHtml: productsHtml,
+                    csrfToken: req.csrfToken()
+                });
+            });
+        });
+    });
+};
+
+module.exports = { handleSearch, ajaxSearch };

@@ -760,9 +760,38 @@ $('body').on('click', '.js-search-btn', function () {
 $('body').on('click', '.js-search-close', function () {
     $('.js-search-input').val('');
     $(this).hide();
+    $('body .js-search-results').hide();
 });
 
-$('body').on('keyup', '.js-search-input', function (event) {
+function delayExecute (callback, delay = 0) {
+    var timer = 0;
+
+    return function () {
+        var context = this, args = arguments;
+        clearTimeout(timer);
+
+        timer = setTimeout(function () {
+            callback.apply(context, args);
+        }, delay);
+    };
+}
+
+$('body').on('input', '.js-search-input', function (event) {
+    // TODO: Finish the js logic for ajax search ( hide / show search container & elements )
+    var searchResult = $('body .js-search-results');
+    var loadingSpinner = searchResult.find('.js-loading');
+    searchResult.show();
+    loadingSpinner.show();
+
+    if ($(this).val().length > 0) {
+        $(this).next('.js-search-close').show();
+    }
+    else if ($('.js-search-input').val().length === 0) {
+        $(this).next('.js-search-close').hide();
+    }
+});
+
+$('body').on('keyup', '.js-search-input', delayExecute(function (event) {
     // Enter key pressed
     if (event.keyCode === 13) {
         var searchInputValue = $('.js-search-input').val();
@@ -772,10 +801,56 @@ $('body').on('keyup', '.js-search-input', function (event) {
         window.location.href = `/${ window.location.pathname.split('/')[1] }/search?keywords=${ keywords }`;
     }
 
-    if ($('.js-search-input').val().length > 0) {
-        $(this).next('.js-search-close').show();
+    else if ($(this).val().length > 0) {
+        var searchResult = $('body .js-search-results');
+        var loadingSpinner = searchResult.find('.js-loading');
+        var searchResultContainer = $('body .js-search-results-container');
+
+        $.ajax({
+            type: 'post',
+            url: `/${ locale }/ajax-search`,
+            dataType: 'json',
+            data: {
+                keywords: $(this).val(),
+                _csrf: $("meta[name='csrf-token']").attr("content")
+            },
+            beforeSend: function (jqXHR) {
+                // I don't know
+            },
+            complete: function (jqXHR, textStatus) {
+                loadingSpinner.hide();
+            },
+            success: function (response) {
+                if (typeof response.csrfToken !== 'undefined') {
+                    $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                }
+
+                if (response.status == 'success') {
+                    console.log(response.productsHtml);
+                    searchResultContainer.find('.js-found-products').empty();
+                    searchResultContainer.find('.js-found-products').html(response.productsHtml);
+
+                    searchResultContainer.find('.js-found-galleries').empty();
+                    searchResultContainer.find('.js-found-galleries').html(response.galleriesHtml);
+
+                    searchResultContainer.find('.js-found-blogs').empty();
+                    searchResultContainer.find('.js-found-blogs').html(response.blogsHtml);
+                    searchResultContainer.show();
+                }
+                else if (response.status == 'error') {
+                    $.alert({
+                        useBootstrap: false,
+                        boxWidth: '350px',
+                        title: response.title,
+                        content: response.message,
+                        buttons: {
+                            OK: function () {
+                                // do nothing
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
-    else if ($('.js-search-input').val().length === 0) {
-        $(this).next('.js-search-close').hide();
-    }
-});
+}, 1500));

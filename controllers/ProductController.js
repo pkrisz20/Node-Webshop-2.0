@@ -197,6 +197,7 @@ const getAllProducts = (req, res) => {
         else if (data.length == 0) {
             return res.render("pages/products", {
                 pageCount: 0,
+                productsTotalCount: 0,
                 main_title: languageHandler('general.products', lang),
                 products: [],
                 meta: metas,
@@ -259,6 +260,7 @@ const getAllProducts = (req, res) => {
                         currentPage: parseInt(page),
                         articleLink: "products",
                         products: result ?? [],
+                        productsTotalCount: elementsCount[0].each_article_count ?? 0,
                         main_title: languageHandler('general.products', lang),
                         category_short_desc: null,
                         meta: metas,
@@ -369,6 +371,7 @@ const getCategoryProducts = (req, res) => {
                     return res.render("pages/products", {
                         pageCount: 0,
                         main_title: selectedCategoryName,
+                        productsTotalCount: 0,
                         products: [],
                         meta: metas,
                         category_short_desc: null,
@@ -429,6 +432,7 @@ const getCategoryProducts = (req, res) => {
                                 pageCount: parseInt(pageCount),
                                 currentPage: parseInt(page),
                                 articleLink: `products/category/${ slug }`,
+                                productsTotalCount: elementsCount[0].each_article_count ?? 0,
                                 products: result ?? [],
                                 main_title: selectedCategoryName,
                                 category_short_desc: selectedCategoryShortDescription,

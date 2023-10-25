@@ -88,42 +88,25 @@
         <i style="display: none;" class="fas fa-times search-close js-search-close"></i>
         <button type="button" class="search-btn js-search-btn"><i class="fas fa-search"></i></button>
 
-        <div class="search-results" style="display: none">
+        <div class="search-results js-search-results" style="display: none;">
           <h4 class="search-results-header"><%= languageHandler('general.results', current_locale) %></h4>
-          <div class="loading-spinner"></div>
+          <div class="loading-spinner js-loading"></div>
 
-          <div class="container">
+          <div class="container js-search-results-container" style="display: none;">
             <header class="container__header">
-              <h4 class="container__header-title"><%= languageHandler('general.category', current_locale) %></h4>
+              <h3 class="container__header-title"><%= languageHandler('general.products', current_locale) %></h3>
             </header>
-            <div style="margin-bottom: 20px;">
-              <a class="container_box" href="#" aria-label="Link to the selected category">
-                <div class="container_box--image">
-                  <img src="#" class="icon" alt="Category name" />
-                </div>
-                <strong class="container_box--title">Category name</strong>
-              </a>
-            </div>
-
-            <div class="search__not-found" style="margin-bottom: 20px;"><%= languageHandler('products.no_category_like_this') %></div>
+            <div class="js-found-products"></div>
 
             <header class="container__header">
-              <h4 class="container__header-title"><%= languageHandler('general.products') %></h4>
+              <h3 class="container__header-title"><%= languageHandler('general.gallery', current_locale) %></h3>
             </header>
-            <div v-if="searchedProducts?.length > 0">
-              <a class="container_box" href="#" aria-label="Link to the selected product">
-                <div class="container_box--image">
-                  <picture>
-                    <source>
-                    <img class="img" loading="lazy" src="images/no-picture.jpg" />
-                  </picture>
-                </div>
-                <strong class="container_box--title">{{ product.name }}</strong>
-                <h5 class="container_box--category">{{ product.category }}</h5>
-            </a>
-            </div>
+            <div class="js-found-galleries"></div>
 
-            <div class="search__not-found"><%= languageHandler('products.no_product_like_this') %></div>
+            <header class="container__header">
+              <h3 class="container__header-title"><%= languageHandler('nav.blog', current_locale) %></h3>
+            </header>
+            <div class="js-found-blogs"></div>
           </div>
         </div>
       </div>

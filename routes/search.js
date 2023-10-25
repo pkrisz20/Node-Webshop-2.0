@@ -7,4 +7,7 @@ const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 searchRouter.route("/search")
     .get(getConfigFromDb, selectWebshopCategories, SearchController.handleSearch);
 
+searchRouter.route("/ajax-search")
+    .post(SearchController.ajaxSearch);
+
 module.exports = searchRouter;
