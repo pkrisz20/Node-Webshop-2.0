@@ -131,6 +131,9 @@
         <%- include('../layout/footer.ejs') %>
     </div>
 
+    <script type="text/javascript">
+        var locale = <%- JSON.stringify(current_locale) %>;
+    </script>
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
@@ -139,7 +142,7 @@
         <script type="text/javascript" src="js/plugins/validate.min.js"></script>
     <% } %>
 
-    <% if ((current_locale == 'sr' || current_locale == 'hu') && productDetails.isAllowed) { %>
+    <% if (current_locale != 'en' && productDetails.isAllowed) { %>
         <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
     <% } %>
 

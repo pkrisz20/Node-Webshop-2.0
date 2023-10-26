@@ -310,10 +310,12 @@ const ajaxSearch = (req, res) => {
                     blogsHtml += `
                         <div style="margin-bottom: 10px;">
                             <a class="container_box" href="${ process.env.APP_URL }/${ lang }/blog/${ element.slug }" aria-label="${ getValueByLanguage(element.title, lang) }">
-                                <picture class="container_box--image">
-                                    <source srcset="${ imagePathConverter(element.image_thumbnail, "blogs") }">
-                                    <img src="images/no-picture.jpg" loading="lazy" class="icon" alt="${ getValueByLanguage(element.title, lang) }" />
-                                </picture>
+                                <div class="container_box--image">
+                                    <picture>
+                                        <source srcset="${ imagePathConverter(element.image_thumbnail, "blogs") }">
+                                        <img src="images/no-picture.jpg" loading="lazy" class="img" alt="${ getValueByLanguage(element.title, lang) }" />
+                                    </picture>
+                                </div>
                                 <strong class="container_box--title">${ getValueByLanguage(element.title, lang) }</strong>
                             </a>
                         </div>
@@ -357,10 +359,12 @@ const ajaxSearch = (req, res) => {
                         galleriesHtml += `
                             <div style="margin-bottom: 10px;">
                                 <a class="container_box" href="${ process.env.APP_URL }/${ lang }/gallery/${ element.slug }" aria-label="${ getValueByLanguage(element.gallery_name, lang) }">
-                                    <picture class="container_box--image">
-                                        <source srcset="${ imagePathConverter(element.gallery_thumbnail, "gallery") }">
-                                        <img src="images/no-picture.jpg" loading="lazy" class="icon" alt="${ getValueByLanguage(element.gallery_name, lang) }" />
-                                    </picture>
+                                    <div class="container_box--image">
+                                        <picture>
+                                            <source srcset="${ imagePathConverter(element.gallery_thumbnail, "gallery") }">
+                                            <img src="images/no-picture.jpg" loading="lazy" class="img" alt="${ getValueByLanguage(element.gallery_name, lang) }" />
+                                        </picture>
+                                    </div>
                                     <strong class="container_box--title">${ getValueByLanguage(element.gallery_name, lang) }</strong>
                                 </a>
                             </div>

@@ -625,9 +625,9 @@
                 }
 
                 &--image {
-                  width: 30%;
+                  min-width: 90px;
+                  width: 90px;
                   height: 100%;
-                  max-width: 80px;
 
                   picture {
                     @include respImage(0.95);

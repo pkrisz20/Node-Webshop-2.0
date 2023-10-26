@@ -399,6 +399,9 @@ $(function() {
         toggleItem.slideToggle();
         icon.toggleClass('rotate');
     });
+
+    // If the site is loaded and unexpectedly the search input has value then make it empty by default
+    $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
 });
 
 // Dropdowns handle
@@ -760,6 +763,7 @@ $('body').on('click', '.js-search-btn', function () {
 $('body').on('click', '.js-search-close', function () {
     $('.js-search-input').val('');
     $(this).hide();
+    $('body .js-search-results-container').hide();
     $('body .js-search-results').hide();
 });
 
@@ -776,28 +780,42 @@ function delayExecute (callback, delay = 0) {
     };
 }
 
-$('body').on('input', '.js-search-input', function (event) {
-    // TODO: Finish the js logic for ajax search ( hide / show search container & elements )
+$('body').on('input', '.js-search-input', function () {
     var searchResult = $('body .js-search-results');
     var loadingSpinner = searchResult.find('.js-loading');
-    searchResult.show();
-    loadingSpinner.show();
+    var searchResultContainer = $('body .js-search-results-container');
+    searchResultContainer.hide();
 
-    if ($(this).val().length > 0) {
-        $(this).next('.js-search-close').show();
+    if ( $(this).val().length > 0 ) {
+        $(this).next('.js-search-close')[0].style.display === 'none' && $(this).next('.js-search-close').show();
+        searchResult[0].style.display === 'none' && searchResult.show();
+        loadingSpinner[0].style.display === 'none' && loadingSpinner.show();
     }
-    else if ($('.js-search-input').val().length === 0) {
+    else if ( $(this).val().length === 0 ) {
         $(this).next('.js-search-close').hide();
+        searchResult.hide();
+        loadingSpinner.hide();
     }
 });
 
 $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
-    // Enter key pressed
-    if (event.keyCode === 13) {
-        var searchInputValue = $('.js-search-input').val();
-        var keywords = '';
 
-        keywords = searchInputValue.replaceAll(' ', '+');
+    // Detect the pressed key & handled which are enabled to start search request
+    if (
+        typeof event.keyCode === 'undefined'
+        || event.keyCode === 0
+        || (event.keyCode >= 16 && event.keyCode <= 27)
+        || (event.keyCode >= 33 && event.keyCode <= 45)
+        || (event.keyCode >= 91 && event.keyCode <= 93)
+        || (event.keyCode >= 112 && event.keyCode <= 183)
+    ) {
+        return;
+    }
+
+    // Enter key pressed
+    else if (event.keyCode === 13) {
+        var searchInputValue = $('.js-search-input').val();
+        var keywords = searchInputValue.replaceAll(' ', '+');
         window.location.href = `/${ window.location.pathname.split('/')[1] }/search?keywords=${ keywords }`;
     }
 
@@ -815,7 +833,9 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
                 _csrf: $("meta[name='csrf-token']").attr("content")
             },
             beforeSend: function (jqXHR) {
-                // I don't know
+                searchResultContainer.find('.js-found-blogs').empty();
+                searchResultContainer.find('.js-found-products').empty();
+                searchResultContainer.find('.js-found-galleries').empty();
             },
             complete: function (jqXHR, textStatus) {
                 loadingSpinner.hide();
@@ -826,18 +846,18 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
                 }
 
                 if (response.status == 'success') {
-                    console.log(response.productsHtml);
-                    searchResultContainer.find('.js-found-products').empty();
                     searchResultContainer.find('.js-found-products').html(response.productsHtml);
-
-                    searchResultContainer.find('.js-found-galleries').empty();
                     searchResultContainer.find('.js-found-galleries').html(response.galleriesHtml);
-
-                    searchResultContainer.find('.js-found-blogs').empty();
                     searchResultContainer.find('.js-found-blogs').html(response.blogsHtml);
                     searchResultContainer.show();
                 }
                 else if (response.status == 'error') {
+                    searchResultContainer.hide();
+                    loadingSpinner.hide();
+                    searchResult.hide();
+                    $('.js-search-close').hide();
+                    $('.js-search-input').val('');
+
                     $.alert({
                         useBootstrap: false,
                         boxWidth: '350px',

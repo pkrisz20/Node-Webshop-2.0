@@ -253,12 +253,15 @@
         <%- include('../layout/footer.ejs') %>
     </div>
 
+    <script type="text/javascript">
+        var locale = <%- JSON.stringify(current_locale) %>;
+    </script>
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
     <script type="text/javascript" src="js/plugins/validate.min.js"></script>
 
-    <% if (current_locale == 'sr' || current_locale == 'hu') { %>
+    <% if (current_locale != 'en') { %>
         <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
     <% } %>
 
