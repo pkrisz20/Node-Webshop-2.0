@@ -11,8 +11,22 @@
         </div>
 
         <% if (blogs.length > 1) { %>
-            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+            <button
+                type="button"
+                class="slick-prev slick-arrow"
+                aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
+                title="<%= languageHandler('general.prev_page', current_locale) %>"
+            >
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+                type="button"
+                class="slick-next slick-arrow"
+                aria-label="<%= languageHandler('general.next_page', current_locale) %>"
+                title="<%= languageHandler('general.next_page', current_locale) %>"
+            >
+                <i class="fas fa-chevron-right"></i>
+            </button>
         <% } %>
     </div>
 </section>

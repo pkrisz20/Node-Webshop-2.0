@@ -87,7 +87,7 @@
                                     <% } %>
 
                                     <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
-                                        <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
+                                        <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>" aria-label="<%= languageHandler('products.add_cart', current_locale) %>" title="<%= languageHandler('products.add_cart', current_locale) %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
                                     <% } %>
                                 </div>
                             </div>

@@ -2,21 +2,21 @@
   <div class="header-top">
     <div class="wrapper">
       <div class="header-top-contacts">
-        <a href="mailto:<%= DB_CONFIG["email"] %>" aria-label="Link to send a mail"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-        <a href="tel:<%= DB_CONFIG["phone_1"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-        <a href="tel:<%= DB_CONFIG["phone_2"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
+        <a href="mailto:<%= DB_CONFIG["email"] %>" aria-label="<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+        <a href="tel:<%= DB_CONFIG["phone_1"] %>" aria-label="<%= DB_CONFIG["phone_1"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+        <a href="tel:<%= DB_CONFIG["phone_2"] %>" aria-label="<%= DB_CONFIG["phone_2"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
       </div>
       <div class="header-top-socials">
-        <h5 class="text"><%= languageHandler("general.follow_us", current_locale) %>:</h5>
-        <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media platform" target="blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
-        <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media platform" target="blank" class="icon instagram"><i class="fab fa-instagram"></i></a>
-        <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media platform" target="blank" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
+        <h3 class="text"><%= languageHandler("general.follow_us", current_locale) %>:</h3>
+        <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Facebook" target="blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
+        <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Instagram" target="blank" class="icon instagram"><i class="fab fa-instagram"></i></a>
+        <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="TikTok" target="blank" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
       </div>
       <div class="lang dropdown js-dropdown-opener">
-        <button type="button" class="dropdown-link">
+        <button type="button" class="dropdown-link" title="<%= current_locale.toUpperCase() %>" aria-label="<%= current_locale.toUpperCase() %>">
           <picture>
             <source srcset="/images/flag-<%= current_locale %>.webp" type="image/webp" />
-            <img alt="<%= current_locale %>" loading="lazy" src="images/flag-<%= current_locale %>.png"/>
+            <img alt="<%= current_locale.toUpperCase() %>" loading="lazy" src="images/flag-<%= current_locale %>.png"/>
           </picture>
           <%= current_locale %>
         </button>
@@ -25,10 +25,10 @@
           <% locales.forEach(lang => { %>
             <% if(lang != current_locale) { %>
               <li class="dropdown-list-item">
-                <a href="<%= process.env.APP_URL %>/<%= lang %>">
+                <a href="<%= process.env.APP_URL %>/<%= lang %>" target="_self" class="dropdown-link" title="<%= lang.toUpperCase() %>" aria-label="<%= lang.toUpperCase() %>">
                   <picture>
                     <source srcset="images/flag-<%= lang %>.webp" type="image/webp" />
-                    <img alt="<%= lang %>" loading="egaer" src="images/flag-<%= lang %>.png"/>
+                    <img alt="<%= lang.toUpperCase() %>" loading="egaer" src="images/flag-<%= lang %>.png"/>
                   </picture>
                   <%= lang %>
                 </a>
@@ -86,7 +86,7 @@
       <div class="search">
         <input class="search-input js-search-input" type="text" placeholder="<%= languageHandler('general.search', current_locale) %>..." />
         <i style="display: none;" class="fas fa-times search-close js-search-close"></i>
-        <button type="button" class="search-btn js-search-btn"><i class="fas fa-search"></i></button>
+        <button type="button" aria-label="<%= languageHandler('general.search', current_locale) %>" title="<%= languageHandler('general.search', current_locale) %>" class="search-btn js-search-btn"><i class="fas fa-search"></i></button>
 
         <div class="search-results js-search-results" style="display: none;">
           <h4 class="search-results-header"><%= languageHandler('general.results', current_locale) %></h4>
@@ -191,5 +191,5 @@
     </div>
   </div>
 
-  <button type="button" class="upscroller js-upscroll"><i class="fas fa-chevron-up"></i></button>
+  <button type="button" class="upscroller js-upscroll" aria-label="<%= languageHandler('general.scroll_to_up', current_locale) %>" title="<%= languageHandler('general.scroll_to_up', current_locale) %>"><i class="fas fa-chevron-up"></i></button>
 </header>

@@ -151,13 +151,14 @@
 
           &--subtitle {
               font-size: 16px;
-              line-height: 40px;
+              line-height: 30px;
               color: $c-grayD8;
               font-weight: 400;
+              margin-top: 20px;
 
               @media #{$r-max-s} {
-                  font-size: 14px;
-                  line-height: 22px;
+                font-size: 14px;
+                line-height: 22px;
               }
           }
 

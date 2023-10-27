@@ -63,6 +63,7 @@ const en = {
 		share_on_facebook: "Share on facebook",
 		send_via_email: "Send via email",
 		copy_to_clipboard: "Copy to clipboard",
+        scroll_to_up: "Scroll to up",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

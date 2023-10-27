@@ -1,6 +1,6 @@
 <div class="blog-card">
     <div class="datetime">
-        <time class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></time>
+        <span class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></span>
     </div>
     <a class="image" title="<%= blog.title %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" aria-label="Navigation to the current blog article - <%= blog.title %>">
         <picture>
@@ -15,7 +15,7 @@
             <div class="bottom-author"><i class="fas fa-user"></i> <%= blog.author %></div>
             <div class="bottom-count"><i class="fas fa-comment-dots"></i> <%= blog.commentsCount %></div>
         </div>
-        <small class="blog-card-fulldate"><i class="far fa-calendar-alt"></i> <%= blog.fullDate %></small>
+        <time class="blog-card-fulldate"><i class="far fa-calendar-alt"></i> <%= blog.fullDate %></time>
 
         <% if (blog.shortDescription) { %>
             <p class="short"><%= blog.shortDescription %></p>

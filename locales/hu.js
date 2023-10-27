@@ -63,6 +63,7 @@ const hu = {
         share_on_facebook: "Megosztás facebook-on",
 		send_via_email: "Küldés emailen",
 		copy_to_clipboard: "Vágólapra másolás",
+        scroll_to_up: "Görgess fel",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

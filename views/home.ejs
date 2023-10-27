@@ -27,8 +27,8 @@
 
             <section class="bg">
                 <div class="bg-box">
-                    <h2 class="bg-box--title">We love the animals</h2>
-                    <p class="bg-box--subtitle">Smooth reliable, responsive rebgy, perfect portfolio, unique blog layout and many many options for you</p>
+                    <h2 class="bg-box--title"><%= DB_CONFIG["home_page_title"] %></h2>
+                    <p class="bg-box--subtitle"><%= DB_CONFIG["home_page_text"] %></p>
                     <a href="<%= process.env.APP_URL %>/<%= current_locale %>/about" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>
                     <a href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery" aria-label="Link to gallery list page" target="_self" class="bg-box_btn bg-btn"><%= languageHandler("nav.gallery", current_locale) %></a>
                 </div>

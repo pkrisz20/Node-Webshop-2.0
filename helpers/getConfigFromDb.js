@@ -1,6 +1,6 @@
 const { db } = require("../config/db-connection");
-const languageHandler = require("../helpers/languageHandler");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
+const getValueByLanguage = require("./getValueByLanguage");
 
 const getConfigFromDb = ( req, res, next ) => {
 
@@ -17,6 +17,10 @@ const getConfigFromDb = ( req, res, next ) => {
             for (const item of config_data) {
                 globalConfigDB[item.config_key] = item.config_value;
             }
+
+            // Get the value from json by current lang
+            globalConfigDB.home_page_title = getValueByLanguage(globalConfigDB.home_page_title, lang);
+            globalConfigDB.home_page_text = getValueByLanguage(globalConfigDB.home_page_text, lang);
 
             req.DB_CONFIG = globalConfigDB;
             return next();

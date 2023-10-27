@@ -33,6 +33,7 @@
         }
 
         &-contacts {
+            flex: 0 0 240px;
 
             &-links {
                 @include flexBox("flex-start", "flex-start", 20px);
