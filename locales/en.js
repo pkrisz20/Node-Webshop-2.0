@@ -64,6 +64,8 @@ const en = {
 		send_via_email: "Send via email",
 		copy_to_clipboard: "Copy to clipboard",
         scroll_to_up: "Scroll to up",
+		lang: "Language",
+		flag: "flag",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",
@@ -104,7 +106,10 @@ const en = {
 		no_product_like_this: "There is no product like this",
 		no_category_like_this: "There is no category like this",
 		no_gallery_like_this: "There is no gallery like this.",
-		no_blogs_like_this: "There is no blogs like this."
+		no_blogs_like_this: "There is no blogs like this.",
+		decrease_quantity: "Decrease quantity",
+		increase_quantity: "Increase quantity",
+		quantity: "Quantity",
 	},
 	orders: {
 		total_price: "Total",

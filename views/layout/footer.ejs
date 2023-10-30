@@ -14,10 +14,10 @@
             <div class="footer-middle-container">
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.contact', current_locale) %></h3>
-                    <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0611237896"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-                    <a class="footer-title-link" aria-label="Link to a phone call" href="tel:0631234567"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
-                    <a class="footer-title-link" aria-label="Link to send a mail" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-                    <a target="_self" class="footer-title-link" aria-label="Link to the map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
+                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:0611237896"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:0631234567"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
+                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+                    <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
                 </div>
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.quick_links', current_locale) %></h3>

@@ -13,10 +13,10 @@
         <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="TikTok" target="blank" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
       </div>
       <div class="lang dropdown js-dropdown-opener">
-        <button type="button" class="dropdown-link" title="<%= current_locale.toUpperCase() %>" aria-label="<%= current_locale.toUpperCase() %>">
+        <button type="button" class="dropdown-link" title="<%= languageHandler('general.lang', current_locale) %>" aria-label="<%= languageHandler('general.lang', current_locale) %>">
           <picture>
             <source srcset="/images/flag-<%= current_locale %>.webp" type="image/webp" />
-            <img alt="<%= current_locale.toUpperCase() %>" loading="lazy" src="images/flag-<%= current_locale %>.png"/>
+            <img alt="<%= current_locale.toUpperCase() %> <%= languageHandler('general.flag', current_locale) %>" loading="lazy" src="images/flag-<%= current_locale %>.png"/>
           </picture>
           <%= current_locale %>
         </button>

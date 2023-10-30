@@ -21,18 +21,18 @@
                             <div class="details-gallery js-gallery-thumb">
                                 <picture>
                                     <source srcset="<%= productDetails.thumbnailImage %>" />
-                                    <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg">
+                                    <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg" alt="<%= productDetails.name %>" />
                                 </picture>
                             </div>
 
                             <% if (productDetails.images.length > 0) { %>
                                 <div class="js-gallery hide">
                                     <div data-src="<%= productDetails.thumbnailImage %>">
-                                        <img src="<%= productDetails.thumbnailImage %>" alt="Image thumbnail">
+                                        <img src="<%= productDetails.thumbnailImage %>" alt="<%= productDetails.name %> thumbnail">
                                     </div>
                                     <% productDetails.images.forEach((image, index) => { %>
                                         <div data-src="<%= image %>">
-                                            <img src="<%= image %>" alt="<%= `Image ${ index }` %>">
+                                            <img src="<%= image %>" alt="<%= productDetails.name %> #<%= index + 1 %>" />
                                         </div>
                                     <% }) %>
                                 </div>
@@ -76,9 +76,30 @@
 
                                     <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
                                         <div class="quantities js-quantities">
-                                            <button type="button" class="quantities-btn minus js-details-quantity-btn"><i class="fas fa-minus"></i></button>
-                                            <input class="quantities-input js-product-details-quantity" value="1" type="number" min="1" max="<%= productDetails.maxQuantity %>" />
-                                            <button type="button" class="quantities-btn plus js-details-quantity-btn"><i class="fas fa-plus"></i></button>
+                                            <button
+                                                type="button"
+                                                title="<%= languageHandler('products.decrease_quantity', current_locale) %>"
+                                                aria-label="<%= languageHandler('products.decrease_quantity', current_locale) %>"
+                                                class="quantities-btn minus js-details-quantity-btn"
+                                            >
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input
+                                                class="quantities-input js-product-details-quantity"
+                                                value="1"
+                                                type="number"
+                                                min="1"
+                                                max="<%= productDetails.maxQuantity %>"
+                                                aria-label="<%= languageHandler('products.quantity', current_locale) %>"
+                                            />
+                                            <button
+                                                type="button"
+                                                title="<%= languageHandler('products.increase_quantity', current_locale) %>"
+                                                aria-label="<%= languageHandler('products.increase_quantity', current_locale) %>"
+                                                class="quantities-btn plus js-details-quantity-btn"
+                                            >
+                                                <i class="fas fa-plus"></i>
+                                            </button>
                                         </div>
                                     <% } %>
 

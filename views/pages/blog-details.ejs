@@ -41,7 +41,7 @@
                                 <%- include('../components/block-title.ejs', { title: languageHandler('general.next_events', current_locale) }) %>
 
                                 <% nextEvents.forEach((event, index) => { %>
-                                    <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= event.slug %>" title="<%= event.title %>" aria-label="Link inside the page to an upcomming event">
+                                    <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= event.slug %>" title="<%= event.title %>" aria-label="<%= event.title %>">
                                         <div class="blog-aside-article-image">
                                             <picture>
                                                 <source srcset="<%= event.image %>">

@@ -64,6 +64,8 @@ const sr = {
 		send_via_email: "Poslati putem e-pošte",
 		copy_to_clipboard: "Kopiraj u međuspremnik",
         scroll_to_up: "Pomeranje gore",
+        lang: "Jezik",
+		flag: "zastava",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",
@@ -104,7 +106,10 @@ const sr = {
         no_product_like_this: "Ne postoji takav proizvod",
         no_category_like_this: "Ne postoji takva kategorija",
 		no_gallery_like_this: "Ne postoji takva galerija.",
-		no_blogs_like_this: "Ne postoji takvi blogovi."
+		no_blogs_like_this: "Ne postoji takvi blogovi.",
+        decrease_quantity: "Smanjenje količine",
+		increase_quantity: "Povećanje količine",
+		quantity: "Količina",
     },
     orders: {
         total_price: "Ukupno",

@@ -1,5 +1,5 @@
 <div class="product">
-    <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="Navigation to the current product - <%= product.name %>">
+    <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="<%= product.name %>">
         <% if (product.isOnDiscount) { %>
             <span class="badge badge-discount"><%= languageHandler("products.discount", current_locale) %></span>
         <% } %>

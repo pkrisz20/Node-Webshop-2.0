@@ -64,6 +64,8 @@ const hu = {
 		send_via_email: "Küldés emailen",
 		copy_to_clipboard: "Vágólapra másolás",
         scroll_to_up: "Görgess fel",
+		lang: "Nyelv",
+		flag: "zászló",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",
@@ -105,6 +107,9 @@ const hu = {
         no_category_like_this: "Nincs ilyen kategória.",
 		no_gallery_like_this: "Nincs ilyen galléria.",
 		no_blogs_like_this: "Nincs ilyen blog.",
+        decrease_quantity: "Mennyiség csökkentése",
+		increase_quantity: "Mennyiség növelése",
+		quantity: "Mennyiség",
     },
     orders: {
         total_price: "Összeg",
