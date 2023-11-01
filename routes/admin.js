@@ -42,6 +42,9 @@ adminRouter.route("/products/list")
 adminRouter.route("/products/comments/list")
     .get(checkAuthentication, AdminProductController.getProductCommentsList);
 
+adminRouter.route("/products/comments/verify/:commentId")
+    .post(checkAuthentication, AdminProductController.updateCommentVerficationBadge);
+
 adminRouter.route("/gallery/list")
     .get(checkAuthentication, AdminGalleryController.getGalleryList);
 

@@ -204,3 +204,48 @@ $('body').on('click', '.js-simple-ajax', function (event) {
     }
   });
 });
+
+// Toggle comment verified badge
+$('body').on('click', '.js-toggle-verified-badge', function (event) {
+  event.preventDefault();
+
+  $.ajax({
+    type: "POST",
+    url: $(this).data("url"),
+    dataType: 'json',
+    data: [{ name: "activationStatus", value: $(this).data("activationStatus") }, { name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
+    beforeSend: function (jqXHR) {
+      Swal.fire('Feldolgozás folyamatban...');
+      Swal.showLoading();
+    },
+    complete: function (jqXHR, textStatus) {
+      // Nothing
+    },
+    success: function (response) {
+      // Set the new XSRF token
+      if (typeof response.csrfToken !== 'undefined') {
+        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+      }
+
+      if (response.status === 'success') {
+        setTimeout(function () {
+          Swal.fire({
+            title: "Sikeresen frissitve!",
+            icon: 'success',
+          }).then(function() {
+            window.location.reload();
+          });
+        }, 1000);
+      }
+      else if (response.status === 'error') {
+        setTimeout(function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hoppá!',
+            text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+          });
+        }, 1000);
+      }
+    }
+  });
+});

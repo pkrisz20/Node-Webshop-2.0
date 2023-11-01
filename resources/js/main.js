@@ -156,23 +156,17 @@ $(document).ready(function() {
         });
     }
 
-    // Is there any form to validate?
-    if ($.validator) {
-        // Hide some error elements
-        $('.js-form-validate').find('.form-row-error').hide();
-        $('.js-form-validate').find('.error-icon').hide();
+    // Is there any recaptcha validation?
+    if (typeof grecaptcha !== 'undefined' && $('.js-form-validate').find('.g-recaptcha').length > 0) {
 
-        if (typeof grecaptcha !== 'undefined' && $('.js-form-validate').find('.g-recaptcha').length > 0) {
+        var inputToken = $('.js-form-validate').find('.g-recaptcha');
+        var recaptchaToken = inputToken.val();
 
-            var inputToken = $('.js-form-validate').find('.g-recaptcha');
-            var recaptchaToken = inputToken.val();
-
-            grecaptcha.ready(function () {
-                grecaptcha.execute(recaptchaToken).then(function (token) {
-                    inputToken.val(token);
-                });
+        grecaptcha.ready(function () {
+            grecaptcha.execute(recaptchaToken).then(function (token) {
+                inputToken.val(token);
             });
-        }
+        });
     }
 });
 

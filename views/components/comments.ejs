@@ -31,8 +31,8 @@
                         <%= languageHandler('validations.full_name', current_locale) %>
                     </label>
 
-                    <i class="error-icon fas fa-times"></i>
-                    <div class="form-row-error"></div>
+                    <i class="error-icon fas fa-times" style="display: none;"></i>
+                    <div class="form-row-error" style="display: none;"></div>
                 </div>
 
                 <div class="form-row">
@@ -47,8 +47,8 @@
                     />
                     <label class="form-label" for="comment-email"><%= languageHandler('validations.email', current_locale) %></label>
 
-                    <i class="error-icon fas fa-times"></i>
-                    <div class="form-row-error"></div>
+                    <i class="error-icon fas fa-times" style="display: none;"></i>
+                    <div class="form-row-error" style="display: none;"></div>
                 </div>
             </div>
 
@@ -68,8 +68,8 @@
                     <%= languageHandler('general.comment', current_locale) %>
                 </label>
 
-                <i class="error-icon textarea-error fas fa-times"></i>
-                <div class="form-row-error"></div>
+                <i class="error-icon textarea-error fas fa-times" style="display: none;"></i>
+                <div class="form-row-error" style="display: none;"></div>
 
                 <small class="characters-count js-counter"><span>1000</span> / 1000</small>
             </div>
@@ -99,13 +99,13 @@
             <div class="comments-container">
                 <% articleComments.forEach(comment => { %>
                     <div class="comments-container-box">
-
-                        <div class="profile-icon">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-
                         <div class="content">
-                            <strong class="content-name"><%= comment.name %></strong>
+                            <div class="content__top">
+                                <strong class="content__top-name"><%= comment.name %></strong>
+                                <% if (comment.is_verified) { %>
+                                    <span class="content__top-badge"><i class="fas fa-check-circle icon"></i><%= languageHandler('products.verified_purchase', current_locale) %></span>
+                                <% } %>
+                            </div>
                             <p class="content-comment"><%= comment.description %></p>
                             <time class="content-date"><i class="fas fa-history"></i> <%= comment.date %></time>
                         </div>

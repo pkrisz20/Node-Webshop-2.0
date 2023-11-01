@@ -32,6 +32,7 @@
                                                         <th scope="col">Név</th>
                                                         <th scope="col">Email</th>
                                                         <th scope="col">Látható</th>
+                                                        <th scope="col">Jelvény</th>
                                                         <th scope="col">Termék</th>
                                                         <th scope="col">Megírták ekkor</th>
                                                         <th scope="col">Műveletek</th>
@@ -43,6 +44,13 @@
                                                             <td><%= comment.author_name %></td>
                                                             <td><%- comment.email %></td>
                                                             <td><%- comment.isActive %></td>
+                                                            <td
+                                                                data-activation-status="<%= comment.isVerifiedInteger %>"
+                                                                class="js-toggle-verified-badge"
+                                                                data-url="<%= process.env.APP_URL %>/admin/products/comments/verify/<%= comment.comment_id %>"
+                                                            >
+                                                                <%- comment.isVerified %>
+                                                            </td>
                                                             <td><%= comment.productName %></td>
                                                             <td><%= comment.date %></td>
                                                             <td>
@@ -81,6 +89,7 @@
                                                         <th scope="col">Név</th>
                                                         <th scope="col">Email</th>
                                                         <th scope="col">Látható</th>
+                                                        <th scope="col">Jelvény</th>
                                                         <th scope="col">Termék</th>
                                                         <th scope="col">Megírták ekkor</th>
                                                         <th scope="col">Műveletek</th>
@@ -92,6 +101,13 @@
                                                             <td><%= comment.author_name %></td>
                                                             <td><%- comment.email %></td>
                                                             <td><%- comment.isActive %></td>
+                                                            <td
+                                                                data-activation-status="<%= comment.isVerifiedInteger %>"
+                                                                class="js-toggle-verified-badge"
+                                                                data-url="<%= process.env.APP_URL %>/admin/products/comments/verify/<%= comment.comment_id %>"
+                                                            >
+                                                                <%- comment.isVerified %>
+                                                            </td>
                                                             <td><%= comment.productName %></td>
                                                             <td><%= comment.date %></td>
                                                             <td>

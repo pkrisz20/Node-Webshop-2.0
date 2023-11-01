@@ -47,7 +47,7 @@ const getProductDetails = (req, res) => {
                 slug: slug,
                 category_name: getValueByLanguage(data[0].category_name, lang),
                 name: getValueByLanguage(data[0].name, lang),
-                short: data[0].short_description ? limitText(getValueByLanguage(data[0].short_description, lang)) : null,
+                short: data[0].short_description ? getValueByLanguage(data[0].short_description, lang) : null,
                 description: getValueByLanguage(data[0].description, lang),
                 thumbnailImage: imagePathConverter(data[0].image_thumbnail, "products"),
                 images: imagePathConverter(JSON.parse(data[0].images), "products") ?? [],
@@ -63,7 +63,7 @@ const getProductDetails = (req, res) => {
 
             // Select article comments, if they are not disabled
             if (result.isAllowed) {
-                const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
+                const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
 
                 db.query(selectProductComments, [1, result.id], (comments_err, comments_data) => {
                     if (comments_err) {
@@ -78,6 +78,7 @@ const getProductDetails = (req, res) => {
                             let tempObject = {
                                 id: parseInt(element.id),
                                 name: element.name,
+                                is_verified: Boolean(element.is_verified_purchase ?? false),
                                 description: element.comment,
                                 date: element.date,
                             }

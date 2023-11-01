@@ -77,43 +77,43 @@
                 margin-bottom: 30px;
             }
 
-            .profile-icon {
-                position: absolute;
-                left: 10px;
-                top: 10px;
-                @include flexBox();
-
-                @media #{ $r-min-m } {
-                    left: 15px;
-                    top: 15px;
-                }
-
-                i {
-                    font-size: 40px;
-                    color: $c-gray71;
-
-                    @media #{ $r-min-m } {
-                        font-size: 60px;
-                    }
-                }
-            }
-
             .content {
-                margin-left: 50px;
 
-                @media #{ $r-min-m } {
-                    margin-left: 80px;
-                }
+                &__top {
+                    @include flexBox('flex-start', 'center', 15px);
+                    flex-wrap: wrap;
 
-                &-name {
-                    font-size: 16px;
-                    color: $c-dark-blue;
-                    font-weight: 700;
+                    @media #{ $r-max-m } {
+                        gap: 6px;
+                    }
 
-                    @media #{ $r-min-m } {
-                        font-size: 18px;
+                    &-badge {
+                        display: inline-block;
+                        background-color: $c-skyblue;
+                        font-size: 13px;
+                        font-style: italic;
+                        padding: 4px;
+                        color: $c-e;
+                        border-radius: 5px;
+
+                        .icon {
+                            font-size: 15px;
+                            color: inherit;
+                            margin-right: 5px;
+                            transform: translateY(1px);
+                        }
+                    }
+                    &-name {
+                        font-size: 16px;
+                        color: $c-dark-blue;
+                        font-weight: 700;
+
+                        @media #{ $r-min-m } {
+                            font-size: 18px;
+                        }
                     }
                 }
+
                 &-comment {
                     font-size: 14px;
                     color: $c-2;
