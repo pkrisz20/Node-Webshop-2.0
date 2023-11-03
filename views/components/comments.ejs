@@ -96,7 +96,7 @@
         </form>
 
         <% if (articleComments.length > 0) { %>
-            <div class="comments-container">
+            <div class="comments-container js-comments-container">
                 <% articleComments.forEach(comment => { %>
                     <div class="comments-container-box">
                         <div class="content">
@@ -112,6 +112,20 @@
                     </div>
                 <% }) %>
             </div>
+
+            <% if (showLoadMoreButton) { %>
+                <button
+                    type="button"
+                    class="comments__load-more js-load-more-comments"
+                    data-product="<%= itemId %>"
+                    data-offset="1"
+                    title="<%= languageHandler('products.load_more_comments', current_locale) %>"
+                    aria-label="<%= languageHandler('products.load_more_comments', current_locale) %>"
+                >
+                    <%= languageHandler('products.load_more_comments', current_locale) %>
+                </button>
+            <% } %>
+
         <% } else if (articleComments.length == 0) { %>
             <div class="comments-information no-comment">
                 <i class="fas fa-info-circle"></i>

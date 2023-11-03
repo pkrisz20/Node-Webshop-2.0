@@ -26,6 +26,7 @@ const getProductDetails = (req, res) => {
     let similarProducts = [];
     let articleComments = [];
     let isAlreadyInCart = false;
+    let showLoadMoreButton = false;
 
     const sqlQuery = "SELECT products.id, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND products.slug = ?";
 
@@ -63,9 +64,9 @@ const getProductDetails = (req, res) => {
 
             // Select article comments, if they are not disabled
             if (result.isAllowed) {
-                const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
+                const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ?";
 
-                db.query(selectProductComments, [1, result.id], (comments_err, comments_data) => {
+                db.query(selectProductComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)], (comments_err, comments_data) => {
                     if (comments_err) {
                         console.log(comments_err);
                         return showServerErrorPage(req, res);
@@ -91,6 +92,20 @@ const getProductDetails = (req, res) => {
                                 ...item,
                                 date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
                             };
+                        });
+
+                        // Select the active comments count for this product to show the load more button or not
+                        const selectCommentsCountSQL = "SELECT COUNT(product_comments.id) AS 'each_comments_count' FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
+
+                        db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
+                            if ( comments_count_err ) {
+                                console.log(comments_count_err);
+                                return showServerErrorPage(req, res);
+                            }
+
+                            else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
+                                showLoadMoreButton = true;
+                            }
                         });
                     }
                 });
@@ -139,6 +154,7 @@ const getProductDetails = (req, res) => {
                     isAlreadyInCart: isAlreadyInCart ?? false,
                     similarProducts: similarProducts ?? [],
                     articleComments: articleComments ?? [],
+                    showLoadMoreButton: showLoadMoreButton ?? false,
                     meta: metas,
                     current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                     cart: cart,
@@ -454,4 +470,89 @@ const getCategoryProducts = (req, res) => {
     });
 };
 
-module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts };
+const ajaxLoadMoreComments = (req, res) => {
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    const { offsetNumber, productID } = req.body;
+    let commentsHtml = "";
+    offsetNumber = parseInt(offsetNumber);
+    productID = parseInt(productID);
+
+    if ( isNaN(offsetNumber) || isNaN(productID) ) {
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    let offsetNum = offsetNumber * parseInt(process.env.COUNT_COMMENTS_SHOW);
+
+    const selectMoreComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ? OFFSET ?";
+
+    db.query(selectMoreComments, [1, productID, parseInt(process.env.COUNT_COMMENTS_SHOW), offsetNum], (comments_err, comments_data) => {
+        if (comments_err) {
+            console.log(comments_err);
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.common_error', lang),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (comments_data.length > 0) {
+            setMomentLocale(lang);
+
+            comments_data.forEach(element => {
+                let tempObject = {
+                    id: parseInt(element.id),
+                    name: element.name,
+                    is_verified: Boolean(element.is_verified_purchase ?? false),
+                    description: element.comment,
+                    date: element.date,
+                }
+
+                articleComments.push(tempObject);
+            });
+
+            articleComments = articleComments.map(item => {
+                return {
+                    ...item,
+                    date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                };
+            });
+
+            // TODO: FInish the selected comments into HTML parsing & send it to front
+            articleComments.forEach(comment => {
+                productsHtml += `
+                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/products/${ element.slug }" aria-label="${ getValueByLanguage(element.name, lang) }">
+                        <div class="container_box--image">
+                            <picture>
+                                <source srcset="${ imagePathConverter(element.image_thumbnail, "products") }">
+                                <img class="img" loading="lazy" alt="${ getValueByLanguage(element.name, lang) }" src="images/no-picture.jpg" />
+                            </picture>
+                        </div>
+                        <strong class="container_box--title">${ getValueByLanguage(element.name, lang) }</strong>
+                        <strong class="container_box--category">${ getValueByLanguage(element.category_name, lang) }</strong>
+                    </a>`;
+            });
+
+            // TODO: Calculate the leftover comments in db (still show load more button or not)
+            const selectCommentsCountSQL = "SELECT COUNT(product_comments.id) AS 'each_comments_count' FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ?";
+
+            db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
+                if ( comments_count_err ) {
+                    console.log(comments_count_err);
+                    return showServerErrorPage(req, res);
+                }
+
+                else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
+                    showLoadMoreButton = true;
+                }
+            });
+        }
+    });
+};
+
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments };

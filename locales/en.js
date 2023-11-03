@@ -111,6 +111,7 @@ const en = {
 		decrease_quantity: "Decrease quantity",
 		increase_quantity: "Increase quantity",
 		quantity: "Quantity",
+		load_more_comments: "Load more comments",
 	},
 	orders: {
 		total_price: "Total",

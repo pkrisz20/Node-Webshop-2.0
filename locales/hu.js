@@ -111,6 +111,7 @@ const hu = {
         decrease_quantity: "Mennyiség csökkentése",
 		increase_quantity: "Mennyiség növelése",
 		quantity: "Mennyiség",
+		load_more_comments: "Mutass több hozzászólást",
     },
     orders: {
         total_price: "Összeg",

@@ -111,6 +111,7 @@ const sr = {
         decrease_quantity: "Smanjenje količine",
 		increase_quantity: "Povećanje količine",
 		quantity: "Količina",
+		load_more_comments: "Prikaži više komentar",
     },
     orders: {
         total_price: "Ukupno",

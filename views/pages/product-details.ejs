@@ -167,6 +167,57 @@
         <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
     <% } %>
 
+    <% if (productDetails.isAllowed && showLoadMoreButton) { %>
+        <script type="text/javascript">
+            $('body').on('click', '.js-load-more-comments', function () {
+                var this_button = $(this);
+                var offsetNum = $(this).data('offset');
+                var productID = $(this).data('product')
+
+                $.ajax({
+                    type: "POST",
+                    url: `/${ locale }/product/comment/load-more`,
+                    dataType: 'json',
+                    data: {
+                        offsetNumber: offsetNum,
+                        productID: productID
+                    },
+                    beforeSend: function (jqXHR) {
+                        this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+                    },
+                    success: function (response) {
+                        // Set the new XSRF token
+                        if (typeof response.csrfToken !== 'undefined') {
+                            $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                        }
+
+                        if (response.status === 'error') {
+                            $.alert({
+                                useBootstrap: false,
+                                boxWidth: '400px',
+                                title: response.title,
+                                content: response.content || false,
+                                buttons: {
+                                    OK: function () {
+                                        // do nothing, and close modal
+                                    }
+                                }
+                            });
+                        }
+                        else if (response.status === 'success') {
+                            $('body .js-comments-container').append(response.html_response_with_comments);
+                            $('body .js-load-more-comments').data("product", response.offsetNumber);
+                            response.removeLoadButton && this_button.remove();
+                        }
+                    }
+                });
+            });
+        </script>
+    <% } %>
+
     <% if (productDetails.images.length > 0) { %>
         <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
     <% } %>

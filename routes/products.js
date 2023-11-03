@@ -17,6 +17,9 @@ productsRouter.route("/products/category/:slug")
 productsRouter.route("/products/:slug")
     .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getProductDetails);
 
+productsRouter.route("/product/comment/load-more")
+    .post(ProductController.ajaxLoadMoreComments);
+
 productsRouter.route("/product/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, ProductController.handleProductComment);
 
