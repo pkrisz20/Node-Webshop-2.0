@@ -46,4 +46,24 @@ function limitText (text, limitNumber = 90) {
     return text.length > limitNumber ? text.substring(0, limitNumber) + '...' : text;
 }
 
-module.exports = { setMomentLocale, numberWithCommas, capitalizeFirstLetter, createUniqueID, getFirst, getLast, getOnly, groupBy, limitText };
+function escapeHtml (unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+module.exports = {
+    setMomentLocale,
+    numberWithCommas,
+    capitalizeFirstLetter,
+    createUniqueID,
+    getFirst,
+    getLast,
+    getOnly,
+    groupBy,
+    limitText,
+    escapeHtml
+};

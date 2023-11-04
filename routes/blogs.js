@@ -14,6 +14,9 @@ blogsRouter.route("/blogs")
 blogsRouter.route("/blog/:slug")
     .get(getConfigFromDb, selectWebshopCategories, getCartItems, BlogsController.getBlogDetails);
 
+blogsRouter.route("/blog/comment/load-more")
+    .post(BlogsController.ajaxLoadMoreComments);
+
 blogsRouter.route("/blog/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, BlogsController.handleBlogComment);
 

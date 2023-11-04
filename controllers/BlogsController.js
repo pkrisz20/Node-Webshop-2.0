@@ -2,7 +2,7 @@ const { db } = require("../config/db-connection");
 const moment = require("moment");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
+const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText, escapeHtml } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require('../helpers/formatDateByLocale');
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
@@ -27,6 +27,7 @@ const getBlogDetails = (req, res) => {
     let newestBlogsArray = [];
     let incommingEvents = [];
     let articleComments = [];
+    let showLoadMoreButton = false;
 
     const blogDetailsQuery = "SELECT id, title, description, author, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
@@ -56,39 +57,6 @@ const getBlogDetails = (req, res) => {
                 image: imagePathConverter(data[0].image_thumbnail, "blogs"),
                 isAllowed: Boolean(data[0].comments_allowed),
                 date: formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
-            }
-
-            // Select article comments, if they are not disabled
-            if (result.isAllowed) {
-                const selectBlogComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
-
-                db.query(selectBlogComments, [1, result.id], (comments_err, comments_data) => {
-                    if (comments_err) {
-                        console.log(comments_err);
-                        return showServerErrorPage(req, res);
-                    }
-
-                    else if (comments_data.length > 0) {
-
-                        comments_data.forEach(element => {
-                            let tempObject = {
-                                id: parseInt(element.id),
-                                name: element.name,
-                                description: element.comment,
-                                date: element.date,
-                            }
-
-                            articleComments.push(tempObject);
-                        });
-
-                        articleComments = articleComments.map(item => {
-                            return {
-                                ...item,
-                                date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
-                            };
-                        });
-                    }
-                });
             }
 
             var metas = {
@@ -152,20 +120,104 @@ const getBlogDetails = (req, res) => {
                         });
                     }
 
-                    return res.render("pages/blog-details", {
-                        blogDetails: result,
-                        newestBlogs: newestBlogsArray ?? [],
-                        nextEvents: incommingEvents ?? [],
-                        articleComments: articleComments ?? [],
-                        meta: metas,
-                        current_locale: req.session.lang,
-                        cart: cart,
-                        locales: ['hu', 'sr', 'en'],
-                        languageHandler: languageHandler,
-                        DB_CONFIG: DB_CONFIG,
-                        webshopCategories: req.webshopCategories,
-                        csrfToken: req.csrfToken()
-                    });
+                    // Select article comments, if they are not disabled
+                    if (result.isAllowed) {
+                        const selectBlogComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ? ORDER BY blog_comments.date DESC LIMIT ?";
+
+                        db.query(selectBlogComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)], (comments_err, comments_data) => {
+                            if (comments_err) {
+                                console.log(comments_err);
+                                return showServerErrorPage(req, res);
+                            }
+
+                            else if ( comments_data.length === 0 ) {
+                                return res.render("pages/blog-details", {
+                                    blogDetails: result,
+                                    newestBlogs: newestBlogsArray ?? [],
+                                    nextEvents: incommingEvents ?? [],
+                                    articleComments: articleComments ?? [],
+                                    showLoadMoreButton: showLoadMoreButton ?? false,
+                                    meta: metas,
+                                    current_locale: req.session.lang,
+                                    cart: cart,
+                                    locales: ['hu', 'sr', 'en'],
+                                    languageHandler: languageHandler,
+                                    DB_CONFIG: DB_CONFIG,
+                                    webshopCategories: req.webshopCategories,
+                                    csrfToken: req.csrfToken()
+                                });
+                            }
+
+                            else if (comments_data.length > 0) {
+
+                                comments_data.forEach(element => {
+                                    let tempObject = {
+                                        id: parseInt(element.id),
+                                        name: element.name,
+                                        description: element.comment,
+                                        date: element.date,
+                                    }
+
+                                    articleComments.push(tempObject);
+                                });
+
+                                articleComments = articleComments.map(item => {
+                                    return {
+                                        ...item,
+                                        date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                                    };
+                                });
+
+                                // Select the active comments count for this blog article to show the load more button or not
+                                const selectCommentsCountSQL = "SELECT COUNT(blog_comments.id) AS 'each_comments_count' FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
+
+                                db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
+                                    if ( comments_count_err ) {
+                                        console.log(comments_count_err);
+                                        return showServerErrorPage(req, res);
+                                    }
+
+                                    else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
+                                        showLoadMoreButton = true;
+                                    }
+
+                                    return res.render("pages/blog-details", {
+                                        blogDetails: result,
+                                        newestBlogs: newestBlogsArray ?? [],
+                                        nextEvents: incommingEvents ?? [],
+                                        articleComments: articleComments ?? [],
+                                        showLoadMoreButton: showLoadMoreButton ?? false,
+                                        meta: metas,
+                                        current_locale: req.session.lang,
+                                        cart: cart,
+                                        locales: ['hu', 'sr', 'en'],
+                                        languageHandler: languageHandler,
+                                        DB_CONFIG: DB_CONFIG,
+                                        webshopCategories: req.webshopCategories,
+                                        csrfToken: req.csrfToken()
+                                    });
+                                });
+                            }
+                        });
+                    }
+
+                    else if (!result.isAllowed) {
+                        return res.render("pages/blog-details", {
+                            blogDetails: result,
+                            newestBlogs: newestBlogsArray ?? [],
+                            nextEvents: incommingEvents ?? [],
+                            articleComments: articleComments ?? [],
+                            showLoadMoreButton: showLoadMoreButton ?? false,
+                            meta: metas,
+                            current_locale: req.session.lang,
+                            cart: cart,
+                            locales: ['hu', 'sr', 'en'],
+                            languageHandler: languageHandler,
+                            DB_CONFIG: DB_CONFIG,
+                            webshopCategories: req.webshopCategories,
+                            csrfToken: req.csrfToken()
+                        });
+                    }
                 });
             });
         }
@@ -321,4 +373,105 @@ const handleBlogComment = (req, res) => {
     });
 }
 
-module.exports = { getAllBlogs, getBlogDetails, handleBlogComment };
+const ajaxLoadMoreComments = (req, res) => {
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    let { offsetNumber, blogID } = req.body;
+    let selectedComments = [];
+    let commentsHtml = "";
+    let removeLoadButton = true;
+    offsetNumber = parseInt(offsetNumber);
+    blogID = parseInt(blogID);
+
+    if ( isNaN(offsetNumber) || isNaN(blogID) ) {
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    offsetNumber = offsetNumber * parseInt(process.env.COUNT_COMMENTS_SHOW);
+
+    const selectMoreComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ? ORDER BY blog_comments.date DESC LIMIT ? OFFSET ?";
+
+    db.query(selectMoreComments, [1, blogID, parseInt(process.env.COUNT_COMMENTS_SHOW), offsetNumber], (comments_err, comments_data) => {
+        if (comments_err) {
+            console.log(comments_err);
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.common_error', lang),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (comments_data.length > 0) {
+            setMomentLocale(lang);
+
+            comments_data.forEach(element => {
+                let tempObject = {
+                    id: parseInt(element.id),
+                    name: element.name,
+                    description: element.comment,
+                    date: element.date,
+                }
+
+                selectedComments.push(tempObject);
+            });
+
+            selectedComments = selectedComments.map(item => {
+                return {
+                    ...item,
+                    date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                };
+            });
+
+            // Parse the comments into HTML response
+            selectedComments.forEach(comment => {
+                commentsHtml += `
+                    <div class="comments-container-box">
+                        <div class="content">
+                            <div class="content__top">
+                                <strong class="content__top-name">${ escapeHtml(comment.name) }</strong>
+                            </div>
+                        <p class="content-comment">${ escapeHtml(comment.description) }</p>
+                        <time class="content-date"><i class="fas fa-history"></i> ${ comment.date }</time>
+                    </div>
+                </div>`;
+            });
+
+            // Calculate the leftover comments from db (still show load more button or not)
+            const selectCommentsCountSQL = "SELECT COUNT(blog_comments.id) AS 'each_comments_count' FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
+
+            db.query(selectCommentsCountSQL, [1, blogID], (comments_count_err, comments_count) => {
+                if ( comments_count_err ) {
+                    console.log(comments_count_err);
+                    return res.status(200).json({
+                        status: "error",
+                        title: languageHandler('errors.error', lang),
+                        message: languageHandler('errors.common_error', lang),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                // Offsetnumber => the number of comments which have to skipped
+                // COUNT_COMMENTS_SHOW => the number of comments which can be loaded by default & on button click to load more
+                // In this if statement has to be Offsetnumber + the COUNT_COMMENTS_SHOW, because already the first comments are loaded
+                else if (comments_count[0].each_comments_count > (offsetNumber + parseInt(process.env.COUNT_COMMENTS_SHOW))) {
+                    removeLoadButton = false;
+                }
+
+                return res.status(200).json({
+                    status: "success",
+                    html_response_with_comments: commentsHtml ?? '',
+                    removeLoadButton: removeLoadButton ?? true,
+                    offsetNumber: (offsetNumber / parseInt(process.env.COUNT_COMMENTS_SHOW)) + 1,
+                    csrfToken: req.csrfToken()
+                });
+            });
+        }
+    });
+};
+
+module.exports = { getAllBlogs, getBlogDetails, handleBlogComment, ajaxLoadMoreComments };

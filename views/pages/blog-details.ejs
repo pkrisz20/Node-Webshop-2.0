@@ -102,8 +102,66 @@
         <script type="text/javascript" src="js/plugins/validate.min.js"></script>
     <% } %>
 
-    <% if ((current_locale == 'sr' || current_locale == 'hu') && blogDetails.isAllowed) { %>
+    <% if (current_locale != 'en' && blogDetails.isAllowed) { %>
         <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
+    <% } %>
+
+    <% if (blogDetails.isAllowed && showLoadMoreButton) { %>
+        <script type="text/javascript">
+            $('body').on('click', '.js-load-more-comments', function () {
+                var this_button = $(this);
+                var offsetNum = this_button.data('offset');
+                var articleID = this_button.data('article');
+
+                $.ajax({
+                    type: "POST",
+                    url: `/${ locale }/blog/comment/load-more`,
+                    dataType: 'json',
+                    data: {
+                        offsetNumber: offsetNum,
+                        blogID: articleID,
+                        _csrf: $("meta[name='csrf-token']").attr("content")
+                    },
+                    beforeSend: function (jqXHR) {
+                        this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+                    },
+                    success: function (response) {
+                        // Set the new XSRF token
+                        if (typeof response.csrfToken !== 'undefined') {
+                            $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                        }
+
+                        if (response.status === 'success') {
+                            $('body .js-comments-container').append(response.html_response_with_comments);
+
+                            if ( response.removeLoadButton ) {
+                                this_button.remove();
+                            }
+                            else if ( !response.removeLoadButton && response.offsetNumber ) {
+                                this_button.data('offset', response.offsetNumber);
+                            }
+                        }
+
+                        else if (response.status === 'error') {
+                            $.alert({
+                                useBootstrap: false,
+                                boxWidth: '400px',
+                                title: response.title,
+                                content: response.message || false,
+                                buttons: {
+                                    OK: function () {
+                                        // do nothing, and close modal
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
     <% } %>
 
     <script type="text/javascript" src="js/main.js"></script>
