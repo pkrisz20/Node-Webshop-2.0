@@ -8,6 +8,12 @@
         font-size: 14px;
         font-weight: 500;
         text-transform: uppercase;
+
+        i {
+            font-size: 18px;
+            transform: translateY(2px);
+            margin-right: 5px;
+        }
     }
 
     .header_title {

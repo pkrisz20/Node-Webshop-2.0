@@ -868,3 +868,52 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
         });
     }
 }, 1500));
+
+$('body').on("click", ".js-wishlist-btn", function (event) {
+    event.preventDefault();
+    var this_button = $(this);
+    var wishlistEndpoint = this_button.data('url');
+    var operation = this_button.data("operation");
+
+    $.ajax({
+        type: 'post',
+        url: wishlistEndpoint,
+        dataType: 'json',
+        data: {
+            _csrf: $("meta[name='csrf-token']").attr("content"),
+            operation: operation
+        },
+        beforeSend: function (jqXHR) {
+            this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+            this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+            if (typeof response.csrfToken !== 'undefined') {
+                $("meta[name='csrf-token']").attr("content", response.csrfToken);
+            }
+
+            if (response.status == 'success') {
+                response.finishedTask === 'removed' && this_button.removeClass('saved');
+                response.finishedTask === 'added' && this_button.addClass('saved');
+                this_button.data('operation', response.operation);
+                $('body .js-wishlist-counter').text(response.wishlistTotalNumber);
+            }
+
+            $.alert({
+                useBootstrap: false,
+                boxWidth: '350px',
+                title: response.title,
+                content: false,
+                buttons: {
+                    OK: {
+                        action: function() {
+                            // do nothing
+                        },
+                    }
+                }
+            });
+        }
+    });
+});

@@ -66,6 +66,7 @@ const hu = {
         scroll_to_up: "Görgess fel",
 		lang: "Nyelv",
 		flag: "zászló",
+		wishlist: "Kívánságlista",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",
@@ -112,6 +113,8 @@ const hu = {
 		increase_quantity: "Mennyiség növelése",
 		quantity: "Mennyiség",
 		load_more_comments: "Mutass több hozzászólást",
+		added_to_wishlist: "Sikeresen hozzáadva a kívánságlistához!",
+		removed_from_wishlist: "Sikeresen eltávolítva a kívánságlistából!",
     },
     orders: {
         total_price: "Összeg",

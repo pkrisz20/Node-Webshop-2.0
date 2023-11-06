@@ -66,6 +66,7 @@ const en = {
         scroll_to_up: "Scroll to up",
 		lang: "Language",
 		flag: "flag",
+		wishlist: "Wishlist",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",
@@ -112,6 +113,8 @@ const en = {
 		increase_quantity: "Increase quantity",
 		quantity: "Quantity",
 		load_more_comments: "Load more comments",
+		added_to_wishlist: "Successfully added to wishlist!",
+		removed_from_wishlist: "Successfully removed from wishlist!",
 	},
 	orders: {
 		total_price: "Total",

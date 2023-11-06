@@ -209,6 +209,7 @@ const handleSearch = (req, res) => {
                     languageHandler: languageHandler,
                     DB_CONFIG: DB_CONFIG,
                     webshopCategories: req.webshopCategories,
+                    wishlistTotalNumber: req.session.wishlist.length,
                     csrfToken: req.csrfToken()
                 });
             });

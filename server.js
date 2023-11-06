@@ -82,6 +82,8 @@ app.use("/:lang", function (req, res, next) {
     return next();
 });
 
+// TODO: Finished the wishlist selection on each route, cause now the wishlist session variable is undefined and got an error everywhere
+
 // Web routes
 const homeRouter = require("./routes/home");
 app.use("/:lang", homeRouter);

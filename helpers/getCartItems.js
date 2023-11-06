@@ -34,7 +34,7 @@ const getCartItems = (req, res, next) => {
                             cartItem.maxQuantity = parseInt(databaseItem.max_order_count),
                             cartItem.price = databaseItem.discount_value != null ? parseInt(databaseItem.discount_value) : parseInt(databaseItem.price),
                             cartItem.image = imagePathConverter(databaseItem.image_thumbnail, "products"),
-                            cartItem.is_available = databaseItem.is_available
+                            cartItem.is_available = parseInt(databaseItem.is_available)
                         }
                     });
                 });

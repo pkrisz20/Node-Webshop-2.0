@@ -124,6 +124,7 @@ const getProductDetails = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
+                                wishlistTotalNumber: req.session.wishlist.length,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -176,6 +177,7 @@ const getProductDetails = (req, res) => {
                                     languageHandler: languageHandler,
                                     DB_CONFIG: DB_CONFIG,
                                     webshopCategories: req.webshopCategories,
+                                    wishlistTotalNumber: req.session.wishlist.length,
                                     csrfToken: req.csrfToken()
                                 });
                             });
@@ -197,6 +199,7 @@ const getProductDetails = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
+                        wishlistTotalNumber: req.session.wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -262,6 +265,7 @@ const getAllProducts = (req, res) => {
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
+                wishlistTotalNumber: req.session.wishlist.length,
                 csrfToken: req.csrfToken()
             });
         }
@@ -323,6 +327,7 @@ const getAllProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
+                        wishlistTotalNumber: req.session.wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -434,6 +439,7 @@ const getCategoryProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
+                        wishlistTotalNumber: req.session.wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -496,6 +502,7 @@ const getCategoryProducts = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
+                                wishlistTotalNumber: req.session.wishlist.length,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -613,4 +620,103 @@ const ajaxLoadMoreComments = (req, res) => {
     });
 };
 
-module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments };
+const wishlistHandler = (req, res) => {
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    let { operation } = req.body;
+    let { productId } = req.params;
+    productId = parseInt(productId);
+    var wishlist = req.session.wishlist ?? [];
+
+    if ( isNaN(productId) || (operation !== 'add' && operation !== 'remove') ) {
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    if ( operation === 'add' ) {
+
+        let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id = ?";
+
+        db.query(sqlQuery, productId, (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(200).json({
+                    status: "error",
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.server_error', lang),
+                    csrfToken: req.csrfToken()
+                });
+            }
+
+            else if (data.length === 0) {
+                return res.status(200).json({
+                    status: "error",
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.common_error', lang),
+                    csrfToken: req.csrfToken()
+                });
+            }
+
+            else if (data.length > 0) {
+
+                let result = {
+                    id: parseInt(data[0].id),
+                    name: getValueByLanguage(data[0].name, lang),
+                    slug: data[0].slug,
+                    short: data[0].short_description ? limitText(getValueByLanguage(data[0].short_description, lang)) : null,
+                    image: imagePathConverter(data[0].image_thumbnail, "products"),
+                    price: numberWithCommas(data[0].price),
+                    isOnDiscount: Boolean(data[0].discount_value),
+                    discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
+                    isAvailable: Boolean(data[0].is_available),
+                    isPostable: Boolean(data[0].is_delivered),
+                    maxQuantity: parseInt(data[0].max_order_count)
+                }
+
+                wishlist.push(result);
+                req.session.wishlist = wishlist ?? [];
+                operation = operation === 'remove' ? 'add' : 'remove';
+
+                return res.status(200).json({
+                    status: "success",
+                    title: languageHandler('products.added_to_wishlist', lang),
+                    operation: operation,
+                    finishedTask: 'added',
+                    wishlistTotalNumber: req.session.wishlist.length,
+                    csrfToken: req.csrfToken()
+                });
+            }
+        });
+    }
+
+    else if ( operation === 'remove' ) {
+        let hasTheProductId = wishlist?.some(item => item.id === productId);
+
+        if ( hasTheProductId ) {
+            wishlist = wishlist?.filter(item => item.id !== productId);
+            req.session.wishlist = wishlist ?? [];
+            operation = operation === 'remove' ? 'add' : 'remove';
+
+            return res.status(200).json({
+                status: "success",
+                title: languageHandler('products.removed_from_wishlist', lang),
+                operation: operation,
+                finishedTask: 'removed',
+                wishlistTotalNumber: req.session.wishlist.length,
+                csrfToken: req.csrfToken()
+            });
+        }
+        else if ( !hasTheProductId ) {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang),
+                csrfToken: req.csrfToken()
+            });
+        }
+    }
+};
+
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler };

@@ -23,4 +23,7 @@ productsRouter.route("/product/comment/load-more")
 productsRouter.route("/product/comment/:itemId")
     .post(validationMiddleware(commentsSchema), recaptchaValidation, ProductController.handleProductComment);
 
+productsRouter.route("/wishlist-handle/:productId")
+    .post(ProductController.wishlistHandler);
+
 module.exports = productsRouter;

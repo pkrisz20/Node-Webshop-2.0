@@ -34,6 +34,7 @@ const getOrderPage = (req, res) => {
         numberWithCommas: numberWithCommas,
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
+        wishlistTotalNumber: req.session.wishlist.length,
         csrfToken: req.csrfToken()
     });
 }

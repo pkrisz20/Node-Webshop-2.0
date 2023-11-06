@@ -55,6 +55,7 @@ const getAllGallery = (req, res) => {
                 meta: metas,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
+                wishlistTotalNumber: req.session.wishlist.length,
                 current_locale: req.session.lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
@@ -108,6 +109,7 @@ const getAllGallery = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
+                        wishlistTotalNumber: req.session.wishlist.length,
                         webshopCategories: req.webshopCategories,
                         csrfToken: req.csrfToken()
                     });
@@ -201,6 +203,7 @@ const getGalleryDetails = (req, res) => {
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
+                wishlistTotalNumber: req.session.wishlist.length,
                 webshopCategories: req.webshopCategories,
                 csrfToken: req.csrfToken()
             });

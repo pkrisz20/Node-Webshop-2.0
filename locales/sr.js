@@ -66,6 +66,7 @@ const sr = {
         scroll_to_up: "Pomeranje gore",
         lang: "Jezik",
 		flag: "zastava",
+		wishlist: "Lista želja",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",
@@ -112,6 +113,8 @@ const sr = {
 		increase_quantity: "Povećanje količine",
 		quantity: "Količina",
 		load_more_comments: "Prikaži više komentar",
+		added_to_wishlist: "Uspešno dodatno u listu želju!",
+		removed_from_wishlist: "Uspešno je uklonio iz lista želja!",
     },
     orders: {
         total_price: "Ukupno",

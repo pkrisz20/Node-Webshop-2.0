@@ -61,6 +61,17 @@
       </nav>
 
       <div class="functions">
+        <a
+          href="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist"
+          target="_self"
+          class="functions-btn"
+          aria-label="<%= languageHandler("general.wishlist", current_locale) %>"
+          title="<%= languageHandler("general.wishlist", current_locale) %>"
+        >
+          <span class="js-wishlist-counter"><%= wishlistTotalNumber %></span>
+          <i class="fas fa-heart"></i>
+        </a>
+
         <button class="functions-btn js-cart-btn" type="button"><span class="js-cart-counter">0</span><i class="fas fa-shopping-cart"></i></button>
         <button class="functions-btn js-hamburger-menu" type="button"><i class="fas fa-bars"></i></button>
       </div>
@@ -112,6 +123,17 @@
       </div>
 
       <div class="functions">
+        <a
+          href="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist"
+          target="_self"
+          class="functions-btn"
+          aria-label="<%= languageHandler("general.wishlist", current_locale) %>"
+          title="<%= languageHandler("general.wishlist", current_locale) %>"
+        >
+          <span class="js-wishlist-counter"><%= wishlistTotalNumber %></span>
+          <i class="fas fa-heart"></i>
+        </a>
+
         <button
           class="functions-btn js-cart-btn"
           type="button"
