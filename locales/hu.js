@@ -67,6 +67,7 @@ const hu = {
 		lang: "Nyelv",
 		flag: "zászló",
 		wishlist: "Kívánságlista",
+		no_items_in_wishlist: "A kívánságlista még üres",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

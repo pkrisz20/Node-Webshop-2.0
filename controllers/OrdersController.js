@@ -14,6 +14,7 @@ const getOrderPage = (req, res) => {
         totalPrice: numberWithCommas(req.session.totalPrice)
     };
 
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var metas = {
@@ -34,7 +35,7 @@ const getOrderPage = (req, res) => {
         numberWithCommas: numberWithCommas,
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
-        wishlistTotalNumber: req.session.wishlist.length,
+        wishlistTotalNumber: wishlist.length,
         csrfToken: req.csrfToken()
     });
 }

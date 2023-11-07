@@ -17,6 +17,9 @@ productsRouter.route("/products/category/:slug")
 productsRouter.route("/products/:slug")
     .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getProductDetails);
 
+productsRouter.route("/wishlist")
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getWishlistListPage);
+
 productsRouter.route("/product/comment/load-more")
     .post(ProductController.ajaxLoadMoreComments);
 

@@ -20,6 +20,7 @@ const getBlogDetails = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { slug } = req.params;
@@ -143,7 +144,7 @@ const getBlogDetails = (req, res) => {
                                     locales: ['hu', 'sr', 'en'],
                                     languageHandler: languageHandler,
                                     DB_CONFIG: DB_CONFIG,
-                                    wishlistTotalNumber: req.session.wishlist.length,
+                                    wishlistTotalNumber: wishlist.length,
                                     webshopCategories: req.webshopCategories,
                                     csrfToken: req.csrfToken()
                                 });
@@ -194,7 +195,7 @@ const getBlogDetails = (req, res) => {
                                         locales: ['hu', 'sr', 'en'],
                                         languageHandler: languageHandler,
                                         DB_CONFIG: DB_CONFIG,
-                                        wishlistTotalNumber: req.session.wishlist.length,
+                                        wishlistTotalNumber: wishlist.length,
                                         webshopCategories: req.webshopCategories,
                                         csrfToken: req.csrfToken()
                                     });
@@ -215,7 +216,7 @@ const getBlogDetails = (req, res) => {
                             cart: cart,
                             locales: ['hu', 'sr', 'en'],
                             languageHandler: languageHandler,
-                            wishlistTotalNumber: req.session.wishlist.length,
+                            wishlistTotalNumber: wishlist.length,
                             DB_CONFIG: DB_CONFIG,
                             webshopCategories: req.webshopCategories,
                             csrfToken: req.csrfToken()
@@ -240,6 +241,7 @@ const getAllBlogs = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { page = 1 } = req.query;
@@ -279,7 +281,7 @@ const getAllBlogs = (req, res) => {
                 current_locale: req.session.lang,
                 cart: cart,
                 DB_CONFIG: DB_CONFIG,
-                wishlistTotalNumber: req.session.wishlist.length,
+                wishlistTotalNumber: wishlist.length,
                 webshopCategories: req.webshopCategories,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
@@ -337,9 +339,8 @@ const getAllBlogs = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
-                        wishlistTotalNumber: req.session.wishlist.length,
+                        wishlistTotalNumber: wishlist.length,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: req.session.wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }

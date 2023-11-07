@@ -67,6 +67,7 @@ const sr = {
         lang: "Jezik",
 		flag: "zastava",
 		wishlist: "Lista želja",
+		no_items_in_wishlist: "Lista želja još je prazna",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

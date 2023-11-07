@@ -21,6 +21,7 @@ const getData = (req, res) => {
         }
     });
 
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     let products = [];
     let sliders = [];
@@ -77,6 +78,7 @@ const getData = (req, res) => {
             products?.forEach(resultItem => {
 
                 resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
+                resultItem.saved_in_wishlist = wishlist.includes(resultItem.id);
             });
 
             db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
@@ -163,7 +165,7 @@ const getData = (req, res) => {
                                         languageHandler: languageHandler,
                                         DB_CONFIG: DB_CONFIG,
                                         webshopCategories: req.webshopCategories ?? [],
-                                        wishlistTotalNumber: req.session.wishlist.length,
+                                        wishlistTotalNumber: wishlist.length,
                                         csrfToken: req.csrfToken()
                                     });
                                 }

@@ -2,7 +2,6 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="canonical" href="<%= process.env.APP_URL %>/<%= current_locale %>/products" />
     <link rel="preload" href="css/product-list.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
@@ -17,19 +16,19 @@
                 <h1 class="main-title"><%= languageHandler('general.wishlist', current_locale) %></h1>
 
                 <section class="listpage products">
-                    <% if (productsTotalCount > 0) { %>
-                        <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                    <% if (wishlistTotalNumber > 0) { %>
+                        <strong class="listpage__total-count"><%= wishlistTotalNumber %> <%= languageHandler('general.product', current_locale) %></strong>
                     <% } %>
 
-                    <% if (products.length > 0) { %>
+                    <% if (wishlistProducts.length > 0) { %>
                         <div class="listpage-container">
-                            <% products.forEach(product => { %>
+                            <% wishlistProducts.forEach(product => { %>
                                 <%- include("../components/product-card.ejs", { product: product }) %>
                             <% }) %>
                         </div>
                     <% } else { %>
                         <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_product_like_this', current_locale) %></strong>
+                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('general.no_items_in_wishlist', current_locale) %></strong>
                         </div>
                     <% } %>
                 </section>

@@ -18,6 +18,7 @@ const getFAQ = (req, res) => {
         }
     });
 
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let result = [];
@@ -59,7 +60,7 @@ const getFAQ = (req, res) => {
             languageHandler: languageHandler,
             DB_CONFIG: DB_CONFIG,
             webshopCategories: req.webshopCategories,
-            wishlistTotalNumber: req.session.wishlist.length,
+            wishlistTotalNumber: wishlist.length,
             csrfToken: req.csrfToken()
         });
     });
@@ -79,6 +80,7 @@ const getGDPR = (req, res) => {
         }
     });
 
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     var metas = {
         title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
@@ -97,7 +99,7 @@ const getGDPR = (req, res) => {
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
-        wishlistTotalNumber: req.session.wishlist.length,
+        wishlistTotalNumber: wishlist.length,
         csrfToken: req.csrfToken()
     });
 }

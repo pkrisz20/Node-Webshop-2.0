@@ -35,8 +35,8 @@
 
             <button
                 type="button"
-                class="wishlist-btn js-wishlist-btn <%= product.savedInWishlist ? 'saved' : '' %>"
-                data-operation="<%= product.savedInWishlist ? 'remove' : 'add' %>"
+                class="wishlist-btn js-wishlist-btn <%= product.saved_in_wishlist ? 'saved' : '' %>"
+                data-operation="<%= product.saved_in_wishlist ? 'remove' : 'add' %>"
                 data-url="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist-handle/<%= product.id %>"
             >
                 <i class="far fa-heart"></i>

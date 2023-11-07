@@ -19,6 +19,8 @@ const getProductDetails = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { slug } = req.params;
@@ -98,6 +100,15 @@ const getProductDetails = (req, res) => {
 
                         similarProducts.push(tempObject);
                     });
+
+                    // Check for is the product already in the cart
+                    let productIdsInCart = cart?.items?.map(item => item.productId);
+
+                    similarProducts?.forEach(similarProduct => {
+
+                        similarProduct.already_in_cart = productIdsInCart.includes(similarProduct.id);
+                        similarProduct.saved_in_wishlist = wishlist.includes(similarProduct.id);
+                    });
                 }
 
                 // Select product comments, if they are not disabled
@@ -124,7 +135,7 @@ const getProductDetails = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
-                                wishlistTotalNumber: req.session.wishlist.length,
+                                wishlistTotalNumber: wishlist.length,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -177,7 +188,7 @@ const getProductDetails = (req, res) => {
                                     languageHandler: languageHandler,
                                     DB_CONFIG: DB_CONFIG,
                                     webshopCategories: req.webshopCategories,
-                                    wishlistTotalNumber: req.session.wishlist.length,
+                                    wishlistTotalNumber: wishlist.length,
                                     csrfToken: req.csrfToken()
                                 });
                             });
@@ -199,7 +210,7 @@ const getProductDetails = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: req.session.wishlist.length,
+                        wishlistTotalNumber: wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -221,6 +232,8 @@ const getAllProducts = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang  = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
@@ -265,7 +278,7 @@ const getAllProducts = (req, res) => {
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
-                wishlistTotalNumber: req.session.wishlist.length,
+                wishlistTotalNumber: wishlist.length,
                 csrfToken: req.csrfToken()
             });
         }
@@ -295,6 +308,7 @@ const getAllProducts = (req, res) => {
             result?.forEach(resultItem => {
 
                 resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
+                resultItem.saved_in_wishlist = wishlist.includes(resultItem.id);
             });
 
             let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products WHERE products.is_active = ?";
@@ -327,7 +341,7 @@ const getAllProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: req.session.wishlist.length,
+                        wishlistTotalNumber: wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -380,6 +394,8 @@ const getCategoryProducts = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
+
+    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang  = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
@@ -439,7 +455,7 @@ const getCategoryProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: req.session.wishlist.length,
+                        wishlistTotalNumber: wishlist.length,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -470,6 +486,7 @@ const getCategoryProducts = (req, res) => {
                     result?.forEach(resultItem => {
 
                         resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
+                        resultItem.saved_in_wishlist = wishlist.includes(resultItem.id);
                     });
 
                     let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ?";
@@ -502,7 +519,7 @@ const getCategoryProducts = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
-                                wishlistTotalNumber: req.session.wishlist.length,
+                                wishlistTotalNumber: wishlist.length,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -627,6 +644,7 @@ const wishlistHandler = (req, res) => {
     productId = parseInt(productId);
     var wishlist = req.session.wishlist ?? [];
 
+    // Check for valid number & operation name
     if ( isNaN(productId) || (operation !== 'add' && operation !== 'remove') ) {
         return res.status(200).json({
             status: "error",
@@ -638,7 +656,7 @@ const wishlistHandler = (req, res) => {
 
     if ( operation === 'add' ) {
 
-        let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id = ?";
+        let sqlQuery = "SELECT products.id FROM products WHERE products.id = ?";
 
         db.query(sqlQuery, productId, (err, data) => {
             if (err) {
@@ -661,24 +679,9 @@ const wishlistHandler = (req, res) => {
             }
 
             else if (data.length > 0) {
-
-                let result = {
-                    id: parseInt(data[0].id),
-                    name: getValueByLanguage(data[0].name, lang),
-                    slug: data[0].slug,
-                    short: data[0].short_description ? limitText(getValueByLanguage(data[0].short_description, lang)) : null,
-                    image: imagePathConverter(data[0].image_thumbnail, "products"),
-                    price: numberWithCommas(data[0].price),
-                    isOnDiscount: Boolean(data[0].discount_value),
-                    discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
-                    isAvailable: Boolean(data[0].is_available),
-                    isPostable: Boolean(data[0].is_delivered),
-                    maxQuantity: parseInt(data[0].max_order_count)
-                }
-
-                wishlist.push(result);
+                wishlist.push(parseInt(data[0].id));
                 req.session.wishlist = wishlist ?? [];
-                operation = operation === 'remove' ? 'add' : 'remove';
+                operation = 'remove';
 
                 return res.status(200).json({
                     status: "success",
@@ -693,12 +696,12 @@ const wishlistHandler = (req, res) => {
     }
 
     else if ( operation === 'remove' ) {
-        let hasTheProductId = wishlist?.some(item => item.id === productId);
+        let hasTheProductId = wishlist?.some(item => item === productId);
 
         if ( hasTheProductId ) {
-            wishlist = wishlist?.filter(item => item.id !== productId);
+            wishlist = wishlist?.filter(item => item !== productId);
             req.session.wishlist = wishlist ?? [];
-            operation = operation === 'remove' ? 'add' : 'remove';
+            operation = 'add';
 
             return res.status(200).json({
                 status: "success",
@@ -713,10 +716,106 @@ const wishlistHandler = (req, res) => {
             return res.status(200).json({
                 status: "error",
                 title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.common_error', lang),
                 csrfToken: req.csrfToken()
             });
         }
     }
 };
 
-module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler };
+const getWishlistListPage = ( req, res, next ) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    var { DB_CONFIG } = req;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    let wishlistProductIds = req.session.wishlist ?? [];
+    let countParams = Array(wishlistProductIds.length).fill("?").join(",");
+    let wishlistProductsList = [];
+    var metas = {
+        title: languageHandler('general.wishlist', lang),
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/wishlist`,
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: `This is the wishlist list page`,
+    };
+
+    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) ORDER BY id DESC`;
+
+    db.query(selectWishlistProducts, [...wishlistProductIds], (err, data) => {
+        if (err) {
+            console.log(err);
+            return showServerErrorPage(req, res);
+        }
+
+        else if (data.length === 0) {
+            return res.render('pages/wishlist', {
+                meta: metas,
+                current_locale: lang,
+                cart: cart,
+                DB_CONFIG: DB_CONFIG,
+                locales: ['hu', 'sr', 'en'],
+                languageHandler: languageHandler,
+                webshopCategories: req.webshopCategories,
+                wishlistProducts: wishlistProductsList ?? [],
+                wishlistTotalNumber: wishlistProductsList.length,
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (data.length > 0) {
+
+            data.forEach(wishlistItem => {
+                let result = {
+                    id: parseInt(wishlistItem.id),
+                    name: getValueByLanguage(wishlistItem.name, lang),
+                    slug: wishlistItem.slug,
+                    short: wishlistItem.short_description ? limitText(getValueByLanguage(wishlistItem.short_description, lang)) : null,
+                    image: imagePathConverter(wishlistItem.image_thumbnail, "products"),
+                    price: numberWithCommas(wishlistItem.price),
+                    isOnDiscount: Boolean(wishlistItem.discount_value),
+                    discount: wishlistItem.discount_value != null ? numberWithCommas(wishlistItem.discount_value) : null,
+                    isAvailable: Boolean(wishlistItem.is_available),
+                    isPostable: Boolean(wishlistItem.is_delivered),
+                    maxQuantity: parseInt(wishlistItem.max_order_count)
+                }
+
+                wishlistProductsList.push(result);
+            });
+
+            // Check for is the product already in the cart
+            let productIdsInCart = cart?.items?.map(item => item.productId);
+
+            wishlistProductsList?.forEach(wishlistItem => {
+
+                wishlistItem.already_in_cart = productIdsInCart.includes(wishlistItem.id);
+                wishlistItem.saved_in_wishlist = true;
+            });
+
+            return res.render('pages/wishlist', {
+                meta: metas,
+                current_locale: lang,
+                cart: cart,
+                locales: ['hu', 'sr', 'en'],
+                DB_CONFIG: DB_CONFIG,
+                languageHandler: languageHandler,
+                webshopCategories: req.webshopCategories,
+                wishlistProducts: wishlistProductsList ?? [],
+                wishlistTotalNumber: wishlistProductsList.length,
+                csrfToken: req.csrfToken()
+            });
+        }
+    });
+}
+
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler, getWishlistListPage };

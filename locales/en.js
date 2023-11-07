@@ -67,6 +67,7 @@ const en = {
 		lang: "Language",
 		flag: "flag",
 		wishlist: "Wishlist",
+		no_items_in_wishlist: "The wishlist is empty yet",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",
@@ -94,7 +95,7 @@ const en = {
 		all_products: "All products",
 		similar_products: "Similar products",
 		savings: "Savings",
-		discount: "Discount",
+		discount: "On sale",
 		status: "Status",
 		shipping: "Shipping",
 		special: "Special",
