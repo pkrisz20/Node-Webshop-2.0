@@ -72,7 +72,15 @@
           <i class="fas fa-heart"></i>
         </a>
 
-        <button class="functions-btn js-cart-btn" type="button"><span class="js-cart-counter"><%= cart.totalCount %></span><i class="fas fa-shopping-cart"></i></button>
+        <button
+          class="functions-btn js-cart-btn"
+          aria-label="<%= languageHandler("general.cart", current_locale) %>"
+          title="<%= languageHandler("general.cart", current_locale) %>"
+          type="button"
+        >
+          <span class="js-cart-counter"><%= cart.totalCount %></span>
+          <i class="fas fa-shopping-cart"></i>
+        </button>
         <button class="functions-btn js-hamburger-menu" type="button"><i class="fas fa-bars"></i></button>
       </div>
     </div>
@@ -137,6 +145,8 @@
         <button
           class="functions-btn js-cart-btn"
           type="button"
+          aria-label="<%= languageHandler("general.cart", current_locale) %>"
+          title="<%= languageHandler("general.cart", current_locale) %>"
         >
           <span class="js-cart-counter"><%= cart.totalCount %></span>
           <i class="fas fa-shopping-cart"></i>

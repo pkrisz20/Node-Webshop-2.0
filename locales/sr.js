@@ -68,6 +68,7 @@ const sr = {
 		flag: "zastava",
 		wishlist: "Lista želja",
 		no_items_in_wishlist: "Lista želja još je prazna",
+		cart: "Korpa",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",
@@ -116,6 +117,8 @@ const sr = {
 		load_more_comments: "Prikaži više komentar",
 		added_to_wishlist: "Uspešno dodatno u listu želju!",
 		removed_from_wishlist: "Uspešno je uklonio iz lista želja!",
+        add_to_wishlist: "Dodaj u listu želju",
+		remove_from_wishlist: "Ukloni iz lista želja",
     },
     orders: {
         total_price: "Ukupno",

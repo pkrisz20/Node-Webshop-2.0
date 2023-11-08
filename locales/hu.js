@@ -68,6 +68,7 @@ const hu = {
 		flag: "zászló",
 		wishlist: "Kívánságlista",
 		no_items_in_wishlist: "A kívánságlista még üres",
+		cart: "Kosár",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",
@@ -116,6 +117,8 @@ const hu = {
 		load_more_comments: "Mutass több hozzászólást",
 		added_to_wishlist: "Sikeresen hozzáadva a kívánságlistához!",
 		removed_from_wishlist: "Sikeresen eltávolítva a kívánságlistából!",
+        add_to_wishlist: "Hozzáadás a kívánságlistához",
+		remove_from_wishlist: "Eltávolít a kívánságlistából",
     },
     orders: {
         total_price: "Összeg",

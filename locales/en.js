@@ -68,6 +68,7 @@ const en = {
 		flag: "flag",
 		wishlist: "Wishlist",
 		no_items_in_wishlist: "The wishlist is empty yet",
+		cart: "Cart",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",
@@ -116,6 +117,8 @@ const en = {
 		load_more_comments: "Load more comments",
 		added_to_wishlist: "Successfully added to wishlist!",
 		removed_from_wishlist: "Successfully removed from wishlist!",
+		add_to_wishlist: "Add to wishlist",
+		remove_from_wishlist: "Remove from wishlist",
 	},
 	orders: {
 		total_price: "Total",

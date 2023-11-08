@@ -59,7 +59,8 @@ const getProductDetails = (req, res) => {
                 isAvailable: Boolean(data[0].is_available),
                 isPostable: Boolean(data[0].is_delivered),
                 maxQuantity: parseInt(data[0].max_order_count),
-                isAllowed: Boolean(data[0].comments_allowed)
+                isAllowed: Boolean(data[0].comments_allowed),
+                saved_in_wishlist: wishlist.includes(data[0].id),
             }
 
             var metas = {
@@ -656,9 +657,9 @@ const wishlistHandler = (req, res) => {
 
     if ( operation === 'add' ) {
 
-        let sqlQuery = "SELECT products.id FROM products WHERE products.id = ?";
+        let sqlQuery = "SELECT products.id FROM products WHERE products.id = ? AND products.is_active = ?";
 
-        db.query(sqlQuery, productId, (err, data) => {
+        db.query(sqlQuery, [productId, 1], (err, data) => {
             if (err) {
                 console.log(err);
                 return res.status(200).json({

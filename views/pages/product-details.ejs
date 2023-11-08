@@ -74,6 +74,16 @@
 
                                 <div class="details-desc-functions">
 
+                                    <button
+                                        type="button"
+                                        class="details-desc-functions__wishlist js-wishlist-btn <%= productDetails.saved_in_wishlist ? 'saved' : '' %>"
+                                        data-operation="<%= productDetails.saved_in_wishlist ? 'remove' : 'add' %>"
+                                        data-url="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist-handle/<%= productDetails.id %>"
+                                    >
+                                        <i class="far fa-heart"></i>
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+
                                     <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
                                         <div class="quantities js-quantities">
                                             <button
