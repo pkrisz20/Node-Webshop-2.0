@@ -26,7 +26,7 @@
             <% } %>
 
             <section class="bg">
-                <div class="bg-box">
+                <div class="bg-box wrapper">
                     <h2 class="bg-box--title"><%= DB_CONFIG["home_page_title"] %></h2>
                     <p class="bg-box--subtitle"><%= DB_CONFIG["home_page_text"] %></p>
                     <a href="<%= process.env.APP_URL %>/<%= current_locale %>/about" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>

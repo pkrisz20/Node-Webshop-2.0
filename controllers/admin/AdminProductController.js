@@ -216,4 +216,21 @@ const updateCommentVerficationBadge = (req, res) => {
     });
 }
 
-module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge };
+const getProductUploadPage = (req, res) => {
+    const lang = req.session.lang ?? process.env.ADMIN_LANG;
+    var metas = {
+        title: "Új termék",
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/faq`,
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the product upload page",
+    };
+
+    return res.render("admin/products/form", {
+        meta: metas,
+        current_locale: lang,
+        csrfToken: req.csrfToken()
+    });
+}
+
+module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage };

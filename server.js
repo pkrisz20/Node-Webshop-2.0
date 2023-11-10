@@ -65,6 +65,9 @@ app.use("/api", cartRouter);
 const adminRouter = require("./routes/admin");
 app.use("/admin", adminRouter);
 
+const adminFormsRouter = require("./routes/admin-forms");
+app.use("/admin", adminFormsRouter);
+
 // Redirect to the lang slug version
 app.get('/', (req, res) => {
     res.redirect(`/${ req.session.lang ?? process.env.FALLBACK_LANG }`);

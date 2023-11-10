@@ -395,7 +395,9 @@ $(function() {
     });
 
     // If the site is loaded and unexpectedly the search input has value then make it empty by default
-    $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
+    if ( $('body .js-search-input').length > 0 ) {
+        $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
+    }
 });
 
 // Dropdowns handle

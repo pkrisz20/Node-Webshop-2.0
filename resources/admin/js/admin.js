@@ -34,6 +34,18 @@ $(document).ready(function() {
       position: 'left'
     });
   }
+
+  // Ck editor handle
+  if ( $('.js-ckeditor').length > 0 ) {
+
+    $('.js-ckeditor').each(function (_index, editor) {
+      ClassicEditor
+      .create(editor)
+      .catch(function (error) {
+        console.error(error);
+      });
+    });
+  }
 });
 
 // Delete data
@@ -248,4 +260,17 @@ $('body').on('click', '.js-toggle-verified-badge', function (event) {
       }
     }
   });
+});
+
+// Toggle discount price input
+$('body').on('change', '.js-discount-input-toggle', function (event) {
+  event.preventDefault();
+  var discountInput = $(this).closest('.js-price-wrapper').find('.js-discount-input');
+
+  if ( discountInput[0].style.display === 'none' ) {
+    discountInput.slideDown(300);
+  }
+  else {
+    discountInput.slideUp(300);
+  }
 });

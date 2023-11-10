@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('../layout/head.ejs') %>
+    </head>
+        <%- include('../layout/sidebar-navs.ejs') %>
+
+                <main class="p-4">
+                    <form class="row g-3" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product-name" class="form-label">Termék megnevezése</label>
+                                <input type="text" id="product-name" class="form-control" name="name" value="" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="product-category">Kategória</label>
+                                <select class="form-select" id="product-category">
+                                    <option selected>Válassz kategórát...</option>
+                                    <option value="1">Csirkék</option>
+                                    <option value="2">Libák</option>
+                                    <option value="3">Kacsák</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product-short" class="form-label">Rövid leírás</label>
+                                <textarea id="product-short" rows="5" class="form-control"></textarea>
+                            </div>
+                            <div class="col-md-6 js-price-wrapper">
+                                <label for="product-price" class="form-label">Árjegyzék</label>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">RSD</span>
+                                    <input type="number" id="product-price" class="form-control" />
+                                    <span class="input-group-text">.00</span>
+                                </div>
+
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
+                                </div>
+                                <div class="input-group js-discount-input" style="display: none;">
+                                    <span class="input-group-text">RSD</span>
+                                    <input type="number" class="form-control" />
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch d-inline-block">
+                                    <input class="form-check-input" type="checkbox" id="product-is-active" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
+                                </div>
+                                <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                    <input class="form-check-input" type="checkbox" id="product-is-featured" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
+                                </div>
+                                <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                    <input class="form-check-input" type="checkbox" id="product-is-orderable" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
+                                </div>
+                                <div>
+                                    <div class="form-check form-switch d-inline-block">
+                                        <input class="form-check-input" type="checkbox" id="product-is-delivered" role="switch" />
+                                        <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
+                                    </div>
+                                    <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                        <input class="form-check-input" type="checkbox" id="product-comments-allowed" role="switch" />
+                                        <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
+                                <input type="number" id="product-max-order" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="product-long" class="form-label">Hosszú leirás</label>
+                            <textarea id="product-long" name="product-description" class="form-control js-ckeditor"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Mentés</button>
+                        </div>
+                    </form>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/plugins/ckeditor.min.js"></script>
+        <script src="admin/js/admin.js"></script>
+    </body>
+</html>
