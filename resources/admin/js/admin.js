@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', function (event) {
   }
 });
 
-// Set new default font family and font color to mimic Bootstrap's default styling
+// Set new default font family and font color to charts
 Chart.defaults.global.defaultFontFamily = 'Poppins, sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
@@ -265,12 +265,108 @@ $('body').on('click', '.js-toggle-verified-badge', function (event) {
 // Toggle discount price input
 $('body').on('change', '.js-discount-input-toggle', function (event) {
   event.preventDefault();
-  var discountInput = $(this).closest('.js-price-wrapper').find('.js-discount-input');
+  var inputContainer = $(this).closest('.js-price-wrapper').find('.js-input-container');
+  var inputField = inputContainer.find('.js-discount-input');
 
-  if ( discountInput[0].style.display === 'none' ) {
-    discountInput.slideDown(300);
+  if ( inputContainer[0].style.display === 'none' ) {
+    inputContainer.slideDown(300);
+    inputField.rules('add', {
+      required: true,
+      digits: true
+    });
   }
   else {
-    discountInput.slideUp(300);
+    inputContainer.slideUp(300);
+    inputField.rules('remove');
   }
+});
+
+// Boolean checkbox values handle
+$('input.js-boolean-checkbox[type="checkbox"]').change(function () {
+  this.value = (Number(this.checked));
+});
+
+$('.js-validate-form').not('.inited').each(function () {
+  $(this).validate({
+    ignore: 'input[type=hidden], .dont-validate',
+    errorClass: 'is-invalid',
+    validClass: 'is-valid',
+    focusInvalid: false,
+    invalidHandler: function (form, validator) {
+      if (validator.numberOfInvalids() > 0) {
+        form.preventDefault();
+      }
+    },
+    highlight: function (element, errorClass, validClass) {
+      console.log(element);
+      $(element).addClass(errorClass).removeClass(validClass);
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass(errorClass).addClass(validClass);
+    },
+    errorPlacement: function (error, element) {
+      var parent = $(element).closest('.form-row');
+      error.addClass('error-label');
+      parent.append(error);
+    },
+    submitHandler: function (form) {
+      var this_button = $('button[type="submit"]', $(form));
+
+      $.ajax({
+        type: $(form).prop('method'),
+        url: $(form).data('url'),
+        dataType: 'json',
+        // data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
+        data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
+        beforeSend: function (jqXHR) {
+          Swal.fire('Feldolgozás folyamatban...');
+          Swal.showLoading();
+          this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+        },
+        complete: function (jqXHR, textStatus) {
+          this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+        },
+        success: function (response) {
+          // Set the new XSRF token
+          if (typeof response.csrfToken !== 'undefined') {
+            $("meta[name='csrf-token']").attr("content", response.csrfToken);
+          }
+
+          if (response.status === 'error') {
+            setTimeout(function () {
+              Swal.fire({
+                icon: 'error',
+                title: response.title || 'Hoppá!',
+                text: response.message || 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+              });
+            }, 1000);
+          }
+          else if (response.status === 'success') {
+            if (!$(form).data('noReset')) {
+              form.reset();
+            }
+
+            setTimeout(function () {
+              Swal.fire({
+                title: response.title || "Sikeresen feldolgozva",
+                icon: response.icon || 'success',
+                text: response.text || false,
+              }).then(function() {
+                var callbackFunction = $(form).data("callback");
+
+                if (response.redirect_url) {
+                  window.location = response.redirect_url;
+                }
+                else if (callbackFunction && typeof window[callbackFunction] == 'function') {
+                  window[callbackFunction](response, form);
+                }
+              });
+            }, 1000);
+          }
+        }
+      });
+    },
+  });
+
+  $(this).addClass('inited');
 });

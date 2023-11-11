@@ -6,80 +6,154 @@
         <%- include('../layout/sidebar-navs.ejs') %>
 
                 <main class="p-4">
-                    <form class="row g-3" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="product-name" class="form-label">Termék megnevezése</label>
-                                <input type="text" id="product-name" class="form-control" name="name" value="" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="product-category">Kategória</label>
-                                <select class="form-select" id="product-category">
-                                    <option selected>Válassz kategórát...</option>
-                                    <option value="1">Csirkék</option>
-                                    <option value="2">Libák</option>
-                                    <option value="3">Kacsák</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="product-short" class="form-label">Rövid leírás</label>
-                                <textarea id="product-short" rows="5" class="form-control"></textarea>
-                            </div>
-                            <div class="col-md-6 js-price-wrapper">
-                                <label for="product-price" class="form-label">Árjegyzék</label>
-                                <div class="input-group mb-2">
-                                    <span class="input-group-text">RSD</span>
-                                    <input type="number" id="product-price" class="form-control" />
-                                    <span class="input-group-text">.00</span>
-                                </div>
+                    <h1 class="h3 mb-3">Új termék feltöltése</h1>
 
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
-                                    <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
-                                </div>
-                                <div class="input-group js-discount-input" style="display: none;">
-                                    <span class="input-group-text">RSD</span>
-                                    <input type="number" class="form-control" />
-                                    <span class="input-group-text">.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-check form-switch d-inline-block">
-                                    <input class="form-check-input" type="checkbox" id="product-is-active" role="switch" />
-                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
-                                </div>
-                                <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                    <input class="form-check-input" type="checkbox" id="product-is-featured" role="switch" />
-                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
-                                </div>
-                                <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                    <input class="form-check-input" type="checkbox" id="product-is-orderable" role="switch" />
-                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
-                                </div>
-                                <div>
-                                    <div class="form-check form-switch d-inline-block">
-                                        <input class="form-check-input" type="checkbox" id="product-is-delivered" role="switch" />
-                                        <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
+                    <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
+
+                        <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU"><img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane show fade active" id="HU">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-name" class="form-label">Termék megnevezése</label>
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[hu]" value="" />
+                                        </div>
                                     </div>
-                                    <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                        <input class="form-check-input" type="checkbox" id="product-comments-allowed" role="switch" />
-                                        <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label class="form-label" for="product-category">Kategória</label>
+                                            <select class="form-select" data-rule-required="true" name="category_id" id="product-category">
+                                                <option value="" selected>Válassz kategóriát...</option>
+                                                <option value="1">Csirkék</option>
+                                                <option value="2">Libák</option>
+                                                <option value="3">Kacsák</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-short" class="form-label">Rövid leírás</label>
+                                            <textarea id="product-short" rows="5" name="short_description[hu]" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 js-price-wrapper">
+                                        <div class="form-row">
+                                            <label for="product-price" class="form-label">Árjegyzék</label>
+                                            <div class="input-group mb-2">
+                                                <span class="input-group-text">RSD</span>
+                                                <input type="text" data-rule-required="true" data-rule-digits="true" name="price" value="" id="product-price" class="form-control" />
+                                                <span class="input-group-text">.00</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
+                                        </div>
+                                        <div class="form-row js-input-container" style="display: none;">
+                                            <div class="input-group">
+                                                <span class="input-group-text">RSD</span>
+                                                <input type="text" name="discount_value" class="form-control js-discount-input" />
+                                                <span class="input-group-text">.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_active" id="product-is-active" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
+                                        </div>
+                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_featured" id="product-is-featured" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
+                                        </div>
+                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_available" id="product-is-orderable" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_delivered" id="product-is-delivered" role="switch" />
+                                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
+                                            </div>
+                                            <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="comments_allowed" id="product-comments-allowed" role="switch" />
+                                                <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
+                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="product-long" class="form-label">Hosszú leírás</label>
+                                    <textarea id="product-long" name="product-description[hu]" class="form-control js-ckeditor"></textarea>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
-                                <input type="number" id="product-max-order" class="form-control" value="" />
+
+                            <div class="tab-pane fade" id="SR">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-name" class="form-label">Termék megnevezése szerbül</label>
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[sr]" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-short" class="form-label">Rövid leírás szerbül</label>
+                                            <textarea id="product-short" rows="5" name="short_description[sr]" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="product-long" class="form-label">Hosszú leírás szerbül</label>
+                                    <textarea id="product-long" name="product-description[sr]" class="form-control js-ckeditor"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="EN">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-name" class="form-label">Termék megnevezése angolul</label>
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[en]" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="product-short" class="form-label">Rövid leírás angolul</label>
+                                            <textarea id="product-short" rows="5" name="short_description[en]" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="product-long" class="form-label">Hosszú leírás angolul</label>
+                                    <textarea id="product-long" name="product-description[en]" class="form-control js-ckeditor"></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <label for="product-long" class="form-label">Hosszú leirás</label>
-                            <textarea id="product-long" name="product-description" class="form-control js-ckeditor"></textarea>
-                        </div>
+
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Mentés</button>
                         </div>
@@ -94,6 +168,8 @@
         <script src="admin/js/plugins/chart.min.js"></script>
         <script src="admin/js/plugins/sweetalert.min.js"></script>
         <script src="admin/js/plugins/ckeditor.min.js"></script>
+        <script src="js/plugins/validate.min.js"></script>
+        <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
     </body>
 </html>

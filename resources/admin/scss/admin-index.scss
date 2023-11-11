@@ -8162,6 +8162,10 @@ textarea.form-control-lg {
   --bs-bg-opacity: 0.1;
 }
 
+.bg-opacity-15 {
+  --bs-bg-opacity: 0.15;
+}
+
 .bg-opacity-25 {
   --bs-bg-opacity: 0.25;
 }
@@ -10902,6 +10906,12 @@ body {
 }
 #layoutError #layoutError_footer {
   min-width: 0;
+}
+
+.error-label {
+  font-size: 13px;
+  color: #dc3545;
+  font-weight: 600;
 }
 
 .img-error {
