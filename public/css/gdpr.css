@@ -1,1 +1,36 @@
-.gdpr.gdpr-site{margin:50px 0 0}.gdpr .main-title{margin:0 0 25px}@media (min-width:768px){.gdpr .main-title{margin:0 0 60px}}@media (min-width:1200px){.gdpr .form.form-gdpr{width:60%}}.gdpr-container{padding:20px 0 60px}.gdpr-container-information{color:#212121;font-size:calc(12.00434px + .26019vw);font-weight:600;line-height:25px;margin:0 0 20px}@media (max-width:767px){.gdpr-container-information{font-size:14px}}@media (min-width:1920px){.gdpr-container-information{font-size:17px}}
+.gdpr.gdpr-site {
+  margin: 50px 0 0;
+}
+.gdpr .main-title {
+  margin: 0 0 25px;
+}
+@media (min-width: 768px) {
+  .gdpr .main-title {
+    margin: 0 0 60px;
+  }
+}
+@media (min-width: 1200px) {
+  .gdpr .form.form-gdpr {
+    width: 60%;
+  }
+}
+.gdpr-container {
+  padding: 20px 0 60px;
+}
+.gdpr-container-information {
+  margin: 0 0 20px;
+  color: #212121;
+  font-size: calc(14px + 3 * ((100vw - 767px) / 1153));
+  font-weight: 600;
+  line-height: 25px;
+}
+@media (max-width: 767px) {
+  .gdpr-container-information {
+    font-size: 14px;
+  }
+}
+@media (min-width: 1920px) {
+  .gdpr-container-information {
+    font-size: 17px;
+  }
+}

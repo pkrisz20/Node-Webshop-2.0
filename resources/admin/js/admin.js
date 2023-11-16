@@ -34,18 +34,6 @@ $(document).ready(function() {
       position: 'left'
     });
   }
-
-  // Ck editor handle
-  if ( $('.js-ckeditor').length > 0 ) {
-
-    $('.js-ckeditor').each(function (_index, editor) {
-      ClassicEditor
-      .create(editor)
-      .catch(function (error) {
-        console.error(error);
-      });
-    });
-  }
 });
 
 // Delete data
@@ -298,7 +286,6 @@ $('.js-validate-form').not('.inited').each(function () {
       }
     },
     highlight: function (element, errorClass, validClass) {
-      console.log(element);
       $(element).addClass(errorClass).removeClass(validClass);
     },
     unhighlight: function (element, errorClass, validClass) {

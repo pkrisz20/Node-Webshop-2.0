@@ -28,7 +28,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name" class="form-label">Termék megnevezése</label>
-                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[hu]" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name.hu" value="" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -47,7 +47,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short" class="form-label">Rövid leírás</label>
-                                            <textarea id="product-short" rows="5" name="short_description[hu]" class="form-control"></textarea>
+                                            <textarea id="product-short" rows="5" name="short_description.hu" class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 js-price-wrapper">
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long" class="form-label">Hosszú leírás</label>
-                                    <textarea id="product-long" name="product-description[hu]" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long" name="product_description.hu" class="form-control js-ck-HU"></textarea>
                                 </div>
                             </div>
 
@@ -116,19 +116,19 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name" class="form-label">Termék megnevezése szerbül</label>
-                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[sr]" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name.sr" value="" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short" class="form-label">Rövid leírás szerbül</label>
-                                            <textarea id="product-short" rows="5" name="short_description[sr]" class="form-control"></textarea>
+                                            <textarea id="product-short" rows="5" name="short_description.sr" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long" class="form-label">Hosszú leírás szerbül</label>
-                                    <textarea id="product-long" name="product-description[sr]" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ck-SR"></textarea>
                                 </div>
                             </div>
 
@@ -137,25 +137,25 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name" class="form-label">Termék megnevezése angolul</label>
-                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name[en]" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name" class="form-control" name="name.en" value="" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short" class="form-label">Rövid leírás angolul</label>
-                                            <textarea id="product-short" rows="5" name="short_description[en]" class="form-control"></textarea>
+                                            <textarea id="product-short" rows="5" name="short_description.en" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long" class="form-label">Hosszú leírás angolul</label>
-                                    <textarea id="product-long" name="product-description[en]" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ck-EN"></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Mentés</button>
+                            <button class="btn btn-primary js-test" type="button">Mentés</button>
                         </div>
                     </form>
                 </main>
@@ -171,5 +171,14 @@
         <script src="js/plugins/validate.min.js"></script>
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
+        <script type="text/javascript">
+            CKEDITOR.replace('product-long-en');
+            // CKEDITOR.replace( 'editor1' );
+            // CKEDITOR.replace( 'editor1' );
+
+            // $('.js-test').on('click', function() {
+            //     console.log(ckEditorHU.getData())
+            // });
+        </script>
     </body>
 </html>
