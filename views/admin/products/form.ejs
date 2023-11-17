@@ -172,13 +172,38 @@
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
         <script type="text/javascript">
-            CKEDITOR.replace('product-long-en');
-            // CKEDITOR.replace( 'editor1' );
-            // CKEDITOR.replace( 'editor1' );
+            var ckEditorHU = null;
+            var ckEditorSR = null;
+            var ckEditorEN = null;
 
-            // $('.js-test').on('click', function() {
-            //     console.log(ckEditorHU.getData())
-            // });
+            ClassicEditor
+                .create( document.querySelector( '.js-ck-EN' ) )
+                .then( function (editor) {
+                    ckEditorEN = editor;
+                })
+                .catch( function (err) {
+                    console.error( err.stack );
+                });
+            ClassicEditor
+                .create( document.querySelector( '.js-ck-SR' ) )
+                .then( function (editor) {
+                    ckEditorSR = editor;
+                })
+                .catch( function (err) {
+                    console.error( err.stack );
+                });
+            ClassicEditor
+                .create( document.querySelector( '.js-ck-HU' ) )
+                .then( function (editor) {
+                    ckEditorHU = editor;
+                })
+                .catch( function (err) {
+                    console.error( err.stack );
+                });
+
+            $('.js-test').on('click', function() {
+                console.log(ckEditorHU.getData())
+            });
         </script>
     </body>
 </html>

@@ -29,6 +29,13 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 $(document).ready(function() {
 
+  // This requires to prevent some random errors because the validate & ckeditor plugins do not like each other
+  $('form').each(function() {
+    if ($(this).data('validator')) {
+      $(this).data('validator').settings.ignore = ".ck";
+    }
+  });
+
   if ( $('.jquery-tooltip').length > 0 ) {
     $('.jquery-tooltip').tooltipster({
       position: 'left'
