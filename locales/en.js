@@ -61,6 +61,7 @@ const en = {
 		no_content: "No content",
 		related_galleries: "Related galleries",
 		share_on_facebook: "Share on facebook",
+		share_on_twitter: "Share on twitter",
 		send_via_email: "Send via email",
 		copy_to_clipboard: "Copy to clipboard",
         scroll_to_up: "Scroll to up",

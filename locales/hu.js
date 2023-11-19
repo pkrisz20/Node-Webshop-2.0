@@ -61,6 +61,7 @@ const hu = {
 		no_content: "Nincs tartalom",
 		related_galleries: "Kapcsolódó gallériák",
         share_on_facebook: "Megosztás facebook-on",
+		share_on_twitter: "Megosztás twitter-en",
 		send_via_email: "Küldés emailen",
 		copy_to_clipboard: "Vágólapra másolás",
         scroll_to_up: "Görgess fel",

@@ -61,6 +61,7 @@ const sr = {
 		no_content: "Nema sadržaja",
 		related_galleries: "Povezane galerije",
         share_on_facebook: "Podeli na facebook",
+		share_on_twitter: "Podeli na twitter",
 		send_via_email: "Poslati putem e-pošte",
 		copy_to_clipboard: "Kopiraj u međuspremnik",
         scroll_to_up: "Pomeranje gore",
