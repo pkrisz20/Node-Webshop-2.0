@@ -41,6 +41,22 @@ $(document).ready(function() {
       position: 'left'
     });
   }
+
+  // It there is any ck editor, then initialize it
+  if ($('body .js-ckeditor').length > 0) {
+    document.querySelectorAll('.js-ckeditor').forEach(function (event) {
+      ClassicEditor
+        .create(event)
+        .then(function (editor) {
+          editor.model.document.on('change:data', function () {
+            event.value = editor.getData();
+          });
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    });
+  }
 });
 
 // Delete data
@@ -310,7 +326,6 @@ $('.js-validate-form').not('.inited').each(function () {
         type: $(form).prop('method'),
         url: $(form).data('url'),
         dataType: 'json',
-        // data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
         data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
         beforeSend: function (jqXHR) {
           Swal.fire('Feldolgozás folyamatban...');

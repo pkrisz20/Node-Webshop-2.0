@@ -35,10 +35,16 @@
                                         <div class="form-row">
                                             <label class="form-label" for="product-category">Kategória</label>
                                             <select class="form-select" data-rule-required="true" name="category_id" id="product-category">
-                                                <option value="" selected>Válassz kategóriát...</option>
-                                                <option value="1">Csirkék</option>
-                                                <option value="2">Libák</option>
-                                                <option value="3">Kacsák</option>
+                                                <% if (webshopCategories.length > 0) { %>
+                                                    <option value="" selected>Válassz kategóriát...</option>
+
+                                                    <% webshopCategories.forEach(category => { %>
+                                                        <option value="<%= category.id %>"><%= category.name %></option>
+                                                    <% }) %>
+
+                                                <% } else { %>
+                                                    <option value="" selected>Nincs feltöltve még kategória...</option>
+                                                <% } %>
                                             </select>
                                         </div>
                                     </div>
@@ -107,7 +113,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-hu" class="form-label">Hosszú leírás</label>
-                                    <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ck-HU"></textarea>
+                                    <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ckeditor"></textarea>
                                 </div>
                             </div>
 
@@ -128,7 +134,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-sr" class="form-label">Hosszú leírás szerbül</label>
-                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ck-SR"></textarea>
+                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ckeditor"></textarea>
                                 </div>
                             </div>
 
@@ -149,7 +155,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-en" class="form-label">Hosszú leírás angolul</label>
-                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ck-EN"></textarea>
+                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ckeditor"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -171,35 +177,5 @@
         <script src="js/plugins/validate.min.js"></script>
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
-        <script type="text/javascript">
-            var ckEditorHU = null;
-            var ckEditorSR = null;
-            var ckEditorEN = null;
-
-            ClassicEditor
-                .create( document.querySelector( '.js-ck-EN' ) )
-                .then( function (editor) {
-                    ckEditorEN = editor;
-                })
-                .catch( function (err) {
-                    console.error( err.stack );
-                });
-            ClassicEditor
-                .create( document.querySelector( '.js-ck-SR' ) )
-                .then( function (editor) {
-                    ckEditorSR = editor;
-                })
-                .catch( function (err) {
-                    console.error( err.stack );
-                });
-            ClassicEditor
-                .create( document.querySelector( '.js-ck-HU' ) )
-                .then( function (editor) {
-                    ckEditorHU = editor;
-                })
-                .catch( function (err) {
-                    console.error( err.stack );
-                });
-        </script>
     </body>
 </html>

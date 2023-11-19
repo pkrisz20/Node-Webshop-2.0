@@ -227,6 +227,7 @@ const getProductUploadPage = (req, res) => {
     };
 
     return res.render("admin/products/form", {
+        webshopCategories: req.webshopCategories ?? [],
         meta: metas,
         current_locale: lang,
         csrfToken: req.csrfToken()
