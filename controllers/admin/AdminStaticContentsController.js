@@ -56,4 +56,20 @@ const getFAQListPage = (req, res) => {
     });
 }
 
-module.exports = { getFAQListPage };
+const deleteFAQItem = (req, res) => {
+    let { faqId } = req.params;
+
+    const deleteFAQItemQuery = "DELETE FROM faq WHERE id = ?";
+
+    db.query(deleteFAQItemQuery, faqId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+}
+
+module.exports = { getFAQListPage, deleteFAQItem };

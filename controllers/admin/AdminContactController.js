@@ -95,4 +95,20 @@ const getIncomingMessagesList = (req, res) => {
     });
 }
 
-module.exports = { getIncomingMessagesList };
+const deleteMessageItem = (req, res) => {
+    let { messageId } = req.params;
+
+    const deleteMessageItemQuery = "DELETE FROM contact_messages WHERE id = ?";
+
+    db.query(deleteMessageItemQuery, messageId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+}
+
+module.exports = { getIncomingMessagesList, deleteMessageItem };

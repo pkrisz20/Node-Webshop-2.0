@@ -234,4 +234,20 @@ const getProductUploadPage = (req, res) => {
     });
 }
 
-module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage };
+const deleteProductComment = (req, res) => {
+    let { commentId } = req.params;
+
+    const deleteProductCommentQuery = "DELETE FROM product_comments WHERE id = ?";
+
+    db.query(deleteProductCommentQuery, commentId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+}
+
+module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment };

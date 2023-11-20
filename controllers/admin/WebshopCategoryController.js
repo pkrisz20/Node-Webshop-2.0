@@ -54,4 +54,20 @@ const getWebshopCategoryList = (req, res) => {
     });
 }
 
-module.exports = { getWebshopCategoryList };
+const deleteWebshopCategory = (req, res) => {
+    let { categoryId } = req.params;
+
+    const deleteCategoryQuery = "DELETE FROM categories WHERE id = ?";
+
+    db.query(deleteCategoryQuery, categoryId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+}
+
+module.exports = { getWebshopCategoryList, deleteWebshopCategory };

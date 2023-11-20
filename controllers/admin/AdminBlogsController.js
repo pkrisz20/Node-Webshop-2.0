@@ -2,7 +2,6 @@ const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
-const languageHandler = require("../../helpers/languageHandler");
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
 
@@ -281,4 +280,20 @@ const getEventsList = (req, res) => {
     });
 }
 
-module.exports = { getBlogsList, getBlogsCommentsList, getEventsList };
+const deleteArticleComment = (req, res) => {
+    let { commentId } = req.params;
+
+    const deleteArticleCommentQuery = "DELETE FROM blog_comments WHERE id = ?";
+
+    db.query(deleteArticleCommentQuery, commentId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+}
+
+module.exports = { getBlogsList, getBlogsCommentsList, getEventsList, deleteArticleComment };
