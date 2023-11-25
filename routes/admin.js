@@ -27,6 +27,9 @@ adminRouter.route("/logout")
 adminRouter.route("/dashboard")
     .get(checkAuthentication, AdminController.getDashboard);
 
+adminRouter.route("/image-upload")
+    .post(checkAuthentication, AdminController.uploadImageFiles);
+
 adminRouter.route("/statistics")
     .get(checkAuthentication, StatisticsController.getStatistics);
 

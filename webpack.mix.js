@@ -25,6 +25,7 @@ mix
     // Admin setup
     .sass("resources/admin/scss/admin-index.scss", "public/admin/css")
     .js("resources/admin/js/admin.js", "public/admin/js")
+    .js("resources/admin/js/image-uploader.js", "public/admin/js")
 
     .version();
 

@@ -8,21 +8,24 @@
                 <main class="p-4">
                     <h1 class="h3 mb-3">Új termék feltöltése</h1>
 
+                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU">Általános adatok + <img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media"><i class="fas fa-photo-video"></i> Média</a>
+                        </li>
+                    </ul>
+
                     <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
-
-                        <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU">Általános adatok + <img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
-                            </li>
-                        </ul>
-
                         <div class="tab-content">
+
                             <div class="tab-pane show fade active" id="HU">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
@@ -115,6 +118,9 @@
                                     <label for="product-long-hu" class="form-label">Hosszú leírás</label>
                                     <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ckeditor"></textarea>
                                 </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">Mentés</button>
+                                </div>
                             </div>
 
                             <div class="tab-pane fade" id="SR">
@@ -159,11 +165,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Mentés</button>
-                        </div>
                     </form>
+
+                    <div class="tab-pane fade" id="media">
+                        <%- include('../components/image-uploader.ejs', { single: true, inputName: "files", whereToUpload: "products" }) %>
+                    </div>
                 </main>
             </div>
         </div>
@@ -177,5 +183,6 @@
         <script src="js/plugins/validate.min.js"></script>
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
+        <script src="admin/js/image-uploader.js"></script>
     </body>
 </html>

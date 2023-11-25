@@ -3,6 +3,8 @@ const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunct
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
+const multer = require("multer");
+const path = require("path");
 
 const getLoginPage = (req, res) => {
 
@@ -138,4 +140,46 @@ const getDashboard = (req, res) => {
     });
 };
 
-module.exports = { getLoginPage, getDashboard };
+const uploadImageFiles = (req, res) => {
+
+    // TODO: Finish the image uploader function
+    // https://github.com/pkrisz20/Netflix-Vue-Node/blob/develop/server/admin/uploadThumbnail.js
+    // https://stackoverflow.com/questions/56493710/request-body-is-empty-when-posting-form-data
+
+    console.log(req.body);
+
+    // return res.status(200).json({ status: 'success' });
+
+    // Check for file type
+    const enabledFileTypes = /jpeg|jpg|png/;
+    const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = enabledFileTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+
+        const fileStorageImage = multer.diskStorage({
+            destination: "./uploads/" + folder,
+            filename: (req, file, cb) => {
+                cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
+            }
+        });
+
+        const uploadThumbnail = multer({
+            storage: fileStorageImage,
+            limits: { fileSize: 4000000 },
+            fileFilter: function (req, file, cb) {
+                checkFileTpye(file, cb);
+            }
+        }).single("image");
+    }
+    else {
+        return res.status(200).json({
+            status: 'error',
+            title: 'Nem megfelelő képformátum',
+            message: 'Engedélyezett képformátumok: jpg, jpeg, png',
+            csrfToken: req.csrfToken()
+        });
+    }
+};
+
+module.exports = { getLoginPage, getDashboard, uploadImageFiles };

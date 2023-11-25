@@ -1,0 +1,46 @@
+<form method="post" enctype="multipart/form-data" data-url="<%= process.env.APP_URL %>/admin/image-upload" data-folder="<%= whereToUpload %>" class="col-6 js-image-upload-form">
+    <div class="mb-3">
+        <% if (locals.single) { %>
+            <label for="files" class="form-label">Indexkép feltöltése</label>
+            <input class="form-control js-file-input" name="<%= inputName %>" type="file" id="files" />
+        <% } else if (locals.multiple) { %>
+            <label for="files" class="form-label">Képek feltöltése</label>
+            <input class="form-control js-file-input" name="<%= inputName %>" type="file" id="files" multiple />
+            <small class="text-muted">Kiválaszthatsz akár több képet is egyszerre.</small>
+        <% } %>
+    </div>
+
+    <button class="btn btn-primary js-upload-submit" type="submit">Feltöltés</button>
+</form>
+
+<% if (locals.uploadedImages && locals.uploadedImages.length > 0) { %>
+    <div class="mt-5">
+        <% if (locals.single) { %>
+            <h2 class="fs-5">Feltöltött indexkép</h2>
+        <% } else if (locals.multiple) { %>
+            <h2 class="fs-5">Feltöltött képek</h2>
+        <% } %>
+
+        <% if (locals.single) { %>
+            <div class="d-flex mw-100" style="flex-wrap: wrap; gap: 10px;">
+                <div class="position-absolute js-image-item" style="min-width: 200px;">
+                    <button type="button" class="js-delete-image btn btn-danger position-absolute" style="left: 5px; bottom: 5px; font-size: 12px;">
+                        <i class="fas fa-trash"></i> Törlés
+                    </button>
+                    <img src="<%= uploadedImages[0].imageSrc %>" width="200" class="img-thumbnail" />
+                </div>
+            </div>
+        <% } else if (locals.multiple) { %>
+            <div class="d-flex mw-100" style="flex-wrap: wrap; gap: 10px;">
+                <% uploadedImages.forEach( image => { %>
+                    <div class="position-absolute js-image-item" style="min-width: 200px;">
+                        <button type="button" class="js-delete-image btn btn-danger position-absolute" style="left: 5px; bottom: 5px; font-size: 12px;">
+                            <i class="fas fa-trash"></i> Törlés
+                        </button>
+                        <img src="<%= image.imageSrc %>" width="200" class="img-thumbnail" />
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+<% } %>
