@@ -1,7 +1,8 @@
 const { db } = require("../../config/db-connection");
-const { setMomentLocale, numberWithCommas } = require("../../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas, createUniqueID } = require("../../helpers/globalFunctions");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
+const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 const multer = require("multer");
 const path = require("path");
@@ -142,44 +143,78 @@ const getDashboard = (req, res) => {
 
 const uploadImageFiles = (req, res) => {
 
-    // TODO: Finish the image uploader function
-    // https://github.com/pkrisz20/Netflix-Vue-Node/blob/develop/server/admin/uploadThumbnail.js
-    // https://stackoverflow.com/questions/56493710/request-body-is-empty-when-posting-form-data
+    const fileStorageImage = multer.diskStorage({
+        // TODO: Handle the destination by request body folder value
+        destination: (req, file, cb) => {
+            console.log(req.body);
 
-    console.log(req.body);
+            cb(null, '../../../files/');
+        },
+        filename: (req, file, cb) => {
+            cb(null, createUniqueID() + "-" + file.originalname);
+        }
+    });
 
-    // return res.status(200).json({ status: 'success' });
+    const uploadImage = multer({
+        storage: fileStorageImage,
+        limits: { fileSize: 4000000 },
+        fileFilter: function (req, file, cb) {
+            const enabledFileTypes = /jpeg|jpg|png/;
+            const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
+            const mimetype = enabledFileTypes.test(file.mimetype);
 
-    // Check for file type
-    const enabledFileTypes = /jpeg|jpg|png/;
-    const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = enabledFileTypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-
-        const fileStorageImage = multer.diskStorage({
-            destination: "./uploads/" + folder,
-            filename: (req, file, cb) => {
-                cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
+            if (mimetype && extname) {
+                return cb(null, true);
             }
-        });
-
-        const uploadThumbnail = multer({
-            storage: fileStorageImage,
-            limits: { fileSize: 4000000 },
-            fileFilter: function (req, file, cb) {
-                checkFileTpye(file, cb);
+            else {
+                return res.status(200).json({
+                    status: 'error',
+                    title: 'Nem megfelelő képformátum',
+                    message: 'Engedélyezett képformátumok: jpg, jpeg, png',
+                    csrfToken: req.csrfToken()
+                });
             }
-        }).single("image");
-    }
-    else {
-        return res.status(200).json({
-            status: 'error',
-            title: 'Nem megfelelő képformátum',
-            message: 'Engedélyezett képformátumok: jpg, jpeg, png',
-            csrfToken: req.csrfToken()
-        });
-    }
+        }
+    }).single("files");
+
+    uploadImage(req, res, (err) => {
+
+        console.log(req.file);
+
+        if (err) {
+            return res.status(200).json({
+                status: 'error',
+                csrfToken: req.csrfToken()
+            });
+        }
+        else {
+            if (req.file == undefined) {
+                return res.status(200).json({
+                    status: 'error',
+                    message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
+                    csrfToken: req.csrfToken()
+                });
+            }
+            else {
+                // upload everything into database
+                const finalImageName = req.file.filename;
+                // console.log(finalImageName);
+                return res.status(200).json({ status: 'success' });
+
+                const sqlQuery = "UPDATE movies SET image = ? WHERE id = ?;";
+
+                db.query(sqlQuery, [finalImageName, movieId], (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.json({ status: false, message: "Something went wrong" });
+                    }
+                    if (result) {
+                        res.json({ status: true, message: "Successfully changed thumbnail image!" });
+                    }
+                });
+            }
+        }
+    });
 };
 
 module.exports = { getLoginPage, getDashboard, uploadImageFiles };

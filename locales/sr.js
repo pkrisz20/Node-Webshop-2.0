@@ -144,6 +144,7 @@ const sr = {
     errors: {
         error: "Greška",
         common_error: "Došlo je do greške!",
+		no_selected_file: "Nema izabrane datoteke!",
         server_error: "Greška na serveru",
         wrong_data: "Netačne podatke!",
         unprocessable_data: "Neobrađene podatke!",

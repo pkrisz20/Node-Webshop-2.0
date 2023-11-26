@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, '/files')));
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.use(bodyParser.json({ limit: '300mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '300mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '300mb' }));
 app.use(express.json());
 
 // Cookies
@@ -84,8 +84,6 @@ app.use("/:lang", function (req, res, next) {
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
     return next();
 });
-
-// TODO: Finished the wishlist selection on each route, cause now the wishlist session variable is undefined and got an error everywhere
 
 // Web routes
 const homeRouter = require("./routes/home");

@@ -144,6 +144,7 @@ const hu = {
     errors: {
         error: "Hiba",
         common_error: "Váratlan hiba lépett fel!",
+		no_selected_file: "Nincs kiválasztva semmilyen fájl!",
         server_error: "Szerver hiba",
         wrong_data: "Nem megfelelő adatok!",
         unprocessable_data: "Nem feldolgozható adatok!",
