@@ -144,27 +144,25 @@ const getDashboard = (req, res) => {
 const uploadImageFiles = (req, res) => {
 
     const fileStorageImage = multer.diskStorage({
-        // TODO: Handle the destination by request body folder value
-        destination: (req, file, cb) => {
-            console.log(req.body);
-
-            cb(null, '../../../files/');
+        destination: (req, file, callback) => {
+            // Set the exact destination inside the files folder
+            callback(null, path.join('./files/' + req.params.folder));
         },
-        filename: (req, file, cb) => {
-            cb(null, createUniqueID() + "-" + file.originalname);
+        filename: (req, file, callback) => {
+            callback(null, createUniqueID() + "-" + file.originalname);
         }
     });
 
     const uploadImage = multer({
         storage: fileStorageImage,
         limits: { fileSize: 4000000 },
-        fileFilter: function (req, file, cb) {
+        fileFilter: function (req, file, callback) {
             const enabledFileTypes = /jpeg|jpg|png/;
             const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
             const mimetype = enabledFileTypes.test(file.mimetype);
 
             if (mimetype && extname) {
-                return cb(null, true);
+                return callback(null, true);
             }
             else {
                 return res.status(200).json({
@@ -178,10 +176,9 @@ const uploadImageFiles = (req, res) => {
     }).single("files");
 
     uploadImage(req, res, (err) => {
-
-        console.log(req.file);
-
         if (err) {
+            console.error(err);
+
             return res.status(200).json({
                 status: 'error',
                 csrfToken: req.csrfToken()
@@ -196,9 +193,11 @@ const uploadImageFiles = (req, res) => {
                 });
             }
             else {
-                // upload everything into database
+                // TODO: save the image path into database
+                // Here you can earn the req.body => it will include the ID for database query
                 const finalImageName = req.file.filename;
-                // console.log(finalImageName);
+                console.log(req.file);
+                console.log(finalImageName);
                 return res.status(200).json({ status: 'success' });
 
                 const sqlQuery = "UPDATE movies SET image = ? WHERE id = ?;";
@@ -217,4 +216,78 @@ const uploadImageFiles = (req, res) => {
     });
 };
 
-module.exports = { getLoginPage, getDashboard, uploadImageFiles };
+const uploadMultipleImages = (req, res) => {
+
+    const fileStorageImage = multer.diskStorage({
+        destination: (req, file, callback) => {
+            // Set the exact destination inside the files folder
+            callback(null, path.join('./files/' + req.params.folder));
+        },
+        filename: (req, file, callback) => {
+            callback(null, createUniqueID() + "-" + file.originalname);
+        }
+    });
+
+    const uploadImage = multer({
+        storage: fileStorageImage,
+        limits: { fileSize: 4000000 },
+        fileFilter: function (req, file, callback) {
+            const enabledFileTypes = /jpeg|jpg|png/;
+            const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
+            const mimetype = enabledFileTypes.test(file.mimetype);
+
+            if (mimetype && extname) {
+                return callback(null, true);
+            }
+            else {
+                return res.status(200).json({
+                    status: 'error',
+                    title: 'Nem megfelelő képformátum',
+                    message: 'Engedélyezett képformátumok: jpg, jpeg, png',
+                    csrfToken: req.csrfToken()
+                });
+            }
+        }
+    }).any("files");
+
+    uploadImage(req, res, (err) => {
+        if (err) {
+            console.error(err);
+
+            return res.status(200).json({
+                status: 'error',
+                csrfToken: req.csrfToken()
+            });
+        }
+        else {
+            if (req.files == undefined) {
+                return res.status(200).json({
+                    status: 'error',
+                    message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
+                    csrfToken: req.csrfToken()
+                });
+            }
+            else {
+                // TODO: save the path of images into database
+                // Here you can earn the req.body => it will include the ID for database query
+                // You can use the req.files variable, it's an array which includes the images
+                console.log(req.files);
+                return res.status(200).json({ status: 'success' });
+
+                const sqlQuery = "UPDATE movies SET image = ? WHERE id = ?;";
+
+                db.query(sqlQuery, [finalImageName, movieId], (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.json({ status: false, message: "Something went wrong" });
+                    }
+                    if (result) {
+                        res.json({ status: true, message: "Successfully changed thumbnail image!" });
+                    }
+                });
+            }
+        }
+    });
+};
+
+module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages };

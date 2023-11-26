@@ -1,4 +1,10 @@
-<form method="post" enctype="multipart/form-data" data-url="<%= process.env.APP_URL %>/admin/image-upload" data-folder="<%= whereToUpload %>" class="col-6 js-image-upload-form">
+<% if (locals.single) { %>
+    <form method="post" enctype="multipart/form-data" accept="image/*" data-url="<%= process.env.APP_URL %>/admin/single-upload/<%= whereToUpload %>" class="col-6 js-image-upload-form">
+
+<% } else if (locals.multiple) { %>
+    <form method="post" enctype="multipart/form-data" accept="image/*" data-url="<%= process.env.APP_URL %>/admin/multiple-upload/<%= whereToUpload %>" class="col-6 js-image-upload-form">
+
+<% } %>
     <div class="mb-3">
         <% if (locals.single) { %>
             <label for="files" class="form-label">Indexkép feltöltése</label>

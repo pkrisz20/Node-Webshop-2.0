@@ -4,17 +4,18 @@ $(document).ready(function() {
 
         $('body').on('click', '.js-upload-submit', function (event) {
             event.preventDefault();
-            var fileInput = $('body .js-file-input');
+            var submitButton = $(this);
+            var fileInput = submitButton.closest('.js-image-upload-form').find('.js-file-input');
 
             if ( fileInput[0].files.length === 0 ) {
                 Swal.fire({ icon: 'warning', title: 'Nincs fájl kiválasztva!' });
                 return;
             }
 
-            var uploadForm = $('body .js-image-upload-form');
-            var submitButton = uploadForm.find('.js-upload-submit');
+            var uploadForm = submitButton.closest('.js-image-upload-form');
             var formData = new FormData( $(uploadForm)[0] );
-            formData.append("folder", uploadForm.data('folder'));
+            // Here you can get the ID for database query, just put on a data attribute
+            // formData.append(uploadForm.data('id'));
 
             $.ajax({
                 type: "post",

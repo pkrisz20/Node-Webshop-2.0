@@ -27,8 +27,11 @@ adminRouter.route("/logout")
 adminRouter.route("/dashboard")
     .get(checkAuthentication, AdminController.getDashboard);
 
-adminRouter.route("/image-upload")
+adminRouter.route("/single-upload/:folder")
     .post(checkAuthentication, AdminController.uploadImageFiles);
+
+adminRouter.route("/multiple-upload/:folder")
+    .post(checkAuthentication, AdminController.uploadMultipleImages);
 
 adminRouter.route("/statistics")
     .get(checkAuthentication, StatisticsController.getStatistics);
