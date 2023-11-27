@@ -11,7 +11,6 @@ const handleSearch = (req, res) => {
     let { keywords } = req.query;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var { DB_CONFIG } = req;
-    var wishlist = req.session.wishlist ?? [];
 
     // Redirect if something is fishy with the query param
     if ( typeof keywords !== "string" || keywords.length === 0 ) {
@@ -210,7 +209,7 @@ const handleSearch = (req, res) => {
                     languageHandler: languageHandler,
                     DB_CONFIG: DB_CONFIG,
                     webshopCategories: req.webshopCategories,
-                    wishlistTotalNumber: wishlist.length,
+                    wishlistTotalNumber: req.wishlistTotalNumber,
                     csrfToken: req.csrfToken()
                 });
             });

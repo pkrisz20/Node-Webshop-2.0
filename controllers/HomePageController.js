@@ -165,7 +165,7 @@ const getData = (req, res) => {
                                         languageHandler: languageHandler,
                                         DB_CONFIG: DB_CONFIG,
                                         webshopCategories: req.webshopCategories ?? [],
-                                        wishlistTotalNumber: wishlist.length,
+                                        wishlistTotalNumber: req.wishlistTotalNumber,
                                         csrfToken: req.csrfToken()
                                     });
                                 }

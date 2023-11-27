@@ -20,7 +20,6 @@ const getBlogDetails = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { slug } = req.params;
@@ -144,7 +143,7 @@ const getBlogDetails = (req, res) => {
                                     locales: ['hu', 'sr', 'en'],
                                     languageHandler: languageHandler,
                                     DB_CONFIG: DB_CONFIG,
-                                    wishlistTotalNumber: wishlist.length,
+                                    wishlistTotalNumber: req.wishlistTotalNumber,
                                     webshopCategories: req.webshopCategories,
                                     csrfToken: req.csrfToken()
                                 });
@@ -195,7 +194,7 @@ const getBlogDetails = (req, res) => {
                                         locales: ['hu', 'sr', 'en'],
                                         languageHandler: languageHandler,
                                         DB_CONFIG: DB_CONFIG,
-                                        wishlistTotalNumber: wishlist.length,
+                                        wishlistTotalNumber: req.wishlistTotalNumber,
                                         webshopCategories: req.webshopCategories,
                                         csrfToken: req.csrfToken()
                                     });
@@ -216,7 +215,7 @@ const getBlogDetails = (req, res) => {
                             cart: cart,
                             locales: ['hu', 'sr', 'en'],
                             languageHandler: languageHandler,
-                            wishlistTotalNumber: wishlist.length,
+                            wishlistTotalNumber: req.wishlistTotalNumber,
                             DB_CONFIG: DB_CONFIG,
                             webshopCategories: req.webshopCategories,
                             csrfToken: req.csrfToken()
@@ -339,7 +338,7 @@ const getAllBlogs = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
-                        wishlistTotalNumber: wishlist.length,
+                        wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
                         csrfToken: req.csrfToken()
                     });

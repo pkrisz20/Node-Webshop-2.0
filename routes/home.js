@@ -4,8 +4,9 @@ const HomePageController = require("../controllers/HomePageController");
 const { getCartItems } = require("../helpers/getCartItems");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 homeRouter.route("/")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, HomePageController.getData);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, HomePageController.getData);
 
 module.exports = homeRouter;

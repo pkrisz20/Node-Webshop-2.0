@@ -20,7 +20,6 @@ const getAllGallery = (req, res) => {
         }
     });
 
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { page = 1 } = req.query;
@@ -57,7 +56,7 @@ const getAllGallery = (req, res) => {
                 meta: metas,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
-                wishlistTotalNumber: wishlist.length,
+                wishlistTotalNumber: req.wishlistTotalNumber,
                 current_locale: req.session.lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
@@ -111,7 +110,7 @@ const getAllGallery = (req, res) => {
                         locales: ['hu', 'sr', 'en'],
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
-                        wishlistTotalNumber: wishlist.length,
+                        wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
                         csrfToken: req.csrfToken()
                     });
@@ -135,7 +134,6 @@ const getGalleryDetails = (req, res) => {
         }
     });
 
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
     let { slug } = req.params;
@@ -207,7 +205,7 @@ const getGalleryDetails = (req, res) => {
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
-                wishlistTotalNumber: wishlist.length,
+                wishlistTotalNumber: req.wishlistTotalNumber,
                 webshopCategories: req.webshopCategories,
                 csrfToken: req.csrfToken()
             });

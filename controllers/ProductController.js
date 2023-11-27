@@ -136,7 +136,7 @@ const getProductDetails = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
-                                wishlistTotalNumber: wishlist.length,
+                                wishlistTotalNumber: req.wishlistTotalNumber,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -189,7 +189,7 @@ const getProductDetails = (req, res) => {
                                     languageHandler: languageHandler,
                                     DB_CONFIG: DB_CONFIG,
                                     webshopCategories: req.webshopCategories,
-                                    wishlistTotalNumber: wishlist.length,
+                                    wishlistTotalNumber: req.wishlistTotalNumber,
                                     csrfToken: req.csrfToken()
                                 });
                             });
@@ -211,7 +211,7 @@ const getProductDetails = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: wishlist.length,
+                        wishlistTotalNumber: req.wishlistTotalNumber,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -279,7 +279,7 @@ const getAllProducts = (req, res) => {
                 languageHandler: languageHandler,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
-                wishlistTotalNumber: wishlist.length,
+                wishlistTotalNumber: req.wishlistTotalNumber,
                 csrfToken: req.csrfToken()
             });
         }
@@ -342,7 +342,7 @@ const getAllProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: wishlist.length,
+                        wishlistTotalNumber: req.wishlistTotalNumber,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -456,7 +456,7 @@ const getCategoryProducts = (req, res) => {
                         languageHandler: languageHandler,
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
-                        wishlistTotalNumber: wishlist.length,
+                        wishlistTotalNumber: req.wishlistTotalNumber,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -520,7 +520,7 @@ const getCategoryProducts = (req, res) => {
                                 languageHandler: languageHandler,
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
-                                wishlistTotalNumber: wishlist.length,
+                                wishlistTotalNumber: req.wishlistTotalNumber,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -751,9 +751,9 @@ const getWishlistListPage = ( req, res, next ) => {
         description: `This is the wishlist list page`,
     };
 
-    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) ORDER BY id DESC`;
+    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) AND is_active = ? ORDER BY id DESC`;
 
-    db.query(selectWishlistProducts, [...wishlistProductIds], (err, data) => {
+    db.query(selectWishlistProducts, [...wishlistProductIds, 1], (err, data) => {
         if (err) {
             console.log(err);
             return showServerErrorPage(req, res);

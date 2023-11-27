@@ -18,7 +18,6 @@ const getEmployees = (req, res) => {
         }
     });
 
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     let employees = [];
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
@@ -70,7 +69,7 @@ const getEmployees = (req, res) => {
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
             webshopCategories: req.webshopCategories,
-            wishlistTotalNumber: wishlist.length,
+            wishlistTotalNumber: req.wishlistTotalNumber,
             csrfToken: req.csrfToken()
         });
     });

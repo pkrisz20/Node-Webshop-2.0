@@ -5,12 +5,13 @@ const { getCartItems } = require("../helpers/getCartItems");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 staticContentsRouter.route("/faq")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, StaticContentsController.getFAQ);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getFAQ);
 
 staticContentsRouter.route("/gdpr")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, StaticContentsController.getGDPR);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getGDPR);
 
 staticContentsRouter.route("/gdpr/handle")
     .post(recaptchaValidation, StaticContentsController.handleGDPR);

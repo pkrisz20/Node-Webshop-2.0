@@ -4,11 +4,12 @@ const GalleryController = require("../controllers/GalleryController");
 const { getCartItems } = require("../helpers/getCartItems");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 galleryRouter.route("/gallery")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, GalleryController.getAllGallery);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, GalleryController.getAllGallery);
 
 galleryRouter.route("/gallery/:slug")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, GalleryController.getGalleryDetails);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, GalleryController.getGalleryDetails);
 
 module.exports = galleryRouter;

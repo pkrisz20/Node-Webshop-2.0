@@ -7,15 +7,16 @@ const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 productsRouter.route("/products")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getAllProducts);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, ProductController.getAllProducts);
 
 productsRouter.route("/products/category/:slug")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getCategoryProducts);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, ProductController.getCategoryProducts);
 
 productsRouter.route("/products/:slug")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getProductDetails);
+    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, ProductController.getProductDetails);
 
 productsRouter.route("/wishlist")
     .get(getConfigFromDb, selectWebshopCategories, getCartItems, ProductController.getWishlistListPage);

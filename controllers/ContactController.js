@@ -19,7 +19,6 @@ const getContactPage = (req, res) => {
         }
     });
 
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     var metas = {
         title: languageHandler("nav.contact", req.session.lang ?? process.env.FALLBACK_LANG),
@@ -38,7 +37,7 @@ const getContactPage = (req, res) => {
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
-        wishlistTotalNumber: wishlist.length,
+        wishlistTotalNumber: req.wishlistTotalNumber,
         csrfToken: req.csrfToken()
     });
 };
