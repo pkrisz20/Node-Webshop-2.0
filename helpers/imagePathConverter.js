@@ -1,5 +1,3 @@
-const path = require("path");
-
 function imagePathConverter ( images, path = "products" ) {
 
     if (typeof images === "string") {
