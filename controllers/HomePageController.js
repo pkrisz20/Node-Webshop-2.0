@@ -147,7 +147,7 @@ const getData = (req, res) => {
                                             id: parseInt(gallery_element.id),
                                             name: getValueByLanguage(gallery_element.gallery_name, lang),
                                             slug: gallery_element.slug,
-                                            source: imagePathConverter(gallery_element.gallery_thumbnail, "gallery"),
+                                            source: imagePathConverter(gallery_element.gallery_thumbnail, "galleries"),
                                         }
 
                                         galleries.push(tempObjectGallery);

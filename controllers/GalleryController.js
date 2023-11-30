@@ -72,7 +72,7 @@ const getAllGallery = (req, res) => {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.gallery_name, lang),
                     slug: element.slug,
-                    thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
+                    thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries"),
                     date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                 }
 
@@ -161,7 +161,7 @@ const getGalleryDetails = (req, res) => {
                 slug: slug,
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
-                galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "gallery"),
+                galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "galleries"),
                 date: formatDateByLang(data[0].gallery_date, lang ?? process.env.FALLBACK_LANG)
             }
         }
@@ -188,7 +188,7 @@ const getGalleryDetails = (req, res) => {
                     let tempObject = {
                         name: getValueByLanguage(item.gallery_name, lang),
                         slug: item.slug,
-                        thumbnailImage: imagePathConverter(item.gallery_thumbnail, "gallery"),
+                        thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
                         date: formatDateByLang(item.gallery_date, lang ?? process.env.FALLBACK_LANG),
                     }
 

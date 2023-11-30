@@ -15,7 +15,7 @@ $(document).ready(function() {
             var uploadForm = submitButton.closest('.js-image-upload-form');
             var formData = new FormData( $(uploadForm)[0] );
             // Here you can get the ID for database query, just put on a data attribute
-            // formData.append(uploadForm.data('id'));
+            // formData.append('test', 56);
 
             $.ajax({
                 type: "post",

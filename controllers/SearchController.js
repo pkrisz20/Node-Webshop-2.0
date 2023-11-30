@@ -177,7 +177,7 @@ const handleSearch = (req, res) => {
                             id: parseInt(element.id),
                             name: getValueByLanguage(element.gallery_name, lang ?? process.env.FALLBACK_LANG),
                             slug: element.slug,
-                            thumbnailImage: imagePathConverter(element.gallery_thumbnail, "gallery"),
+                            thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries"),
                             date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                         }
 
@@ -362,7 +362,7 @@ const ajaxSearch = (req, res) => {
                                 <a class="container_box" href="${ process.env.APP_URL }/${ lang }/gallery/${ element.slug }" aria-label="${ getValueByLanguage(element.gallery_name, lang) }">
                                     <div class="container_box--image">
                                         <picture>
-                                            <source srcset="${ imagePathConverter(element.gallery_thumbnail, "gallery") }">
+                                            <source srcset="${ imagePathConverter(element.gallery_thumbnail, "galleries") }">
                                             <img src="images/no-picture.jpg" loading="lazy" class="img" alt="${ getValueByLanguage(element.gallery_name, lang) }" />
                                         </picture>
                                     </div>

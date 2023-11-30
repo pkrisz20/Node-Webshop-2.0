@@ -157,7 +157,7 @@ const uploadImageFiles = (req, res) => {
         storage: fileStorageImage,
         limits: { fileSize: 4000000 },
         fileFilter: function (req, file, callback) {
-            const enabledFileTypes = /jpeg|jpg|png/;
+            const enabledFileTypes = /jpeg|jpg|png/;    // Enable only jpg, jpeg, and png formats
             const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
             const mimetype = enabledFileTypes.test(file.mimetype);
 
@@ -199,18 +199,6 @@ const uploadImageFiles = (req, res) => {
                 console.log(req.file);
                 console.log(finalImageName);
                 return res.status(200).json({ status: 'success' });
-
-                const sqlQuery = "UPDATE movies SET image = ? WHERE id = ?;";
-
-                db.query(sqlQuery, [finalImageName, movieId], (error, result) => {
-                    if (error) {
-                        console.log(error);
-                        res.json({ status: false, message: "Something went wrong" });
-                    }
-                    if (result) {
-                        res.json({ status: true, message: "Successfully changed thumbnail image!" });
-                    }
-                });
             }
         }
     });
@@ -268,23 +256,11 @@ const uploadMultipleImages = (req, res) => {
                 });
             }
             else {
-                // TODO: save the path of images into database
+                // TODO: save the path of images into database (saveImageToDatabase.js)
                 // Here you can earn the req.body => it will include the ID for database query
                 // You can use the req.files variable, it's an array which includes the images
                 console.log(req.files);
                 return res.status(200).json({ status: 'success' });
-
-                const sqlQuery = "UPDATE movies SET image = ? WHERE id = ?;";
-
-                db.query(sqlQuery, [finalImageName, movieId], (error, result) => {
-                    if (error) {
-                        console.log(error);
-                        res.json({ status: false, message: "Something went wrong" });
-                    }
-                    if (result) {
-                        res.json({ status: true, message: "Successfully changed thumbnail image!" });
-                    }
-                });
             }
         }
     });
