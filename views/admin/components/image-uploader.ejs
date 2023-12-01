@@ -8,10 +8,10 @@
     <div class="mb-3">
         <% if (locals.single) { %>
             <label for="files" class="form-label">Indexkép feltöltése</label>
-            <input class="form-control js-file-input" name="files" type="file" id="files" />
+            <input class="form-control js-file-input" data-id="<%= databaseID %>" name="files" type="file" id="files" />
         <% } else if (locals.multiple) { %>
             <label for="files" class="form-label">Képek feltöltése</label>
-            <input class="form-control js-file-input" name="files" type="file" id="files" multiple />
+            <input class="form-control js-file-input" data-id="<%= databaseID %>" name="files" type="file" id="files" multiple />
             <small class="text-muted">Kiválaszthatsz akár több képet is egyszerre. (max. 20 darab)</small>
         <% } %>
     </div>

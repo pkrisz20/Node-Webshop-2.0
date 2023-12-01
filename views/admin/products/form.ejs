@@ -167,8 +167,9 @@
                         </div>
                     </form>
 
+                    <!-- NOTE: Here the 402 is just a test value -->
                     <div class="tab-pane fade" id="media">
-                        <%- include('../components/image-uploader.ejs', { single: true, whereToUpload: "products" }) %>
+                        <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: 402 }) %>
                     </div>
                 </main>
             </div>

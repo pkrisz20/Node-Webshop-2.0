@@ -1,6 +1,7 @@
 const { db } = require("../../config/db-connection");
 const { setMomentLocale, numberWithCommas, createUniqueID } = require("../../helpers/globalFunctions");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
+const { saveImageToDatabase } = require('../../helpers/admin/saveImageToDatabase');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
@@ -192,14 +193,8 @@ const uploadImageFiles = (req, res) => {
                     csrfToken: req.csrfToken()
                 });
             }
-            else {
-                // TODO: save the image path into database
-                // Here you can earn the req.body => it will include the ID for database query
-                const finalImageName = req.file.filename;
-                console.log(req.file);
-                console.log(finalImageName);
-                return res.status(200).json({ status: 'success' });
-            }
+
+            saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
         }
     });
 };
@@ -255,13 +250,8 @@ const uploadMultipleImages = (req, res) => {
                     csrfToken: req.csrfToken()
                 });
             }
-            else {
-                // TODO: save the path of images into database (saveImageToDatabase.js)
-                // Here you can earn the req.body => it will include the ID for database query
-                // You can use the req.files variable, it's an array which includes the images
-                console.log(req.files);
-                return res.status(200).json({ status: 'success' });
-            }
+
+            saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
         }
     });
 };
