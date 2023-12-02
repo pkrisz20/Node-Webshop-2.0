@@ -145,6 +145,8 @@ const sr = {
         error: "Greška",
         common_error: "Došlo je do greške!",
 		no_selected_file: "Nema izabrane datoteke!",
+		wrong_image_format: "Pogrešan format slike!",
+		enabled_image_format: "Omogućeni formati slika: {0}",
         server_error: "Greška na serveru",
         wrong_data: "Netačne podatke!",
         unprocessable_data: "Neobrađene podatke!",

@@ -168,8 +168,8 @@ const uploadImageFiles = (req, res) => {
             else {
                 return res.status(200).json({
                     status: 'error',
-                    title: 'Nem megfelelő képformátum',
-                    message: 'Engedélyezett képformátumok: jpg, jpeg, png',
+                    title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
+                    message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
                     csrfToken: req.csrfToken()
                 });
             }
@@ -225,8 +225,8 @@ const uploadMultipleImages = (req, res) => {
             else {
                 return res.status(200).json({
                     status: 'error',
-                    title: 'Nem megfelelő képformátum',
-                    message: 'Engedélyezett képformátumok: jpg, jpeg, png',
+                    title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
+                    message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
                     csrfToken: req.csrfToken()
                 });
             }

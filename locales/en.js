@@ -145,6 +145,8 @@ const en = {
 		error: "Error",
 		common_error: "Something went wrong during the processing!",
 		no_selected_file: "There is no selected file!",
+		wrong_image_format: "Wrong image format!",
+		enabled_image_format: "Wrong image formats: {0}",
 		server_error: "Server error",
 		wrong_data: "Wrong datas!",
 		unprocessable_data: "Unprocessable data types!",
