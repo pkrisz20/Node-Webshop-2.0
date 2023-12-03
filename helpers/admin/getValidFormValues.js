@@ -1,18 +1,23 @@
 const { db } = require('../../config/db-connection');
+const { showServerErrorPage } = require('../../helpers/showErrorPages')
 
-function getValidFormValues ( databaseTable, databaseID ) {
+export function getValidFormValues ( request, response, databaseTable, databaseID ) {
 
     const selectEachFormData = `SELECT * FROM ${ databaseTable } WHERE id = ?`;
 
     db.query(selectEachFormData, databaseID, (err, formValues) => {
         if (err) {
             console.log(err);
-            return response.status(200).json({ status: 'error' });
+            return showServerErrorPage(request, response);
         }
 
         // If there is already some image data in the database
         else if (formValues.length > 0) {
+            return formValues[0] ?? null;
+        }
 
+        else if (formValues.length === 0) {
+            return null;
         }
     });
 }

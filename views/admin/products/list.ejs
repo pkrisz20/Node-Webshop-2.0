@@ -43,7 +43,9 @@
                                                     <td><%= product.date %></td>
                                                     <td>
                                                         <i data-url="<%= process.env.APP_URL %>/admin/product/delete/<%= product.productId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                        <i role=button class="fas fa-edit link-dark mx-1"></i>
+                                                        <a class="mx-1 link-dark" href="<%= process.env.APP_URL %>/admin/products/edit/<%= product.productId %>">
+                                                            <i role=button class="fas fa-edit"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             <% }) %>

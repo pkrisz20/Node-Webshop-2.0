@@ -1,9 +1,10 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
-const languageHandler = require("../../helpers/languageHandler");
-const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
+const imagePathConverter = require("../../helpers/imagePathConverter");
+const { setMomentLocale, limitText, numberWithCommas } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
+const { getValidFormValues } = require("../../helpers/admin/getValidFormValues");
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
@@ -226,7 +227,7 @@ const getProductUploadPage = (req, res) => {
         description: "This is the product upload page",
     };
 
-    return res.render("admin/products/form", {
+    return res.render("admin/products/new", {
         webshopCategories: req.webshopCategories ?? [],
         meta: metas,
         current_locale: lang,
@@ -250,4 +251,65 @@ const deleteProductComment = (req, res) => {
     });
 }
 
-module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment };
+const getProductEditPage = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    var metas = {
+        title: "Szerkesztés",
+        type: "website",
+        // url: `${ process.env.APP_URL }/${ lang }/edit`,
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the product edit page",
+    };
+
+    let { productId } = req.params;
+    productId = parseInt(productId);
+
+    if ( isNaN(productId) ) {
+        return showBadRequestPage(req, res);
+    }
+
+    let formValues = getValidFormValues(req, res, 'products', productId);
+    // TODO: Find a solution for the undefined returned value after function is called
+    console.log(formValues);
+
+    // If HAS form values, then show edit page
+    if ( formValues != null ) {
+
+        // Convert & format the form values
+        formValues.name = getValueByLanguage(formValues.name, lang);
+        formValues.short_description = formValues.short_description != null ? getValueByLanguage(formValues.short_description, lang) : null;
+        formValues.images = formValues.images != null ? imagePathConverter(JSON.parse(formValues.images), 'products') : null;
+        formValues.image_thumbnail = formValues.image_thumbnail != null ? imagePathConverter(formValues.image_thumbnail, 'products') : null;
+        formValues.discount_value = formValues.discount_value != null ? numberWithCommas(formValues.discount_value) : null;
+        formValues.price = numberWithCommas(formValues.price);
+        formValues.is_active = parseInt(formValues.is_active);
+        formValues.is_featured = parseInt(formValues.is_featured);
+        formValues.is_available = parseInt(formValues.is_available);
+        formValues.is_delivered = parseInt(formValues.is_delivered);
+        formValues.max_order_count = parseInt(formValues.max_order_count);
+        formValues.comments_allowed = parseInt(formValues.comments_allowed);
+        formValues.category_id = parseInt(formValues.category_id);
+
+        return res.render("admin/products/edit", {
+            formValues: formValues,
+            webshopCategories: req.webshopCategories ?? [],
+            meta: metas,
+            current_locale: lang,
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // If NO form values, then show new product upload page
+    else if ( !formValues ) {
+
+        return res.render("admin/products/new", {
+            webshopCategories: req.webshopCategories ?? [],
+            meta: metas,
+            current_locale: lang,
+            csrfToken: req.csrfToken()
+        });
+    }
+
+}
+
+module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment, getProductEditPage };
