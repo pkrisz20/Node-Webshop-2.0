@@ -19,6 +19,9 @@
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
                         </li>
                         <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media-thumbnail"><i class="fas fa-photo-video"></i> Indexkép</a>
+                        </li>
+                        <li class="nav-item mx-2">
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media"><i class="fas fa-photo-video"></i> Média</a>
                         </li>
                     </ul>
@@ -31,7 +34,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-hu" class="form-label">Termek megnevezése</label>
-                                            <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name.hu" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name.hu" value="<%= formValues.hu.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -41,7 +44,7 @@
                                                 <% if (webshopCategories.length > 0) { %>
 
                                                     <% webshopCategories.forEach(category => { %>
-                                                        <option value="<%= category.id %>" <% if (category.id == formValues.category_id) && selected %> ><%= category.name %></option>
+                                                        <option value="<%= category.id %>" <%= category.id == formValues.category_id ?  'selected' : '' %> ><%= category.name %></option>
                                                     <% }) %>
 
                                                 <% } else { %>
@@ -55,7 +58,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-hu" class="form-label">Rövid leírás</label>
-                                            <textarea id="product-short-hu" rows="5" name="short_description.hu" class="form-control"></textarea>
+                                            <textarea id="product-short-hu" rows="5" name="short_description.hu" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 js-price-wrapper">
@@ -63,19 +66,19 @@
                                             <label for="product-price" class="form-label">Árjegyzék</label>
                                             <div class="input-group mb-2">
                                                 <span class="input-group-text">RSD</span>
-                                                <input type="text" data-rule-required="true" data-rule-digits="true" name="price" value="" id="product-price" class="form-control" />
+                                                <input type="text" data-rule-required="true" data-rule-digits="true" name="price" value="<%= formValues.price %>" id="product-price" class="form-control" />
                                                 <span class="input-group-text">.00</span>
                                             </div>
                                         </div>
 
                                         <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
+                                            <input class="form-check-input js-discount-input-toggle" type="checkbox" <%= formValues.discount_value ? 'checked' : '' %> id="discount-price" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
                                         </div>
-                                        <div class="form-row js-input-container" style="display: none;">
+                                        <div class="form-row js-input-container" style="<%= !formValues.discount_value ? 'display: none;' : '' %>">
                                             <div class="input-group">
                                                 <span class="input-group-text">RSD</span>
-                                                <input type="text" name="discount_value" class="form-control js-discount-input" />
+                                                <input type="text" name="discount_value" value="<%= formValues.discount_value ? formValues.discount_value : '' %>" class="form-control js-discount-input" />
                                                 <span class="input-group-text">.00</span>
                                             </div>
                                         </div>
@@ -84,24 +87,24 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_active" id="product-is-active" role="switch" />
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_active === 1 ? 'checked' : '' %> value="<%= formValues.is_active %>" name="is_active" id="product-is-active" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
                                         </div>
                                         <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_featured" id="product-is-featured" role="switch" />
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_featured === 1 ? 'checked' : '' %> value="<%= formValues.is_featured %>" name="is_featured" id="product-is-featured" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
                                         </div>
                                         <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_available" id="product-is-orderable" role="switch" />
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_available === 1 ? 'checked' : '' %> value="<%= formValues.is_available %>" name="is_available" id="product-is-orderable" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
                                         </div>
                                         <div>
                                             <div class="form-check form-switch d-inline-block">
-                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_delivered" id="product-is-delivered" role="switch" />
+                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_delivered === 1 ? 'checked' : '' %> value="<%= formValues.is_delivered %>" name="is_delivered" id="product-is-delivered" role="switch" />
                                                 <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
                                             </div>
                                             <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="comments_allowed" id="product-comments-allowed" role="switch" />
+                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_allowed === 1 ? 'checked' : '' %> value="<%= formValues.is_allowed %>" name="comments_allowed" id="product-comments-allowed" role="switch" />
                                                 <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
                                             </div>
                                         </div>
@@ -109,7 +112,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
-                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="" />
+                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="<%= formValues.max_order_count %>" />
                                         </div>
                                     </div>
                                 </div>
@@ -127,13 +130,13 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-sr" class="form-label">Termék megnevezése szerbül</label>
-                                            <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name.sr" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name.sr" value="<%= formValues.sr.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-sr" class="form-label">Rövid leírás szerbül</label>
-                                            <textarea id="product-short-sr" rows="5" name="short_description.sr" class="form-control"></textarea>
+                                            <textarea id="product-short-sr" rows="5" name="short_description.sr" class="form-control"><%= formValues.sr.short_description ? formValues.sr.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -148,13 +151,13 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-en" class="form-label">Termék megnevezése angolul</label>
-                                            <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name.en" value="" />
+                                            <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name.en" value="<%= formValues.en.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-en" class="form-label">Rövid leírás angolul</label>
-                                            <textarea id="product-short-en" rows="5" name="short_description.en" class="form-control"></textarea>
+                                            <textarea id="product-short-en" rows="5" name="short_description.en" class="form-control"><%= formValues.en.short_description ? formValues.en.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -166,9 +169,11 @@
                         </div>
                     </form>
 
-                    <!-- NOTE: Here the 402 is just a test value -->
-                    <div class="tab-pane fade" id="media">
-                        <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: 402 }) %>
+                    <!-- TODO: Here has to be fixed the design with the tab system -->
+                    <div class="tab-pane fade" id="media-thumbnail">
+                        <%- include('../components/image-uploader.ejs', { single: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.image_thumbnail }) %>
+
+                        <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.images }) %>
                     </div>
                 </main>
             </div>

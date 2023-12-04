@@ -289,6 +289,8 @@ $('body').on('change', '.js-discount-input-toggle', function (event) {
   else {
     inputContainer.slideUp(300);
     inputField.rules('remove');
+    inputField.hasClass('is-valid') && inputField.removeClass('is-valid');
+    inputField.val('');
   }
 });
 

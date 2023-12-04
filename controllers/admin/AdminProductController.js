@@ -1,10 +1,10 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const imagePathConverter = require("../../helpers/imagePathConverter");
-const { setMomentLocale, limitText, numberWithCommas } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
-const { getValidFormValues } = require("../../helpers/admin/getValidFormValues");
+const getValidFormValues = require("../../helpers/admin/getValidFormValues");
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
@@ -268,48 +268,58 @@ const getProductEditPage = (req, res) => {
         return showBadRequestPage(req, res);
     }
 
-    let formValues = getValidFormValues(req, res, 'products', productId);
-    // TODO: Find a solution for the undefined returned value after function is called
-    console.log(formValues);
+    // function params => Table, database ID, callback
+    getValidFormValues('products', productId, function (err, DBformData) {
+        // If there is ANY error, then the ID does not exist -> show new upload form
+        if (err) {
+            return res.redirect('/admin/products/new');
+        }
 
-    // If HAS form values, then show edit page
-    if ( formValues != null ) {
+        // If HAS form values, then show edit page
+        else if ( DBformData.length > 0 ) {
 
-        // Convert & format the form values
-        formValues.name = getValueByLanguage(formValues.name, lang);
-        formValues.short_description = formValues.short_description != null ? getValueByLanguage(formValues.short_description, lang) : null;
-        formValues.images = formValues.images != null ? imagePathConverter(JSON.parse(formValues.images), 'products') : null;
-        formValues.image_thumbnail = formValues.image_thumbnail != null ? imagePathConverter(formValues.image_thumbnail, 'products') : null;
-        formValues.discount_value = formValues.discount_value != null ? numberWithCommas(formValues.discount_value) : null;
-        formValues.price = numberWithCommas(formValues.price);
-        formValues.is_active = parseInt(formValues.is_active);
-        formValues.is_featured = parseInt(formValues.is_featured);
-        formValues.is_available = parseInt(formValues.is_available);
-        formValues.is_delivered = parseInt(formValues.is_delivered);
-        formValues.max_order_count = parseInt(formValues.max_order_count);
-        formValues.comments_allowed = parseInt(formValues.comments_allowed);
-        formValues.category_id = parseInt(formValues.category_id);
+            const validLanguages = ['en', 'hu', 'sr'];
+            let formValues = DBformData[0];
+            let formattedValues = {
+                en: {},
+                hu: {},
+                sr: {}
+            };
 
-        return res.render("admin/products/edit", {
-            formValues: formValues,
-            webshopCategories: req.webshopCategories ?? [],
-            meta: metas,
-            current_locale: lang,
-            csrfToken: req.csrfToken()
-        });
-    }
+            // Convert & format the form values
+            validLanguages.forEach(currentLanguage => {
+                formattedValues[currentLanguage].name = getValueByLanguage(formValues.name, currentLanguage);
+                formattedValues[currentLanguage].short_description = formValues.short_description != null ? getValueByLanguage(formValues.short_description, currentLanguage) : null;
+                formattedValues[currentLanguage].description = formValues.description != null ? getValueByLanguage(formValues.description, currentLanguage) : null;
+            });
 
-    // If NO form values, then show new product upload page
-    else if ( !formValues ) {
+            formattedValues.images = formValues.images != null ? imagePathConverter(JSON.parse(formValues.images), 'products') : null;
+            formattedValues.image_thumbnail = formValues.image_thumbnail != null ? imagePathConverter(formValues.image_thumbnail, 'products') : null;
+            formattedValues.discount_value = formValues.discount_value != null ? parseInt(formValues.discount_value) : null;
+            formattedValues.price = parseInt(formValues.price);
+            formattedValues.id = parseInt(formValues.id);
+            formattedValues.is_active = parseInt(formValues.is_active);
+            formattedValues.is_featured = parseInt(formValues.is_featured);
+            formattedValues.is_available = parseInt(formValues.is_available);
+            formattedValues.is_delivered = parseInt(formValues.is_delivered);
+            formattedValues.max_order_count = parseInt(formValues.max_order_count);
+            formattedValues.comments_allowed = parseInt(formValues.comments_allowed);
+            formattedValues.category_id = parseInt(formValues.category_id);
 
-        return res.render("admin/products/new", {
-            webshopCategories: req.webshopCategories ?? [],
-            meta: metas,
-            current_locale: lang,
-            csrfToken: req.csrfToken()
-        });
-    }
+            return res.render("admin/products/edit", {
+                formValues: formattedValues,
+                webshopCategories: req.webshopCategories ?? [],
+                meta: metas,
+                current_locale: lang,
+                csrfToken: req.csrfToken()
+            });
+        }
 
+        // If NO form values, then show new product upload page
+        else if ( DBformData.length === 0 ) {
+            return res.redirect('/admin/products/new');
+        }
+    });
 }
 
 module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment, getProductEditPage };
