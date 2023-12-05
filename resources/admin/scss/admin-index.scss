@@ -3716,10 +3716,10 @@ textarea.form-control-lg {
   width: 100%;
 }
 
-.tab-content > .tab-pane {
+.tab-content .tab-pane {
   display: none;
 }
-.tab-content > .active {
+.tab-content .active {
   display: block;
 }
 
@@ -10889,6 +10889,21 @@ body {
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
   overflow-y: auto;
+  scrollbar-color: #0d6efd #adb5bd;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #0d6efd;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #adb5bd;
+  }
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
   padding-left: 225px;

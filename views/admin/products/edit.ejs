@@ -26,8 +26,8 @@
                         </li>
                     </ul>
 
-                    <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
-                        <div class="tab-content">
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
 
                             <div class="tab-pane show fade active" id="HU">
                                 <div class="row mb-3">
@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-hu" class="form-label">Hosszú leírás</label>
-                                    <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ckeditor"><%= formValues.hu.description ? formValues.hu.description : '' %></textarea>
                                 </div>
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="submit">Mentés</button>
@@ -142,7 +142,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-sr" class="form-label">Hosszú leírás szerbül</label>
-                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ckeditor"><%= formValues.sr.description ? formValues.sr.description : '' %></textarea>
                                 </div>
                             </div>
 
@@ -163,17 +163,18 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-en" class="form-label">Hosszú leírás angolul</label>
-                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ckeditor"></textarea>
+                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ckeditor"><%= formValues.en.description ? formValues.en.description : '' %></textarea>
                                 </div>
                             </div>
+                        </form>
+
+                        <div class="tab-pane fade" id="media-thumbnail">
+                            <%- include('../components/image-uploader.ejs', { single: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.image_thumbnail }) %>
                         </div>
-                    </form>
 
-                    <!-- TODO: Here has to be fixed the design with the tab system -->
-                    <div class="tab-pane fade" id="media-thumbnail">
-                        <%- include('../components/image-uploader.ejs', { single: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.image_thumbnail }) %>
-
-                        <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.images }) %>
+                        <div class="tab-pane fade" id="media">
+                            <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: formValues.id, uploadedImages: formValues.images }) %>
+                        </div>
                     </div>
                 </main>
             </div>

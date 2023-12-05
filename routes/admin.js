@@ -33,6 +33,9 @@ adminRouter.route("/single-upload/:folder")
 adminRouter.route("/multiple-upload/:folder")
     .post(checkAuthentication, AdminController.uploadMultipleImages);
 
+adminRouter.route("/delete-image/:folder")
+    .post(checkAuthentication, AdminController.deleteImageFile);
+
 adminRouter.route("/statistics")
     .get(checkAuthentication, StatisticsController.getStatistics);
 

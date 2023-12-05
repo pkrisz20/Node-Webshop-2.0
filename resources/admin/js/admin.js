@@ -45,16 +45,37 @@ $(document).ready(function() {
   // It there is any ck editor, then initialize it
   if ($('body .js-ckeditor').length > 0) {
     document.querySelectorAll('.js-ckeditor').forEach(function (event) {
-      ClassicEditor
-        .create(event)
-        .then(function (editor) {
-          editor.model.document.on('change:data', function () {
-            event.value = editor.getData();
+
+      // If the db value is null, just init the ck editor
+      if ( typeof event.value !== 'undefined' && event.value.length === 0 ) {
+        ClassicEditor
+          .create(event)
+          .then(function (editor) {
+            editor.model.document.on('change:data', function () {
+              event.value = editor.getData();
+            });
+          })
+          .catch(function (error) {
+            console.error(error);
           });
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+      }
+      // If the db value is not empty, then init + set the value
+      else if ( typeof event.value !== 'undefined' && event.value.length > 0 ) {
+        ClassicEditor
+          .create(event)
+          .then(function (editor) {
+
+            editor.data.set(event.value);
+
+            editor.model.document.on('change:data', function () {
+              event.value = editor.getData();
+            });
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+
     });
   }
 });

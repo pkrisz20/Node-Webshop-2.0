@@ -18,13 +18,10 @@
                         <li class="nav-item mx-2">
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
                         </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media"><i class="fas fa-photo-video"></i> Média</a>
-                        </li>
                     </ul>
 
-                    <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
-                        <div class="tab-content">
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
 
                             <div class="tab-pane show fade active" id="HU">
                                 <div class="row mb-3">
@@ -164,12 +161,7 @@
                                     <textarea id="product-long-en" name="product_description.en" class="form-control js-ckeditor"></textarea>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-
-                    <!-- NOTE: Here the 402 is just a test value -->
-                    <div class="tab-pane fade" id="media">
-                        <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "products", databaseID: 402 }) %>
+                        </form>
                     </div>
                 </main>
             </div>
@@ -184,6 +176,5 @@
         <script src="js/plugins/validate.min.js"></script>
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>
-        <script src="admin/js/image-uploader.js"></script>
     </body>
 </html>

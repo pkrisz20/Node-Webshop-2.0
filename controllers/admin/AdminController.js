@@ -256,4 +256,13 @@ const uploadMultipleImages = (req, res) => {
     });
 };
 
-module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages };
+const deleteImageFile = (req, res) => {
+    const { databaseId, fileSource } = req.body;
+    const { folder } = req.params;
+
+    // TODO: Finish the image delete/remove feature on server side
+
+    return res.status(200).json({ status: 'success' });
+};
+
+module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile };

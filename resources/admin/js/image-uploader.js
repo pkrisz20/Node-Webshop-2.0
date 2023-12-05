@@ -63,5 +63,73 @@ $(document).ready(function() {
                 }
             });
         });
+
+        $('body').on('click', '.js-delete-image', function (event) {
+            event.preventDefault();
+            var deleteButton = $(this);
+            var fileSource = deleteButton.closest('.js-image-item').find('.js-uploaded-image');
+
+            Swal.fire({
+                title: "Biztosan törlöd ezt a képet?",
+                text: "Ez a folyamat visszafordíthatatlan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#008a00",
+                cancelButtonColor: "#db3700",
+                confirmButtonText: "Igen, törlöm!",
+                cancelButtonText: "Nem, mégsem!"
+            }).then(function (result) {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        type: "post",
+                        url: $(deleteButton).data('url'),
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr("content")
+                        },
+                        data: {
+                            databaseId: deleteButton.data('id'),
+                            fileSource: fileSource.attr('src'),
+                        },
+                        beforeSend: function (jqXHR) {
+                            deleteButton.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+                            Swal.fire('Feldolgozás folyamatban...');
+                            Swal.showLoading();
+                        },
+                        complete: function (jqXHR, textStatus) {
+                            deleteButton.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+                        },
+                        success: function (response) {
+                            // Set the new XSRF token
+                            if (typeof response.csrfToken !== 'undefined') {
+                                $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                            }
+
+                            if (response.status === 'error') {
+                                setTimeout(function () {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: response.title || 'Hoppá!',
+                                        text: response.message || 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+                                    });
+                                }, 1000);
+                            }
+                            else if (response.status === 'success') {
+                                setTimeout(function () {
+                                    Swal.fire({
+                                        title: response.title || "Sikeresen törölve",
+                                        icon: response.icon || 'success',
+                                        text: response.message || "A fájl törlésre került a rendszerből. Az oldal újra fog tölteni másodperceken belül.",
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+            });
+        });
     }
 });
