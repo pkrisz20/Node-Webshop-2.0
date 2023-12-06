@@ -29,10 +29,11 @@
 
         <% if (locals.single) { %>
             <div class="d-flex mw-100" style="flex-wrap: wrap; gap: 10px;">
-                <div class="position-absolute js-image-item" style="min-width: 200px;">
+                <div class="position-relative js-image-item" style="min-width: 200px;">
                     <button
                         type="button"
                         data-id="<%= databaseID %>"
+                        data-type="single"
                         data-url="<%= process.env.APP_URL %>/admin/delete-image/<%= whereToUpload %>"
                         class="js-delete-image btn btn-danger position-absolute"
                         style="left: 5px; bottom: 5px; font-size: 12px;"
@@ -45,10 +46,11 @@
         <% } else if (locals.multiple) { %>
             <div class="d-flex mw-100" style="flex-wrap: wrap; gap: 10px;">
                 <% uploadedImages.forEach( image => { %>
-                    <div class="position-absolute js-image-item" style="min-width: 200px;">
+                    <div class="position-relative js-image-item" style="min-width: 200px;">
                         <button
                             type="button"
                             data-id="<%= databaseID %>"
+                            data-type="multiple"
                             data-url="<%= process.env.APP_URL %>/admin/delete-image/<%= whereToUpload %>"
                             class="js-delete-image btn btn-danger position-absolute"
                             style="left: 5px; bottom: 5px; font-size: 12px;"

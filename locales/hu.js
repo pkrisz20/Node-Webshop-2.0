@@ -146,6 +146,7 @@ const hu = {
         common_error: "Váratlan hiba lépett fel!",
 		no_selected_file: "Nincs kiválasztva semmilyen fájl!",
 		wrong_image_format: "Nem megfelelő képformátum!",
+		file_does_not_exist: "Nem létezik a fájl vagy a rendszer nem találja!",
 		enabled_image_format: "Engedélyezett képformátumok: {0}",
         server_error: "Szerver hiba",
         wrong_data: "Nem megfelelő adatok!",

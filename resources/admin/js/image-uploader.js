@@ -90,6 +90,7 @@ $(document).ready(function() {
                         },
                         data: {
                             databaseId: deleteButton.data('id'),
+                            fileType: deleteButton.data('type'),
                             fileSource: fileSource.attr('src'),
                         },
                         beforeSend: function (jqXHR) {

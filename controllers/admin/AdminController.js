@@ -1,12 +1,14 @@
 const { db } = require("../../config/db-connection");
-const { setMomentLocale, numberWithCommas, createUniqueID } = require("../../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas, createUniqueID, getLast } = require("../../helpers/globalFunctions");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { saveImageToDatabase } = require('../../helpers/admin/saveImageToDatabase');
+const { deleteImageFromDatabase } = require('../../helpers/admin/deleteImageFromDatabase');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 const multer = require("multer");
 const path = require("path");
+const fs = require('fs');
 
 const getLoginPage = (req, res) => {
 
@@ -257,12 +259,34 @@ const uploadMultipleImages = (req, res) => {
 };
 
 const deleteImageFile = (req, res) => {
-    const { databaseId, fileSource } = req.body;
+    const { databaseId, fileSource, fileType } = req.body;
     const { folder } = req.params;
 
-    // TODO: Finish the image delete/remove feature on server side
+    // TODO: Optimize the path converter
+    const pathToFile = path.join('./files' + fileSource.replace(process.env.APP_URL, ''));
 
-    return res.status(200).json({ status: 'success' });
+    fs.unlink(pathToFile, function (error) {
+        if(error && error.code == 'ENOENT') {
+            // file doens't exist
+            return res.status(200).json({
+                status: 'error',
+                title: languageHandler('errors.error', process.env.ADMIN_LANG),
+                message: languageHandler('errors.file_does_not_exist', process.env.ADMIN_LANG)
+            });
+
+        } else if (error) {
+            // other errors occur
+            return res.status(200).json({ status: 'error' });
+        } else {
+
+            // Example: duck.jpg
+            var exactSourceFileName = getLast(pathToFile.split('\\'));  // Split by single back slash
+
+            // NOTE: The folder name is the same like the database table name
+            deleteImageFromDatabase(res, exactSourceFileName, folder, databaseId, fileType);
+        }
+    });
+
 };
 
 module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile };
