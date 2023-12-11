@@ -5,6 +5,9 @@ const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
+const { generateSlug } = require("../../helpers/admin/generateSlug");
+const formatJSONByLanguage = require('../../helpers/admin/formatJSONByLanguage');
+const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
@@ -218,7 +221,7 @@ const updateCommentVerficationBadge = (req, res) => {
 }
 
 const getProductUploadPage = (req, res) => {
-    const lang = req.session.lang ?? process.env.ADMIN_LANG;
+    const lang = process.env.ADMIN_LANG;
     var metas = {
         title: "Új termék",
         type: "website",
@@ -322,4 +325,81 @@ const getProductEditPage = (req, res) => {
     });
 }
 
-module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment, getProductEditPage };
+const handleProductUpload = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    let productData = req.body;
+
+    // Required number type data check
+    let basePrice = parseInt(productData.price);
+    let categoryID = parseInt(productData.category_id);
+    if (isNan(categoryID) || isNan(basePrice)) {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // Discount price check and handler
+    let discountPrice = parseInt(productData.discount_value);
+    if (isNan(discountPrice)) discountPrice = null;
+
+    // Slug generate for product
+    let generatedSlug = generateSlug(productData["name[en]"]);
+    if ( generatedSlug === false ) {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('error.no_title_for_slug_generate', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // Language handling for json values
+    let productNamesJsonValue = null;
+    let shortDescriptionJsonValue = null;
+    let longDescriptionJsonValue = null;
+
+    // TODO: Finish the product insert feature & handle the json formatting fucntion by languages
+    // productNamesJsonValue = formatJSONByLanguage();
+
+    const SQLInsertProduct = "INSERT INTO products (name, slug, short_description, description, price, discount_value, is_active, is_featured, is_availabe, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    db.query(
+        SQLInsertProduct,
+        [
+            productNamesJsonValue,
+            generatedSlug,
+            shortDescriptionJsonValue,
+            longDescriptionJsonValue,
+            basePrice,
+            discountPrice,
+            productData.is_active,
+            productData.is_featured,
+            productData.is_available,
+            productData.is_delivered,
+            productData.max_order_count,
+            productData.comments_allowed,
+            categoryID,
+            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+        ],
+        (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+            }
+
+            else if (data) {
+
+                console.log(data);
+
+                return res.status(200).json({
+                    status: "success",
+                    // redirect_url: `/admin/products/edit/${ productId }`,
+                    csrfToken: req.csrfToken()
+                });
+            }
+        }
+    );
+}
+
+module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment, getProductEditPage, handleProductUpload };

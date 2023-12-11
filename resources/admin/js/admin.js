@@ -7,7 +7,12 @@
 // Scripts
 //
 
-window.addEventListener('DOMContentLoaded', function (event) {
+// Set new default font family and font color to charts
+Chart.defaults.global.defaultFontFamily = 'Poppins, sans-serif';
+Chart.defaults.global.defaultFontColor = '#292b2c';
+
+$(document).ready(function() {
+
   // Toggle the side navigation
   const sidebarToggle = document.querySelector('#sidebarToggle');
   if (sidebarToggle) {
@@ -21,13 +26,13 @@ window.addEventListener('DOMContentLoaded', function (event) {
       localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
     });
   }
-});
 
-// Set new default font family and font color to charts
-Chart.defaults.global.defaultFontFamily = 'Poppins, sans-serif';
-Chart.defaults.global.defaultFontColor = '#292b2c';
-
-$(document).ready(function() {
+  // Default ajax setup
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr("content")
+    }
+  });
 
   // This requires to prevent some random errors because the validate & ckeditor plugins do not like each other
   $('form').each(function() {
@@ -99,10 +104,9 @@ $('body').on('click', '.js-delete-data', function () {
     if (result.isConfirmed) {
 
       $.ajax({
-        type: "POST",
+        type: "GET",
         url: $(this_button).data('url'),
         dataType: 'json',
-        data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
         beforeSend: function (jqXHR) {
           Swal.fire('Folyamatban...');
           Swal.showLoading();
@@ -155,10 +159,9 @@ $('body').on('click', '.js-get-order-info', function (event) {
   event.preventDefault();
 
   $.ajax({
-    type: "POST",
+    type: "GET",
     url: $(this).data("url"),
     dataType: 'json',
-    data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
     beforeSend: function (jqXHR) {
       Swal.fire('Adatok lekérése folyamatban...');
       Swal.showLoading();
@@ -200,10 +203,9 @@ $('body').on('click', '.js-simple-ajax', function (event) {
   event.preventDefault();
 
   $.ajax({
-    type: "POST",
+    type: "GET",
     url: $(this).data("url"),
     dataType: 'json',
-    data: [{ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
     beforeSend: function (jqXHR) {
       Swal.fire('Feldolgozás folyamatban...');
       Swal.showLoading();
@@ -257,7 +259,7 @@ $('body').on('click', '.js-toggle-verified-badge', function (event) {
     type: "POST",
     url: $(this).data("url"),
     dataType: 'json',
-    data: [{ name: "activationStatus", value: $(this).data("activationStatus") }, { name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }],
+    data: [{ name: "activationStatus", value: $(this).data("activationStatus") }],
     beforeSend: function (jqXHR) {
       Swal.fire('Feldolgozás folyamatban...');
       Swal.showLoading();
@@ -349,7 +351,7 @@ $('.js-validate-form').not('.inited').each(function () {
         type: $(form).prop('method'),
         url: $(form).data('url'),
         dataType: 'json',
-        data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
+        data: $(form).serializeArray(),
         beforeSend: function (jqXHR) {
           Swal.fire('Feldolgozás folyamatban...');
           Swal.showLoading();

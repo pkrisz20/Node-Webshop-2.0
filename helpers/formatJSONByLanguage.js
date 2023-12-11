@@ -2,6 +2,11 @@ function formatJSONByLanguage (newData, lang = "en", oldData = null) {
 
     var availableLanguages = ['en', 'sr', 'hu'];
 
+    // NOTE:
+    // let dataObject = oldData != null ? JSON.parse(oldData) : {};
+    // dataObject[lang] = newData;
+    // return JSON.stringify(dataObject);
+
     // There is already data in the json (WHEN UPDATE)
     if (oldData != null) {
         let dataObject = JSON.parse(oldData);
