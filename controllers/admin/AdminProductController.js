@@ -332,7 +332,7 @@ const handleProductUpload = (req, res) => {
     // Required number type data check
     let basePrice = parseInt(productData.price);
     let categoryID = parseInt(productData.category_id);
-    if (isNan(categoryID) || isNan(basePrice)) {
+    if (isNaN(categoryID) || isNaN(basePrice)) {
         return res.status(200).json({
             status: 'error',
             title: languageHandler('errors.wrong_data', lang),
@@ -342,7 +342,7 @@ const handleProductUpload = (req, res) => {
 
     // Discount price check and handler
     let discountPrice = parseInt(productData.discount_value);
-    if (isNan(discountPrice)) discountPrice = null;
+    if (isNaN(discountPrice)) discountPrice = null;
 
     // Slug generate for product
     let generatedSlug = generateSlug(productData["name[en]"]);
@@ -359,8 +359,9 @@ const handleProductUpload = (req, res) => {
     let shortDescriptionJsonValue = null;
     let longDescriptionJsonValue = null;
 
-    // TODO: Finish the product insert feature & handle the json formatting fucntion by languages
-    // productNamesJsonValue = formatJSONByLanguage();
+    // NOTE: Examples for the correct form object keys to function param: name[hu] / name[sr] / name[en]
+    // Example: { 'nam[en]': 'english value' }
+    productNamesJsonValue = formatJSONByLanguage(productData, 'name');
 
     const SQLInsertProduct = "INSERT INTO products (name, slug, short_description, description, price, discount_value, is_active, is_featured, is_availabe, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
