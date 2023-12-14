@@ -1,12 +1,11 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const imagePathConverter = require("../../helpers/imagePathConverter");
-const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
-const { generateSlug } = require("../../helpers/admin/generateSlug");
-const formatJSONByLanguage = require('../../helpers/admin/formatJSONByLanguage');
+const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -329,13 +328,31 @@ const handleProductUpload = (req, res) => {
     const lang = process.env.ADMIN_LANG;
     let productData = req.body;
 
-    // Required number type data check
+    // Numbers and Boolean types data check
     let basePrice = parseInt(productData.price);
     let categoryID = parseInt(productData.category_id);
-    if (isNaN(categoryID) || isNaN(basePrice)) {
+    let is_active = parseInt(productData.is_active ?? 0);
+    let is_featured = parseInt(productData.is_featured ?? 0);
+    let is_delivered = parseInt(productData.is_delivered ?? 0);
+    let is_available = parseInt(productData.is_available ?? 0);
+    let comments_allowed = parseInt(productData.comments_allowed ?? 0);
+    let max_order_count = parseInt(productData.max_order_count);
+
+    if (
+        isNaN(categoryID)
+        || isNaN(basePrice)
+        || isNaN(is_active)
+        || isNaN(is_featured)
+        || isNaN(max_order_count)
+        || isNaN(is_delivered)
+        || isNaN(is_available)
+        || isNaN(comments_allowed)
+    )
+    {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('errors.wrong_data', lang),
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.wrong_data', lang),
             csrfToken: req.csrfToken()
         });
     }
@@ -345,41 +362,53 @@ const handleProductUpload = (req, res) => {
     if (isNaN(discountPrice)) discountPrice = null;
 
     // Slug generate for product
-    let generatedSlug = generateSlug(productData["name[en]"]);
+    let generatedSlug = generateUniqueSlug(productData["name[en]"]);
+
     if ( generatedSlug === false ) {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('error.no_title_for_slug_generate', lang),
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.slug_error', lang),
             csrfToken: req.csrfToken()
         });
     }
 
-    // Language handling for json values
-    let productNamesJsonValue = null;
-    let shortDescriptionJsonValue = null;
-    let longDescriptionJsonValue = null;
+    // The product names are required
+    let productNames = {
+        en: escapeHtml(productData['name[en]']),
+        sr: escapeHtml(productData['name[sr]']),
+        hu: escapeHtml(productData['name[hu]']),
+    };
+    // The short description simple textarea, it's a string
+    let shortDescriptions = {
+        en: productData['short_description[en]'].length > 0 ? escapeHtml(productData['short_description[en]']) : null,
+        sr: productData['short_description[sr]'].length > 0 ? escapeHtml(productData['short_description[sr]']) : null,
+        hu: productData['short_description[hu]'].length > 0 ? escapeHtml(productData['short_description[hu]']) : null
+    };
 
-    // NOTE: Examples for the correct form object keys to function param: name[hu] / name[sr] / name[en]
-    // Example: { 'nam[en]': 'english value' }
-    productNamesJsonValue = formatJSONByLanguage(productData, 'name');
+    let longDescriptions = {
+        en: productData['product_description[en]'] ?? null,
+        sr: productData['product_description[sr]'] ?? null,
+        hu: productData['product_description[hu]'] ?? null
+    };
 
-    const SQLInsertProduct = "INSERT INTO products (name, slug, short_description, description, price, discount_value, is_active, is_featured, is_availabe, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const SQLInsertProduct = "INSERT INTO products (name, slug, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
         SQLInsertProduct,
         [
-            productNamesJsonValue,
+            JSON.stringify(productNames),
             generatedSlug,
-            shortDescriptionJsonValue,
-            longDescriptionJsonValue,
+            JSON.stringify(shortDescriptions),
+            JSON.stringify(longDescriptions),
             basePrice,
             discountPrice,
-            productData.is_active,
-            productData.is_featured,
-            productData.is_available,
-            productData.is_delivered,
-            productData.max_order_count,
-            productData.comments_allowed,
+            is_active,
+            is_featured,
+            is_available,
+            is_delivered,
+            max_order_count,
+            comments_allowed,
             categoryID,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         ],
@@ -390,12 +419,9 @@ const handleProductUpload = (req, res) => {
             }
 
             else if (data) {
-
-                console.log(data);
-
                 return res.status(200).json({
                     status: "success",
-                    // redirect_url: `/admin/products/edit/${ productId }`,
+                    redirect_url: `/admin/products/edit/${ data.insertId }`,
                     csrfToken: req.csrfToken()
                 });
             }

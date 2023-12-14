@@ -145,7 +145,7 @@ const sr = {
         error: "Greška",
         common_error: "Došlo je do greške!",
 		no_selected_file: "Nema izabrane datoteke!",
-		no_title_for_slug_generate: "Ne postoji ime za preuzimanje puža (slug)!",
+		slug_error: "Ne postoji ime za preuzimanje puža (slug) ili došlo je do greške dok generisanje!",
 		wrong_image_format: "Pogrešan format slike!",
 		file_does_not_exist: "Fajl ne postoji ili ga sistem ne pronađe!",
 		enabled_image_format: "Omogućeni formati slika: {0}",

@@ -1,16 +1,14 @@
 const { createUniqueID, escapeHtml } = require('../../helpers/globalFunctions');
 
-function generateSlug (titleText) {
+function generateUniqueSlug (titleText) {
 
     if ( typeof titleText !== 'string' ) return false;
 
-    let slugResult = null;
-
     titleText = escapeHtml(titleText);
-    slugResult = titleText.replaceAll(' ', '-').toLowerCase();
-    slugResult.concat(createUniqueID);
+    let slugResult = titleText.replaceAll(' ', '-').toLowerCase();
+    slugResult = slugResult + "-" + createUniqueID();
 
-    return slugResult;
+    return slugResult ?? false;
 }
 
-module.exports = { generateSlug };
+module.exports = { generateUniqueSlug };

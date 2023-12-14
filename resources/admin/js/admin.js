@@ -371,7 +371,7 @@ $('.js-validate-form').not('.inited').each(function () {
               Swal.fire({
                 icon: 'error',
                 title: response.title || 'Hoppá!',
-                text: response.message || 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+                text: response.text || 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
               });
             }, 1000);
           }

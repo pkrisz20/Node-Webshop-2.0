@@ -146,6 +146,7 @@ const hu = {
         common_error: "Váratlan hiba lépett fel!",
 		no_selected_file: "Nincs kiválasztva semmilyen fájl!",
         no_title_for_slug_generate: "Nincs név a slug létrehozásához!",
+		slug_error: "Nincs név a slug létrehozásához! vagy váratlan hiba lépett fel generálás közben!",
 		wrong_image_format: "Nem megfelelő képformátum!",
 		file_does_not_exist: "Nem létezik a fájl vagy a rendszer nem találja!",
 		enabled_image_format: "Engedélyezett képformátumok: {0}",
