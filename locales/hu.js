@@ -157,6 +157,7 @@ const hu = {
         has_to_be_number: "Számnak kell lennie!",
 		no_permission: "Nincs jogosultsága ehhez",
 		unauthorized: "Azonosítatlan felhasználó",
+		forbidden: "Hozzáférés megtagadva",
     }
 };
 

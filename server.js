@@ -14,7 +14,7 @@ const { logger } = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errorHandler");
 const deleteLogs = require("./jobs/deleteLogs");
 const corsOptions = require("./config/cors");
-const { showNotFoundPage } = require("./helpers/showErrorPages");
+const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
 
 // Custom middleware logger
 app.use(logger);
@@ -52,6 +52,12 @@ app.use(cors(corsOptions));
 
 // CSRF
 app.use(csrfProtection({ cookie: true }));
+
+// error handler for bad CSRF token
+app.use(function (err, req, res, next) {
+    if (err.code === 'EBADCSRFTOKEN') return showForbiddenPage(req, res);
+    return next();
+});
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);

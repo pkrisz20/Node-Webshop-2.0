@@ -170,110 +170,14 @@ $(document).ready(function() {
     }
 });
 
-$('body').on('keyup', '.js-characters-count', function () {
-    var characterCounter = $(this);
-    var counterElement = $('.js-characters-count').closest('.form-row').find('.js-counter');
-    var characters = characterCounter.val().length;
-    $(counterElement).find('span').text(1000 - characters);
-});
-
-$('.js-form-validate').not('.inited').each(function () {
-    $(this).validate({
-        ignore: 'input[type=hidden], .dont-validate',
-        errorClass: 'is-invalid',
-        focusInvalid: false,
-        invalidHandler: function (form, validator) {
-            if (validator.numberOfInvalids() > 0) {
-                form.preventDefault();
-                var to_elem = $(validator.errorList[0].element).closest('.form-row');
-                var topY = to_elem.offset().top - $('.js-header').outerHeight() - 10;
-                window.scroll({ top: topY, behavior: 'smooth' });
-            }
-        },
-        highlight: function (element, errorClass) {
-            $(element).addClass(errorClass);
-            $(element).closest('.form-row').find('.form-label').addClass('error');
-            $(element).closest('.form-row').find('.form-row-error').show();
-            $(element).closest('.form-row').find('.error-icon').show();
-        },
-        unhighlight: function (element, errorClass) {
-            $(element).removeClass(errorClass);
-            $(element).closest('.form-row').find('.form-label').removeClass('error');
-            $(element).closest('.form-row').find('.form-row-error').hide();
-            $(element).closest('.form-row').find('.error-icon').hide();
-        },
-        errorPlacement: function (error, element) {
-            var parent = $(element).closest('.form-row').find('.form-row-error');
-            parent.append(error);
-        },
-        submitHandler: function (form) {
-            var this_button = $('button[type="submit"]', $(form));
-
-            $.ajax({
-                type: $(form).prop('method'),
-                url: $(form).data('url'),
-                dataType: 'json',
-                data: $(form).serializeArray().concat({ name: "_csrf", value: $("meta[name='csrf-token']").attr("content") }),
-                beforeSend: function (jqXHR) {
-                    this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
-                },
-                complete: function (jqXHR, textStatus) {
-                    this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
-                },
-                success: function (response) {
-                    // Set the new XSRF token
-                    if (typeof response.csrfToken !== 'undefined') {
-                        $("meta[name='csrf-token']").attr("content", response.csrfToken);
-                    }
-
-                    if (response.status === 'error') {
-                        $.alert({
-                            useBootstrap: false,
-                            boxWidth: '400px',
-                            title: response.title,
-                            content: response.content || false,
-                            buttons: {
-                                OK: function () {
-                                    // do nothing, and close modal
-                                }
-                            }
-                        });
-                    }
-                    else if (response.status === 'success') {
-
-                        if (!$(form).data('noReset')) {
-                            form.reset();
-                        }
-
-                        var callbackFunctionOnSuccess = $(form).data('callback');
-                        if (callbackFunctionOnSuccess && typeof window[callbackFunctionOnSuccess] == 'function') {
-                            window[callbackFunctionOnSuccess](response, form);
-                        }
-
-                        $.alert({
-                            useBootstrap: false,
-                            boxWidth: '400px',
-                            title: response.title,
-                            content: response.content || false,
-                            buttons: {
-                                OK: function () {
-                                    if (response.redirect_url) {
-                                        setTimeout(function () {
-                                            window.location = response.redirect_url;
-                                        }, 1000);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        },
-    });
-    $(this).addClass('inited');
-});
-
 $(function() {
+    // Default ajax setup
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr("content")
+        }
+    });
+
     var header = $(".js-header");
     var upscrollButton = $('.js-upscroll');
 
@@ -400,6 +304,109 @@ $(function() {
     }
 });
 
+$('body').on('keyup', '.js-characters-count', function () {
+    var characterCounter = $(this);
+    var counterElement = $('.js-characters-count').closest('.form-row').find('.js-counter');
+    var characters = characterCounter.val().length;
+    $(counterElement).find('span').text(1000 - characters);
+});
+
+$('.js-form-validate').not('.inited').each(function () {
+    $(this).validate({
+        ignore: 'input[type=hidden], .dont-validate',
+        errorClass: 'is-invalid',
+        focusInvalid: false,
+        invalidHandler: function (form, validator) {
+            if (validator.numberOfInvalids() > 0) {
+                form.preventDefault();
+                var to_elem = $(validator.errorList[0].element).closest('.form-row');
+                var topY = to_elem.offset().top - $('.js-header').outerHeight() - 10;
+                window.scroll({ top: topY, behavior: 'smooth' });
+            }
+        },
+        highlight: function (element, errorClass) {
+            $(element).addClass(errorClass);
+            $(element).closest('.form-row').find('.form-label').addClass('error');
+            $(element).closest('.form-row').find('.form-row-error').show();
+            $(element).closest('.form-row').find('.error-icon').show();
+        },
+        unhighlight: function (element, errorClass) {
+            $(element).removeClass(errorClass);
+            $(element).closest('.form-row').find('.form-label').removeClass('error');
+            $(element).closest('.form-row').find('.form-row-error').hide();
+            $(element).closest('.form-row').find('.error-icon').hide();
+        },
+        errorPlacement: function (error, element) {
+            var parent = $(element).closest('.form-row').find('.form-row-error');
+            parent.append(error);
+        },
+        submitHandler: function (form) {
+            var this_button = $('button[type="submit"]', $(form));
+
+            $.ajax({
+                type: $(form).prop('method'),
+                url: $(form).data('url'),
+                dataType: 'json',
+                data: $(form).serializeArray(),
+                beforeSend: function (jqXHR) {
+                    this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+                },
+                complete: function (jqXHR, textStatus) {
+                    this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+                },
+                success: function (response) {
+                    // Set the new XSRF token
+                    if (typeof response.csrfToken !== 'undefined') {
+                        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                    }
+
+                    if (response.status === 'error') {
+                        $.alert({
+                            useBootstrap: false,
+                            boxWidth: '400px',
+                            title: response.title,
+                            content: response.content || false,
+                            buttons: {
+                                OK: function () {
+                                    // do nothing, and close modal
+                                }
+                            }
+                        });
+                    }
+                    else if (response.status === 'success') {
+
+                        if (!$(form).data('noReset')) {
+                            form.reset();
+                        }
+
+                        var callbackFunctionOnSuccess = $(form).data('callback');
+                        if (callbackFunctionOnSuccess && typeof window[callbackFunctionOnSuccess] == 'function') {
+                            window[callbackFunctionOnSuccess](response, form);
+                        }
+
+                        $.alert({
+                            useBootstrap: false,
+                            boxWidth: '400px',
+                            title: response.title,
+                            content: response.content || false,
+                            buttons: {
+                                OK: function () {
+                                    if (response.redirect_url) {
+                                        setTimeout(function () {
+                                            window.location = response.redirect_url;
+                                        }, 1000);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        },
+    });
+    $(this).addClass('inited');
+});
+
 // Dropdowns handle
 $('body').on("mouseenter", ".js-dropdown-opener", function () {
     $(this).find('.js-dropdown-list').addClass('dropdown-list--open');
@@ -430,18 +437,13 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         quantity = 1;
     }
 
-    let item = {
-        productId: this_button.data('id'),
-        quantity: quantity
-    };
-
     $.ajax({
         type: 'post',
         url: "/api/cart/add",
         dataType: 'json',
         data: {
-            cartItem: item,
-            _csrf: $("meta[name='csrf-token']").attr("content")
+            productId: this_button.data('id'),
+            quantity: quantity,
         },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
@@ -581,7 +583,6 @@ $('body').on("click", ".js-remove-cart", function (event) {
         dataType: 'json',
         data: {
             productId: this_button.data('id'),
-            _csrf: $("meta[name='csrf-token']").attr("content")
         },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
@@ -678,7 +679,6 @@ $('body').on("change", ".js-product-quantity", function (event, targetInput) {
         data: {
             productId: productId,
             quantity: quantity,
-            _csrf: $("meta[name='csrf-token']").attr("content")
         },
         beforeSend: function (jqXHR) {
             this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
@@ -826,7 +826,6 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
             dataType: 'json',
             data: {
                 keywords: $(this).val(),
-                _csrf: $("meta[name='csrf-token']").attr("content")
             },
             beforeSend: function (jqXHR) {
                 searchResultContainer.find('.js-found-blogs').empty();
@@ -882,7 +881,6 @@ $('body').on("click", ".js-wishlist-btn", function (event) {
         url: wishlistEndpoint,
         dataType: 'json',
         data: {
-            _csrf: $("meta[name='csrf-token']").attr("content"),
             operation: operation
         },
         beforeSend: function (jqXHR) {

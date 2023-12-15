@@ -42,4 +42,14 @@ const showNotFoundPage = (req, res) => {
     });
 };
 
-module.exports = { showServerErrorPage, showBadRequestPage, showUnauthorizedUserPage, showNotFoundPage };
+const showForbiddenPage = (req, res) => {
+    return res.status(403).render('403', {
+        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        title: languageHandler("errors.forbidden", req.session.lang ?? process.env.FALLBACK_LANG),
+        back_to_home: languageHandler("general.back_to_home", req.session.lang ?? process.env.FALLBACK_LANG),
+        learn_more: languageHandler("general.information", req.session.lang ?? process.env.FALLBACK_LANG),
+        csrfToken: req.csrfToken()
+    });
+};
+
+module.exports = { showServerErrorPage, showBadRequestPage, showUnauthorizedUserPage, showNotFoundPage, showForbiddenPage };

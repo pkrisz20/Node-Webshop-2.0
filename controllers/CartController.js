@@ -53,51 +53,51 @@ const deleteCartItem = (req, res) => {
 }
 
 const addCartItem = (req, res) => {
-    let { cartItem } = req.body;
-    const lang = req.session.lang;
+    let { productId, quantity } = req.body;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var cart = req.session.cart ?? [];
 
-    if ( !cartItem.productId || !cartItem.quantity )
+    if ( !productId || !quantity )
     {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
         });
     }
 
-    cartItem.productId = parseInt(cartItem.productId);
-    cartItem.quantity = parseInt(cartItem.quantity);
+    productId = parseInt(productId);
+    quantity = parseInt(quantity);
 
-    if ( isNaN(cartItem.productId) || isNaN(cartItem.quantity) ) {
+    if ( isNaN(productId) || isNaN(quantity) ) {
         return res.status(200).json({
             status: 'error',
-            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
         });
     }
 
     if ( cart.length > 0 ) {
-        let isAlreadyInCart = cart?.some(item => item.productId === cartItem.productId);
+        let isAlreadyInCart = cart?.some(item => item.productId === productId);
 
         if ( isAlreadyInCart ) {
             return res.status(200).json({
                 status: 'error',
-                title: languageHandler('general.information', lang ?? process.env.FALLBACK_LANG),
-                message: languageHandler('orders.already_added', lang ?? process.env.FALLBACK_LANG)
+                title: languageHandler('general.information', lang),
+                message: languageHandler('orders.already_added', lang)
             });
         }
     }
 
     const cartQuery = "SELECT id, name, slug, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
 
-    db.query(cartQuery, cartItem.productId, (err, data) => {
+    db.query(cartQuery, productId, (err, data) => {
         if (err) {
             console.log(err);
             return res.status(200).json({
                 status: "error",
-                title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-                message: languageHandler('errors.server_error', lang ?? process.env.FALLBACK_LANG)
+                title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.server_error', lang)
             });
         }
 
@@ -108,26 +108,26 @@ const addCartItem = (req, res) => {
             if ( !isAvailableEachProduct ) {
                 return res.status(200).json({
                     status: "error",
-                    title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-                    message: languageHandler('errors.wrong_data', lang ?? process.env.FALLBACK_LANG)
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.wrong_data', lang)
                 });
             }
 
             // Check if quantity is bigger than the max orderable quantity
-            if ( cartItem.quantity > data[0].max_order_count ) {
+            if ( quantity > data[0].max_order_count ) {
                 return res.status(200).json({
                     status: "error",
-                    title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-                    message: languageHandler('errors.wrong_data', lang ?? process.env.FALLBACK_LANG)
+                    title: languageHandler('errors.error', lang),
+                    message: languageHandler('errors.wrong_data', lang)
                 });
             }
 
             let resultItem = {
                 productId: data[0].id,
-                productName: getValueByLanguage(data[0].name, lang ?? process.env.FALLBACK_LANG),
+                productName: getValueByLanguage(data[0].name, lang),
                 slug: data[0].slug,
                 maxQuantity: data[0].max_order_count,
-                quantity: cartItem.quantity,
+                quantity: quantity,
                 price: data[0].discount_value ? data[0].discount_value : data[0].price,
                 image: imagePathConverter(data[0].image_thumbnail, "products") ?? null,
                 is_available: parseInt(data[0].is_available),
@@ -146,29 +146,29 @@ const addCartItem = (req, res) => {
             if (req.session.cart.length > 1) {
                 return res.status(200).json({
                     status: 'success',
-                    title: languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
-                    content: languageHandler('orders.added_to_cart', lang ?? process.env.FALLBACK_LANG),
+                    title: languageHandler('general.process_success', lang),
+                    content: languageHandler('orders.added_to_cart', lang),
                     totalPrice: numberWithCommas(totalPrice),
                     totalCount: totalCount,
                     results: formattedCart,
-                    current_locale: lang ?? process.env.FALLBACK_LANG,
-                    remove_text: languageHandler('general.remove', lang ?? process.env.FALLBACK_LANG)
+                    current_locale: lang,
+                    remove_text: languageHandler('general.remove', lang)
                 });
             }
 
             else if (req.session.cart.length == 1) {
                 return res.status(200).json({
                     status: 'success',
-                    title: languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
-                    content: languageHandler('orders.added_to_cart', lang ?? process.env.FALLBACK_LANG),
+                    title: languageHandler('general.process_success', lang),
+                    content: languageHandler('orders.added_to_cart', lang),
                     totalPrice: numberWithCommas(totalPrice),
                     totalCount: totalCount,
                     results: formattedCart,
-                    current_locale: lang ?? process.env.FALLBACK_LANG,
-                    remove_text: languageHandler('general.remove', lang ?? process.env.FALLBACK_LANG),
-                    ordersCartCountText: languageHandler('orders.cart_count', lang ?? process.env.FALLBACK_LANG),
-                    orderPageText: languageHandler('orders.order', lang ?? process.env.FALLBACK_LANG),
-                    totalPriceText: languageHandler('orders.total_price', lang ?? process.env.FALLBACK_LANG)
+                    current_locale: lang,
+                    remove_text: languageHandler('general.remove', lang),
+                    ordersCartCountText: languageHandler('orders.cart_count', lang),
+                    orderPageText: languageHandler('orders.order', lang),
+                    totalPriceText: languageHandler('orders.total_price', lang)
                 });
             }
         }
@@ -183,8 +183,8 @@ const updateCartItem = (req, res) => {
     if (!quantity || !productId) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-            message: languageHandler('errors.unprocessable_data', lang ?? process.env.FALLBACK_LANG)
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.unprocessable_data', lang)
         });
     }
 
@@ -194,8 +194,8 @@ const updateCartItem = (req, res) => {
     if ( isNaN(quantity) || isNaN(productId) ) {
         return res.status(200).json({
             status: "error",
-            title: languageHandler('errors.error', lang ?? process.env.FALLBACK_LANG),
-            message: languageHandler('errors.has_to_be_number', lang ?? process.env.FALLBACK_LANG)
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.has_to_be_number', lang)
         });
     }
 
@@ -221,8 +221,8 @@ const updateCartItem = (req, res) => {
 
     return res.status(200).json({
         status: 'success',
-        title: quantity > maxQuantityEnabled ? languageHandler('general.information', lang ?? process.env.FALLBACK_LANG) : languageHandler('general.process_success', lang ?? process.env.FALLBACK_LANG),
-        message: quantity > maxQuantityEnabled ? languageHandler('validations.max_quantity', lang ?? process.env.FALLBACK_LANG, maxQuantityEnabled) : languageHandler('validations.cart_updated', lang ?? process.env.FALLBACK_LANG),
+        title: quantity > maxQuantityEnabled ? languageHandler('general.information', lang) : languageHandler('general.process_success', lang),
+        message: quantity > maxQuantityEnabled ? languageHandler('validations.max_quantity', lang, maxQuantityEnabled) : languageHandler('validations.cart_updated', lang),
         newValue: quantity > maxQuantityEnabled ?  maxQuantityEnabled : quantity,
         totalPrice: numberWithCommas(sum),
         alonePrice: numberWithCommas(alonePrice)

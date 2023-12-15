@@ -156,6 +156,7 @@ const sr = {
 		has_to_be_number: "Samo brojevi prihvata!",
 		no_permission: "Nemate dozvolu za ovaj aktivnost",
 		unauthorized: "Neovlašćeno korisnik",
+		forbidden: "Pristup zabranjen",
     }
 };
 

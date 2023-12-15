@@ -156,6 +156,7 @@ const en = {
 		has_to_be_number: "Has to be number!",
 		no_permission: "You do not have permission for this",
 		unauthorized: "Unauthorized user",
+		forbidden: "Forbidden",
 	}
 };
 
