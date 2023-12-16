@@ -27,14 +27,14 @@
                     </ul>
 
                     <div class="tab-content">
-                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/edit/handle/<%= formValues.id %>">
 
                             <div class="tab-pane show fade active" id="HU">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-hu" class="form-label">Termek megnevezése</label>
-                                            <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name.hu" value="<%= formValues.hu.name %>" />
+                                            <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name[hu]" value="<%= formValues.hu.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -58,7 +58,7 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-hu" class="form-label">Rövid leírás</label>
-                                            <textarea id="product-short-hu" rows="5" name="short_description.hu" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
+                                            <textarea id="product-short-hu" rows="5" name="short_description[hu]" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 js-price-wrapper">
@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-hu" class="form-label">Hosszú leírás</label>
-                                    <textarea id="product-long-hu" name="product_description.hu" class="form-control js-ckeditor"><%= formValues.hu.description ? formValues.hu.description : '' %></textarea>
+                                    <textarea id="product-long-hu" name="product_description[hu]" class="form-control js-ckeditor"><%= formValues.hu.description ? formValues.hu.description : '' %></textarea>
                                 </div>
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="submit">Mentés</button>
@@ -130,19 +130,19 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-sr" class="form-label">Termék megnevezése szerbül</label>
-                                            <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name.sr" value="<%= formValues.sr.name %>" />
+                                            <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name[sr]" value="<%= formValues.sr.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-sr" class="form-label">Rövid leírás szerbül</label>
-                                            <textarea id="product-short-sr" rows="5" name="short_description.sr" class="form-control"><%= formValues.sr.short_description ? formValues.sr.short_description : '' %></textarea>
+                                            <textarea id="product-short-sr" rows="5" name="short_description[sr]" class="form-control"><%= formValues.sr.short_description ? formValues.sr.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-sr" class="form-label">Hosszú leírás szerbül</label>
-                                    <textarea id="product-long-sr" name="product_description.sr" class="form-control js-ckeditor"><%= formValues.sr.description ? formValues.sr.description : '' %></textarea>
+                                    <textarea id="product-long-sr" name="product_description[sr]" class="form-control js-ckeditor"><%= formValues.sr.description ? formValues.sr.description : '' %></textarea>
                                 </div>
                             </div>
 
@@ -151,19 +151,19 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-name-en" class="form-label">Termék megnevezése angolul</label>
-                                            <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name.en" value="<%= formValues.en.name %>" />
+                                            <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name[en]" value="<%= formValues.en.name %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label for="product-short-en" class="form-label">Rövid leírás angolul</label>
-                                            <textarea id="product-short-en" rows="5" name="short_description.en" class="form-control"><%= formValues.en.short_description ? formValues.en.short_description : '' %></textarea>
+                                            <textarea id="product-short-en" rows="5" name="short_description[en]" class="form-control"><%= formValues.en.short_description ? formValues.en.short_description : '' %></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="product-long-en" class="form-label">Hosszú leírás angolul</label>
-                                    <textarea id="product-long-en" name="product_description.en" class="form-control js-ckeditor"><%= formValues.en.description ? formValues.en.description : '' %></textarea>
+                                    <textarea id="product-long-en" name="product_description[en]" class="form-control js-ckeditor"><%= formValues.en.description ? formValues.en.description : '' %></textarea>
                                 </div>
                             </div>
                         </form>

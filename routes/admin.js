@@ -50,9 +50,6 @@ adminRouter.route("/category/delete/:categoryId")
 adminRouter.route("/products/list")
     .get(checkAuthentication, AdminProductController.getWebshopProductList);
 
-adminRouter.route("/products/new/handle")
-    .post(checkAuthentication, AdminProductController.handleProductUpload);
-
 adminRouter.route("/products/comments/list")
     .get(checkAuthentication, AdminProductController.getProductCommentsList);
 
@@ -97,5 +94,8 @@ adminRouter.route("/order/delete/:orderId")
 
 adminRouter.route("/order/get-info/:orderId")
     .get(checkAuthentication, AdminOrdersController.getOrderDetails);
+
+adminRouter.route("/order/change-status/:orderId")
+    .get(checkAuthentication, AdminOrdersController.changeOrderStatus);
 
 module.exports = adminRouter;

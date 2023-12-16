@@ -34,6 +34,7 @@ function saveImageToDatabase ( response, files, databaseTable, columnId, isThumb
 
     let imageFilesWithNames = null;
 
+    // Simple image upload
     if ( isThumbnailImage ) {
         imageFilesWithNames = files.filename;
 
@@ -51,6 +52,7 @@ function saveImageToDatabase ( response, files, databaseTable, columnId, isThumb
         });
     }
 
+    // Multiple images upload
     else if ( !isThumbnailImage ) {
 
         imageFilesWithNames = files.map(file => file.filename);
@@ -63,11 +65,12 @@ function saveImageToDatabase ( response, files, databaseTable, columnId, isThumb
             }
 
             // If there is already some image data in the database
-            else if (databaseImages.length > 0) {
+            else if (databaseImages[0].database_images != null) {
                 databaseImages = JSON.parse(databaseImages[0].database_images);
                 imageFilesWithNames = imageFilesWithNames.concat(databaseImages);
             }
 
+            imageFilesWithNames = imageFilesWithNames.filter(image => image != null);
             imageFilesWithNames = JSON.stringify(imageFilesWithNames);
 
             const sqlMultipleImageUpdate = `UPDATE ${ databaseTable } SET ${ databaseColumn } = ? WHERE id = ?;`;

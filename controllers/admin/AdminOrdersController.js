@@ -198,4 +198,8 @@ const getOrderDetails = (req, res) => {
     });
 };
 
-module.exports = { deleteOrder, getOrdersListPage, getOrderDetails };
+const changeOrderStatus = (req, res) => {
+    // TODO: Finish order status changing
+};
+
+module.exports = { deleteOrder, getOrdersListPage, getOrderDetails, changeOrderStatus };

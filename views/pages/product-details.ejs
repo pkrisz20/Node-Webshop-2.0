@@ -125,7 +125,7 @@
                         </div>
 
                     <% if (productDetails.description) { %>
-                        <div class="paragraph"><%- productDetails.description %></div>
+                        <div class="ck-content"><%- productDetails.description %></div>
                     <% } %>
 
                         <%- include('../components/sharing-buttons.ejs', { page_url: `products/${ productDetails.slug }`, mail_subject: productDetails.name }) %>

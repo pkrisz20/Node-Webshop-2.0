@@ -429,4 +429,124 @@ const handleProductUpload = (req, res) => {
     );
 }
 
-module.exports = { getWebshopProductList, getProductCommentsList, updateCommentVerficationBadge, getProductUploadPage, deleteProductComment, getProductEditPage, handleProductUpload };
+const handleEditProduct = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    let productData = req.body;
+    let { productId } = req.params;
+
+    // Numbers and Boolean types data check
+    let basePrice = parseInt(productData.price);
+    let categoryID = parseInt(productData.category_id);
+    let is_active = parseInt(productData.is_active ?? 0);
+    let is_featured = parseInt(productData.is_featured ?? 0);
+    let is_delivered = parseInt(productData.is_delivered ?? 0);
+    let is_available = parseInt(productData.is_available ?? 0);
+    let comments_allowed = parseInt(productData.comments_allowed ?? 0);
+    let max_order_count = parseInt(productData.max_order_count);
+    productId = parseInt(productId);
+
+    if (
+        isNaN(categoryID)
+        || isNaN(basePrice)
+        || isNaN(is_active)
+        || isNaN(is_featured)
+        || isNaN(max_order_count)
+        || isNaN(is_delivered)
+        || isNaN(is_available)
+        || isNaN(comments_allowed)
+        || isNaN(productId)
+    )
+    {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // Discount price check and handler
+    let discountPrice = parseInt(productData.discount_value);
+    if (isNaN(discountPrice)) discountPrice = null;
+
+    // TODO: Should I change the slug on each product edit !?
+    // Slug generate for product
+    let generatedSlug = generateUniqueSlug(productData["name[en]"]);
+
+    if ( generatedSlug === false ) {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.slug_error', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // The product names are required
+    let productNames = {
+        en: escapeHtml(productData['name[en]']),
+        sr: escapeHtml(productData['name[sr]']),
+        hu: escapeHtml(productData['name[hu]']),
+    };
+    // The short description simple textarea, it's a string
+    let shortDescriptions = {
+        en: productData['short_description[en]'].length > 0 ? escapeHtml(productData['short_description[en]']) : null,
+        sr: productData['short_description[sr]'].length > 0 ? escapeHtml(productData['short_description[sr]']) : null,
+        hu: productData['short_description[hu]'].length > 0 ? escapeHtml(productData['short_description[hu]']) : null
+    };
+
+    // NOTE: For some reason here I do not need to escape the HTML, cause it stores in db as escaped format
+    let longDescriptions = {
+        en: productData['product_description[en]'] ?? null,
+        sr: productData['product_description[sr]'] ?? null,
+        hu: productData['product_description[hu]'] ?? null
+    };
+
+    const SQLUpdateProduct = "UPDATE products SET name = ?, slug = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
+
+    db.query(
+        SQLUpdateProduct,
+        [
+            JSON.stringify(productNames),
+            generatedSlug,
+            JSON.stringify(shortDescriptions),
+            JSON.stringify(longDescriptions),
+            basePrice,
+            discountPrice,
+            is_active,
+            is_featured,
+            is_available,
+            is_delivered,
+            max_order_count,
+            comments_allowed,
+            categoryID,
+            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+            productId
+        ],
+        (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+            }
+
+            else if (data.affectedRows > 0) {
+                return res.status(200).json({
+                    status: "success",
+                    redirect_url: `/admin/products/edit/${ productId }`,
+                    csrfToken: req.csrfToken()
+                });
+            }
+        }
+    );
+}
+
+module.exports = {
+    getWebshopProductList,
+    getProductCommentsList,
+    updateCommentVerficationBadge,
+    getProductUploadPage,
+    deleteProductComment,
+    getProductEditPage,
+    handleProductUpload,
+    handleEditProduct
+};

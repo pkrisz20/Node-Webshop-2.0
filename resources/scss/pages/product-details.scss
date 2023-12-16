@@ -5,6 +5,7 @@
 @import "../components/featured-products.scss";
 @import "../components/comments.scss";
 @import "../components/sharing-buttons.scss";
+@import "../components/plain-text.scss";
 
 .product-details {
     padding: 40px 0;
@@ -12,15 +13,6 @@
 
     &-section {
       padding: 0 0 40px;
-    }
-
-    .paragraph {
-      margin: 20px 0 0;
-      width: 100%;
-      font-size: 16px;
-      color: $c-dark;
-      font-weight: 400;
-      line-height: 26px;
     }
 
     .details {

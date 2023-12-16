@@ -29,8 +29,8 @@
                                     <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= blogDetails.title %>" />
                                 </picture>
                             </div>
-                            <div>
-                                <%= blogDetails.description %>
+                            <div class="ck-content">
+                                <%- blogDetails.description %>
                             </div>
 
                             <%- include('../components/sharing-buttons.ejs', { page_url: `blog/${ blogDetails.slug }`, mail_subject: blogDetails.title }) %>

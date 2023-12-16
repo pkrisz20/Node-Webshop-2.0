@@ -4,6 +4,7 @@
 /build
 *.todo
 /sessions
+/files
 /logs
 
 # local env files
