@@ -361,18 +361,6 @@ const handleProductUpload = (req, res) => {
     let discountPrice = parseInt(productData.discount_value);
     if (isNaN(discountPrice)) discountPrice = null;
 
-    // Slug generate for product
-    let generatedSlug = generateUniqueSlug(productData["name[en]"]);
-
-    if ( generatedSlug === false ) {
-        return res.status(200).json({
-            status: 'error',
-            title: languageHandler('errors.error', lang),
-            text: languageHandler('errors.slug_error', lang),
-            csrfToken: req.csrfToken()
-        });
-    }
-
     // The product names are required
     let productNames = {
         en: escapeHtml(productData['name[en]']),
@@ -392,13 +380,12 @@ const handleProductUpload = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLInsertProduct = "INSERT INTO products (name, slug, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
         SQLInsertProduct,
         [
             JSON.stringify(productNames),
-            generatedSlug,
             JSON.stringify(shortDescriptions),
             JSON.stringify(longDescriptions),
             basePrice,
@@ -418,12 +405,49 @@ const handleProductUpload = (req, res) => {
                 return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
             }
 
-            else if (data) {
-                return res.status(200).json({
-                    status: "success",
-                    redirect_url: `/admin/products/edit/${ data.insertId }`,
-                    csrfToken: req.csrfToken()
-                });
+            else if (data.affectedRows > 0) {
+
+                // Slug generate for product with inserted id
+                let generatedSlug = generateUniqueSlug(productData["name[en]"], data.insertId);
+
+                if ( generatedSlug === false ) {
+                    return res.status(200).json({
+                        status: 'error',
+                        title: languageHandler('errors.error', lang),
+                        text: languageHandler('errors.slug_error', lang),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+                else {
+                    const updateSlugForProduct = "UPDATE products SET slug = ? WHERE id = ?";
+
+                    db.query(updateSlugForProduct,
+                        [
+                            generatedSlug,
+                            data.insertId
+                        ],
+                        (update_err, queryStatus) => {
+                            if (update_err) {
+                                console.log(update_err);
+                                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+                            }
+                            else if (queryStatus.changedRows > 0) {
+                                return res.status(200).json({
+                                    status: "success",
+                                    redirect_url: `/admin/products/edit/${ data.insertId }`,
+                                    csrfToken: req.csrfToken()
+                                });
+                            }
+                            else {
+                                return res.status(200).json({
+                                    status: 'error',
+                                    title: languageHandler('errors.error', lang),
+                                    csrfToken: req.csrfToken()
+                                });
+                            }
+                        }
+                    );
+                }
             }
         }
     );
@@ -469,19 +493,6 @@ const handleEditProduct = (req, res) => {
     let discountPrice = parseInt(productData.discount_value);
     if (isNaN(discountPrice)) discountPrice = null;
 
-    // TODO: Should I change the slug on each product edit !?
-    // Slug generate for product
-    let generatedSlug = generateUniqueSlug(productData["name[en]"]);
-
-    if ( generatedSlug === false ) {
-        return res.status(200).json({
-            status: 'error',
-            title: languageHandler('errors.error', lang),
-            text: languageHandler('errors.slug_error', lang),
-            csrfToken: req.csrfToken()
-        });
-    }
-
     // The product names are required
     let productNames = {
         en: escapeHtml(productData['name[en]']),
@@ -502,13 +513,12 @@ const handleEditProduct = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLUpdateProduct = "UPDATE products SET name = ?, slug = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateProduct,
         [
             JSON.stringify(productNames),
-            generatedSlug,
             JSON.stringify(shortDescriptions),
             JSON.stringify(longDescriptions),
             basePrice,
