@@ -16,29 +16,91 @@
     }
 
     .details {
-      @include flexBox("center", "flex-start", 25px);
+      @include flexBox("center", "flex-start", 15px);
       flex-direction: column;
 
-      @media #{ $r-min-m } {
-        @include flexBox("space-between", "flex-start", 40px);
+      @media #{ $r-min-xl } {
+        @include flexBox("space-between", "flex-start", 15px);
         flex-direction: row;
       }
 
       &-gallery {
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        cursor: pointer;
-        border-radius: 10px;
-        max-width: 500px;
+        max-width: 600px;
         margin: 0 auto;
 
-        @media #{ $r-min-m } {
+        .icon--hover {
+          position: relative;
+
+          .search-icon {
+            opacity: 0;
+            visibility: hidden;
+            @include absoluteCenter();
+            font-size: 28px;
+            color: $c-3;
+            transition: opacity .3s ease;
+            z-index: 3;
+          }
+
+          &::before {
+            @include absoluteFullSize();
+            content: "";
+            background-color: transparent;
+            transition: background-color .3s ease;
+            z-index: 2;
+          }
+
+          &:hover {
+            .search-icon {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+
+          &:hover::before {
+            background-color: rgba($c-white, .5);
+          }
+        }
+
+        &__lead-image {
+          overflow: hidden;
+          border-radius: 10px;
+          cursor: pointer;
+
+          picture {
+            @include respImage(0.76);
+          }
+        }
+
+        @media #{ $r-min-xl } {
           max-width: 50%;
         }
 
-        picture {
-          @include respImage(0.76);
+        &__thumbs {
+          display: none;
+
+          @media #{ $r-min-m } {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+          }
+
+          & > div {
+            cursor: pointer;
+
+            &:not(:last-child) {
+              margin: 0 5px 5px 0;
+            }
+          }
+
+          img {
+            border-radius: 3px;
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            object-position: center;
+          }
         }
       }
 
@@ -51,7 +113,13 @@
           text-align: left;
           padding: 0;
           margin-bottom: 15px;
-          @include resp('font-size', 23px, 30px, 767px, 1200px);
+          @include resp('font-size', 20px, 30px, 767px, 1200px);
+        }
+
+        &-short {
+          @media #{ $r-max-l } {
+            font-size: 14px;
+          }
         }
 
         .prices {
@@ -160,7 +228,7 @@
         }
 
         &-functions {
-          @include flexBox("flex-start", "center", 15px);
+          @include flexBox("flex-start", "center", 10px);
           width: 100%;
 
           @media #{ $r-max-xs } {
