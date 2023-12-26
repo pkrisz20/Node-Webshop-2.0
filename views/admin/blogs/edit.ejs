@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('../layout/head.ejs') %>
+    </head>
+        <%- include('../layout/sidebar-navs.ejs') %>
+
+                <main class="p-4">
+                    <h1 class="h3 mb-3">Cikk szerkesztése</h1>
+
+                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU">Általános adatok + <img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media-thumbnail"><i class="fas fa-photo-video"></i> Indexkép</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media"><i class="fas fa-photo-video"></i> Média</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/blogs/edit/handle/<%= formValues.id %>">
+
+                            <div class="tab-pane show fade active" id="HU">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-name-hu" class="form-label">Cikk címe</label>
+                                            <input type="text" data-rule-required="true" id="article-name-hu" class="form-control" name="title[hu]" value="<%= formValues.hu.title %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="article-date" class="form-label">Cikk dátuma</label>
+                                            <input type="date" data-rule-required="true" id="article-date" class="form-control" name="date" value="<%= formValues.date %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="article-author" class="form-label">Szerző</label>
+                                            <input type="text" data-rule-required="true" id="article-author" class="form-control" name="author" value="<%= formValues.author %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-short-hu" class="form-label">Rövid leírás</label>
+                                            <textarea id="article-short-hu" rows="5" name="short_description[hu]" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_active === 1 ? 'checked' : '' %> value="<%= formValues.is_active %>" name="is_active" id="article-is-active" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="article-is-active">Aktív</label>
+                                        </div>
+                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_featured === 1 ? 'checked' : '' %> value="<%= formValues.is_featured %>" name="is_featured" id="article-is-featured" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="article-is-featured">Főoldali kiemelés</label>
+                                        </div>
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_allowed === 1 ? 'checked' : '' %> value="<%= formValues.is_allowed %>" name="comments_allowed" id="article-comments-allowed" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="article-comments-allowed">Hozzászólások engedélyezése</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="article-long-hu" class="form-label">Hosszú leírás</label>
+                                    <textarea id="article-long-hu" name="article_description[hu]" class="form-control js-ckeditor"><%= formValues.hu.description ? formValues.hu.description : '' %></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">Mentés</button>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="SR">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-name-sr" class="form-label">Cikk címe szerbül</label>
+                                            <input type="text" data-rule-required="true" id="article-name-sr" class="form-control" name="title[sr]" value="<%= formValues.sr.title %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-short-sr" class="form-label">Rövid leírás szerbül</label>
+                                            <textarea id="article-short-sr" rows="5" name="short_description[sr]" class="form-control"><%= formValues.sr.short_description ? formValues.sr.short_description : '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="article-long-sr" class="form-label">Hosszú leírás szerbül</label>
+                                    <textarea id="article-long-sr" name="article_description[sr]" class="form-control js-ckeditor"><%= formValues.sr.description ? formValues.sr.description : '' %></textarea>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="EN">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-name-en" class="form-label">Cikk címe angolul</label>
+                                            <input type="text" data-rule-required="true" id="article-name-en" class="form-control" name="title[en]" value="<%= formValues.en.title %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="article-short-en" class="form-label">Rövid leírás angolul</label>
+                                            <textarea id="article-short-en" rows="5" name="short_description[en]" class="form-control"><%= formValues.en.short_description ? formValues.en.short_description : '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="article-long-en" class="form-label">Hosszú leírás angolul</label>
+                                    <textarea id="article-long-en" name="article_description[en]" class="form-control js-ckeditor"><%= formValues.en.description ? formValues.en.description : '' %></textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="tab-pane fade" id="media-thumbnail">
+                            <%- include('../components/image-uploader.ejs', { single: true, whereToUpload: "blogs", databaseID: formValues.id, uploadedImages: formValues.image_thumbnail }) %>
+                        </div>
+
+                        <div class="tab-pane fade" id="media">
+                            <%- include('../components/image-uploader.ejs', { multiple: true, whereToUpload: "blogs", databaseID: formValues.id, uploadedImages: formValues.images }) %>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/plugins/ckeditor.min.js"></script>
+        <script src="js/plugins/validate.min.js"></script>
+        <script src="js/plugins/validator_messages_hu.js"></script>
+        <script src="admin/js/admin.js"></script>
+        <script src="admin/js/image-uploader.js"></script>
+    </body>
+</html>

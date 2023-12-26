@@ -1,8 +1,12 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
-const { setMomentLocale, limitText } = require("../../helpers/globalFunctions");
+const imagePathConverter = require("../../helpers/imagePathConverter");
+const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
+const getValidFormValues = require("../../helpers/admin/getValidFormValues");
+const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
+const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
 const getBlogsList = (req, res) => {
@@ -296,4 +300,290 @@ const deleteArticleComment = (req, res) => {
     });
 }
 
-module.exports = { getBlogsList, getBlogsCommentsList, getEventsList, deleteArticleComment };
+const getArticleUploadPage = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    var metas = {
+        title: "Új cikk",
+        type: "website",
+        url: `${ process.env.APP_URL }/admin/blogs/new`,
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the article upload page",
+    };
+
+    return res.render("admin/blogs/new", {
+        meta: metas,
+        current_locale: lang,
+        csrfToken: req.csrfToken()
+    });
+}
+
+const handleArticleUpload = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    let articleData = req.body;
+
+    // Boolean types data check
+    let is_active = parseInt(articleData.is_active ?? 0);
+    let is_featured = parseInt(articleData.is_featured ?? 0);
+    let comments_allowed = parseInt(articleData.comments_allowed ?? 0);
+
+    if (
+        isNaN(is_active)
+        || isNaN(is_featured)
+        || isNaN(comments_allowed)
+        || !articleData['author']
+    )
+    {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // The article names are required
+    let articleTitles = {
+        en: escapeHtml(articleData['title[en]']),
+        sr: escapeHtml(articleData['title[sr]']),
+        hu: escapeHtml(articleData['title[hu]']),
+    };
+    // The short description simple textarea, it's a string
+    let shortDescriptions = {
+        en: articleData['short_description[en]'].length > 0 ? escapeHtml(articleData['short_description[en]']) : null,
+        sr: articleData['short_description[sr]'].length > 0 ? escapeHtml(articleData['short_description[sr]']) : null,
+        hu: articleData['short_description[hu]'].length > 0 ? escapeHtml(articleData['short_description[hu]']) : null
+    };
+
+    let longDescriptions = {
+        en: articleData['article_description[en]'] ?? null,
+        sr: articleData['article_description[sr]'] ?? null,
+        hu: articleData['article_description[hu]'] ?? null
+    };
+
+    const SQLInsertArticle = "INSERT INTO blogs (title, short_description, description, date, author, is_active, is_featured, comments_allowed, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+
+    db.query(
+        SQLInsertArticle,
+        [
+            JSON.stringify(articleTitles),
+            JSON.stringify(shortDescriptions),
+            JSON.stringify(longDescriptions),
+            articleData['date'],
+            articleData['author'],
+            is_active,
+            is_featured,
+            comments_allowed,
+            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+        ],
+        (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+            }
+
+            else if (data.affectedRows > 0) {
+
+                // Slug generate for product with inserted id
+                let generatedSlug = generateUniqueSlug(articleData["name[en]"], data.insertId);
+
+                if ( generatedSlug === false ) {
+                    return res.status(200).json({
+                        status: 'error',
+                        title: languageHandler('errors.error', lang),
+                        text: languageHandler('errors.slug_error', lang),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+                else {
+                    const updateSlugForArticle = "UPDATE blogs SET slug = ? WHERE id = ?";
+
+                    db.query(updateSlugForArticle,
+                        [
+                            generatedSlug,
+                            data.insertId
+                        ],
+                        (update_err, queryStatus) => {
+                            if (update_err) {
+                                console.log(update_err);
+                                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+                            }
+                            else if (queryStatus.changedRows > 0) {
+                                return res.status(200).json({
+                                    status: "success",
+                                    redirect_url: `/admin/blogs/edit/${ data.insertId }`,
+                                    csrfToken: req.csrfToken()
+                                });
+                            }
+                            else {
+                                return res.status(200).json({
+                                    status: 'error',
+                                    title: languageHandler('errors.error', lang),
+                                    csrfToken: req.csrfToken()
+                                });
+                            }
+                        }
+                    );
+                }
+            }
+        }
+    );
+}
+
+const getArticleEditPage = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    var metas = {
+        title: "Szerkesztés",
+        type: "website",
+        url: `${ process.env.APP_URL }/blogs/edit`,
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the article edit page",
+    };
+
+    let { articleId } = req.params;
+    articleId = parseInt(articleId);
+
+    if ( isNaN(articleId) ) {
+        return showBadRequestPage(req, res);
+    }
+
+    // function params => Table, database ID, callback
+    getValidFormValues('blogs', articleId, function (err, DBformData) {
+        // If there is ANY error, then the ID does not exist -> show new upload form
+        if (err) {
+            return res.redirect('/admin/blogs/new');
+        }
+
+        // If HAS form values, then show edit page
+        else if ( DBformData.length > 0 ) {
+
+            const validLanguages = process.env.VALID_LANGS.split(',');
+            let formValues = DBformData[0];
+            let formattedValues = {
+                en: {},
+                hu: {},
+                sr: {}
+            };
+
+            setMomentLocale("hu");
+
+            // Convert & format the form values
+            validLanguages.forEach(currentLanguage => {
+                formattedValues[currentLanguage].title = getValueByLanguage(formValues.title, currentLanguage);
+                formattedValues[currentLanguage].short_description = formValues.short_description != null ? getValueByLanguage(formValues.short_description, currentLanguage) : null;
+                formattedValues[currentLanguage].description = formValues.description != null ? getValueByLanguage(formValues.description, currentLanguage) : null;
+            });
+
+            formattedValues.images = formValues.images != null ? imagePathConverter(JSON.parse(formValues.images), 'blogs') : null;
+            formattedValues.image_thumbnail = formValues.image_thumbnail != null ? imagePathConverter(formValues.image_thumbnail, 'blogs') : null;
+            formattedValues.id = parseInt(formValues.id);
+            formattedValues.author = formValues.author;
+            formattedValues.date = moment(formValues.date).format("YYYY-MM-DD");
+            formattedValues.is_active = parseInt(formValues.is_active);
+            formattedValues.is_featured = parseInt(formValues.is_featured);
+            formattedValues.comments_allowed = parseInt(formValues.comments_allowed);
+
+            return res.render("admin/blogs/edit", {
+                formValues: formattedValues,
+                meta: metas,
+                current_locale: lang,
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        // If NO form values, then show new article upload page
+        else if ( DBformData.length === 0 ) {
+            return res.redirect('/admin/blogs/new');
+        }
+    });
+}
+
+const handleEditArticle = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    let articleData = req.body;
+    let { articleId } = req.params;
+
+    // Boolean types data check
+    let is_active = parseInt(articleData.is_active ?? 0);
+    let is_featured = parseInt(articleData.is_featured ?? 0);
+    let comments_allowed = parseInt(articleData.comments_allowed ?? 0);
+    articleId = parseInt(articleId);
+
+    if (
+        isNaN(is_active)
+        || isNaN(is_featured)
+        || isNaN(comments_allowed)
+        || isNaN(articleId)
+        || !articleData['author']
+    )
+    {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    // The product names are required
+    let titleNames = {
+        en: escapeHtml(articleData['title[en]']),
+        sr: escapeHtml(articleData['title[sr]']),
+        hu: escapeHtml(articleData['title[hu]']),
+    };
+    // The short description simple textarea, it's a string
+    let shortDescriptions = {
+        en: articleData['short_description[en]'].length > 0 ? escapeHtml(articleData['short_description[en]']) : null,
+        sr: articleData['short_description[sr]'].length > 0 ? escapeHtml(articleData['short_description[sr]']) : null,
+        hu: articleData['short_description[hu]'].length > 0 ? escapeHtml(articleData['short_description[hu]']) : null
+    };
+
+    // NOTE: For some reason here I do not need to escape the HTML, cause it stores in db as escaped format
+    let longDescriptions = {
+        en: articleData['article_description[en]'] ?? null,
+        sr: articleData['article_description[sr]'] ?? null,
+        hu: articleData['article_description[hu]'] ?? null
+    };
+
+    const SQLUpdateArticle = "UPDATE blogs SET title = ?, short_description = ?, description = ?, date = ?, author = ?, is_active = ?, is_featured = ?, comments_allowed = ?, updated_at = ? WHERE id = ?";
+
+    db.query(
+        SQLUpdateArticle,
+        [
+            JSON.stringify(titleNames),
+            JSON.stringify(shortDescriptions),
+            JSON.stringify(longDescriptions),
+            articleData['date'],
+            articleData['author'],
+            is_active,
+            is_featured,
+            comments_allowed,
+            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+            articleId
+        ],
+        (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+            }
+
+            else if (data.affectedRows > 0) {
+                return res.status(200).json({
+                    status: "success",
+                    redirect_url: `/admin/blogs/edit/${ articleId }`,
+                    csrfToken: req.csrfToken()
+                });
+            }
+        }
+    );
+}
+
+module.exports = {
+    getBlogsList,
+    getBlogsCommentsList,
+    getEventsList,
+    deleteArticleComment,
+    getArticleUploadPage,
+    handleArticleUpload,
+    getArticleEditPage,
+    handleEditArticle
+};

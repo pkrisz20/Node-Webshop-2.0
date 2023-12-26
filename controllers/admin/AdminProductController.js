@@ -280,7 +280,7 @@ const getProductEditPage = (req, res) => {
         // If HAS form values, then show edit page
         else if ( DBformData.length > 0 ) {
 
-            const validLanguages = ['en', 'hu', 'sr'];
+            const validLanguages = process.env.VALID_LANGS.split(',');
             let formValues = DBformData[0];
             let formattedValues = {
                 en: {},

@@ -33,7 +33,7 @@ const getBlogDetails = (req, res) => {
 
     const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
-    const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ? ORDER BY blogs.id DESC LIMIT ?";
+    const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ? AND blogs.id != ? ORDER BY blogs.id DESC LIMIT ?";
 
     db.query(blogDetailsQuery, [1, slug], (err, data) => {
         if (err) {
@@ -100,7 +100,7 @@ const getBlogDetails = (req, res) => {
                     });
                 }
 
-                db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), 12], (err, incommingEvent) => {
+                db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), result.id, 12], (err, incommingEvent) => {
                     if (err) {
                         console.log(err);
                         return showServerErrorPage(req, res);
