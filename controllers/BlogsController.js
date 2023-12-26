@@ -29,7 +29,7 @@ const getBlogDetails = (req, res) => {
     let articleComments = [];
     let showLoadMoreButton = false;
 
-    const blogDetailsQuery = "SELECT id, title, description, author, image_thumbnail, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
+    const blogDetailsQuery = "SELECT id, title, description, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
     const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
@@ -54,7 +54,8 @@ const getBlogDetails = (req, res) => {
                 title: getValueByLanguage(data[0].title, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 author: data[0].author,
-                image: imagePathConverter(data[0].image_thumbnail, "blogs"),
+                thumb_image: imagePathConverter(data[0].image_thumbnail, "blogs"),
+                images: imagePathConverter(JSON.parse(data[0].images), "blogs") ?? [],
                 isAllowed: Boolean(data[0].comments_allowed),
                 date: formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
             }

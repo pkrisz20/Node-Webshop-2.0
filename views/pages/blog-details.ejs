@@ -3,6 +3,9 @@
     <%- include('../layout/head.ejs') %>
 
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <% if (blogDetails.images.length > 0) { %>
+        <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <% } %>
     <link rel="preload" href="css/blog-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
@@ -23,12 +26,29 @@
                                 <time class="blog-article__date"><%= blogDetails.date %></time>
                                 <strong class="blog-article__author"><%= blogDetails.author %></strong>
                             </header>
-                            <div class="blog-thumbnail">
+                            <div class="blog-thumbnail <%= blogDetails.images.length > 0 ? 'icon--hover js-gallery-thumb' : ''%>">
+                                <i class="fas fa-search-plus search-icon"></i>
                                 <picture>
-                                    <source srcset="<%= blogDetails.image %>">
+                                    <source srcset="<%= blogDetails.thumb_image %>">
                                     <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= blogDetails.title %>" />
                                 </picture>
                             </div>
+
+                            <% if (blogDetails.images.length > 0) { %>
+                                <div class="blog-article__thumbs js-gallery">
+                                    <div class="hide" data-src="<%= blogDetails.thumb_image %>">
+                                        <img src="<%= blogDetails.thumb_image %>" alt="<%= blogDetails.title %> thumbnail">
+                                    </div>
+                                    <% blogDetails.images.forEach((image, index) => { %>
+                                        <div class="icon--hover" data-src="<%= image %>">
+                                            <i class="fas fa-search-plus search-icon"></i>
+
+                                            <img src="<%= image %>" alt="<%= blogDetails.title %> #<%= index + 1 %>" />
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            <% } %>
+
                             <div class="ck-content">
                                 <%- blogDetails.description %>
                             </div>
@@ -96,6 +116,9 @@
     <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
     <script type="text/javascript" src="js/plugins/slick.min.js"></script>
     <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <% if (blogDetails.images.length > 0) { %>
+        <script type="text/javascript" src="js/plugins/lightbox.min.js"></script>
+    <% } %>
 
     <% if (blogDetails.isAllowed) { %>
         <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
@@ -160,6 +183,23 @@
                         }
                     }
                 });
+            });
+        </script>
+    <% } %>
+
+    <% if (blogDetails.images.length > 0) { %>
+        <script type="text/javascript">
+            var gallery = $('.js-gallery div').simpleLightbox({
+                focus: false,
+                doubleTapZoom: 2,
+                maxZoom: 6,
+                loop: true,
+                showCounter: true,
+                sourceAttr: 'data-src'
+            });
+
+            $('body').on('click', '.js-gallery-thumb', function () {
+                gallery.open();
             });
         </script>
     <% } %>

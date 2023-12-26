@@ -33,10 +33,44 @@
                 @media #{ $r-min-m } {
                     flex-direction: row;
                 }
+
+                .icon--hover {
+                    position: relative;
+                    cursor: pointer;
+
+                    .search-icon {
+                        opacity: 0;
+                        visibility: hidden;
+                        @include absoluteCenter();
+                        font-size: 28px;
+                        color: $c-3;
+                        transition: opacity .3s ease;
+                        z-index: 3;
+                    }
+
+                    &::before {
+                        @include absoluteFullSize();
+                        content: "";
+                        background-color: transparent;
+                        transition: background-color .3s ease;
+                        z-index: 2;
+                    }
+
+                    &:hover {
+                        .search-icon {
+                            opacity: 1;
+                            visibility: visible;
+                        }
+                    }
+
+                    &:hover::before {
+                        background-color: rgba($c-white, .5);
+                    }
+                }
             }
             &-thumbnail {
                 @include respImage(math.div(500, 820));
-                margin-bottom: 30px;
+                margin-bottom: 10px;
 
                 img {
                     border-radius: 3px;
@@ -64,6 +98,31 @@
                     color: $c-white;
                     padding: 2px;
                     font-weight: 600;
+                }
+
+                &__thumbs {
+                    display: none;
+
+                    @media #{ $r-min-m } {
+                        display: flex;
+                        flex-wrap: wrap;
+                    }
+
+                    & > div {
+                        cursor: pointer;
+
+                        &:not(:last-child) {
+                            margin: 0 5px 5px 0;
+                        }
+                    }
+
+                    img {
+                        border-radius: 3px;
+                        width: 110px;
+                        height: 110px;
+                        object-fit: cover;
+                        object-position: center;
+                    }
                 }
             }
             &-aside {
