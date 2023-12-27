@@ -3,6 +3,7 @@ const adminFormsRouter = express.Router();
 const checkAuthentication = require('../middleware/checkAuthentication');
 const AdminProductController = require("../controllers/admin/AdminProductController");
 const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
+const WebshopCategoryController = require("../controllers/admin/WebshopCategoryController");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 adminFormsRouter.route("/products/new")
@@ -28,5 +29,17 @@ adminFormsRouter.route("/blogs/edit/:articleId")
 
 adminFormsRouter.route("/blogs/edit/handle/:articleId")
     .post(checkAuthentication, AdminBlogsController.handleEditArticle);
+
+adminFormsRouter.route("/category/new")
+    .get(checkAuthentication, WebshopCategoryController.getNewCategoryPage);
+
+adminFormsRouter.route("/category/new/handle")
+    .post(checkAuthentication, WebshopCategoryController.addNewCategory);
+
+adminFormsRouter.route("/category/edit/:categoryId")
+    .get(checkAuthentication, WebshopCategoryController.getCategoryEditPage);
+
+adminFormsRouter.route("/category/edit/handle/:categoryId")
+    .post(checkAuthentication, WebshopCategoryController.handleEditCategory);
 
 module.exports = adminFormsRouter;
