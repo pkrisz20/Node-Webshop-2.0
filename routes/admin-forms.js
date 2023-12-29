@@ -4,6 +4,7 @@ const checkAuthentication = require('../middleware/checkAuthentication');
 const AdminProductController = require("../controllers/admin/AdminProductController");
 const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
 const WebshopCategoryController = require("../controllers/admin/WebshopCategoryController");
+const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 adminFormsRouter.route("/products/new")
@@ -41,5 +42,17 @@ adminFormsRouter.route("/category/edit/:categoryId")
 
 adminFormsRouter.route("/category/edit/handle/:categoryId")
     .post(checkAuthentication, WebshopCategoryController.handleEditCategory);
+
+adminFormsRouter.route("/faq/new")
+    .get(checkAuthentication, AdminStaticContentsController.getNewFAQPage);
+
+adminFormsRouter.route("/faq/new/handle")
+    .post(checkAuthentication, AdminStaticContentsController.handleFAQUpload);
+
+adminFormsRouter.route("/faq/edit/:faqId")
+    .get(checkAuthentication, AdminStaticContentsController.getFAQEditPage);
+
+adminFormsRouter.route("/faq/edit/handle/:faqId")
+    .post(checkAuthentication, AdminStaticContentsController.handleEditFAQ);
 
 module.exports = adminFormsRouter;

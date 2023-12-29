@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('../layout/head.ejs') %>
+    </head>
+        <%- include('../layout/sidebar-navs.ejs') %>
+
+                <main class="p-4">
+                    <h1 class="h3 mb-3">Kérdés/válasz szerkesztése</h1>
+
+                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU"><img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/faq/edit/handle/<%= formValues.id %>">
+
+                            <div class="tab-pane show fade active" id="HU">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="question-hu" class="form-label">Kérdés</label>
+                                            <input type="text" data-rule-required="true" id="question-hu" class="form-control" name="question[hu]" value="<%= formValues.hu.question %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="answer-hu" class="form-label">Válasz</label>
+                                            <textarea id="answer-hu" data-rule-required="true" rows="5" name="answer[hu]" class="form-control js-ckeditor"><%= formValues.hu.answer %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="SR">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="question-sr" class="form-label">Kérdés szerbül</label>
+                                            <input type="text" data-rule-required="true" id="question-sr" class="form-control" name="question[sr]" value="<%= formValues.sr.question %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="answer-sr" class="form-label">Válasz szerbül</label>
+                                            <textarea id="answer-sr" data-rule-required="true" rows="5" name="answer[sr]" class="form-control js-ckeditor"><%= formValues.sr.answer %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="EN">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="question-en" class="form-label">Kérdés angolul</label>
+                                            <input type="text" data-rule-required="true" id="question-en" class="form-control" name="question[en]" value="<%= formValues.en.question %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="form-row">
+                                            <label for="answer-en" class="form-label">Válasz angolul</label>
+                                            <textarea id="answer-en" data-rule-required="true" rows="5" name="answer[en]" class="form-control js-ckeditor"><%= formValues.en.answer %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="form-check form-switch d-inline-block">
+                                        <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_active === 1 ? 'checked' : '' %> value="<%= formValues.is_active %>" value="0" name="is_active" id="faq-is-active" role="switch" />
+                                        <label class="form-check-label ms-sm-2 lh-lg" for="faq-is-active">Aktív</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Mentés</button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/plugins/ckeditor.min.js"></script>
+        <script src="js/plugins/validate.min.js"></script>
+        <script src="js/plugins/validator_messages_hu.js"></script>
+        <script src="admin/js/admin.js"></script>
+    </body>
+</html>
