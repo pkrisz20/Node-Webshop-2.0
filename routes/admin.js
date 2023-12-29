@@ -62,6 +62,9 @@ adminRouter.route("/products/comments/delete/:commentId")
 adminRouter.route("/gallery/list")
     .get(checkAuthentication, AdminGalleryController.getGalleryList);
 
+adminRouter.route("/gallery/delete/:galleryId")
+    .get(checkAuthentication, AdminGalleryController.deleteGallery);
+
 adminRouter.route("/blogs/list")
     .get(checkAuthentication, AdminBlogsController.getBlogsList);
 

@@ -5,6 +5,7 @@ const AdminProductController = require("../controllers/admin/AdminProductControl
 const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
 const WebshopCategoryController = require("../controllers/admin/WebshopCategoryController");
 const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
+const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 adminFormsRouter.route("/products/new")
@@ -54,5 +55,17 @@ adminFormsRouter.route("/faq/edit/:faqId")
 
 adminFormsRouter.route("/faq/edit/handle/:faqId")
     .post(checkAuthentication, AdminStaticContentsController.handleEditFAQ);
+
+adminFormsRouter.route("/gallery/new")
+    .get(checkAuthentication, AdminGalleryController.getGalleryUploadPage);
+
+adminFormsRouter.route("/gallery/new/handle")
+    .post(checkAuthentication, AdminGalleryController.handleGalleryUpload);
+
+adminFormsRouter.route("/gallery/edit/:galleryId")
+    .get(checkAuthentication, AdminGalleryController.getGalleryEditPage);
+
+adminFormsRouter.route("/gallery/edit/handle/:galleryId")
+    .post(checkAuthentication, AdminGalleryController.handleEditGallery);
 
 module.exports = adminFormsRouter;
