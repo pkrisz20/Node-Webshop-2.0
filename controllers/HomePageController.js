@@ -44,7 +44,7 @@ const getData = (req, res) => {
     // GALLERIES
     const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND galleries.is_featured = ? ORDER BY galleries.gallery_date DESC";
     // HEROS
-    const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM hero WHERE is_active = ? ORDER BY id DESC";
+    const sqlQuerySliders = "SELECT id, title, subtitle, target_page, image, link, button_text FROM heros WHERE is_active = ? ORDER BY id DESC";
 
     setMomentLocale(lang);
 

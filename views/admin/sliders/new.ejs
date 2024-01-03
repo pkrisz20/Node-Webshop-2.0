@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('../layout/head.ejs') %>
+    </head>
+        <%- include('../layout/sidebar-navs.ejs') %>
+
+                <main class="p-4">
+                    <h1 class="h3 mb-3">Új forgó feltöltése</h1>
+
+                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU"><img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/slider/new/handle">
+
+                            <div class="tab-pane show fade active" id="HU">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="slider-name-hu" class="form-label">Forgó címe</label>
+                                            <input type="text" data-rule-required="true" id="slider-name-hu" class="form-control" name="title[hu]" value="" />
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <label for="slider-button-hu" class="form-label">Gomb szövege</label>
+                                            <input type="text" id="slider-button-hu" class="form-control" name="button[hu]" value="" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="slider-link-hu" class="form-label">Link</label>
+                                            <input type="text" data-rule-url="true" id="slider-link-hu" class="form-control" name="link[hu]" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="slider-short-hu" class="form-label">Rövid leírás</label>
+                                            <textarea id="slider-short-hu" rows="5" name="subtitle[hu]" class="form-control"></textarea>
+                                        </div>
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_active" id="slider-is-active" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="slider-is-active">Aktív</label>
+                                        </div>
+                                        <div class="ms-sm-3 d-inline-block">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="target_page" id="target_page_blank" value="_blank" />
+                                                <label class="form-check-label" for="target_page_blank">
+                                                    Új oldalon nyíljon
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="target_page" id="target_page_self" value="_self" checked />
+                                                <label class="form-check-label" for="target_page_self">
+                                                    Meglévő oldalon nyíljon
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="SR">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="slider-name-sr" class="form-label">Forgó címe szerbül</label>
+                                            <input type="text" data-rule-required="true" id="slider-name-sr" class="form-control" name="title[sr]" value="" />
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <label for="slider-button-sr" class="form-label">Gomb szövege szerbül</label>
+                                            <input type="text" id="slider-button-sr" class="form-control" name="button[sr]" value="" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="slider-link-sr" class="form-label">Link szerben</label>
+                                            <input type="text" data-rule-url="true" id="slider-link-sr" class="form-control" name="link[sr]" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="slider-short-sr" class="form-label">Rövid leírás szerbül</label>
+                                            <textarea id="slider-short-sr" rows="5" name="subtitle[sr]" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="EN">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="slider-name-en" class="form-label">Forgó címe angolul</label>
+                                            <input type="text" data-rule-required="true" id="slider-name-en" class="form-control" name="title[en]" value="" />
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <label for="slider-button-en" class="form-label">Gomb szövege angolul</label>
+                                            <input type="text" id="slider-button-en" class="form-control" name="button[en]" value="" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="slider-link-en" class="form-label">Link angolon</label>
+                                            <input type="text" data-rule-url="true" id="slider-link-en" class="form-control" name="link[en]" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="slider-short-en" class="form-label">Rövid leírás angolul</label>
+                                            <textarea id="slider-short-en" rows="5" name="subtitle[en]" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Mentés</button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="js/plugins/validate.min.js"></script>
+        <script src="js/plugins/validator_messages_hu.js"></script>
+        <script src="admin/js/admin.js"></script>
+    </body>
+</html>
