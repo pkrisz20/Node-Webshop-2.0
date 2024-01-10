@@ -143,7 +143,7 @@ const handleSliderUpload = (req, res) => {
     isThereAnyButtonText && heroParamValues.push(JSON.stringify(buttonTexts));
     let paramsCount = Array(heroParamValues.length).fill("?").join(",");
 
-    const SQLInsertHero = `INSERT INTO hero (title, subtitle, target_page, is_active, created_at ${ isThereAnyLink ? ', link' : '' } ${ isThereAnyButtonText ? ', button_text' : '' }) VALUES(${ paramsCount })`;
+    const SQLInsertHero = `INSERT INTO heros (title, subtitle, target_page, is_active, created_at ${ isThereAnyLink ? ', link' : '' } ${ isThereAnyButtonText ? ', button_text' : '' }) VALUES(${ paramsCount })`;
 
     db.query(
         SQLInsertHero,

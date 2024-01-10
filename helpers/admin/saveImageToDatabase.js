@@ -16,7 +16,7 @@ function saveImageToDatabase ( response, files, databaseTable, columnId, isThumb
     // databaseTable : databaseColumn
     const database_values_single_upload = {
         products: 'image_thumbnail',
-        hero: 'image',
+        heros: 'image',
         galleries: 'gallery_thumbnail',
         employees: 'image',
         categories: 'image',
