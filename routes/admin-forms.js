@@ -7,7 +7,14 @@ const WebshopCategoryController = require("../controllers/admin/WebshopCategoryC
 const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
 const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
 const AdminSliderController = require("../controllers/admin/SliderController");
+const AdminSettingsController = require("../controllers/admin/AdminController");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+
+adminFormsRouter.route("/settings")
+    .get(checkAuthentication, AdminSettingsController.getGlobalSettingsPage);
+
+// adminFormsRouter.route("/settings/handle")
+//     .post(checkAuthentication, AdminSettingsController.handleGlobalSettings);
 
 adminFormsRouter.route("/products/new")
     .get(checkAuthentication, selectWebshopCategories, AdminProductController.getProductUploadPage);

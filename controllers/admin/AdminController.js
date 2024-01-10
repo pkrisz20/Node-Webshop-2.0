@@ -4,6 +4,7 @@ const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { saveImageToDatabase } = require('../../helpers/admin/saveImageToDatabase');
 const { deleteImageFromDatabase } = require('../../helpers/admin/deleteImageFromDatabase');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
+const getValidFormValues = require('../../helpers/admin/getValidFormValues')
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 const multer = require("multer");
@@ -289,4 +290,67 @@ const deleteImageFile = (req, res) => {
 
 };
 
-module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile };
+const getGlobalSettingsPage = (req, res) => {
+    var metas = {
+        title: 'Admin dashboard',
+        type: "website",
+        image: `${ process.env.APP_URL }/images/logo.png`,
+        description: "This is the admin global settings page",
+        // keywords: []
+    };
+
+    // function params => Table, database ID, callback
+    getValidFormValues('config', null, function (err, DBformData) {
+        // If there is ANY error, then the ID does not exist -> show new upload form
+        if (err) {
+            return showServerErrorPage(req, res);
+        }
+
+        // If HAS form values, then show edit page
+        else if ( DBformData.length > 0 ) {
+
+            const validLanguages = process.env.VALID_LANGS.split(',');
+            let configValues = DBformData[0];
+            let formattedConfigValues = {
+                en: {},
+                hu: {},
+                sr: {}
+            };
+
+            // Convert & format the form values
+            // The home page banner texts
+            validLanguages.forEach(currentLanguage => {
+                formattedConfigValues[currentLanguage].home_page_title = configValues.home_page_title != null ? getValueByLanguage(configValues.home_page_title, currentLanguage) : null;
+                formattedConfigValues[currentLanguage].home_page_text = configValues.home_page_text != null ? getValueByLanguage(configValues.home_page_text, currentLanguage) : null;
+            });
+
+            // Countup numbers
+            formattedConfigValues.posted_products_number = parseInt(configValues.posted_products_number ?? 0);
+            formattedConfigValues.animals_in_numbers = parseInt(configValues.animals_in_numbers ?? 0);
+            formattedConfigValues.cups_of_coffe_number = parseInt(configValues.cups_of_coffe_number ?? 0);
+            formattedConfigValues.satisfied_clients_number = parseInt(configValues.satisfied_clients_number ?? 0);
+
+            // Contact data
+            formattedConfigValues.phone_1 = configValues.phone_1 != null ? configValues.phone_1 : null;
+            formattedConfigValues.phone_2 = configValues.phone_2 != null ? configValues.phone_2 : null;
+            formattedConfigValues.email = configValues.email != null ? configValues.email : null;
+            formattedConfigValues.facebook = configValues.facebook != null ? configValues.facebook : null;
+            formattedConfigValues.instagram = configValues.instagram != null ? configValues.instagram : null;
+            formattedConfigValues.tiktok = configValues.tiktok != null ? configValues.tiktok : null;
+            formattedConfigValues.company_street = configValues.company_street != null ? configValues.company_street : null;
+            formattedConfigValues.currency = configValues.currency != null ? configValues.currency : null;
+
+            // Config images
+            formattedConfigValues.posted_products_number = configValues.image != null ? imagePathConverter(configValues.image, 'heros') : null;
+
+            return res.render("admin/settings-form", {
+                configValues: formattedConfigValues,
+                meta: metas,
+                current_locale: lang,
+                csrfToken: req.csrfToken()
+            });
+        }
+    });
+};
+
+module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile, getGlobalSettingsPage };
