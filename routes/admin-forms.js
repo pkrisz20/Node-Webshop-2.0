@@ -13,8 +13,8 @@ const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 adminFormsRouter.route("/settings")
     .get(checkAuthentication, AdminSettingsController.getGlobalSettingsPage);
 
-// adminFormsRouter.route("/settings/handle")
-//     .post(checkAuthentication, AdminSettingsController.handleGlobalSettings);
+adminFormsRouter.route("/settings/handle")
+    .post(checkAuthentication, AdminSettingsController.saveGlobalSettings);
 
 adminFormsRouter.route("/products/new")
     .get(checkAuthentication, selectWebshopCategories, AdminProductController.getProductUploadPage);

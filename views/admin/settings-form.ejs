@@ -1,1 +1,175 @@
-<!-- TODO: Finish the edit form for basic config settings -->
+<!DOCTYPE html>
+<html lang="hu">
+        <!-- HEAD + STYLE LINKS -->
+        <%- include('./layout/head.ejs') %>
+    </head>
+        <%- include('./layout/sidebar-navs.ejs') %>
+
+                <main class="p-4">
+                    <h1 class="h3 mb-3">Általános beállítások</h1>
+
+                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#general">Általános adatok</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#HU"><img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/settings/handle">
+
+                            <div class="tab-pane show fade active" id="general">
+                                <h2 class="h5 mb-3">Kapcsolati adatok</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="phone_1" class="form-label">Telefonszám 1</label>
+                                            <input type="text" data-rule-number="true" id="phone_1" class="form-control" name="phone_1" value="<%= configValues.phone_1 || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="email" class="form-label">E-mail cím</label>
+                                            <input type="text" data-rule-email="true" id="email" class="form-control" name="email" value="<%= configValues.email || '' %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="phone_2" class="form-label">Telefonszám 2</label>
+                                            <input type="text" data-rule-number="true" id="phone_2" class="form-control" name="phone_2" value="<%= configValues.phone_2 || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="company_street" class="form-label">Helység</label>
+                                            <input type="text" id="company_street" class="form-control" name="company_street" value="<%= configValues.company_street || '' %>" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 class="h5 mb-3">Közösségi média</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="facebook" class="form-label">Facebook</label>
+                                            <input type="text" data-rule-url="true" id="facebook" class="form-control" name="facebook" value="<%= configValues.facebook || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="tiktok" class="form-label">TikTok</label>
+                                            <input type="text" data-rule-url="true" id="tiktok" class="form-control" name="tiktok" value="<%= configValues.tiktok || '' %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="instagram" class="form-label">Instagram</label>
+                                            <input type="text" data-rule-url="true" id="instagram" class="form-control" name="instagram" value="<%= configValues.instagram || '' %>" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 class="h5 mb-3">Animációs számláló a főoldalon</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="satisfied_clients_number" class="form-label">Elégedett ügyfél</label>
+                                            <input type="text" data-rule-number="true" id="satisfied_clients_number" class="form-control" name="satisfied_clients_number" value="<%= configValues.satisfied_clients_number || 0 %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="cups_of_coffe_number" class="form-label">Megivott kávé</label>
+                                            <input type="text" data-rule-number="true" id="cups_of_coffe_number" class="form-control" name="cups_of_coffe_number" value="<%= configValues.cups_of_coffe_number || 0 %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="animals_in_numbers" class="form-label">Állomány számokban</label>
+                                            <input type="text" data-rule-number="true" id="animals_in_numbers" class="form-control" name="animals_in_numbers" value="<%= configValues.animals_in_numbers || 0 %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="posted_products_number" class="form-label">Elküldött termék</label>
+                                            <input type="text" data-rule-number="true" id="posted_products_number" class="form-control" name="posted_products_number" value="<%= configValues.posted_products_number || 0 %>" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 class="h5 mb-3">Egyéb</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="currency" class="form-label">Pénznem</label>
+                                            <input type="text" data-rule-required="true" id="currency" class="form-control" name="currency" value="<%= configValues.currency || '' %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="HU">
+                                <h2 class="h5 mb-3">Főoldali reklám magyarul</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="banner-title-hu" class="form-label">Cím</label>
+                                            <input type="text" data-rule-required="true" id="banner-title-hu" class="form-control" name="home_page_title[hu]" value="<%= configValues.hu.home_page_title || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="banner-text-hu" class="form-label">Szöveg</label>
+                                            <textarea data-rule-required="true" id="banner-text-hu" rows="5" name="home_page_text[hu]" class="form-control"><%= configValues.hu.home_page_text || '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="SR">
+                                <h2 class="h5 mb-3">Főoldali reklám szerbül</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="banner-title-sr" class="form-label">Cím</label>
+                                            <input type="text" data-rule-required="true" id="banner-title-sr" class="form-control" name="home_page_title[sr]" value="<%= configValues.sr.home_page_title || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="banner-text-sr" class="form-label">Szöveg</label>
+                                            <textarea data-rule-required="true" id="banner-text-sr" rows="5" name="home_page_text[sr]" class="form-control"><%= configValues.sr.home_page_text || '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="EN">
+                                <h2 class="h5 mb-3">Főoldali reklám angolul</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row mb-3">
+                                            <label for="banner-title-en" class="form-label">Cím</label>
+                                            <input type="text" data-rule-required="true" id="banner-title-en" class="form-control" name="home_page_title[en]" value="<%= configValues.en.home_page_title || '' %>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="banner-text-en" class="form-label">Szöveg</label>
+                                            <textarea data-rule-required="true" id="banner-text-en" rows="5" name="home_page_text[en]" class="form-control"><%= configValues.en.home_page_text || '' %></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Mentés</button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/plugins/jquery.min.js"></script>
+        <script src="admin/js/plugins/bootstrap.min.js"></script>
+        <script src="admin/js/plugins/chart.min.js"></script>
+        <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="js/plugins/validate.min.js"></script>
+        <script src="js/plugins/validator_messages_hu.js"></script>
+        <script src="admin/js/admin.js"></script>
+    </body>
+</html>

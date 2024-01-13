@@ -12,13 +12,23 @@
     <div class="footer-middle">
         <div class="wrapper">
             <div class="footer-middle-container">
-                <div class="footer-middle-col">
-                    <h3 class="footer-title"><%= languageHandler('nav.contact', current_locale) %></h3>
-                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:0611237896"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:0631234567"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
-                    <a class="footer-title-link" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-                    <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
-                </div>
+                <% if (DB_CONFIG["phone_1"] || DB_CONFIG["phone_2"] || DB_CONFIG["email"] || DB_CONFIG["company_street"]) { %>
+                    <div class="footer-middle-col">
+                        <h3 class="footer-title"><%= languageHandler('nav.contact', current_locale) %></h3>
+                        <% if (DB_CONFIG["phone_1"]) { %>
+                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:0611237896"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+                        <% } %>
+                        <% if (DB_CONFIG["phone_2"]) { %>
+                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:0631234567"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
+                        <% } %>
+                        <% if (DB_CONFIG["email"]) { %>
+                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+                        <% } %>
+                        <% if (DB_CONFIG["company_street"]) { %>
+                            <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
+                        <% } %>
+                    </div>
+                <% } %>
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.quick_links', current_locale) %></h3>
                     <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('nav.about', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler('nav.about', current_locale) %></a>
@@ -34,12 +44,20 @@
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/policy" aria-label="<%= languageHandler('nav.privacy_policy', current_locale) %>" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= languageHandler('nav.privacy_policy', current_locale) %></a>
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/gdpr" aria-label="<%= languageHandler('nav.gdpr', current_locale) %>" class="footer-title-link"><i class="fas fa-database"></i> <%= languageHandler('nav.gdpr', current_locale) %></a>
                 </div>
-                <div class="footer-middle-col">
-                    <h3 class="footer-title"><%= languageHandler('general.follow_us', current_locale) %></h3>
-                    <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media facebook" target="blank" class="footer-title-link social"><i class="fab fa-facebook"></i> Facebook</a>
-                    <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media instagram" target="blank" class="footer-title-link social"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media tiktok" target="blank" class="footer-title-link social"><i class="fab fa-tiktok"></i> TikTok</a>
-                </div>
+                <% if (DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
+                    <div class="footer-middle-col">
+                        <h3 class="footer-title"><%= languageHandler('general.follow_us', current_locale) %></h3>
+                        <% if (DB_CONFIG["facebook"]) { %>
+                            <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media facebook" target="blank" class="footer-title-link social"><i class="fab fa-facebook"></i> Facebook</a>
+                        <% } %>
+                        <% if (DB_CONFIG["instagram"]) { %>
+                            <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media instagram" target="blank" class="footer-title-link social"><i class="fab fa-instagram"></i> Instagram</a>
+                        <% } %>
+                        <% if (DB_CONFIG["tiktok"]) { %>
+                            <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media tiktok" target="blank" class="footer-title-link social"><i class="fab fa-tiktok"></i> TikTok</a>
+                        <% } %>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>

@@ -1,10 +1,11 @@
 const { db } = require("../../config/db-connection");
-const { setMomentLocale, numberWithCommas, createUniqueID, getLast } = require("../../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas, createUniqueID, getLast, escapeHtml } = require("../../helpers/globalFunctions");
 const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { saveImageToDatabase } = require('../../helpers/admin/saveImageToDatabase');
 const { deleteImageFromDatabase } = require('../../helpers/admin/deleteImageFromDatabase');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
-const getValidFormValues = require('../../helpers/admin/getValidFormValues')
+const getValidFormValues = require('../../helpers/admin/getValidFormValues');
+const getValueByLanguage = require('../../helpers/getValueByLanguage');
 const languageHandler = require('../../helpers/languageHandler');
 const moment = require("moment");
 const multer = require("multer");
@@ -291,6 +292,7 @@ const deleteImageFile = (req, res) => {
 };
 
 const getGlobalSettingsPage = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
     var metas = {
         title: 'Admin dashboard',
         type: "website",
@@ -310,12 +312,17 @@ const getGlobalSettingsPage = (req, res) => {
         else if ( DBformData.length > 0 ) {
 
             const validLanguages = process.env.VALID_LANGS.split(',');
-            let configValues = DBformData[0];
             let formattedConfigValues = {
                 en: {},
                 hu: {},
                 sr: {}
             };
+
+            // Getting the config values & formatting them into an object
+            let configValues = DBformData.reduce((accumulator, row) => {
+                accumulator[row.config_key] = row.config_value;
+                return accumulator;
+            }, {});
 
             // Convert & format the form values
             // The home page banner texts
@@ -340,9 +347,6 @@ const getGlobalSettingsPage = (req, res) => {
             formattedConfigValues.company_street = configValues.company_street != null ? configValues.company_street : null;
             formattedConfigValues.currency = configValues.currency != null ? configValues.currency : null;
 
-            // Config images
-            formattedConfigValues.posted_products_number = configValues.image != null ? imagePathConverter(configValues.image, 'heros') : null;
-
             return res.render("admin/settings-form", {
                 configValues: formattedConfigValues,
                 meta: metas,
@@ -353,4 +357,84 @@ const getGlobalSettingsPage = (req, res) => {
     });
 };
 
-module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile, getGlobalSettingsPage };
+const saveGlobalSettings = (req, res) => {
+    const lang = process.env.ADMIN_LANG;
+    let settings = req.body;
+
+    // Numbers and Boolean types data check
+    settings.satisfied_clients_number = parseInt(settings.satisfied_clients_number || 0);
+    settings.cups_of_coffe_number = parseInt(settings.cups_of_coffe_number || 0);
+    settings.animals_in_numbers = parseInt(settings.animals_in_numbers || 0);
+    settings.posted_products_number = parseInt(settings.posted_products_number || 0);
+
+    if (
+        isNaN(settings.satisfied_clients_number)
+        || isNaN(settings.cups_of_coffe_number)
+        || isNaN(settings.animals_in_numbers)
+        || isNaN(settings.posted_products_number)
+        || !settings.currency
+        || !settings['home_page_title[en]']
+        || !settings['home_page_title[sr]']
+        || !settings['home_page_title[hu]']
+        || !settings['home_page_text[hu]']
+        || !settings['home_page_text[hu]']
+        || !settings['home_page_text[hu]']
+    )
+    {
+        return res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', lang),
+            text: languageHandler('errors.wrong_data', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    let homepageBannerTitles = {
+        en: escapeHtml(settings['home_page_title[en]']),
+        sr: escapeHtml(settings['home_page_title[sr]']),
+        hu: escapeHtml(settings['home_page_title[hu]']),
+    };
+    let homepageBannerText = {
+        en: escapeHtml(settings['home_page_text[en]']),
+        sr: escapeHtml(settings['home_page_text[sr]']),
+        hu: escapeHtml(settings['home_page_text[hu]']),
+    };
+
+    settings.home_page_title = JSON.stringify(homepageBannerTitles);
+    settings.home_page_text = JSON.stringify(homepageBannerText);
+
+    // Delete the unnecessary key-values from the object, due to make it usable to update the config table
+    // These keys are used to make difference between the text values based on languages
+    delete settings['home_page_title[en]'];
+    delete settings['home_page_title[sr]'];
+    delete settings['home_page_title[hu]'];
+    delete settings['home_page_text[en]'];
+    delete settings['home_page_text[sr]'];
+    delete settings['home_page_text[hu]'];
+
+    const SQLUpdateSettings = "UPDATE config SET config_value = ? WHERE config_key = ?";
+
+    for (const [key, value] of Object.entries(settings)) {
+        db.query(
+            SQLUpdateSettings,
+            [
+                value,
+                key
+            ],
+            (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+                }
+            }
+        );
+    }
+
+    return res.status(200).json({
+        status: "success",
+        redirect_url: "/admin/settings",
+        csrfToken: req.csrfToken()
+    });
+};
+
+module.exports = { getLoginPage, getDashboard, uploadImageFiles, uploadMultipleImages, deleteImageFile, getGlobalSettingsPage, saveGlobalSettings };
