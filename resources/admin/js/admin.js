@@ -80,7 +80,6 @@ $(document).ready(function() {
             console.error(error);
           });
       }
-
     });
   }
 });
@@ -447,4 +446,14 @@ $('.js-validate-form').not('.inited').each(function () {
   });
 
   $(this).addClass('inited');
+});
+
+// Open order editor modal
+$('body').on('mouseenter', '.js-open-edit-order', function () {
+  $(this).find('.js-statuses-container').css({ 'visibility': 'visible', 'opacity': '1' });
+});
+
+// Close order editor modal
+$('body').on('mouseleave', '.js-open-edit-order', function () {
+  $(this).find('.js-statuses-container').css({ 'visibility': 'hidden', 'opacity': '0' });
 });

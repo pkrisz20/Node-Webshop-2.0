@@ -1,7 +1,7 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const languageHandler = require("../../helpers/languageHandler");
-const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
+const { getOrderStatus, isOrderStatusEditable, getAvailableOrderStatuses } = require('../../helpers/admin/orderHelpers');
 const { numberWithCommas, setMomentLocale } = require("../../helpers/globalFunctions");
 const { showBadRequestPage, showServerErrorPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
@@ -65,6 +65,8 @@ const getOrdersListPage = (req, res) => {
             orders.forEach(order => {
                 let result = {
                     id: order.order_id,
+                    can_edit_status: isOrderStatusEditable(order.order_status),
+                    selectableStatuses: getAvailableOrderStatuses(order.order_status),
                     firstname: order.customer_firstname,
                     lastname: order.customer_lastname,
                     city: order.customer_city,

@@ -3,11 +3,19 @@
 // @in process
 // @done
 // @canceled
+var orderStatuses = {
+    statusNames: ['done', 'canceled', 'new', 'in process'],
+    done: "Lezárt",
+    canceled: "Lemondott",
+    in_process: "Folyamatban",
+    new: "Új",
+}
+
 function getOrderStatus (status = "new") {
 
     let statusData = {
         statusText: "Új",
-        statusClass: ""
+        statusClass: "bg-secondary"
     }
 
     switch (status) {
@@ -36,4 +44,13 @@ function getOrderStatus (status = "new") {
     }
 }
 
-module.exports = { getOrderStatus };
+function isOrderStatusEditable (status) {
+    return status !== 'done' && status !== 'canceled';
+}
+
+// Returns the order statuses except the current status, which can not be selected
+function getAvailableOrderStatuses (currentStatus) {
+    return orderStatuses.statusNames.filter(status => status !== currentStatus);
+}
+
+module.exports = { getOrderStatus, isOrderStatusEditable, getAvailableOrderStatuses };
