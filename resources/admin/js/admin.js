@@ -198,6 +198,50 @@ $('body').on('click', '.js-get-order-info', function (event) {
   });
 });
 
+// Get client message details
+$('body').on('click', '.js-get-message-details', function (event) {
+  event.preventDefault();
+
+  $.ajax({
+    type: "GET",
+    url: $(this).data("url"),
+    dataType: 'json',
+    beforeSend: function (jqXHR) {
+      Swal.fire('Adatok lekérése folyamatban...');
+      Swal.showLoading();
+      $(this).addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+    },
+    complete: function (jqXHR, textStatus) {
+      $(this).removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+    },
+    success: function (response) {
+      // Set the new XSRF token
+      if (typeof response.csrfToken !== 'undefined') {
+        $("meta[name='csrf-token']").attr("content", response.csrfToken);
+      }
+
+      if (response.status === 'error') {
+        setTimeout(function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hoppá!',
+            text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+          });
+        }, 1000);
+      }
+      else if (response.status === 'success') {
+        setTimeout(function () {
+          Swal.fire({
+            title: 'Üzenet tartalma',
+            icon: 'info',
+            html: response.htmlResponse,
+          });
+        }, 1000);
+      }
+    }
+  });
+});
+
 // Simple ajax
 $('body').on('click', '.js-simple-ajax', function (event) {
   event.preventDefault();

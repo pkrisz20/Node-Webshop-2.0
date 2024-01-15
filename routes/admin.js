@@ -83,6 +83,9 @@ adminRouter.route("/messages/list")
 adminRouter.route("/messages/delete/:messageId")
     .get(checkAuthentication, AdminContactController.deleteMessageItem);
 
+adminRouter.route("/messages/details/:messageId")
+    .get(checkAuthentication, AdminContactController.getMessageDetails);
+
 adminRouter.route("/faq/list")
     .get(checkAuthentication, AdminStaticContentsController.getFAQListPage);
 

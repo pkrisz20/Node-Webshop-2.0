@@ -11,7 +11,6 @@ const getIncomingMessagesList = (req, res) => {
         description: "This is the messages list page",
         // keywords: []
     };
-    const lang = req.session.lang ?? process.env.ADMIN_LANG;
 
     let { page = 1 } = req.query;
     page = parseInt(page);
@@ -111,4 +110,44 @@ const deleteMessageItem = (req, res) => {
     });
 }
 
-module.exports = { getIncomingMessagesList, deleteMessageItem };
+const getMessageDetails = (req, res) => {
+    const { messageId } = req.params;
+    const lang = req.session.lang ?? process.env.ADMIN_LANG;
+    var htmlResponse = null;
+
+    setMomentLocale("hu");
+
+    const selectMessageDetails = "SELECT client_message FROM contact_messages WHERE id = ?";
+
+    db.query(selectMessageDetails, messageId, (err, message_data) => {
+        if (err || message_data.length === 0) {
+            console.log(err);
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang ?? process.env.ADMIN_LANG),
+                message: languageHandler('errors.common_error', lang ?? process.env.ADMIN_LANG),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+        else if (message_data.length > 0) {
+            let clientMessage = message_data[0].client_message ?? "<span class='badge text-uppercase fw-medium bg-danger'>Nincs megjegyzés</span>";
+
+            htmlResponse = `
+                <div class='d-flex flex-column'>
+                    <div class='text-start mb-2'>
+                        <p class='fs-6 mb-0'><b>Üzenet:</b> ${ clientMessage }</p>
+                    </div>
+                </div>
+            `;
+
+            return res.status(200).json({
+                status: "success",
+                htmlResponse: htmlResponse ?? "<div class='fs-6 mt-2 bg-danger link-light p-2 d-inline-block'>Nincs megjeleníthető adat!</div>",
+                csrfToken: req.csrfToken()
+            });
+        }
+    });
+}
+
+module.exports = { getIncomingMessagesList, deleteMessageItem, getMessageDetails };
