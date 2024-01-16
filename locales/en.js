@@ -135,6 +135,12 @@ const en = {
 		order_succes_message: "Your order has been processed successfully. We are going to contact with You soon!",
 		added_to_cart: "Successfully added to cart!"
 	},
+	order_status: {
+		done: "Done",
+		canceled: "Canceled",
+		new: "New",
+		"in process": "In process",
+	},
 	about: {
 		our_workers: "Our team",
 		our_workers_subtitle: "Get to know us",

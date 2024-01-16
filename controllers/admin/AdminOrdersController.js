@@ -1,7 +1,7 @@
 const { db } = require("../../config/db-connection");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const languageHandler = require("../../helpers/languageHandler");
-const { getOrderStatus, isOrderStatusEditable, getAvailableOrderStatuses } = require('../../helpers/admin/orderHelpers');
+const { getOrderStatus, isOrderStatusEditable, getSelectableOrderStatuses, isValidOrderStatus } = require('../../helpers/admin/orderHelpers');
 const { numberWithCommas, setMomentLocale } = require("../../helpers/globalFunctions");
 const { showBadRequestPage, showServerErrorPage } = require("../../helpers/showErrorPages");
 const moment = require("moment");
@@ -66,7 +66,7 @@ const getOrdersListPage = (req, res) => {
                 let result = {
                     id: order.order_id,
                     can_edit_status: isOrderStatusEditable(order.order_status),
-                    selectableStatuses: getAvailableOrderStatuses(order.order_status),
+                    selectableStatuses: getSelectableOrderStatuses(order.order_status),
                     firstname: order.customer_firstname,
                     lastname: order.customer_lastname,
                     city: order.customer_city,
@@ -100,6 +100,7 @@ const getOrdersListPage = (req, res) => {
                         currentPage: parseInt(page),
                         paginationLink: "orders",
                         meta: metas,
+                        languageHandler: languageHandler,
                         ordersList: ordersList ?? [],
                         csrfToken: req.csrfToken(),
                     });
@@ -201,7 +202,38 @@ const getOrderDetails = (req, res) => {
 };
 
 const changeOrderStatus = (req, res) => {
-    // TODO: Finish order status changing
+    let { orderId } = req.params;
+    let { new_status } = req.body;
+
+    if ( !orderId || !new_status || !isValidOrderStatus(new_status) ) {
+        console.log('wrong data');
+        res.status(200).json({
+            status: 'error',
+            title: languageHandler('errors.error', process.env.ADMIN_LANG),
+            message: languageHandler('errors.unprocessable_data', process.env.ADMIN_LANG),
+            csrfToken: req.csrfToken()
+        });
+    }
+
+    var SQLparams = [];
+    var isWithDateTime = new_status === 'canceled' || new_status === 'done';
+    var updateOrderQuery = "UPDATE orders SET order_status = ?";
+    updateOrderQuery += isWithDateTime ? ', closed_order_at = ? ' : ' ';
+    updateOrderQuery += "WHERE order_id = ?";
+
+    SQLparams.push(new_status);
+    isWithDateTime && SQLparams.push(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+    SQLparams.push(orderId);
+
+    db.query(updateOrderQuery, SQLparams, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else if (data.affectedRows > 0) {
+            return res.status(200).json({ status: "success" });
+        }
+    });
 };
 
 module.exports = { deleteOrder, getOrdersListPage, getOrderDetails, changeOrderStatus };

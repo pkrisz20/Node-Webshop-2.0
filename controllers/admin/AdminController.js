@@ -1,6 +1,6 @@
 const { db } = require("../../config/db-connection");
 const { setMomentLocale, numberWithCommas, createUniqueID, getLast, escapeHtml } = require("../../helpers/globalFunctions");
-const { getOrderStatus } = require('../../helpers/admin/orderHelpers');
+const { getOrderStatus, isOrderStatusEditable, getSelectableOrderStatuses } = require('../../helpers/admin/orderHelpers');
 const { saveImageToDatabase } = require('../../helpers/admin/saveImageToDatabase');
 const { deleteImageFromDatabase } = require('../../helpers/admin/deleteImageFromDatabase');
 const { showServerErrorPage } = require("../../helpers/showErrorPages");
@@ -61,6 +61,8 @@ const getDashboard = (req, res) => {
             data.forEach(order => {
                 let result = {
                     id: order.order_id,
+                    can_edit_status: isOrderStatusEditable(order.order_status),
+                    selectableStatuses: getSelectableOrderStatuses(order.order_status),
                     firstname: order.customer_firstname,
                     lastname: order.customer_lastname,
                     city: order.customer_city,
@@ -95,7 +97,7 @@ const getDashboard = (req, res) => {
             }
 
             // Select finances per month
-            const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(closed_order_at) as month FROM orders WHERE order_status = 'done' AND YEAR(closed_order_at) = '2023' GROUP BY MONTH(closed_order_at) ASC;";
+            const selectFinancesPerMonth = "SELECT SUM(order_sum_price) as total, MONTH(closed_order_at) as month FROM orders WHERE order_status = 'done' AND YEAR(closed_order_at) = ? GROUP BY MONTH(closed_order_at) ASC;";
 
             db.query(selectFinancesPerMonth, moment(new Date()).year(), (finance_err, monthly_finance_data) => {
 
@@ -130,6 +132,7 @@ const getDashboard = (req, res) => {
 
                     return res.render("admin/dashboard", {
                         meta: metas,
+                        languageHandler: languageHandler,
                         lastOrders: lastOrders ?? [],
                         ordersCountPerMonth: ordersCountPerMonth ?? [],
                         maxValueordersCount: Math.max.apply(null, ordersCountPerMonth ?? []),

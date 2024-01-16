@@ -135,6 +135,12 @@ const hu = {
         order_succes_message: "A rendelését sikeresen feldolgoztuk. Hamarosan felvesszük Önnel a kapcsolatot!",
 		added_to_cart: "Sikeresen hozzáadva a kosárhoz!"
     },
+    order_status: {
+		done: "Lezárt",
+		canceled: "Lemondott",
+		new: "Új",
+		"in process": "Folyamatban",
+	},
     about: {
         our_workers: "Csapatunk",
         our_workers_subtitle: "Ismerjen meg minket",

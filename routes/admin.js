@@ -102,6 +102,6 @@ adminRouter.route("/order/get-info/:orderId")
     .get(checkAuthentication, AdminOrdersController.getOrderDetails);
 
 adminRouter.route("/order/change-status/:orderId")
-    .get(checkAuthentication, AdminOrdersController.changeOrderStatus);
+    .post(checkAuthentication, AdminOrdersController.changeOrderStatus);
 
 module.exports = adminRouter;

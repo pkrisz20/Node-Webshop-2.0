@@ -135,6 +135,12 @@ const sr = {
         order_succes_message: "Vaša narudžbina je uspešno obrađeno. Uskoro ćemo stupiti kontakt sa Vama!",
 		added_to_cart: "Dodatno u korpu!"
     },
+    order_status: {
+		done: "Zatvoreno",
+		canceled: "Otkazano",
+		new: "Novo",
+		"in process": "U toku",
+	},
     about: {
         our_workers: "Naš tim",
         our_workers_subtitle: "Upoznajte nas",
