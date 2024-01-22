@@ -1,5 +1,3 @@
-const { logEvents } = require("../middleware/logEvents");
-
 const fileStoreOptions = {
     path: "./sessions",
     ttl: 60 * 60 * 24 * 30,
