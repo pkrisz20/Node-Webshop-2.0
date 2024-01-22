@@ -163,7 +163,12 @@ const en = {
 		no_permission: "You do not have permission for this",
 		unauthorized: "Unauthorized user",
 		forbidden: "Forbidden",
-	}
+	},
+	meta: {
+		description: "Happy Geese, Healthy Products: Our geese are raised with the utmost care and attention. We provide them with a spacious, natural environment where they can roam freely and enjoy a diet of nutrient-rich grains. This translates into healthier, tastier products.",
+		blog_description: "Discover a diverse array of insights and inspiration in our curated blog list. Your next favorite read is just a click away!",
+		product_description: "Explore must-have products on our curated list. Find what you need in one convenient destination.",
+	},
 };
 
 module.exports = en;

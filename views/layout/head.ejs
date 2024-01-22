@@ -3,22 +3,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes" />
-    <title><%= meta.title %> | <%= process.env.SITE_NAME %></title>
+    <title><%= meta.title %></title>
 
     <meta name="description" content="<%= meta.description %>" />
     <meta name="DC.title" content="<%= meta.title %>" />
     <meta name="csrf-token" content="<%= csrfToken %>" />
 
     <meta property="og:site_name" content="<%= process.env.SITE_NAME %>" />
-    <meta property="og:title" content="<%= meta.title %> | <%= process.env.SITE_NAME %>" />
+    <meta property="og:title" content="<%= meta.title %>" />
     <meta property="og:type" content="<%= meta.type %>" />
-    <meta property="og:image" content="<%= meta.image %>" />
+    <meta property="og:image" content="<%= meta.image.src %>" />
+    <meta property="og:image:width" content="<%= meta.image.width %>" />
+    <meta property="og:image:height" content="<%= meta.image.height %>" />
     <meta property="og:description" content="<%= meta.description %>" />
     <meta property="og:url" content="<%= meta.url %>" />
 
-    <meta itemprop="name" content="<%= meta.title %> | <%= process.env.SITE_NAME %>" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="<%= process.env.APP_DOMAIN %>">
+    <meta property="twitter:url" content="<%= meta.url %>">
+    <meta name="twitter:title" content="<%= meta.title %>">
+    <meta name="twitter:description" content="<%= meta.description %>">
+    <meta name="twitter:image" content="<%= meta.image.src %>">
+
+    <meta itemprop="name" content="<%= meta.title %>" />
     <meta itemprop="description" content="<%= meta.description %>" />
-    <meta itemprop="image" content="<%= meta.image %>" />
+    <meta itemprop="image" content="<%= meta.image.src %>" />
     <meta itemprop="url" content="<%= meta.url %>" />
 
     <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png" />

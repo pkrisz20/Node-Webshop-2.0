@@ -2,6 +2,7 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
+const metaDefault = require('../config/meta');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
@@ -28,13 +29,18 @@ const getData = (req, res) => {
     var galleries = [];
     var blogs = [];
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
+
     var metas = {
-        title: languageHandler("nav.home", lang),
-        type: "website",
+        lang: metaDefault.langs[lang],
+        title: languageHandler("nav.home", lang) + metaDefault['separator'] + metaDefault['title'],
+        type: metaDefault["og:type"],
         url: `${ process.env.APP_URL }/${ lang }`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the home page",
-        // keywords: []
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
+        description: languageHandler('meta.description', lang),
     };
 
     // PRODUCTS

@@ -163,7 +163,12 @@ const sr = {
 		no_permission: "Nemate dozvolu za ovaj aktivnost",
 		unauthorized: "Neovlašćeno korisnik",
 		forbidden: "Pristup zabranjen",
-    }
+    },
+    meta: {
+		description: "Srećne guske, zdravi proizvodi: Naše guske se uzgajaju s najvećom pažnjom i pažnjom. Pružamo im prostrano, prirodno okruženje gde mogu slobodno šetati i uživati u ishrani bogatoj hranljivim žitaricama. To se prevodi u zdravije, ukusnije proizvode.",
+		blog_description: "Otkrijte raznoliku lepezu uvida i inspiracije na našoj kuriranoj listi blogova. Vaše sledeće omiljeno čitanje je udaljeno samo jedan klik!",
+		product_description: "Izlistajte neophodne proizvode na našem odabranom spisku. Pronađite sve što vam je potrebno na jednom mestu.",
+	},
 };
 
 module.exports = sr;

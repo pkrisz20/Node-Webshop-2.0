@@ -6,6 +6,7 @@ const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText, esc
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require('../helpers/formatDateByLocale');
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getBlogDetails = (req, res) => {
     // Cart converting stuffs
@@ -29,7 +30,7 @@ const getBlogDetails = (req, res) => {
     let articleComments = [];
     let showLoadMoreButton = false;
 
-    const blogDetailsQuery = "SELECT id, title, description, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
+    const blogDetailsQuery = "SELECT id, title, description, short_description, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
     const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
@@ -52,6 +53,7 @@ const getBlogDetails = (req, res) => {
                 id: parseInt(data[0].id),
                 slug: slug,
                 title: getValueByLanguage(data[0].title, lang),
+                short_description: getValueByLanguage(data[0].short_description, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 author: data[0].author,
                 thumb_image: imagePathConverter(data[0].image_thumbnail, "blogs"),
@@ -61,12 +63,16 @@ const getBlogDetails = (req, res) => {
             }
 
             var metas = {
-                title: result.title,
-                type: "website",
+                title: limitText(result.title, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
+                lang: metaDefault.langs[lang],
+                type: "article",
                 url: `${ process.env.APP_URL }/${ lang }/blog/${ slug }`,
-                image: `${ process.env.APP_URL }/images/logo.png`,
-                description: `This is the details blog page of ${ result.title }`,
-                // keywords: []
+                description: limitText(result.short_description ?? languageHandler('meta.description', lang), metaDefault.limits['description']),
+                image: {
+                    src: result.thumb_image ?? metaDefault['default_og_images'],
+                    width: metaDefault['og:image:width'],
+                    height: metaDefault['og:image:height'],
+                },
             };
 
             db.query(newestBlogsQuery, [1, result.id, moment(new Date()).subtract(3, 'months').format("YYYY-MM-DD"), moment(new Date()).format("YYYY-MM-DD"), 15], (err, newestBlog) => {
@@ -243,16 +249,21 @@ const getAllBlogs = (req, res) => {
     });
     var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
     let result = [];
+
     var metas = {
-        title: languageHandler("nav.blog", lang),
+        title: languageHandler("nav.blog", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/blogs`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the blog list page",
-        // keywords: []
+        description: languageHandler('meta.blog_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     page = parseInt(page);

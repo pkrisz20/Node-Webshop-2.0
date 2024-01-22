@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="<%= current_locale %>">
+<html lang="<%= meta.lang %>">
     <%- include('../layout/head.ejs') %>
 
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+
     <% if (blogDetails.images.length > 0) { %>
         <link rel="preload" href="css/plugins/lightbox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <% } %>
+
     <link rel="preload" href="css/blog-details.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 

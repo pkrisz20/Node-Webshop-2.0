@@ -5,6 +5,7 @@ const { setMomentLocale, numberWithCommas, limitText, escapeHtml } = require("..
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -64,12 +65,16 @@ const getProductDetails = (req, res) => {
             }
 
             var metas = {
-                title: result.name,
+                title: limitText(result.name, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
+                lang: metaDefault.langs[lang],
                 type: "product",
                 url: `${ process.env.APP_URL }/${ lang }/products/${ slug }`,
-                image: `${ process.env.APP_URL }/images/logo.png`,
-                description: `This is the product details page for ${ result.name }`,
-                // keywords: []
+                description: limitText(result.short ?? languageHandler('meta.description', lang), metaDefault.limits['description']),
+                image: {
+                    src: result.thumbnailImage ?? metaDefault['default_og_images'],
+                    width: metaDefault['og:image:width'],
+                    height: metaDefault['og:image:height'],
+                },
             };
 
             isAlreadyInCart = cart?.items?.some(cartItem => cartItem.productId == result.id);
@@ -218,7 +223,7 @@ const getProductDetails = (req, res) => {
             });
         }
     });
-}
+};
 
 const getAllProducts = (req, res) => {
     // Cart converting stuffs
@@ -245,13 +250,18 @@ const getAllProducts = (req, res) => {
     }
 
     let result = [];
+
     var metas = {
-        title: languageHandler("general.products", lang),
+        title: languageHandler("general.products", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/poducts`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the product list page",
-        // keywords: []
+        description: languageHandler('meta.product_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
@@ -349,7 +359,7 @@ const getAllProducts = (req, res) => {
             });
         }
     });
-}
+};
 
 const handleProductComment = (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
@@ -380,7 +390,7 @@ const handleProductComment = (req, res) => {
             return res.status(200).json({ status: "success", title: languageHandler("general.process_success", lang ?? process.env.FALLBACK_LANG) });
         }
     });
-}
+};
 
 const getCategoryProducts = (req, res) => {
     // Cart converting stuffs
@@ -423,13 +433,18 @@ const getCategoryProducts = (req, res) => {
         else if (category_data.length > 0) {
             const selectedCategoryName = getValueByLanguage(category_data[0].name, lang);
             const selectedCategoryShortDescription = category_data[0].category_short_description ? getValueByLanguage(category_data[0].category_short_description, lang) : null;
+
             var metas = {
-                title: selectedCategoryName,
+                title: limitText(selectedCategoryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
+                lang: metaDefault.langs[lang],
                 type: "website",
                 url: `${ process.env.APP_URL }/${ lang }/products/category/${ slug }`,
-                image: `${ process.env.APP_URL }/images/logo.png`,
-                description: `This is the ${ selectedCategoryName } category list page`,
-                // keywords: []
+                description: limitText(selectedCategoryShortDescription ?? languageHandler('meta.product_description', lang), metaDefault.limits['description']),
+                image: {
+                    src: result.thumbnailImage ?? metaDefault['default_og_images'],
+                    width: metaDefault['og:image:width'],
+                    height: metaDefault['og:image:height'],
+                },
             };
 
             let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
@@ -743,12 +758,18 @@ const getWishlistListPage = ( req, res, next ) => {
     let wishlistProductIds = req.session.wishlist ?? [];
     let countParams = Array(wishlistProductIds.length).fill("?").join(",");
     let wishlistProductsList = [];
+
     var metas = {
-        title: languageHandler('general.wishlist', lang),
+        title: languageHandler("general.wishlist", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/wishlist`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: `This is the wishlist list page`,
+        description: languageHandler("general.wishlist", lang) + metaDefault['separator'] + metaDefault['title'],
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     if (wishlistProductIds.length === 0) {
@@ -832,6 +853,6 @@ const getWishlistListPage = ( req, res, next ) => {
             });
         }
     });
-}
+};
 
 module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler, getWishlistListPage };

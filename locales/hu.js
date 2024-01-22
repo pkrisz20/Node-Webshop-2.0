@@ -164,7 +164,12 @@ const hu = {
 		no_permission: "Nincs jogosultsága ehhez",
 		unauthorized: "Azonosítatlan felhasználó",
 		forbidden: "Hozzáférés megtagadva",
-    }
+    },
+    meta: {
+		description: "Boldog libák, egészséges termékek: Libáinkat a legnagyobb gondossággal neveljük. Számukra tágas, természetes környezetet biztosítunk, ahol szabadon legelészhetnek, és táplálkozhatnak tápanyagokban gazdag gabonákkal. Ez egészségesebb, ízletesebb termékeket eredményez.",
+		blog_description: "Fedezze fel a betekintések és inspirációk sokrétű tárházát összeállított bloglistánkon. Következő kedvenc olvasmányod csak egy kattintásnyira van!",
+		product_description: "Fedezze fel nélkülözhetetlen termékeinket válogatott listánkon. Találja meg, amire szüksége van egyetlen kényelmes helyen.",
+	},
 };
 
 module.exports = hu;
