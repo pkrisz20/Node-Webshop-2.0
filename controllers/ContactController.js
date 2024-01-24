@@ -4,6 +4,7 @@ const { db } = require("../config/db-connection");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const moment = require("moment");
+const metaDefault = require('../config/meta');
 
 const getContactPage = (req, res) => {
     // Cart converting stuffs
@@ -20,18 +21,24 @@ const getContactPage = (req, res) => {
     });
 
     var { DB_CONFIG } = req;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+
     var metas = {
-        title: languageHandler("nav.contact", req.session.lang ?? process.env.FALLBACK_LANG),
+        title: languageHandler("nav.contact", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/contact`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the contact page",
-        // keywords: []
+        url: `${ process.env.APP_URL }/${ lang }/contact`,
+        description: languageHandler('meta.contact_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     return res.render("pages/contact", {
         meta: metas,
-        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+        current_locale: lang,
         cart: cart,
         locales: ['hu', 'sr', 'en'],
         languageHandler: languageHandler,
@@ -119,6 +126,6 @@ const handleContactMessage = (req, res) => {
             });
         }
     });
-}
+};
 
 module.exports = { handleContactMessage, getContactPage };

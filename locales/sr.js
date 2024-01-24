@@ -168,6 +168,11 @@ const sr = {
 		description: "Srećne guske, zdravi proizvodi: Naše guske se uzgajaju s najvećom pažnjom i pažnjom. Pružamo im prostrano, prirodno okruženje gde mogu slobodno šetati i uživati u ishrani bogatoj hranljivim žitaricama. To se prevodi u zdravije, ukusnije proizvode.",
 		blog_description: "Otkrijte raznoliku lepezu uvida i inspiracije na našoj kuriranoj listi blogova. Vaše sledeće omiljeno čitanje je udaljeno samo jedan klik!",
 		product_description: "Izlistajte neophodne proizvode na našem odabranom spisku. Pronađite sve što vam je potrebno na jednom mestu.",
+		wishlist_description: "Vaše želje, naša zapovest. Počnite sastavljati listu već danas!",
+		gallery_description: "Zaronite u kreativnost! Istražite našu raznovrsnu galeriju. Od remek-dela do jedinstvenih vizija, otkrijte umetnost koja progovara vašoj duši. Počnite pretraživati sada!",
+        about_us_description: "Otkrijte priču o našem posvećenju. Saznajte ko smo, šta nas pokreće i pridružite nam se na našem putovanju.",
+		FAQ_description: "Dobijte odgovore na sva vaša pitanja! Ojednostavite svoje iskustvo brzim i informativnim rešenjima.",
+		contact_description: "Lako nas kontaktirajte! Bez obzira imate li pitanja ili povratne informacije. Počnimo razgovor danas!",
 	},
 };
 

@@ -1,10 +1,11 @@
 const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { setMomentLocale, numberWithCommas } = require("../helpers/globalFunctions");
+const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const languageHandler = require("../helpers/languageHandler");
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getAllGallery = (req, res) => {
     // Cart converting stuffs
@@ -31,13 +32,18 @@ const getAllGallery = (req, res) => {
 
     let result = [];
     var metas = {
-        title: languageHandler("nav.gallery", lang),
+        title: languageHandler("nav.gallery", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/gallery`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the gallery list page",
-        // keywords: []
+        description: languageHandler('meta.gallery_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
+
     const sqlQuery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_date, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? ORDER BY galleries.gallery_date DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
@@ -135,12 +141,12 @@ const getGalleryDetails = (req, res) => {
     });
 
     var { DB_CONFIG } = req;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { slug } = req.params;
     let result = {};
     let relatedGalleries = [];
 
-    const sqlGalleryDetails = "SELECT id, gallery_name, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
+    const sqlGalleryDetails = "SELECT id, gallery_name, gallery_thumbnail, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
 
     const relatedGalleriesQuery = "SELECT id, gallery_name, slug, gallery_thumbnail, gallery_date FROM galleries WHERE is_active = ? AND id != ? ORDER BY id DESC LIMIT ?";
 
@@ -159,20 +165,25 @@ const getGalleryDetails = (req, res) => {
         else if (data.length > 0) {
             result = {
                 slug: slug,
+                thumbImage: imagePathConverter(data[0].gallery_thumbnail, "galleries"),
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "galleries"),
-                date: formatDateByLang(data[0].gallery_date, lang ?? process.env.FALLBACK_LANG)
+                date: formatDateByLang(data[0].gallery_date, lang)
             }
         }
 
         var metas = {
-            title: result.galleryName,
-            type: "website",
+            title: limitText(result.galleryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
+            lang: metaDefault.langs[lang],
+            type: "article",
             url: `${ process.env.APP_URL }/${ lang }/gallery/${ slug }`,
-            image: `${ process.env.APP_URL }/images/logo.png`,
-            description: `This is the ${ result.galleryName } gallery`,
-            // keywords: []
+            description: limitText(result.description ?? languageHandler('meta.gallery_description', lang), metaDefault.limits['description']),
+            image: {
+                src: result.thumbImage ?? metaDefault['default_og_images'],
+                width: metaDefault['og:image:width'],
+                height: metaDefault['og:image:height'],
+            },
         };
 
         db.query(relatedGalleriesQuery, [1, data[0].id, 15], (related_err, related_galleries) => {
@@ -189,7 +200,7 @@ const getGalleryDetails = (req, res) => {
                         name: getValueByLanguage(item.gallery_name, lang),
                         slug: item.slug,
                         thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
-                        date: formatDateByLang(item.gallery_date, lang ?? process.env.FALLBACK_LANG),
+                        date: formatDateByLang(item.gallery_date, lang),
                     }
 
                     relatedGalleries.push(tempObject);
@@ -200,7 +211,7 @@ const getGalleryDetails = (req, res) => {
                 galleryData: result,
                 meta: metas,
                 relatedGalleries: relatedGalleries ?? [],
-                current_locale: req.session.lang,
+                current_locale: lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,

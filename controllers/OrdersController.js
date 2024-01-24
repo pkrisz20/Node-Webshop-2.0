@@ -5,6 +5,7 @@ const { createUniqueID, numberWithCommas } = require("../helpers/globalFunctions
 const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const { showBadRequestPage, showServerErrorPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getOrderPage = (req, res) => {
     // Cart converting stuffs
@@ -16,6 +17,7 @@ const getOrderPage = (req, res) => {
 
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+
     var metas = {
         title: languageHandler('orders.order', lang),
         type: "website",
@@ -23,6 +25,19 @@ const getOrderPage = (req, res) => {
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: `This is the order page`,
         // keywords: []
+    };
+
+    var metas = {
+        title: languageHandler('orders.order', lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
+        type: "website",
+        url: `${ process.env.APP_URL }/${ lang }/order`,
+        description: languageHandler('orders.order', lang) + metaDefault['separator'] + metaDefault['title'],
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     return res.render("pages/order", {

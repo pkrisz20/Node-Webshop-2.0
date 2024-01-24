@@ -169,6 +169,11 @@ const hu = {
 		description: "Boldog libák, egészséges termékek: Libáinkat a legnagyobb gondossággal neveljük. Számukra tágas, természetes környezetet biztosítunk, ahol szabadon legelészhetnek, és táplálkozhatnak tápanyagokban gazdag gabonákkal. Ez egészségesebb, ízletesebb termékeket eredményez.",
 		blog_description: "Fedezze fel a betekintések és inspirációk sokrétű tárházát összeállított bloglistánkon. Következő kedvenc olvasmányod csak egy kattintásnyira van!",
 		product_description: "Fedezze fel nélkülözhetetlen termékeinket válogatott listánkon. Találja meg, amire szüksége van egyetlen kényelmes helyen.",
+		wishlist_description: "Te kívánságaid, mi parancsolunk. Kezdd el építeni a listádat még ma!",
+		gallery_description: "Mélyedj el a kreativitásban! Fedezd fel változatos galériánkat. A mesterművektől a különleges alkotásokig, találj művészetet, ami beszél a lelkedhez. Böngéssz most!",
+        about_us_description: "Ismerd meg elkötelezettségünk történetét. Fedezd fel, ki vagyunk, mi hajt bennünket, és csatlakozz utazásunkhoz.",
+		FAQ_description: "Kapjon válaszokat minden kérdésére! Egyszerűsítse tapasztalatát gyors és informatív megoldásokkal.",
+		contact_description: "Keress minket könnyedén! Legyen szó kérdésekről vagy visszajelzésekről. Kezdjünk beszélgetést ma!",
 	},
 };
 

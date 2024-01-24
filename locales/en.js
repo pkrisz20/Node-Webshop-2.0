@@ -168,6 +168,11 @@ const en = {
 		description: "Happy Geese, Healthy Products: Our geese are raised with the utmost care and attention. We provide them with a spacious, natural environment where they can roam freely and enjoy a diet of nutrient-rich grains. This translates into healthier, tastier products.",
 		blog_description: "Discover a diverse array of insights and inspiration in our curated blog list. Your next favorite read is just a click away!",
 		product_description: "Explore must-have products on our curated list. Find what you need in one convenient destination.",
+		wishlist_description: "Your wishes, our command. Start building your list now!",
+		gallery_description: "Immerse in creativity! Explore our diverse gallery collection. From masterpieces to unique visions, discover art that speaks to your soul. Start browsing now!",
+        about_us_description: "Discover the story of our commitment. Find out who we are, what drives us, and join our journey.",
+		FAQ_description: "Get answers to all your questions! Simplify your experience with quick and informative solutions.",
+		contact_description: "Reach out to us easily! Whether you have questions or feedback. Let's start a conversation today!",
 	},
 };
 

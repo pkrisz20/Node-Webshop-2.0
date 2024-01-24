@@ -4,6 +4,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 const { showServerErrorPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getEmployees = (req, res) => {
     var cart = {
@@ -21,13 +22,20 @@ const getEmployees = (req, res) => {
     var { DB_CONFIG } = req;
     let employees = [];
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
+
     var metas = {
-        title: languageHandler("nav.about", lang ?? process.env.FALLBACK_LANG),
+        title: languageHandler("nav.about", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang ?? process.env.FALLBACK_LANG }/about`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the about page, here can the guests read about us"
+        url: `${ process.env.APP_URL }/${ lang }/about`,
+        description: languageHandler('meta.about_us_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
+
     const sqlQuery = "SELECT name, position, image, facebook, tiktok, instagram, email, phone FROM employees WHERE is_active = ?";
 
     db.query(sqlQuery, 1, (err, data) => {
@@ -42,7 +50,7 @@ const getEmployees = (req, res) => {
                 let tempObject = {
                     name: element.name,
                     image: imagePathConverter(element.image, "employees"),
-                    position: getValueByLanguage(element.position, lang ?? process.env.FALLBACK_LANG),
+                    position: getValueByLanguage(element.position, lang),
                     contact: {
                         facebook: element.facebook,
                         tiktok: element.tiktok,
@@ -63,7 +71,7 @@ const getEmployees = (req, res) => {
                 longDesc: "Long desc goes here",
             },
             meta: metas,
-            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+            current_locale: lang,
             DB_CONFIG: DB_CONFIG,
             cart: cart,
             locales: ['hu', 'sr', 'en'],

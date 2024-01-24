@@ -3,6 +3,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const getFAQ = (req, res) => {
     // Cart converting stuffs
@@ -21,13 +22,18 @@ const getFAQ = (req, res) => {
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let result = [];
+
     var metas = {
-        title: languageHandler("nav.FAQ", lang),
+        title: languageHandler("nav.FAQ", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/faq`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the FAQ page",
-        // keywords: []
+        description: languageHandler('meta.FAQ_description', lang),
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ? ORDER BY id DESC";

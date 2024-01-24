@@ -6,6 +6,7 @@ const languageHandler = require("../helpers/languageHandler");
 const moment = require("moment");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
+const metaDefault = require('../config/meta');
 
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
@@ -30,12 +31,16 @@ const handleSearch = (req, res) => {
     });
 
     var metas = {
-        title: languageHandler("general.search", lang),
+        title: languageHandler("general.search", lang) + metaDefault['separator'] + metaDefault['title'],
+        lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/search?keywords=${ keywords }`,
-        image: `${ process.env.APP_URL }/images/logo.png`,
-        description: "This is the search page",
-        // keywords: []
+        description: languageHandler("general.search", lang) + metaDefault['separator'] + metaDefault['title'],
+        image: {
+            src: metaDefault['default_og_images'],
+            width: metaDefault['og:image:width'],
+            height: metaDefault['og:image:height'],
+        },
     };
 
     let galleryFound = {

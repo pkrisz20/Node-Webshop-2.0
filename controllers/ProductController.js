@@ -67,7 +67,7 @@ const getProductDetails = (req, res) => {
             var metas = {
                 title: limitText(result.name, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
-                type: "product",
+                type: "article",
                 url: `${ process.env.APP_URL }/${ lang }/products/${ slug }`,
                 description: limitText(result.short ?? languageHandler('meta.description', lang), metaDefault.limits['description']),
                 image: {
@@ -764,7 +764,7 @@ const getWishlistListPage = ( req, res, next ) => {
         lang: metaDefault.langs[lang],
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/wishlist`,
-        description: languageHandler("general.wishlist", lang) + metaDefault['separator'] + metaDefault['title'],
+        description: languageHandler("meta.wishlist_description", lang) + metaDefault['separator'] + metaDefault['title'],
         image: {
             src: metaDefault['default_og_images'],
             width: metaDefault['og:image:width'],
