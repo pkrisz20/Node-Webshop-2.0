@@ -1,0 +1,22 @@
+<div class="cookie-consent-banner">
+    <div class="cookie-consent-banner__inner">
+        <div class="cookie-consent-banner__copy">
+            <strong class="cookie-consent-banner__header"><%= languageHandler('gdpr.cookie_title', current_locale) %></strong>
+            <p class="cookie-consent-banner__description"><%= languageHandler('gdpr.cookie_desc', current_locale) %></p>
+        </div>
+
+        <div class="cookie-consent-banner__actions">
+            <button
+                data-show-text="<%= languageHandler('gdpr.details', current_locale) %>"
+                data-hide-text="<%= languageHandler('gdpr.hide_details', current_locale) %>"
+                type="button"
+                class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary js-toggle-details"
+            >
+                <%= languageHandler('gdpr.details', current_locale) %> <i class="fas fa-chevron-down"></i>
+            </button>
+            <button type="button" class="cookie-consent-banner__cta"><%= languageHandler('gdpr.accept', current_locale) %></button>
+        </div>
+
+        <div style="display: none;" class="cookie-consent-banner__description cookie-consent-banner__description--long js-cookie-description"><%= languageHandler('gdpr.cookie_long_desc', current_locale) %></div>
+    </div>
+</div>

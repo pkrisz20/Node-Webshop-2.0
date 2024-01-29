@@ -175,6 +175,14 @@ const hu = {
 		FAQ_description: "Kapjon válaszokat minden kérdésére! Egyszerűsítse tapasztalatát gyors és informatív megoldásokkal.",
 		contact_description: "Keress minket könnyedén! Legyen szó kérdésekről vagy visszajelzésekről. Kezdjünk beszélgetést ma!",
 	},
+    gdpr: {
+		cookie_title: "Ez a weboldal sütiket használ",
+		cookie_desc: "Sütiket használunk a tartalom és hirdetések személyre szabásához, a közösségi média funkcióinak biztosításához, valamint forgalmunk elemzéséhez.",
+        cookie_long_desc: "A sütik kis szövegfájlok, amelyeket a weboldalak helyeznek el az eszközén (például számítógépén vagy okostelefonján), amikor meglátogatja azokat. Ezek a fájlok információkat tartalmaznak a weboldalon végzett böngészési tevékenységéről, segítve ezzel javítani a felhasználói élményt azáltal, hogy emlékeznek a beállításokra és fokozzák a weboldal funkcionalitását. A sütik szerepet játszanak az analitikában is, lehetővé téve a weboldal tulajdonosai számára, hogy megértsék, hogyan interakcióznak a felhasználók az oldallal. Míg néhány süti elengedhetetlen a weboldal megfelelő működéséhez, másokat követésre és reklám célokra használnak. A felhasználók általában a böngészőbeállításaikon keresztül kezelhetik a sütiket.",
+		accept: "Beleegyezem",
+		details: "Részletek",
+		hide_details: "Részletek elrejtése",
+	},
 };
 
 module.exports = hu;

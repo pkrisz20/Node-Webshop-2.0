@@ -174,6 +174,14 @@ const sr = {
 		FAQ_description: "Dobijte odgovore na sva vaša pitanja! Ojednostavite svoje iskustvo brzim i informativnim rešenjima.",
 		contact_description: "Lako nas kontaktirajte! Bez obzira imate li pitanja ili povratne informacije. Počnimo razgovor danas!",
 	},
+    gdpr: {
+		cookie_title: "Ovaj sajt koristi kolačiće",
+		cookie_desc: "Koristimo kolačiće radi personalizacije sadržaja i oglasa, pružanja funkcija društvenih medija i analize našeg saobraćaja.",
+        cookie_long_desc: "Kolačići su mali tekstualni fajlovi koje veb sajtovi smeštaju na vaš uređaj (kao što je računar ili pametni telefon) kada ih posetite. Ovi fajlovi sadrže informacije o vašoj aktivnosti na sajtu i pomažu poboljšanju vašeg korisničkog iskustva pamćenjem postavki i unapređivanjem funkcionalnosti sajta. Kolačići takođe igraju ulogu u analitici, omogućavajući vlasnicima veb sajtova da razumeju kako korisnici interaguju sa njihovim sajtom. Dok su neki kolačići neophodni za pravilno funkcionisanje sajta, drugi se koriste u svrhe praćenja i oglašavanja. Korisnici obično mogu upravljati postavkama kolačića putem podešavanja svojih pregledača.",
+		accept: "Slažem se",
+        details: "Detalji",
+		hide_details: "Sakrij detalji",
+	},
 };
 
 module.exports = sr;

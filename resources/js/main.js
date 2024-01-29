@@ -302,6 +302,24 @@ $(function() {
     if ( $('body .js-search-input').length > 0 ) {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
     }
+
+    $('body').on('click', '.js-toggle-details', function () {
+
+        var togleBtn = $(this);
+        var cookieDesc = $('body .js-cookie-description');
+        console.log($(cookieDesc)[0].style.display === 'none')
+
+        if ($(cookieDesc)[0].style.display === 'none') {
+            $(cookieDesc).slideDown();
+            togleBtn.addClass('active');
+            togleBtn.text(togleBtn.data('hide-text'));
+        }
+        else if ($(cookieDesc)[0].style.display !== 'none') {
+            $(cookieDesc).slideUp();
+            togleBtn.removeClass('active');
+            togleBtn.text(togleBtn.data('show-text'));
+        }
+    });
 });
 
 $('body').on('keyup', '.js-characters-count', function () {

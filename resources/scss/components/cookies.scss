@@ -1,0 +1,99 @@
+@import "../variables";
+
+.cookie-consent {
+
+    &-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 99999;
+        width: 100%;
+        background-color: $c-grayE6;
+        border-top: 1px solid $c-9;
+        transition: transform .4s ease-in-out;
+
+        &.hidden {
+            transform: translateY(-100%);
+        }
+
+        &__inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 0;
+        }
+
+        &__copy {
+            margin-bottom: 16px;
+        }
+
+        &__header {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            line-height: 24px;
+            text-transform: uppercase;
+        }
+
+        &__description {
+            color: $c-gray71;
+            font-size: 16px;
+            line-height: 24px;
+
+            &--long {
+                margin-top: 15px;
+            }
+        }
+
+        &__actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        &__cta {
+            cursor: pointer;
+            display: inline-block;
+            min-width: 164px;
+            padding: 11px 13px;
+            border-radius: 2px;
+            background-color: $c-theme;
+            color: $c-white;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 20px;
+            transition: background-color .3s ease-in-out;
+
+            &:hover {
+                background-color: $c-light-green;
+            }
+
+            i {
+                transform: translateY(1px);
+                margin-left: 5px;
+                transition: transform .3s ease-in-out;
+            }
+
+            &--secondary {
+                padding: 9px 13px;
+                border: 2px solid $c-gray71;
+                background-color: transparent;
+                color: $c-gray71;
+                font-weight: 500;
+                transition: all .3s ease-in-out;
+
+                &.active {
+                    i {
+                        transform: rotate(180deg);
+                    }
+                }
+
+                &:hover {
+                    border-color: $c-dark;
+                    background-color: transparent;
+                    color: $c-dark;
+                }
+            }
+        }
+    }
+}
