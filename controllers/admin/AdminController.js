@@ -332,6 +332,8 @@ const getGlobalSettingsPage = (req, res) => {
             validLanguages.forEach(currentLanguage => {
                 formattedConfigValues[currentLanguage].home_page_title = configValues.home_page_title != null ? getValueByLanguage(configValues.home_page_title, currentLanguage) : null;
                 formattedConfigValues[currentLanguage].home_page_text = configValues.home_page_text != null ? getValueByLanguage(configValues.home_page_text, currentLanguage) : null;
+                formattedConfigValues[currentLanguage].about_us_short = configValues.about_us_short != null ? getValueByLanguage(configValues.about_us_short, currentLanguage) : null;
+                formattedConfigValues[currentLanguage].about_us_long = configValues.about_us_long != null ? getValueByLanguage(configValues.about_us_long, currentLanguage) : null;
             });
 
             // Countup numbers
@@ -370,6 +372,7 @@ const saveGlobalSettings = (req, res) => {
     settings.animals_in_numbers = parseInt(settings.animals_in_numbers || 0);
     settings.posted_products_number = parseInt(settings.posted_products_number || 0);
 
+    // Check for required fields
     if (
         isNaN(settings.satisfied_clients_number)
         || isNaN(settings.cups_of_coffe_number)
@@ -382,6 +385,12 @@ const saveGlobalSettings = (req, res) => {
         || !settings['home_page_text[hu]']
         || !settings['home_page_text[hu]']
         || !settings['home_page_text[hu]']
+        || !settings['about_us_short[en]']
+        || !settings['about_us_short[sr]']
+        || !settings['about_us_short[hu]']
+        || !settings['about_us_long[en]']
+        || !settings['about_us_long[sr]']
+        || !settings['about_us_long[hu]']
     )
     {
         return res.status(200).json({
@@ -392,6 +401,7 @@ const saveGlobalSettings = (req, res) => {
         });
     }
 
+    // Format the object
     let homepageBannerTitles = {
         en: escapeHtml(settings['home_page_title[en]']),
         sr: escapeHtml(settings['home_page_title[sr]']),
@@ -402,19 +412,42 @@ const saveGlobalSettings = (req, res) => {
         sr: escapeHtml(settings['home_page_text[sr]']),
         hu: escapeHtml(settings['home_page_text[hu]']),
     };
+    let aboutShortDesc = {
+        en: escapeHtml(settings['about_us_short[en]']),
+        sr: escapeHtml(settings['about_us_short[sr]']),
+        hu: escapeHtml(settings['about_us_short[hu]']),
+    };
+    let aboutLongDesc = {
+        en: settings['about_us_long[en]'] ?? null,
+        sr: settings['about_us_long[sr]'] ?? null,
+        hu: settings['about_us_long[hu]'] ?? null,
+    };
 
+    // Parse them into JSON format
     settings.home_page_title = JSON.stringify(homepageBannerTitles);
     settings.home_page_text = JSON.stringify(homepageBannerText);
+    settings.about_us_short = JSON.stringify(aboutShortDesc);
+    settings.about_us_long = JSON.stringify(aboutLongDesc);
 
     // Delete the unnecessary key-values from the object, due to make it usable to update the config table
     // These keys are used to make difference between the text values based on languages
     delete settings['home_page_title[en]'];
     delete settings['home_page_title[sr]'];
     delete settings['home_page_title[hu]'];
+
     delete settings['home_page_text[en]'];
     delete settings['home_page_text[sr]'];
     delete settings['home_page_text[hu]'];
 
+    delete settings['about_us_short[en]'];
+    delete settings['about_us_short[sr]'];
+    delete settings['about_us_short[hu]'];
+
+    delete settings['about_us_long[en]'];
+    delete settings['about_us_long[sr]'];
+    delete settings['about_us_long[hu]'];
+
+    // Update the db
     const SQLUpdateSettings = "UPDATE config SET config_value = ? WHERE config_key = ?";
 
     for (const [key, value] of Object.entries(settings)) {

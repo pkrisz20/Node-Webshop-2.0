@@ -120,6 +120,30 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <h2 class="h5 mb-3">Rólunk oldal magyarul</h2>
+                                <div class="row mb-3">
+                                    <div class="form-row mb-3">
+                                        <label for="about-us-short-hu" class="form-label">Rövid leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-short-hu"
+                                            class="form-control"
+                                            name="about_us_short[hu]"
+                                        ><%= configValues.hu.about_us_short || '' %></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="about-us-long-hu" class="form-label">Hosszú leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-long-hu"
+                                            class="form-control js-ckeditor"
+                                            name="about_us_long[hu]"
+                                        ><%= configValues.hu.about_us_long || '' %></textarea>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="tab-pane fade" id="SR">
@@ -134,6 +158,30 @@
                                             <label for="banner-text-sr" class="form-label">Szöveg</label>
                                             <textarea data-rule-required="true" id="banner-text-sr" rows="5" name="home_page_text[sr]" class="form-control"><%= configValues.sr.home_page_text || '' %></textarea>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <h2 class="h5 mb-3">Rólunk oldal szerbül</h2>
+                                <div class="row mb-3">
+                                    <div class="form-row mb-3">
+                                        <label for="about-us-short-sr" class="form-label">Rövid leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-short-sr"
+                                            class="form-control"
+                                            name="about_us_short[sr]"
+                                        ><%= configValues.sr.about_us_short || '' %></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="about-us-long-sr" class="form-label">Hosszú leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-long-sr"
+                                            class="form-control js-ckeditor"
+                                            name="about_us_long[sr]"
+                                        ><%= configValues.sr.about_us_long || '' %></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -152,6 +200,30 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <h2 class="h5 mb-3">Rólunk oldal angolul</h2>
+                                <div class="row mb-3">
+                                    <div class="form-row mb-3">
+                                        <label for="about-us-short-en" class="form-label">Rövid leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-short-en"
+                                            class="form-control"
+                                            name="about_us_short[en]"
+                                        ><%= configValues.en.about_us_short || '' %></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="about-us-long-en" class="form-label">Hosszú leírás</label>
+                                        <textarea
+                                            rows="5"
+                                            data-rule-required="true"
+                                            id="about-us-long-en"
+                                            class="form-control js-ckeditor"
+                                            name="about_us_long[en]"
+                                        ><%= configValues.en.about_us_long || '' %></textarea>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-12">
@@ -168,6 +240,7 @@
         <script src="admin/js/plugins/bootstrap.min.js"></script>
         <script src="admin/js/plugins/chart.min.js"></script>
         <script src="admin/js/plugins/sweetalert.min.js"></script>
+        <script src="admin/js/plugins/ckeditor.min.js"></script>
         <script src="js/plugins/validate.min.js"></script>
         <script src="js/plugins/validator_messages_hu.js"></script>
         <script src="admin/js/admin.js"></script>

@@ -67,8 +67,8 @@ const getEmployees = (req, res) => {
         return res.render("pages/about", {
             employees: employees ?? [],
             pageData: {
-                shortDesc: "Short desc goes here",
-                longDesc: "Long desc goes here",
+                shortDesc: getValueByLanguage(DB_CONFIG["about_us_short"] ?? null, lang),
+                longDesc: getValueByLanguage(DB_CONFIG["about_us_long"] ?? null, lang),
             },
             meta: metas,
             current_locale: lang,
