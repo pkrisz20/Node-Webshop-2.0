@@ -14,12 +14,9 @@
     }
 
     &-container {
-        @include flexBox("center", "flex-start", 40px);
+        @include flexBox("center", "flex-start", 10px);
         flex-direction: column;
-
-        @media #{ $r-min-xl } {
-            @include gridBox("center", 2);
-        }
+        padding: 0;
 
         &-box {
             width: 100%;
