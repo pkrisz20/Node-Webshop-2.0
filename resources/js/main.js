@@ -303,21 +303,20 @@ $(function() {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
     }
 
-    $('body').on('click', '.js-toggle-details', function () {
-
-        var togleBtn = $(this);
+    $('body').on('click', '.js-toggle-cookie-details', function () {
+        var toggleBtn = $(this);
+        var toggleBtnText = $(this).find('span');
         var cookieDesc = $('body .js-cookie-description');
-        console.log($(cookieDesc)[0].style.display === 'none')
 
         if ($(cookieDesc)[0].style.display === 'none') {
             $(cookieDesc).slideDown();
-            togleBtn.addClass('active');
-            togleBtn.text(togleBtn.data('hide-text'));
+            toggleBtn.addClass('active');
+            toggleBtnText.text(toggleBtn.data('hide-text'));
         }
         else if ($(cookieDesc)[0].style.display !== 'none') {
             $(cookieDesc).slideUp();
-            togleBtn.removeClass('active');
-            togleBtn.text(togleBtn.data('show-text'));
+            toggleBtn.removeClass('active');
+            toggleBtnText.text(toggleBtn.data('show-text'));
         }
     });
 });

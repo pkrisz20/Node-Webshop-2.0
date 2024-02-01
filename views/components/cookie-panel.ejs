@@ -1,4 +1,4 @@
-<div class="cookie-consent-banner">
+<div class="cookie-consent-banner hidden">
     <div class="cookie-consent-banner__inner">
         <div class="cookie-consent-banner__copy">
             <strong class="cookie-consent-banner__header"><%= languageHandler('gdpr.cookie_title', current_locale) %></strong>
@@ -10,9 +10,10 @@
                 data-show-text="<%= languageHandler('gdpr.details', current_locale) %>"
                 data-hide-text="<%= languageHandler('gdpr.hide_details', current_locale) %>"
                 type="button"
-                class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary js-toggle-details"
+                class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary js-toggle-cookie-details"
             >
-                <%= languageHandler('gdpr.details', current_locale) %> <i class="fas fa-chevron-down"></i>
+                <span><%= languageHandler('gdpr.details', current_locale) %></span>
+                <i class="fas fa-chevron-down"></i>
             </button>
             <button type="button" class="cookie-consent-banner__cta"><%= languageHandler('gdpr.accept', current_locale) %></button>
         </div>

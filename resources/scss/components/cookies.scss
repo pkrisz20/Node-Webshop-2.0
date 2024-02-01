@@ -13,13 +13,13 @@
         transition: transform .4s ease-in-out;
 
         &.hidden {
-            transform: translateY(-100%);
+            transform: translateY(100%);
         }
 
         &__inner {
-            max-width: 960px;
+            max-width: 990px;
             margin: 0 auto;
-            padding: 32px 0;
+            padding: 15px 30px;
         }
 
         &__copy {
@@ -30,14 +30,19 @@
             display: inline-block;
             margin-bottom: 8px;
             font-size: 16px;
-            line-height: 24px;
+            line-height: 21px;
             text-transform: uppercase;
         }
 
         &__description {
             color: $c-gray71;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 14px;
+            line-height: 20px;
+
+            @media (min-width: 1200px) {
+                line-height: 24px;
+                font-size: 16px;
+            }
 
             &--long {
                 margin-top: 15px;
@@ -46,8 +51,14 @@
 
         &__actions {
             display: flex;
+            flex-direction: column-reverse;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+
+            @media (min-width: 440px) {
+                flex-direction: row;
+                align-items: center;
+            }
         }
 
         &__cta {
@@ -59,39 +70,52 @@
             background-color: $c-theme;
             color: $c-white;
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             line-height: 20px;
             transition: background-color .3s ease-in-out;
+
+            @media (min-width: 1200px) {
+                font-size: 16px;
+            }
 
             &:hover {
                 background-color: $c-light-green;
             }
 
-            i {
-                transform: translateY(1px);
-                margin-left: 5px;
-                transition: transform .3s ease-in-out;
-            }
-
             &--secondary {
+                min-width: 200px;
                 padding: 9px 13px;
-                border: 2px solid $c-gray71;
-                background-color: transparent;
-                color: $c-gray71;
+                border: 2px solid $c-dark;
+                background-color: transparent !important;
+                color: $c-dark;
+                margin-top: 10px;
                 font-weight: 500;
                 transition: all .3s ease-in-out;
 
+                @media (min-width: 440px) {
+                    margin-top: 0;
+                }
+
+                i {
+                    transform: translateY(2px);
+                    float: right;
+                    transition: transform .3s ease-in-out;
+                }
+
+                & > span {
+                    margin-right: 5px;
+                }
+
                 &.active {
                     i {
-                        transform: rotate(180deg);
+                        transform: translateY(2px) rotate(180deg);
                     }
                 }
 
                 &:hover {
-                    border-color: $c-dark;
-                    background-color: transparent;
-                    color: $c-dark;
+                    border-color: $c-theme;
+                    color: $c-theme;
                 }
             }
         }
