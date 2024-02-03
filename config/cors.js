@@ -1,6 +1,6 @@
 const whiteList = [process.env.APP_URL];
 
-if ( Boolean(process.env.APP_DEBUG) === true ) {
+if ( process.env.APP_DEBUG === 'true' ) {
     whiteList.push("http://127.0.0.1:3000", "http://localhost:3000");
 }
 
