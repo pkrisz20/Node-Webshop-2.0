@@ -44,7 +44,7 @@ const getData = (req, res) => {
     };
 
     // PRODUCTS
-    const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
+    const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, is_available, is_delivered, is_new, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
     // BLOGS
     const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
@@ -73,6 +73,7 @@ const getData = (req, res) => {
                     discount: product_element.discount_value != null ? numberWithCommas(product_element.discount_value) : null,
                     isAvailable: Boolean(product_element.is_available),
                     isPostable: Boolean(product_element.is_delivered),
+                    isNew: Boolean(product_element.is_new),
                     maxQuantity: parseInt(product_element.max_order_count)
                 }
 

@@ -104,6 +104,7 @@ const sr = {
         available: "Dostupan",
         out_of_stock: "Nema na lageru",
         add_cart: "Dodaj u korpu",
+		new: "Novo",
 		verified_purchase: "Verifikovana kupovina",
         postable: "Ovaj proizvod se može poslati poštom",
         not_postable: "Ovaj proizvod se NE MOŽE poslati poštom",

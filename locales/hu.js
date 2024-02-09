@@ -104,6 +104,7 @@ const hu = {
         available: "Elérhető",
         out_of_stock: "Nincs raktáron",
         add_cart: "Kosárhoz adás",
+		new: "Új",
 		verified_purchase: "Igazolt vásárlás",
         postable: "Ez a termék postázható",
         not_postable: "Ez a termék NEM postázható",

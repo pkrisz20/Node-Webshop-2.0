@@ -98,6 +98,10 @@
                                             <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_available === 1 ? 'checked' : '' %> value="<%= formValues.is_available %>" name="is_available" id="product-is-orderable" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
                                         </div>
+                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_new === 1 ? 'checked' : '' %> value="<%= formValues.is_new %>" name="is_new" id="product-is-new" role="switch" />
+                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-new">Új</label>
+                                        </div>
                                         <div>
                                             <div class="form-check form-switch d-inline-block">
                                                 <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_delivered === 1 ? 'checked' : '' %> value="<%= formValues.is_delivered %>" name="is_delivered" id="product-is-delivered" role="switch" />

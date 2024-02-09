@@ -304,6 +304,7 @@ const getProductEditPage = (req, res) => {
             formattedValues.is_featured = parseInt(formValues.is_featured);
             formattedValues.is_available = parseInt(formValues.is_available);
             formattedValues.is_delivered = parseInt(formValues.is_delivered);
+            formattedValues.is_new = parseInt(formValues.is_new);
             formattedValues.max_order_count = parseInt(formValues.max_order_count);
             formattedValues.comments_allowed = parseInt(formValues.comments_allowed);
             formattedValues.category_id = parseInt(formValues.category_id);
@@ -335,6 +336,7 @@ const handleProductUpload = (req, res) => {
     let is_featured = parseInt(productData.is_featured ?? 0);
     let is_delivered = parseInt(productData.is_delivered ?? 0);
     let is_available = parseInt(productData.is_available ?? 0);
+    let is_new = parseInt(productData.is_new ?? 0);
     let comments_allowed = parseInt(productData.comments_allowed ?? 0);
     let max_order_count = parseInt(productData.max_order_count);
 
@@ -345,6 +347,7 @@ const handleProductUpload = (req, res) => {
         || isNaN(is_featured)
         || isNaN(max_order_count)
         || isNaN(is_delivered)
+        || isNaN(is_new)
         || isNaN(is_available)
         || isNaN(comments_allowed)
     )
@@ -380,7 +383,7 @@ const handleProductUpload = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, is_new, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
         SQLInsertProduct,
@@ -395,6 +398,7 @@ const handleProductUpload = (req, res) => {
             is_available,
             is_delivered,
             max_order_count,
+            is_new,
             comments_allowed,
             categoryID,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
@@ -465,6 +469,7 @@ const handleEditProduct = (req, res) => {
     let is_featured = parseInt(productData.is_featured ?? 0);
     let is_delivered = parseInt(productData.is_delivered ?? 0);
     let is_available = parseInt(productData.is_available ?? 0);
+    let is_new = parseInt(productData.is_new ?? 0);
     let comments_allowed = parseInt(productData.comments_allowed ?? 0);
     let max_order_count = parseInt(productData.max_order_count);
     productId = parseInt(productId);
@@ -477,6 +482,7 @@ const handleEditProduct = (req, res) => {
         || isNaN(max_order_count)
         || isNaN(is_delivered)
         || isNaN(is_available)
+        || isNaN(is_new)
         || isNaN(comments_allowed)
         || isNaN(productId)
     )
@@ -513,7 +519,7 @@ const handleEditProduct = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateProduct,
@@ -528,6 +534,7 @@ const handleEditProduct = (req, res) => {
             is_available,
             is_delivered,
             max_order_count,
+            is_new,
             comments_allowed,
             categoryID,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),

@@ -26,7 +26,8 @@
         z-index: 2;
         font-style: italic;
 
-        &-discount {
+        &--discount,
+        &--new {
           text-transform: uppercase;
           top: 5px;
           left: 5px;
@@ -38,7 +39,14 @@
           padding: 4px;
         }
 
-        &-postable {
+        &--new {
+          top: 40px !important;
+          color: $c-white !important;
+          border: 1px solid $c-white !important;
+          background-color: $c-instagram !important;
+        }
+
+        &--postable {
           top: 0;
           right: 10px;
           padding: 7px;
@@ -48,6 +56,7 @@
         }
       }
     }
+
     &_desc {
       @include flexBox("flex-start", "center");
       flex-direction: column;

@@ -43,7 +43,12 @@ function groupBy (array, key) {
 }
 
 function limitText (text, limitNumber = 90) {
-    return text.length > limitNumber ? text.substring(0, limitNumber) + '...' : text;
+    if (!text) {
+        return null;
+    }
+    else if (text != null) {
+        return text.length > limitNumber ? text.substring(0, limitNumber) + '...' : text;
+    }
 }
 
 function escapeHtml (unsafe) {

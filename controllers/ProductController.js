@@ -264,7 +264,7 @@ const getAllProducts = (req, res) => {
         },
     };
 
-    let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_new, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -307,6 +307,7 @@ const getAllProducts = (req, res) => {
                     discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
                     isAvailable: Boolean(element.is_available),
                     isPostable: Boolean(element.is_delivered),
+                    isNew: Boolean(element.is_new),
                     maxQuantity: parseInt(element.max_order_count)
                 }
 
@@ -447,7 +448,7 @@ const getCategoryProducts = (req, res) => {
                 },
             };
 
-            let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            let sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.is_new, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
             let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -490,6 +491,7 @@ const getCategoryProducts = (req, res) => {
                             discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
                             isAvailable: Boolean(element.is_available),
                             isPostable: Boolean(element.is_delivered),
+                            isNew: Boolean(element.is_new),
                             maxQuantity: parseInt(element.max_order_count)
                         }
 
@@ -787,7 +789,7 @@ const getWishlistListPage = ( req, res, next ) => {
         });
     }
 
-    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) AND is_active = ? ORDER BY id DESC`;
+    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_new, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) AND is_active = ? ORDER BY id DESC`;
 
     db.query(selectWishlistProducts, [...wishlistProductIds, 1], (err, data) => {
         if (err) {
@@ -824,6 +826,7 @@ const getWishlistListPage = ( req, res, next ) => {
                     discount: wishlistItem.discount_value != null ? numberWithCommas(wishlistItem.discount_value) : null,
                     isAvailable: Boolean(wishlistItem.is_available),
                     isPostable: Boolean(wishlistItem.is_delivered),
+                    isNew: Boolean(wishlistItem.is_new),
                     maxQuantity: parseInt(wishlistItem.max_order_count)
                 }
 

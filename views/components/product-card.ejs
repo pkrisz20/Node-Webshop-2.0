@@ -1,10 +1,13 @@
 <div class="product">
     <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="<%= product.name %>">
         <% if (product.isOnDiscount) { %>
-            <span class="badge badge-discount"><%= languageHandler("products.discount", current_locale) %></span>
+            <span class="badge badge--discount"><%= languageHandler("products.discount", current_locale) %></span>
+        <% } %>
+        <% if (product.isNew) { %>
+            <span class="badge badge--new"><%= languageHandler("products.new", current_locale) %></span>
         <% } %>
         <% if (product.isPostable) { %>
-            <span class="badge badge-postable"><i class="fas fa-truck"></i></span>
+            <span class="badge badge--postable"><i class="fas fa-truck"></i></span>
         <% } %>
         <picture>
             <source srcset="<%= product.image %>">
