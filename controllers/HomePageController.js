@@ -46,7 +46,7 @@ const getData = (req, res) => {
     // PRODUCTS
     const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, is_available, is_delivered, is_new, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
     // BLOGS
-    const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
+    const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.is_important, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
     const sqlQueryGallery = "SELECT galleries.id, galleries.gallery_name, galleries.slug, galleries.gallery_thumbnail FROM galleries WHERE galleries.is_active = ? AND galleries.is_featured = ? ORDER BY galleries.gallery_date DESC";
     // HEROS
@@ -105,7 +105,8 @@ const getData = (req, res) => {
                             image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
                             author: blog_element.author,
                             fullDate: blog_element.date,
-                            commentsCount: blog_element.comments_count
+                            commentsCount: blog_element.comments_count,
+                            isImportant: Boolean(blog_element.is_important) ?? false
                         }
 
                         blogs.push(tempObjectBlog);

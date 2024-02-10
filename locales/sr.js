@@ -70,6 +70,7 @@ const sr = {
 		wishlist: "Lista želja",
 		no_items_in_wishlist: "Lista želja još je prazna",
 		cart: "Korpa",
+		important: "Važno",
     },
     validations: {
         rights_reserved: "Sva prava zadržana",

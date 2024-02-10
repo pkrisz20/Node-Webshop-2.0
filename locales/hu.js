@@ -70,6 +70,7 @@ const hu = {
 		wishlist: "Kívánságlista",
 		no_items_in_wishlist: "A kívánságlista még üres",
 		cart: "Kosár",
+		important: "Fontos",
     },
     validations: {
         rights_reserved: "Minden jog fenntartva",

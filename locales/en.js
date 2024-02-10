@@ -70,6 +70,7 @@ const en = {
 		wishlist: "Wishlist",
 		no_items_in_wishlist: "The wishlist is empty yet",
 		cart: "Cart",
+		important: "Important",
 	},
 	validations: {
 		rights_reserved: "All rights reserved",

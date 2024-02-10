@@ -32,7 +32,7 @@ const getBlogDetails = (req, res) => {
 
     const blogDetailsQuery = "SELECT id, title, description, short_description, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
 
-    const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
+    const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.is_important, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
     const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ? AND blogs.id != ? ORDER BY blogs.id DESC LIMIT ?";
 
@@ -92,7 +92,8 @@ const getBlogDetails = (req, res) => {
                             image: imagePathConverter(element.image_thumbnail, "blogs"),
                             author: element.author,
                             fullDate: element.date,
-                            commentsCount: element.comments_count
+                            commentsCount: element.comments_count,
+                            isImportant: Boolean(element.is_important) ?? false
                         }
 
                         newestBlogsArray.push(tempObject);
@@ -272,7 +273,7 @@ const getAllBlogs = (req, res) => {
         return showBadRequestPage(req, res);
     }
 
-    const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
+    const sqlQueryPaginatedBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.is_important, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? ORDER BY blogs.date DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
@@ -311,7 +312,8 @@ const getAllBlogs = (req, res) => {
                     image: imagePathConverter(element.image_thumbnail, "blogs"),
                     author: element.author,
                     fullDate: element.date,
-                    commentsCount: element.comments_count
+                    commentsCount: element.comments_count,
+                    isImportant: Boolean(element.is_important) ?? false,
                 }
 
                 result.push(tempObject);

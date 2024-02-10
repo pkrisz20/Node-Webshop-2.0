@@ -34,18 +34,41 @@
         right: 5px;
         top: 5px;
         z-index: 2;
-        padding: 4px 10px;
+        padding: 3px 10px;
         @include flexBox();
         background-color: $c-skyblue;
         border-radius: 4px;
 
         &-value {
-            font-size: 13px;
+            font-size: 12px;
             color: $c-white;
 
             i {
                 margin-right: 5px;
             }
+        }
+    }
+
+    .badge {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        z-index: 1;
+        @include flexBox("center", "flex-start", 5px);
+        flex-direction: column;
+        color: $c-white;
+        font-size: 12px;
+
+        &--important {
+            border-radius: 4px;
+            padding: 3px 10px;
+            background-color: $c-red2;
+        }
+
+        &--featured {
+            border-radius: 4px;
+            padding: 3px 10px;
+            background-color: $c-warning;
         }
     }
 

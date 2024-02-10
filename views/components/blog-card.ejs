@@ -2,6 +2,11 @@
     <div class="datetime">
         <span class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></span>
     </div>
+    <% if (blog.isImportant) { %>
+        <div class="badge">
+            <span class="badge--important"><%= languageHandler('general.important', current_locale) %></span>
+        </div>
+    <% } %>
     <a class="image" title="<%= blog.title %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" aria-label="Navigation to the current blog article - <%= blog.title %>">
         <picture>
             <source srcset="<%= blog.image %>">

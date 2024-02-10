@@ -324,11 +324,13 @@ const handleArticleUpload = (req, res) => {
     // Boolean types data check
     let is_active = parseInt(articleData.is_active ?? 0);
     let is_featured = parseInt(articleData.is_featured ?? 0);
+    let is_important = parseInt(articleData.is_important ?? 0);
     let comments_allowed = parseInt(articleData.comments_allowed ?? 0);
 
     if (
         isNaN(is_active)
         || isNaN(is_featured)
+        || isNaN(is_important)
         || isNaN(comments_allowed)
         || !articleData['author']
     )
@@ -360,7 +362,7 @@ const handleArticleUpload = (req, res) => {
         hu: articleData['article_description[hu]'] ?? null
     };
 
-    const SQLInsertArticle = "INSERT INTO blogs (title, short_description, description, date, author, is_active, is_featured, comments_allowed, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    const SQLInsertArticle = "INSERT INTO blogs (title, short_description, description, date, author, is_active, is_featured, is_important, comments_allowed, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
         SQLInsertArticle,
@@ -372,6 +374,7 @@ const handleArticleUpload = (req, res) => {
             articleData['author'],
             is_active,
             is_featured,
+            is_important,
             comments_allowed,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         ],
@@ -481,6 +484,7 @@ const getArticleEditPage = (req, res) => {
             formattedValues.is_active = parseInt(formValues.is_active);
             formattedValues.is_featured = parseInt(formValues.is_featured);
             formattedValues.comments_allowed = parseInt(formValues.comments_allowed);
+            formattedValues.is_important = parseInt(formValues.is_important);
 
             return res.render("admin/blogs/edit", {
                 formValues: formattedValues,
@@ -505,12 +509,14 @@ const handleEditArticle = (req, res) => {
     // Boolean types data check
     let is_active = parseInt(articleData.is_active ?? 0);
     let is_featured = parseInt(articleData.is_featured ?? 0);
+    let is_important = parseInt(articleData.is_important ?? 0);
     let comments_allowed = parseInt(articleData.comments_allowed ?? 0);
     articleId = parseInt(articleId);
 
     if (
         isNaN(is_active)
         || isNaN(is_featured)
+        || isNaN(is_important)
         || isNaN(comments_allowed)
         || isNaN(articleId)
         || !articleData['author']
@@ -544,7 +550,7 @@ const handleEditArticle = (req, res) => {
         hu: articleData['article_description[hu]'] ?? null
     };
 
-    const SQLUpdateArticle = "UPDATE blogs SET title = ?, short_description = ?, description = ?, date = ?, author = ?, is_active = ?, is_featured = ?, comments_allowed = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateArticle = "UPDATE blogs SET title = ?, short_description = ?, description = ?, date = ?, author = ?, is_active = ?, is_important = ?, is_featured = ?, comments_allowed = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateArticle,
@@ -555,6 +561,7 @@ const handleEditArticle = (req, res) => {
             articleData['date'],
             articleData['author'],
             is_active,
+            is_important,
             is_featured,
             comments_allowed,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
