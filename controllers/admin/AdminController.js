@@ -351,6 +351,8 @@ const getGlobalSettingsPage = (req, res) => {
             formattedConfigValues.tiktok = configValues.tiktok != null ? configValues.tiktok : null;
             formattedConfigValues.company_street = configValues.company_street != null ? configValues.company_street : null;
             formattedConfigValues.currency = configValues.currency != null ? configValues.currency : null;
+            formattedConfigValues.map_lat = configValues.map_lat != null ? configValues.map_lat : null;
+            formattedConfigValues.map_long = configValues.map_long != null ? configValues.map_long : null;
 
             return res.render("admin/settings-form", {
                 configValues: formattedConfigValues,
@@ -371,6 +373,8 @@ const saveGlobalSettings = (req, res) => {
     settings.cups_of_coffe_number = parseInt(settings.cups_of_coffe_number || 0);
     settings.animals_in_numbers = parseInt(settings.animals_in_numbers || 0);
     settings.posted_products_number = parseInt(settings.posted_products_number || 0);
+    settings.map_lat = settings.map_lat || null;
+    settings.map_long = settings.map_long || null;
 
     // Check for required fields
     if (

@@ -27,6 +27,7 @@
         flex-direction: column;
         width: 100%;
         padding: 0;
+        margin-bottom: 40px;
 
         @media #{ $r-min-m } {
             flex-direction: row;

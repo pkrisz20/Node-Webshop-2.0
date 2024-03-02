@@ -2,7 +2,9 @@
 <html lang="<%= meta.lang %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
+        <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <% } %>
     <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="css/contact.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
@@ -195,9 +197,11 @@
                 </section>
             </div>
 
-            <section class="contact-map">
-                <div style="width: 100%; height: 450px; z-index: 30;" id="map"></div>
-            </section>
+            <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
+                <section class="contact-map">
+                    <div style="width: 100%; height: 450px; z-index: 30;" id="map"></div>
+                </section>
+            <% } %>
         </main>
 
         <%- include('../layout/footer.ejs') %>
@@ -219,32 +223,34 @@
 
     <script type="text/javascript" src="js/main.js"></script>
 
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
-    <script type="text/javascript">
-        var platform = new H.service.Platform({
-            apikey: 'BbrImBFdudPWuw_p4_-YDUzsq1ZzwhpZjqbuEtAD6AA'
-        });
-        var defaultLayers = platform.createDefaultLayers();
+    <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+        <script type="text/javascript">
+            var platform = new H.service.Platform({
+                apikey: 'BbrImBFdudPWuw_p4_-YDUzsq1ZzwhpZjqbuEtAD6AA'
+            });
+            var defaultLayers = platform.createDefaultLayers();
 
-        var map = new H.Map(document.getElementById('map'),
-        defaultLayers.vector.normal.map, {
-            center: { lat: 45.878360927128206, lng: 19.832637565189028 },
-            zoom: 11,
-            pixelRatio: window.devicePixelRatio || 1
-        });
+            var map = new H.Map(document.getElementById('map'),
+            defaultLayers.vector.normal.map, {
+                center: { lat: <%- DB_CONFIG["map_lat"] %>, lng: <%- DB_CONFIG["map_long"] %> },
+                zoom: 11,
+                pixelRatio: window.devicePixelRatio || 1
+            });
 
-        var cityMarker = new H.map.Marker({ lat: 45.878360927128206, lng: 19.832637565189028 });
-        map.addObject(cityMarker);
+            var cityMarker = new H.map.Marker({ lat: <%- DB_CONFIG["map_lat"] %>, lng: <%- DB_CONFIG["map_long"] %> });
+            map.addObject(cityMarker);
 
-        window.addEventListener('resize', function () {
-            map.getViewPort().resize();
-        });
+            window.addEventListener('resize', function () {
+                map.getViewPort().resize();
+            });
 
-        var mapEvents = new H.mapevents.MapEvents(map);
-        var behavior = new H.mapevents.Behavior(mapEvents);
-    </script>
+            var mapEvents = new H.mapevents.MapEvents(map);
+            var behavior = new H.mapevents.Behavior(mapEvents);
+        </script>
+    <% } %>
 </body>
 </html>

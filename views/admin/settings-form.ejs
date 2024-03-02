@@ -95,6 +95,22 @@
                                     </div>
                                 </div>
 
+                                <h2 class="h5 mb-3">Térkép</h2>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="map-lat" class="form-label">Szélességi adatok</label>
+                                            <input type="text" id="map-lat" data-rule-latCoord="true" class="form-control" name="map_lat" value="<%= configValues.map_lat || '' %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <label for="map-long" class="form-label">Hosszússági adatok</label>
+                                            <input type="text" id="map-long" data-rule-longCoord="true" class="form-control" name="map_long" value="<%= configValues.map_long || '' %>" />
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <h2 class="h5 mb-3">Egyéb</h2>
                                 <div class="row mb-3">
                                     <div class="col-md-6">

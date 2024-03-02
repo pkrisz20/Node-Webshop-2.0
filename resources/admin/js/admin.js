@@ -47,6 +47,14 @@ $(document).ready(function() {
     });
   }
 
+  $.validator.addMethod('latCoord', function (value, element) {
+    return this.optional(element) || value.length >= 4 && /^(?=.)-?((8[0-5]?)|([0-7]?[0-9]))?(?:\.[0-9]{1,20})?$/.test(value);
+  }, 'A szélességi érték helytelen.');
+
+  $.validator.addMethod('longCoord', function(value, element) {
+    return this.optional(element) || value.length >= 4 && /^(?=.)-?((0?[8-9][0-9])|180|([0-1]?[0-7]?[0-9]))?(?:\.[0-9]{1,20})?$/.test(value);
+  }, 'A hosszússági érték helytelen');
+
   // It there is any ck editor, then initialize it
   if ($('body .js-ckeditor').length > 0) {
     document.querySelectorAll('.js-ckeditor').forEach(function (event) {
