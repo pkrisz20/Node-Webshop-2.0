@@ -3,6 +3,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
@@ -174,6 +175,7 @@ const getData = (req, res) => {
                                         DB_CONFIG: DB_CONFIG,
                                         webshopCategories: req.webshopCategories ?? [],
                                         wishlistTotalNumber: req.wishlistTotalNumber,
+                                        gdprCookies: gdprCookies,
                                         csrfToken: req.csrfToken()
                                     });
                                 }

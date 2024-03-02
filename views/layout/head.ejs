@@ -51,5 +51,75 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     </noscript>
 
+    <% if (process.env.GTAG_ID || false) { %>
+        <script type="text/javascript">
+            // Define dataLayer and the gtag function.
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+
+            if (localStorage.getItem('consentMode') === null) {
+                var consentDone = getCookie('website_cookie_consent_done');
+
+                // If the consent mode isn't set, set it based on the cookie checkboxes
+                if (consentDone) {
+                    window.addEventListener('DOMContentLoaded', function () {
+                        var checkedTypes = [];
+                        var cookieCheckboxes = document.querySelectorAll('.js-cookie-input:checked');
+
+                        cookieCheckboxes.forEach(function (e) {
+                            checkedTypes.push(e.value);
+                        });
+
+                        const consentMode = {
+                            'ad_storage': checkedTypes.includes('performance') ? 'granted' : 'denied',
+                            'ad_user_data': checkedTypes.includes('performance') ? 'granted' : 'denied',
+                            'ad_personalization': checkedTypes.includes('performance') ? 'granted' : 'denied',
+                            'analytics_storage': checkedTypes.includes('performance') ? 'granted' : 'denied',
+                            'functionality_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied',
+                            'personalization_storage': checkedTypes.includes('preferences') ? 'granted' : 'denied',
+                            'security_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied'
+                        };
+
+                        gtag('consent', 'update', consentMode);
+                        localStorage.setItem('consentMode', JSON.stringify(consentMode));
+                    });
+                } else {
+                    // Set default consent to 'denied' as a placeholder
+                    gtag('consent', 'default', {
+                        'ad_storage': 'denied',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'analytics_storage': 'denied',
+                        'functionality_storage': 'denied',
+                        'personalization_storage': 'denied',
+                        'security_storage': 'denied'
+                    });
+                }
+            } else {
+                gtag('consent', 'default', JSON.parse(localStorage.getItem('consentMode')));
+            }
+
+            function getCookie (name) {
+                // Split cookie string and get all individual name=value pairs in an array
+                let cookieArr = document.cookie.split(";");
+
+                // Loop through the array elements
+                for(let i = 0; i < cookieArr.length; i++) {
+                    let cookiePair = cookieArr[i].split("=");
+
+                    /* Removing whitespace at the beginning of the cookie name
+                    and compare it with the given string */
+                    if(name == cookiePair[0].trim()) {
+                        // Decode the cookie value and return
+                        return decodeURIComponent(cookiePair[1]);
+                    }
+                }
+
+                // Return null if not found
+                return null;
+            }
+        </script>
+    <% } %>
+
     <link rel="preload" href="css/plugins/jquery-confirm.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />

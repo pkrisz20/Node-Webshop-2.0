@@ -180,10 +180,19 @@ const hu = {
     gdpr: {
 		cookie_title: "Ez a weboldal sütiket használ",
 		cookie_desc: "Sütiket használunk a tartalom és hirdetések személyre szabásához, a közösségi média funkcióinak biztosításához, valamint forgalmunk elemzéséhez.",
-        cookie_long_desc: "A sütik kis szövegfájlok, amelyeket a weboldalak helyeznek el az eszközén (például számítógépén vagy okostelefonján), amikor meglátogatja azokat. Ezek a fájlok információkat tartalmaznak a weboldalon végzett böngészési tevékenységéről, segítve ezzel javítani a felhasználói élményt azáltal, hogy emlékeznek a beállításokra és fokozzák a weboldal funkcionalitását. A sütik szerepet játszanak az analitikában is, lehetővé téve a weboldal tulajdonosai számára, hogy megértsék, hogyan interakcióznak a felhasználók az oldallal. Míg néhány süti elengedhetetlen a weboldal megfelelő működéséhez, másokat követésre és reklám célokra használnak. A felhasználók általában a böngészőbeállításaikon keresztül kezelhetik a sütiket.",
-		accept: "Beleegyezem",
-		details: "Részletek",
+        details: "Részletek",
 		hide_details: "Részletek elrejtése",
+        what_are_cookies: "Mik azok a sütik?",
+        what_are_cookies_text: "A sütik kis szövegfájlok, amelyeket a weboldalak helyeznek el az eszközén (például számítógépén vagy okostelefonján), amikor meglátogatja azokat. Ezek a fájlok információkat tartalmaznak a weboldalon végzett böngészési tevékenységéről, segítve ezzel javítani a felhasználói élményt azáltal, hogy emlékeznek a beállításokra és fokozzák a weboldal funkcionalitását. A sütik szerepet játszanak az analitikában is, lehetővé téve a weboldal tulajdonosai számára, hogy megértsék, hogyan interakcióznak a felhasználók az oldallal. Míg néhány süti elengedhetetlen a weboldal megfelelő működéséhez, másokat követésre és reklám célokra használnak. A felhasználók általában a böngészőbeállításaikon keresztül kezelhetik a sütiket. Beleegyezése a következő tartománynevekre vonatkozik: {0}",
+		cookie_necessary: "Létfontosságú sütik",
+		cookie_preferences: "Használat sütik",
+		cookie_performance: "Teljesítmény sütik",
+        cookie_text_necessary: "Az létfontosságú sütik elengedgetetlenek a weboldal működéséhez. Olyan alapvető funkciókat biztosítanak, mint például a bejelentkezés, vagy kosárba rakás webáruházak esetében. A weboldal nem működne megfelelően ezen sütik hiányában.",
+		cookie_text_preferences: "A használat sütik lehetővé teszik, hogy a weboldal megjegyezze, hogy például milyen nyelven böngészi az oldalt, vagy hogy melyik régióból nézi azt.",
+		cookie_text_performance: "A teljesítmény sütik névtelen adatgyűjtéssel teszik lehetővé a weboldal tulajdonosai számára, hogy elemezni tudják a weboldal használatát, valamint, hogy a felhasználókat több weboldalon keresztül kövessék. Ennek az a célja, hogy olyan reklámokat tudjunk megjeleníteni felhasználóinknak, amelyek relevánsak és érdeklik őket, és ezáltal értékesebbek a kiadóknak és külső reklám szolgáltatóknak.",
+        accept_all: "Összes elfogadása",
+		save_settings: "Beállítások mentése",
+		last_updated: "Utoljára módosítva: {0}"
 	},
 };
 

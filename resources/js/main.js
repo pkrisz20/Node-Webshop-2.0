@@ -275,8 +275,9 @@ $(function() {
 
             if (currentTab.length === 1) {
                 $('.js-tab-link', tabContent).removeClass('selected');
-                currentTab.siblings().hide();
                 tab.addClass('selected');
+                currentTab.siblings().hide();
+                currentTab.show();
             }
         });
 
@@ -286,7 +287,7 @@ $(function() {
             }
         });
 
-        $('.selected').trigger('click');
+        $('.js-tab-link.selected').trigger('click');
     }
 
     // Mobile categories slide
@@ -301,6 +302,28 @@ $(function() {
     // If the site is loaded and unexpectedly the search input has value then make it empty by default
     if ( $('body .js-search-input').length > 0 ) {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
+    }
+
+    function setCookie (cname, cvalue, exdays) {
+        const date = new Date();
+        date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires="+date.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function setConsent (consent) {
+        const consentMode = {
+            'ad_storage': consent.includes('performance') ? 'granted' : 'denied',
+            'ad_user_data': consent.includes('performance') ? 'granted' : 'denied',
+            'ad_personalization': consent.includes('performance') ? 'granted' : 'denied',
+            'analytics_storage': consent.includes('performance') ? 'granted' : 'denied',
+            'functionality_storage': consent.includes('necessary') ? 'granted' : 'denied',
+            'personalization_storage': consent.includes('preferences') ? 'granted' : 'denied',
+            'security_storage': consent.includes('necessary') ? 'granted' : 'denied'
+        };
+
+        gtag('consent', 'update', consentMode);
+        localStorage.setItem('consentMode', JSON.stringify(consentMode));
     }
 
     $('body').on('click', '.js-toggle-cookie-details', function () {
@@ -318,6 +341,25 @@ $(function() {
             toggleBtn.removeClass('active');
             toggleBtnText.text(toggleBtn.data('show-text'));
         }
+    });
+
+    $('body').on('click', '.js-cookie-submit', function () {
+
+        if ($(this).hasClass('js-cookie-all')) {
+            $('.js-cookie-input').prop('checked', true);
+        }
+
+        var checkedTypes = [];
+        $('.js-cookie-input:checked').each(function () {
+            checkedTypes.push($(this).val());
+        });
+
+        setCookie('website_allowed_cookie_types', checkedTypes.join(','), 365);
+        setCookie('website_cookie_consent_done', '1', 365);
+
+        $('.js-cookies').addClass('hidden');
+
+        setConsent(checkedTypes);
     });
 });
 

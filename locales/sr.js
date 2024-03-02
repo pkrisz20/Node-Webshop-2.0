@@ -179,10 +179,19 @@ const sr = {
     gdpr: {
 		cookie_title: "Ovaj sajt koristi kolačiće",
 		cookie_desc: "Koristimo kolačiće radi personalizacije sadržaja i oglasa, pružanja funkcija društvenih medija i analize našeg saobraćaja.",
-        cookie_long_desc: "Kolačići su mali tekstualni fajlovi koje veb sajtovi smeštaju na vaš uređaj (kao što je računar ili pametni telefon) kada ih posetite. Ovi fajlovi sadrže informacije o vašoj aktivnosti na sajtu i pomažu poboljšanju vašeg korisničkog iskustva pamćenjem postavki i unapređivanjem funkcionalnosti sajta. Kolačići takođe igraju ulogu u analitici, omogućavajući vlasnicima veb sajtova da razumeju kako korisnici interaguju sa njihovim sajtom. Dok su neki kolačići neophodni za pravilno funkcionisanje sajta, drugi se koriste u svrhe praćenja i oglašavanja. Korisnici obično mogu upravljati postavkama kolačića putem podešavanja svojih pregledača.",
-		accept: "Slažem se",
         details: "Detalji",
 		hide_details: "Sakrij detalji",
+        what_are_cookies: "Šta su kolačići?",
+        what_are_cookies_text: "Kolačići su mali tekstualni fajlovi koje veb sajtovi smeštaju na vaš uređaj (kao što je računar ili pametni telefon) kada ih posetite. Ovi fajlovi sadrže informacije o vašoj aktivnosti na sajtu i pomažu poboljšanju vašeg korisničkog iskustva pamćenjem postavki i unapređivanjem funkcionalnosti sajta. Kolačići takođe igraju ulogu u analitici, omogućavajući vlasnicima veb sajtova da razumeju kako korisnici interaguju sa njihovim sajtom. Dok su neki kolačići neophodni za pravilno funkcionisanje sajta, drugi se koriste u svrhe praćenja i oglašavanja. Korisnici obično mogu upravljati postavkama kolačića putem podešavanja svojih pregledača. Vaša saglasnost važi za sledeće domene: {0}",
+        cookie_necessary: "Neophodni kolačići",
+		cookie_preferences: "Upotrebi kolačići",
+		cookie_performance: "Performanse kolačići",
+        cookie_text_necessary: "Neophodni kolačići pomažu da sajt bude upotrebljiv omogućavajući osnovne funkcije kao što su navigacija na stranici i pristup bezbednim oblastima web sajta. Web sajt ne može da funkcioniše pravilno bez ovih kolačića.",
+		cookie_text_preferences: "Upotreba kolačića omogućava veb stranici da zapamti, na primer, na kom jeziku pregledate sajt ili iz koje regije ga gledate.",
+		cookie_text_performance: "Kolačići za performanse omogućavaju vlasnicima veb stranica anonimno prikupljanje podataka kako bi analizirali korišćenje veb stranice, kao i praćenje korisnika kroz više veb stranica. Cilj ovoga je prikazivanje relevantnih i zanimljivih oglasa korisnicima, što čini vlasnike i spoljne reklamne servise vrednijima.",
+        accept_all: "Prihvatam sve",
+		save_settings: "Sačuvajte podešavanja",
+		last_updated: "Poslednje izmene: {0}"
 	},
 };
 
