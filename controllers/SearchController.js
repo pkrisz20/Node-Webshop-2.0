@@ -7,6 +7,7 @@ const moment = require("moment");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
@@ -215,6 +216,7 @@ const handleSearch = (req, res) => {
                     DB_CONFIG: DB_CONFIG,
                     webshopCategories: req.webshopCategories,
                     wishlistTotalNumber: req.wishlistTotalNumber,
+                    gdprCookies: gdprCookies,
                     csrfToken: req.csrfToken()
                 });
             });

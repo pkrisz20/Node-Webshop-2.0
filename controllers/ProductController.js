@@ -6,6 +6,7 @@ const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getProductDetails = (req, res) => {
     // Cart converting stuffs
@@ -142,6 +143,7 @@ const getProductDetails = (req, res) => {
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
                                 wishlistTotalNumber: req.wishlistTotalNumber,
+                                gdprCookies: gdprCookies,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -195,6 +197,7 @@ const getProductDetails = (req, res) => {
                                     DB_CONFIG: DB_CONFIG,
                                     webshopCategories: req.webshopCategories,
                                     wishlistTotalNumber: req.wishlistTotalNumber,
+                                    gdprCookies: gdprCookies,
                                     csrfToken: req.csrfToken()
                                 });
                             });
@@ -217,6 +220,7 @@ const getProductDetails = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
+                        gdprCookies: gdprCookies,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -290,6 +294,7 @@ const getAllProducts = (req, res) => {
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
                 wishlistTotalNumber: req.wishlistTotalNumber,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         }
@@ -354,6 +359,7 @@ const getAllProducts = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
+                        gdprCookies: gdprCookies,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -473,6 +479,7 @@ const getCategoryProducts = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
+                        gdprCookies: gdprCookies,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -538,6 +545,7 @@ const getCategoryProducts = (req, res) => {
                                 DB_CONFIG: DB_CONFIG,
                                 webshopCategories: req.webshopCategories,
                                 wishlistTotalNumber: req.wishlistTotalNumber,
+                                gdprCookies: gdprCookies,
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -785,6 +793,7 @@ const getWishlistListPage = ( req, res, next ) => {
             webshopCategories: req.webshopCategories,
             wishlistProducts: wishlistProductsList ?? [],
             wishlistTotalNumber: wishlistProductsList.length,
+            gdprCookies: gdprCookies,
             csrfToken: req.csrfToken()
         });
     }
@@ -808,6 +817,7 @@ const getWishlistListPage = ( req, res, next ) => {
                 webshopCategories: req.webshopCategories,
                 wishlistProducts: wishlistProductsList ?? [],
                 wishlistTotalNumber: wishlistProductsList.length,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         }
@@ -852,6 +862,7 @@ const getWishlistListPage = ( req, res, next ) => {
                 webshopCategories: req.webshopCategories,
                 wishlistProducts: wishlistProductsList ?? [],
                 wishlistTotalNumber: wishlistProductsList.length,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         }

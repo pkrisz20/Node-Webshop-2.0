@@ -344,6 +344,9 @@ $(function() {
     });
 
     $('body').on('click', '.js-cookie-submit', function () {
+        var this_button = $(this);
+        var currentURL = window.location.href;
+        var currentPath = new URL(currentURL).pathname;
 
         if ($(this).hasClass('js-cookie-all')) {
             $('.js-cookie-input').prop('checked', true);
@@ -359,7 +362,44 @@ $(function() {
 
         $('.js-cookies').addClass('hidden');
 
-        setConsent(checkedTypes);
+        // TODO: Fix it
+        console.log(checkedTypes);
+
+        $.ajax({
+            type: 'post',
+            url: `${ currentPath }/gdpr/handle`,
+            dataType: 'json',
+            data: {
+                data: checkedTypes,
+            },
+            beforeSend: function (jqXHR) {
+                this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
+            },
+            complete: function (jqXHR, textStatus) {
+                this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
+            },
+            success: function (response) {
+                if (response.status == 'success') {
+                    setConsent(checkedTypes);
+                }
+
+                else if (response.status == 'error') {
+                    $.confirm({
+                        useBootstrap: false,
+                        boxWidth: '350px',
+                        title: response.title,
+                        content: response.message,
+                        buttons: {
+                            OK: {
+                                action: function() {
+                                    // do nothing
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
     });
 });
 

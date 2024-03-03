@@ -7,6 +7,7 @@ const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require('../helpers/formatDateByLocale');
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getBlogDetails = (req, res) => {
     // Cart converting stuffs
@@ -153,6 +154,7 @@ const getBlogDetails = (req, res) => {
                                     DB_CONFIG: DB_CONFIG,
                                     wishlistTotalNumber: req.wishlistTotalNumber,
                                     webshopCategories: req.webshopCategories,
+                                    gdprCookies: gdprCookies,
                                     csrfToken: req.csrfToken()
                                 });
                             }
@@ -204,6 +206,7 @@ const getBlogDetails = (req, res) => {
                                         DB_CONFIG: DB_CONFIG,
                                         wishlistTotalNumber: req.wishlistTotalNumber,
                                         webshopCategories: req.webshopCategories,
+                                        gdprCookies: gdprCookies,
                                         csrfToken: req.csrfToken()
                                     });
                                 });
@@ -226,6 +229,7 @@ const getBlogDetails = (req, res) => {
                             wishlistTotalNumber: req.wishlistTotalNumber,
                             DB_CONFIG: DB_CONFIG,
                             webshopCategories: req.webshopCategories,
+                            gdprCookies: gdprCookies,
                             csrfToken: req.csrfToken()
                         });
                     }
@@ -297,6 +301,7 @@ const getAllBlogs = (req, res) => {
                 webshopCategories: req.webshopCategories,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         }
@@ -354,6 +359,7 @@ const getAllBlogs = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
+                        gdprCookies: gdprCookies,
                         csrfToken: req.csrfToken()
                     });
                 }

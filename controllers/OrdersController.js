@@ -6,6 +6,7 @@ const moment = require("moment");
 const languageHandler = require("../helpers/languageHandler");
 const { showBadRequestPage, showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getOrderPage = (req, res) => {
     // Cart converting stuffs
@@ -50,6 +51,7 @@ const getOrderPage = (req, res) => {
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
         wishlistTotalNumber: req.wishlistTotalNumber,
+        gdprCookies: gdprCookies,
         csrfToken: req.csrfToken()
     });
 }

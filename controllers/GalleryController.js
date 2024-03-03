@@ -6,6 +6,7 @@ const formatDateByLang = require("../helpers/formatDateByLocale");
 const languageHandler = require("../helpers/languageHandler");
 const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getAllGallery = (req, res) => {
     // Cart converting stuffs
@@ -67,6 +68,7 @@ const getAllGallery = (req, res) => {
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         }
@@ -118,6 +120,7 @@ const getAllGallery = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
+                        gdprCookies: gdprCookies,
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -218,6 +221,7 @@ const getGalleryDetails = (req, res) => {
                 DB_CONFIG: DB_CONFIG,
                 wishlistTotalNumber: req.wishlistTotalNumber,
                 webshopCategories: req.webshopCategories,
+                gdprCookies: gdprCookies,
                 csrfToken: req.csrfToken()
             });
         });

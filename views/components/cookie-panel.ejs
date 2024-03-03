@@ -20,10 +20,10 @@
 
         <div style="display: none;" class="cookie-consent-banner__description cookie-consent-banner__description--long js-cookie-description">
 
-            <div class="cookies__consent mt-20 mb-20">
+            <div class="cookie__consent">
 
                 <% gdprCookies['types'].forEach(cookie_data => { %>
-                    <div class="cookies__consent-item <%= cookie_data['disabled'] === true ? 'cookies__consent-item--disabled' : '' %>">
+                    <div class="cookie__consent-item <%= cookie_data['disabled'] === true ? 'cookie__consent-item--disabled' : '' %>">
                         <input
                             type="checkbox"
                             name="cookie_<%= cookie_data['type'] %>"
@@ -37,43 +37,39 @@
                     </div>
                 <% }) %>
 
-                <div class="cookies__consent--full-width mt-15">
+                <div class="cookie__consent--full-width">
                     <button type="button" class="cookie-consent-banner__cta js-cookie-submit"><%= languageHandler('gdpr.save_settings', current_locale) %></button>
                 </div>
             </div>
 
             <div class="js-tabs">
-                <header class="cookies__tabs-header">
+                <header class="cookie__tabs-header">
                     <button
                         data-tab-link="#cookies-what-are-cookies"
-                        class="cookies__tabs-link js-tab-link"
+                        class="cookie__tabs-link js-tab-link"
                     >
                         <%= languageHandler('gdpr.what_are_cookies', current_locale) %>
                     </button>
                     <% gdprCookies['types'].forEach(cookie_data => { %>
                         <button
                             data-tab-link="#cookies-<%= cookie_data['type'] %>"
-                            class="cookies__tabs-link js-tab-link"
+                            class="cookie__tabs-link js-tab-link"
                         >
                             <%= languageHandler('gdpr.cookie_' + cookie_data['type'], current_locale) %>
                         </button>
                     <% }) %>
                 </header>
-                <div class="js-tabs-content">
-                    <div class="cookies__tab" id="cookies-what-are-cookies">
+                <div class="cookie__tabs-content js-tabs-content">
+                    <div class="cookie__tabs-tab" id="cookies-what-are-cookies">
                         <%= languageHandler('gdpr.what_are_cookies_text', current_locale, gdprCookies['domain']) %>
                     </div>
                     <% gdprCookies['types'].forEach(cookie_data => { %>
-                        <div class="cookies__tab" id="cookies-<%= cookie_data['type'] %>">
+                        <div class="cookie__tabs-tab" id="cookies-<%= cookie_data['type'] %>">
                             <%= languageHandler('gdpr.cookie_text_' + cookie_data['type'], current_locale) %>
                         </div>
                     <% }) %>
                 </div>
             </div>
-
-            <strong>
-                <%= new Date(gdprCookies['last_update']).format("YYYY MMMM DD.") %>
-            </strong>
         </div>
     </div>
 </div>

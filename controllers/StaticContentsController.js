@@ -4,6 +4,7 @@ const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getFAQ = (req, res) => {
     // Cart converting stuffs
@@ -66,6 +67,7 @@ const getFAQ = (req, res) => {
             DB_CONFIG: DB_CONFIG,
             webshopCategories: req.webshopCategories,
             wishlistTotalNumber: req.wishlistTotalNumber,
+            gdprCookies: gdprCookies,
             csrfToken: req.csrfToken()
         });
     });
@@ -104,14 +106,20 @@ const getGDPR = (req, res) => {
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
         wishlistTotalNumber: req.wishlistTotalNumber,
+        gdprCookies: gdprCookies,
         csrfToken: req.csrfToken()
     });
 }
 
 const handleGDPR = (req, res) => {
-    const { gdpr_email } = req.body;
+    const { data } = req.body;
 
-    // TODO: Finish GDPR request handle
+    if (data) {
+        req.session.gdpr_accepted = true;
+    }
+    else {
+        req.session.gdpr_accepted = false;
+    }
 }
 
 module.exports = { getFAQ, getGDPR, handleGDPR };

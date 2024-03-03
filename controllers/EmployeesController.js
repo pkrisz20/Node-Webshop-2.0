@@ -5,6 +5,7 @@ const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getEmployees = (req, res) => {
     var cart = {
@@ -78,6 +79,7 @@ const getEmployees = (req, res) => {
             languageHandler: languageHandler,
             webshopCategories: req.webshopCategories,
             wishlistTotalNumber: req.wishlistTotalNumber,
+            gdprCookies: gdprCookies,
             csrfToken: req.csrfToken()
         });
     });

@@ -5,6 +5,7 @@ const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const moment = require("moment");
 const metaDefault = require('../config/meta');
+const gdprCookies = require('../config/gdpr');
 
 const getContactPage = (req, res) => {
     // Cart converting stuffs
@@ -45,6 +46,7 @@ const getContactPage = (req, res) => {
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
         wishlistTotalNumber: req.wishlistTotalNumber,
+        gdprCookies: gdprCookies,
         csrfToken: req.csrfToken()
     });
 };
