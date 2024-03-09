@@ -15,6 +15,7 @@ const errorHandler = require("./middleware/errorHandler");
 const deleteLogs = require("./jobs/deleteLogs");
 const corsOptions = require("./config/cors");
 const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
+const getAssetPath = require("./helpers/getAssetPath");
 
 // Custom middleware logger
 app.use(logger);
@@ -58,6 +59,12 @@ app.use(csrfProtection({ cookie: true }));
 app.use(function (err, req, res, next) {
     if (err.code === 'EBADCSRFTOKEN') return showForbiddenPage(req, res);
     return next();
+});
+
+// Add the getAssetPath function globally
+app.use((req, res, next) => {
+    res.locals.getAssetPath = getAssetPath;
+    next();
 });
 
 app.listen(process.env.PORT || 5000, () => {
