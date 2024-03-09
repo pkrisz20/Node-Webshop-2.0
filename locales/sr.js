@@ -191,6 +191,7 @@ const sr = {
 		cookie_text_performance: "Kolačići za performanse omogućavaju vlasnicima veb stranica anonimno prikupljanje podataka kako bi analizirali korišćenje veb stranice, kao i praćenje korisnika kroz više veb stranica. Cilj ovoga je prikazivanje relevantnih i zanimljivih oglasa korisnicima, što čini vlasnike i spoljne reklamne servise vrednijima.",
         accept_all: "Prihvatam sve",
 		save_settings: "Sačuvajte podešavanja",
+        reject: "Odbijem",
 		last_updated: "Poslednje izmene: {0}"
 	},
 };

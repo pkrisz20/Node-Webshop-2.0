@@ -10,8 +10,8 @@ const filterActiveWishlistItems = require('../middleware/filterActiveWishlistIte
 staticContentsRouter.route("/faq")
     .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getFAQ);
 
-staticContentsRouter.route("/gdpr")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getGDPR);
+// staticContentsRouter.route("/gdpr")
+//     .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getGDPR);
 
 staticContentsRouter.route("/gdpr/handle")
     .post(StaticContentsController.handleGDPR);

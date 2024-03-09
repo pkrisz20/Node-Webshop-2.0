@@ -80,8 +80,9 @@
         <%- include('../layout/footer.ejs') %>
     </div>
 
-    <%- include('../components/cookie-panel') %>
-
+    <% if (process.env.GDPR_ENABLED || false) { %>
+        <%- include('../components/cookie-panel') %>
+    <% } %>
     <script type="text/javascript">
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>

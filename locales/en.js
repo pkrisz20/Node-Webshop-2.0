@@ -191,6 +191,7 @@ const en = {
 		cookie_text_performance: "Performance cookies enable website owners to anonymously collect data in order to analyze website usage and track users across multiple websites. The purpose of this is to display relevant and interesting advertisements to users, thereby making publishers and external advertising providers more valuable.",
 		accept_all: "Accept all",
 		save_settings: "Save settings",
+		reject: "Reject",
 		last_updated: "Last updated: {0}"
 	},
 };

@@ -4,6 +4,8 @@
 
     &-consent {
         &-banner {
+            overflow-y: auto;
+            max-height: 550px;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -40,6 +42,13 @@
                 font-size: 14px;
                 line-height: 20px;
 
+                @media #{ $r-max-m } {
+
+                    &:not(div) {
+                        display: none;
+                    }
+                }
+
                 &--long {
                     margin-top: 15px;
                 }
@@ -47,13 +56,13 @@
 
             &__actions {
                 display: flex;
-                flex-direction: column-reverse;
-                justify-content: space-between;
-                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
 
                 @media (min-width: 440px) {
                     flex-direction: row;
                     align-items: center;
+                    justify-content: space-between;
                 }
             }
 
@@ -61,18 +70,18 @@
                 cursor: pointer;
                 display: inline-block;
                 min-width: 164px;
-                padding: 11px 13px;
+                padding: 6px 10px;
                 border-radius: 2px;
                 background-color: $c-theme;
                 color: $c-white;
                 text-align: center;
                 font-size: 14px;
                 font-weight: 500;
-                line-height: 20px;
                 transition: background-color .3s ease-in-out;
 
-                @media (min-width: 1200px) {
+                @media #{ $r-min-xl } {
                     font-size: 16px;
+                    padding: 11px 13px;
                 }
 
                 &:hover {
@@ -81,16 +90,15 @@
 
                 &--secondary {
                     min-width: 200px;
-                    padding: 9px 13px;
+                    padding: 6px 10px;
                     border: 2px solid $c-dark;
                     background-color: transparent !important;
                     color: $c-dark;
-                    margin-top: 10px;
                     font-weight: 500;
                     transition: all .3s ease-in-out;
 
-                    @media (min-width: 440px) {
-                        margin-top: 0;
+                    @media #{ $r-min-xl } {
+                        padding: 9px 13px;
                     }
 
                     i {
@@ -148,6 +156,10 @@
         &--full-width {
             flex-basis: 100%;
             margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap-reverse;
+            align-items: center;
+            gap: 12px;
         }
     }
 

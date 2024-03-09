@@ -68,6 +68,7 @@ const getFAQ = (req, res) => {
             webshopCategories: req.webshopCategories,
             wishlistTotalNumber: req.wishlistTotalNumber,
             gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
             csrfToken: req.csrfToken()
         });
     });
@@ -107,18 +108,64 @@ const getGDPR = (req, res) => {
         webshopCategories: req.webshopCategories,
         wishlistTotalNumber: req.wishlistTotalNumber,
         gdprCookies: gdprCookies,
+        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
         csrfToken: req.csrfToken()
     });
 }
 
 const handleGDPR = (req, res) => {
-    const { data } = req.body;
+    try {
+        // Enable the endpoint, if the GDPR consent component is enabled
+        if (process.env.GDPR_ENABLED || false) {
 
-    if (data) {
-        req.session.gdpr_accepted = true;
-    }
-    else {
-        req.session.gdpr_accepted = false;
+            let allowed_cookies = req.body['allowed_cookies[]'];
+
+            // If the payload is empty, then create an array with the necessary consent type
+            if ( !allowed_cookies ) {
+                allowed_cookies = ['necessary'];
+            }
+
+            // Force the necessary type anyway
+            if (!allowed_cookies.includes('necessary')) {
+                allowed_cookies.push('necessary');
+            }
+
+            if (req.cookies['allowed_cookie_types']) {
+                // Set the cookie new consent value
+                res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies));
+            }
+            else if (!req.cookies['allowed_cookie_types']) {
+                // Set the new cookie with settings for accepted consent types
+                res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies), {
+                    httpOnly: true,
+                    maxAge: 1000 * 60 * 60 * 24 * 365,
+                    secure: Boolean(process.env.APP_DEBUG || false) === false,
+                });
+            }
+
+            return res.status(200).json({
+                status: "success",
+                csrfToken: req.csrfToken()
+            });
+        }
+        else {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler("errors.not_found", req.session.lang ?? process.env.FALLBACK_LANG),
+                csrfToken: req.csrfToken()
+            });
+        }
+
+    } catch (err) {
+
+        console.log(err.message);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler("errors.server_error", req.session.lang ?? process.env.FALLBACK_LANG),
+            message: languageHandler("errors.common_error", req.session.lang ?? process.env.FALLBACK_LANG),
+            csrfToken: req.csrfToken()
+        });
     }
 }
 

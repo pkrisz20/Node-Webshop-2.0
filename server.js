@@ -27,6 +27,7 @@ app.set("views", path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '/files')));
 app.use(express.static(path.join(__dirname, '/public')));
 
+// JSON body parser
 app.use(bodyParser.json({ limit: '300mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '300mb' }));
 app.use(express.json());
@@ -43,7 +44,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 30,
-        secure: process.env.NODE_ENV === "production",
+        secure: Boolean(process.env.APP_DEBUG || false) === false,
     }
 }));
 

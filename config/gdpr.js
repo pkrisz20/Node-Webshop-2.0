@@ -1,5 +1,3 @@
-const formatDateByLang = require('../helpers/formatDateByLocale');
-
 const gdprCookies = {
     domain: process.env.APP_DOMAIN,
     types: [

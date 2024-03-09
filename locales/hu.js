@@ -192,6 +192,7 @@ const hu = {
 		cookie_text_performance: "A teljesítmény sütik névtelen adatgyűjtéssel teszik lehetővé a weboldal tulajdonosai számára, hogy elemezni tudják a weboldal használatát, valamint, hogy a felhasználókat több weboldalon keresztül kövessék. Ennek az a célja, hogy olyan reklámokat tudjunk megjeleníteni felhasználóinknak, amelyek relevánsak és érdeklik őket, és ezáltal értékesebbek a kiadóknak és külső reklám szolgáltatóknak.",
         accept_all: "Összes elfogadása",
 		save_settings: "Beállítások mentése",
+        reject: "Elutasítás",
 		last_updated: "Utoljára módosítva: {0}"
 	},
 };

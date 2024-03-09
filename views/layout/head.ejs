@@ -53,14 +53,12 @@
 
     <% if (process.env.GTAG_ID || false) { %>
         <script type="text/javascript">
-            // Define dataLayer and the gtag function.
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
 
             if (localStorage.getItem('consentMode') === null) {
                 var consentDone = getCookie('website_cookie_consent_done');
 
-                // If the consent mode isn't set, set it based on the cookie checkboxes
                 if (consentDone) {
                     window.addEventListener('DOMContentLoaded', function () {
                         var checkedTypes = [];
@@ -84,15 +82,14 @@
                         localStorage.setItem('consentMode', JSON.stringify(consentMode));
                     });
                 } else {
-                    // Set default consent to 'denied' as a placeholder
                     gtag('consent', 'default', {
                         'ad_storage': 'denied',
                         'ad_user_data': 'denied',
                         'ad_personalization': 'denied',
                         'analytics_storage': 'denied',
-                        'functionality_storage': 'denied',
+                        'functionality_storage': 'granted',
                         'personalization_storage': 'denied',
-                        'security_storage': 'denied'
+                        'security_storage': 'granted'
                     });
                 }
             } else {
@@ -103,13 +100,12 @@
                 // Split cookie string and get all individual name=value pairs in an array
                 let cookieArr = document.cookie.split(";");
 
-                // Loop through the array elements
-                for(let i = 0; i < cookieArr.length; i++) {
-                    let cookiePair = cookieArr[i].split("=");
+                for (let index = 0; index < cookieArr.length; index++) {
+                    let cookiePair = cookieArr[index].split("=");
 
                     /* Removing whitespace at the beginning of the cookie name
                     and compare it with the given string */
-                    if(name == cookiePair[0].trim()) {
+                    if (name == cookiePair[0].trim()) {
                         // Decode the cookie value and return
                         return decodeURIComponent(cookiePair[1]);
                     }

@@ -69,6 +69,7 @@ const getAllGallery = (req, res) => {
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         }
@@ -121,6 +122,7 @@ const getAllGallery = (req, res) => {
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
                         gdprCookies: gdprCookies,
+                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -222,6 +224,7 @@ const getGalleryDetails = (req, res) => {
                 wishlistTotalNumber: req.wishlistTotalNumber,
                 webshopCategories: req.webshopCategories,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         });

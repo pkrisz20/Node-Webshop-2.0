@@ -1,4 +1,4 @@
-<div class="js-cookies cookie-consent-banner">
+<div class="js-cookies cookie-consent-banner <%= gdprAcceptedCookies.length > 0 ? 'hidden' : '' %>">
     <div class="cookie-consent-banner__inner">
         <div class="cookie-consent-banner__copy">
             <strong class="cookie-consent-banner__header"><%= languageHandler('gdpr.cookie_title', current_locale) %></strong>
@@ -22,12 +22,22 @@
 
             <div class="cookie__consent">
 
+                <% if (gdprAcceptedCookies.length > 0) { %>
+                    <% gdprCookies['types'].forEach(cookie_data => { %>
+                        <% if (gdprAcceptedCookies.includes(cookie_data['type'])) { %>
+                            <% cookie_data['checked'] = true; %>
+                        <% } else { %>
+                            <% cookie_data['checked'] = false; %>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+
                 <% gdprCookies['types'].forEach(cookie_data => { %>
                     <div class="cookie__consent-item <%= cookie_data['disabled'] === true ? 'cookie__consent-item--disabled' : '' %>">
                         <input
                             type="checkbox"
-                            name="cookie_<%= cookie_data['type'] %>"
-                            value="<% cookie_data['type'] %>"
+                            name="allowed_cookies"
+                            value="<%= cookie_data['type'] %>"
                             id="cookie-<%= cookie_data['type'] %>"
                             class="js-cookie-input"
                             <%= cookie_data['disabled'] === true ? disabled="disabled" : '' %>
@@ -39,6 +49,7 @@
 
                 <div class="cookie__consent--full-width">
                     <button type="button" class="cookie-consent-banner__cta js-cookie-submit"><%= languageHandler('gdpr.save_settings', current_locale) %></button>
+                    <button type="button" class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary js-reject js-cookie-submit"><%= languageHandler('gdpr.reject', current_locale) %></button>
                 </div>
             </div>
 

@@ -155,6 +155,7 @@ const getBlogDetails = (req, res) => {
                                     wishlistTotalNumber: req.wishlistTotalNumber,
                                     webshopCategories: req.webshopCategories,
                                     gdprCookies: gdprCookies,
+                                    gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                     csrfToken: req.csrfToken()
                                 });
                             }
@@ -207,6 +208,7 @@ const getBlogDetails = (req, res) => {
                                         wishlistTotalNumber: req.wishlistTotalNumber,
                                         webshopCategories: req.webshopCategories,
                                         gdprCookies: gdprCookies,
+                                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                         csrfToken: req.csrfToken()
                                     });
                                 });
@@ -230,6 +232,7 @@ const getBlogDetails = (req, res) => {
                             DB_CONFIG: DB_CONFIG,
                             webshopCategories: req.webshopCategories,
                             gdprCookies: gdprCookies,
+                            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                             csrfToken: req.csrfToken()
                         });
                     }
@@ -302,6 +305,7 @@ const getAllBlogs = (req, res) => {
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         }
@@ -360,6 +364,7 @@ const getAllBlogs = (req, res) => {
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
                         gdprCookies: gdprCookies,
+                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
                     });
                 }

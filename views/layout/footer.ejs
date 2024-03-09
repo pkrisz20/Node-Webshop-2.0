@@ -42,7 +42,6 @@
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/faq" aria-label="<%= languageHandler('nav.FAQ', current_locale) %>" class="footer-title-link"><i class="fas fa-question-circle"></i> <%= languageHandler('nav.FAQ', current_locale) %></a>
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse" aria-label="<%= languageHandler('nav.terms_of_use', current_locale) %>" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= languageHandler('nav.terms_of_use', current_locale) %></a>
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/policy" aria-label="<%= languageHandler('nav.privacy_policy', current_locale) %>" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= languageHandler('nav.privacy_policy', current_locale) %></a>
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/gdpr" aria-label="<%= languageHandler('nav.gdpr', current_locale) %>" class="footer-title-link"><i class="fas fa-database"></i> <%= languageHandler('nav.gdpr', current_locale) %></a>
                 </div>
                 <% if (DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
                     <div class="footer-middle-col">

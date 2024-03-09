@@ -217,6 +217,7 @@ const handleSearch = (req, res) => {
                     webshopCategories: req.webshopCategories,
                     wishlistTotalNumber: req.wishlistTotalNumber,
                     gdprCookies: gdprCookies,
+                    gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                     csrfToken: req.csrfToken()
                 });
             });

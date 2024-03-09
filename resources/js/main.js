@@ -1,5 +1,4 @@
-$(document).ready(function() {
-
+$(function() {
     if ($(".js-hero-slick").length > 0) {
         $(".js-hero-slick").slick({
             inifinite: true,
@@ -168,9 +167,7 @@ $(document).ready(function() {
             });
         });
     }
-});
 
-$(function() {
     // Default ajax setup
     $.ajaxSetup({
         headers: {
@@ -348,8 +345,19 @@ $(function() {
         var currentURL = window.location.href;
         var currentPath = new URL(currentURL).pathname;
 
-        if ($(this).hasClass('js-cookie-all')) {
-            $('.js-cookie-input').prop('checked', true);
+        if (this_button.hasClass('js-cookie-all')) {
+            $('.js-cookie-input').each(function () {
+                if (!$(this).is(':checked')) {
+                    $(this).prop('checked', true);
+                }
+            });
+        }
+        else if (this_button.hasClass('js-reject')) {
+            $('.js-cookie-input:not(:disabled)').each(function () {
+                if ($(this).is(':checked')) {
+                    $(this).prop('checked', false);
+                }
+            });
         }
 
         var checkedTypes = [];
@@ -357,20 +365,16 @@ $(function() {
             checkedTypes.push($(this).val());
         });
 
-        setCookie('website_allowed_cookie_types', checkedTypes.join(','), 365);
         setCookie('website_cookie_consent_done', '1', 365);
 
         $('.js-cookies').addClass('hidden');
-
-        // TODO: Fix it
-        console.log(checkedTypes);
 
         $.ajax({
             type: 'post',
             url: `${ currentPath }/gdpr/handle`,
             dataType: 'json',
             data: {
-                data: checkedTypes,
+                allowed_cookies: checkedTypes,
             },
             beforeSend: function (jqXHR) {
                 this_button.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
@@ -379,6 +383,10 @@ $(function() {
                 this_button.removeClass('disabled').removeAttr('disabled').prop('disabled', false);
             },
             success: function (response) {
+                if (typeof response.csrfToken !== 'undefined') {
+                    $("meta[name='csrf-token']").attr("content", response.csrfToken);
+                }
+
                 if (response.status == 'success') {
                     setConsent(checkedTypes);
                 }

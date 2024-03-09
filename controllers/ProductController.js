@@ -144,6 +144,7 @@ const getProductDetails = (req, res) => {
                                 webshopCategories: req.webshopCategories,
                                 wishlistTotalNumber: req.wishlistTotalNumber,
                                 gdprCookies: gdprCookies,
+                                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -198,6 +199,7 @@ const getProductDetails = (req, res) => {
                                     webshopCategories: req.webshopCategories,
                                     wishlistTotalNumber: req.wishlistTotalNumber,
                                     gdprCookies: gdprCookies,
+                                    gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                     csrfToken: req.csrfToken()
                                 });
                             });
@@ -221,6 +223,7 @@ const getProductDetails = (req, res) => {
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         gdprCookies: gdprCookies,
+                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -295,6 +298,7 @@ const getAllProducts = (req, res) => {
                 webshopCategories: req.webshopCategories,
                 wishlistTotalNumber: req.wishlistTotalNumber,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         }
@@ -360,6 +364,7 @@ const getAllProducts = (req, res) => {
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         gdprCookies: gdprCookies,
+                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -480,6 +485,7 @@ const getCategoryProducts = (req, res) => {
                         webshopCategories: req.webshopCategories,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         gdprCookies: gdprCookies,
+                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
                     });
                 }
@@ -546,6 +552,7 @@ const getCategoryProducts = (req, res) => {
                                 webshopCategories: req.webshopCategories,
                                 wishlistTotalNumber: req.wishlistTotalNumber,
                                 gdprCookies: gdprCookies,
+                                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                 csrfToken: req.csrfToken()
                             });
                         }
@@ -794,6 +801,7 @@ const getWishlistListPage = ( req, res, next ) => {
             wishlistProducts: wishlistProductsList ?? [],
             wishlistTotalNumber: wishlistProductsList.length,
             gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
             csrfToken: req.csrfToken()
         });
     }
@@ -818,6 +826,7 @@ const getWishlistListPage = ( req, res, next ) => {
                 wishlistProducts: wishlistProductsList ?? [],
                 wishlistTotalNumber: wishlistProductsList.length,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         }
@@ -863,6 +872,7 @@ const getWishlistListPage = ( req, res, next ) => {
                 wishlistProducts: wishlistProductsList ?? [],
                 wishlistTotalNumber: wishlistProductsList.length,
                 gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()
             });
         }
