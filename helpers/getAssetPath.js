@@ -5,18 +5,18 @@ const path = require('path');
 function getAssetPath (fileName) {
 
     // Construct the absolute URL to the mix-manifest.json file
-    let manifestPath = process.env.APP_URL + '/mix-manifest.json';
+    let manifestPath = path.join(__dirname, "..", "public/mix-manifest.json");
 
     try {
         // Read mix-manifest.json file
         let mixManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
         // Return the asset path corresponding to the fileName
-        return mixManifest[fileName];
+        return process.env.APP_URL + mixManifest[fileName];
 
     } catch (error) {
-        console.error('Error reading mix-manifest.json:', error);
-        return null; // Handle the error appropriately
+        console.error('Error reading mix-manifest.json: ', error.message);
+        return "";
     }
 }
 

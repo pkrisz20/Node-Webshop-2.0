@@ -2,8 +2,8 @@
 <html lang="<%= meta.lang %>">
     <%- include('layout/head.ejs') %>
 
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="css/home.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="<%= getAssetPath('/css/home.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -89,11 +89,15 @@
     <script type="text/javascript">
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>
-    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
-    <script type="text/javascript" src="js/plugins/slick.min.js"></script>
-    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
-    <script type="text/javascript" src="js/plugins/waypoints.min.js"></script>
-    <script type="text/javascript" src="js/plugins/countup.min.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
+
+    <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
+        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/waypoints.min.js') %>"></script>
+        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countup.min.js') %>"></script>
+    <% } %>
+
+    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
 </body>
 </html>

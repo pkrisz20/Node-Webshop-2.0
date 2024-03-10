@@ -2,7 +2,7 @@
 <html lang="<%= current_locale %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="preload" href="css/gdpr.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="<%= getAssetPath('/css/gdpr.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -59,15 +59,15 @@
     <script type="text/javascript">
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>
-    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-    <script type="text/javascript" src="js/plugins/validate.min.js"></script>
-    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
 
     <% if (current_locale != 'en') { %>
-        <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
+        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
     <% } %>
 
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
 </body>
 </html>

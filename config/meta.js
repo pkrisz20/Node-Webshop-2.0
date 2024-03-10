@@ -1,6 +1,8 @@
+const getAssetPath = require('../helpers/getAssetPath');
+
 const metaDefault = {
     title: process.env.SITE_NAME,
-    "default_og_images": `${ process.env.APP_URL }/images/cover_default.png`,
+    "default_og_images": getAssetPath('/images/cover_default.png'),
     separator: ' | ',
     limits: {
         title: 60,

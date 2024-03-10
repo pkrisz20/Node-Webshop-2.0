@@ -5,8 +5,8 @@
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
         <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
     <% } %>
-    <link rel="preload" href="css/plugins/slick.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="css/contact.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="<%= getAssetPath('/css/contact.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
 <body>
@@ -214,16 +214,16 @@
     <script type="text/javascript">
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>
-    <script type="text/javascript" src="js/plugins/jquery.min.js"></script>
-    <script type="text/javascript" src="js/plugins/jconfirm.min.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-    <script type="text/javascript" src="js/plugins/validate.min.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
 
     <% if (current_locale != 'en') { %>
-        <script type="text/javascript" src="js/plugins/validator_messages_<%= current_locale %>.js"></script>
+        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
     <% } %>
 
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
 
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
         <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
