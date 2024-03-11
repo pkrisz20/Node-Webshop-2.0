@@ -1,8 +1,20 @@
 <% if (locals.single) { %>
-    <form method="post" enctype="multipart/form-data" accept="image/*" data-url="<%= process.env.APP_URL %>/admin/single-upload/<%= whereToUpload %>" class="col-6 js-image-upload-form">
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        accept="image/*"
+        data-url="<%= process.env.APP_URL %>/admin/single-upload/<%= whereToUpload %>"
+        class="col-6 js-image-upload-form"
+    >
 
 <% } else if (locals.multiple) { %>
-    <form method="post" enctype="multipart/form-data" accept="image/*" data-url="<%= process.env.APP_URL %>/admin/multiple-upload/<%= whereToUpload %>" class="col-6 js-image-upload-form">
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        accept="image/*"
+        data-url="<%= process.env.APP_URL %>/admin/multiple-upload/<%= whereToUpload %>"
+        class="col-6 js-image-upload-form"
+    >
 
 <% } %>
     <div class="mb-3">
