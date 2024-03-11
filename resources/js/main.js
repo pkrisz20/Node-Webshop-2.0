@@ -316,7 +316,8 @@ $(function() {
             'analytics_storage': consent.includes('performance') ? 'granted' : 'denied',
             'functionality_storage': consent.includes('necessary') ? 'granted' : 'denied',
             'personalization_storage': consent.includes('preferences') ? 'granted' : 'denied',
-            'security_storage': consent.includes('necessary') ? 'granted' : 'denied'
+            'security_storage': consent.includes('necessary') ? 'granted' : 'denied',
+            'wait_for_update': 500
         };
 
         gtag('consent', 'update', consentMode);

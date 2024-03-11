@@ -75,7 +75,8 @@
                             'analytics_storage': checkedTypes.includes('performance') ? 'granted' : 'denied',
                             'functionality_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied',
                             'personalization_storage': checkedTypes.includes('preferences') ? 'granted' : 'denied',
-                            'security_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied'
+                            'security_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied',
+                            'wait_for_update': 500
                         };
 
                         gtag('consent', 'update', consentMode);
@@ -89,7 +90,8 @@
                         'analytics_storage': 'denied',
                         'functionality_storage': 'granted',
                         'personalization_storage': 'denied',
-                        'security_storage': 'granted'
+                        'security_storage': 'granted',
+                        'wait_for_update': 500
                     });
                 }
             } else {

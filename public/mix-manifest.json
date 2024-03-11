@@ -1,5 +1,5 @@
 {
-    "/js/main.js": "/js/main.js?id=a017a8b0afd82aecc14207bef02570e5",
+    "/js/main.js": "/js/main.js?id=cff758290f0dd4813bd9e1af6a3bbca1",
     "/admin/js/admin.js": "/admin/js/admin.js?id=9dfdbfbba6d07cabf36f4f749bda3cec",
     "/admin/js/image-uploader.js": "/admin/js/image-uploader.js?id=d7d97c7e6b0386b61e7cbfe35f2c8f00",
     "/css/gallery-list.css": "/css/gallery-list.css?id=45029bfa607e1d2a2cf4e854e474778f",
@@ -23,8 +23,6 @@
     "/js/plugins/jconfirm.min.js": "/js/plugins/jconfirm.min.js?id=a96fcd9d379ca06e632df0fcd21488a5",
     "/js/plugins/jquery.min.js": "/js/plugins/jquery.min.js?id=e6c2415c0ace414e5153670314ce99a9",
     "/js/plugins/lightbox.min.js": "/js/plugins/lightbox.min.js?id=db5fa5311c90e297a9c5afb4ef96a6b1",
-    "/js/plugins/messages_hu.js": "/js/plugins/messages_hu.js?id=4713d149dbefa547dc00faed4c033c93",
-    "/js/plugins/messages_sr.js": "/js/plugins/messages_sr.js?id=83acf3167c6d40dfd970de1814d1b633",
     "/js/plugins/slick.min.js": "/js/plugins/slick.min.js?id=777da4aaf5b960636dec0fd4e50ba489",
     "/js/plugins/validate.min.js": "/js/plugins/validate.min.js?id=7c0ad5bde3aa9792188e3fccbc2ef206",
     "/js/plugins/validator_messages_hu.js": "/js/plugins/validator_messages_hu.js?id=4713d149dbefa547dc00faed4c033c93",
