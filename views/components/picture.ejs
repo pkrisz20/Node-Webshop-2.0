@@ -1,0 +1,29 @@
+<%= if (imageSrc) { %>
+    <picture class="<%= pictureClass ? pictureClass : '' %>">
+        <% if (imageSrc['webp']) { %>
+            <source
+                srcset="<%= imageSrc['webp'] %>"
+                type="image/webp"
+            />
+        <% } %>
+        <img
+            src="<%= imageSrc['src'] %>"
+            alt="<%= alt || '' %>"
+            class="<%= imgClass ? imgClass : '' %>"
+            loading="<%= loading || 'eager' %>"
+        />
+    </picture>
+<% } else { %>
+    <picture class="nopic <%= pictureClass ? pictureClass : '' %>">
+        <source
+            srcset="<%= getAssetPath('/images/no-picture.webp') %>"
+            type="image/webp"
+        />
+        <img
+            src="<%= getAssetPath('/images/no-picture.jpg') %>"
+            alt="<%= alt || '' %>"
+            class="nopic-img <%= imgClass ? imgClass : '' %>"
+            loading="<%= loading || 'eager' %>"
+        />
+    </picture>
+<% } %>
