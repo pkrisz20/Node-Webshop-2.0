@@ -2,8 +2,9 @@ const gdprCookies = {
     domain: process.env.APP_DOMAIN,
     types: [
         { type: 'necessary', checked: true, disabled: true },
-        { type: 'preferences', checked: false, disabled: false },
-        { type: 'performance', checked: false, disabled: false },
+        { type: 'preferences', checked: true, disabled: false },
+        { type: 'statistics', checked: true, disabled: false },
+        { type: 'marketing', checked: false, disabled: false },
     ],
 };
 

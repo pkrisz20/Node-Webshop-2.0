@@ -185,13 +185,16 @@ const en = {
 		what_are_cookies_text: "Cookies are small text files that websites place on your device (such as your computer or smartphone) when you visit them. These files contain information about your browsing activity on the site and help improve your user experience by remembering preferences and enhancing website functionality. Cookies also play a role in analytics, allowing website owners to understand how users interact with their site. While some cookies are essential for the site's proper functioning, others are used for tracking and advertising purposes. Users can often manage cookie preferences through their browser settings. Your consent applies to the following domains: {0}",
         cookie_necessary: "Necessary cookies",
 		cookie_preferences: "Preference cookies",
-		cookie_performance: "Performance cookies",
+		cookie_statistics: "Statistics cookies",
+		cookie_marketing: "Marketing cookies",
         cookie_text_necessary: "Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.",
 		cookie_text_preferences: "Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in.",
-		cookie_text_performance: "Performance cookies enable website owners to anonymously collect data in order to analyze website usage and track users across multiple websites. The purpose of this is to display relevant and interesting advertisements to users, thereby making publishers and external advertising providers more valuable.",
+		cookie_text_statistics: "Statistical cookies allow website owners to analyze the use of the website by collecting anonymous data.",
+		cookie_text_marketing: "The purpose of marketing cookies is to track users through multiple websites. The goal is to show ads that are relevant and interesting to our users, and therefore more valuable to publishers and external advertising providers.",
 		accept_all: "Accept all",
 		save_settings: "Save settings",
 		reject: "Reject",
+        cookie_settings: "Cookie settings",
 		last_updated: "Last updated: {0}"
 	},
 };

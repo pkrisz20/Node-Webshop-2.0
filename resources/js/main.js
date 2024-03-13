@@ -310,10 +310,10 @@ $(function() {
 
     function setConsent (consent) {
         const consentMode = {
-            'ad_storage': consent.includes('performance') ? 'granted' : 'denied',
-            'ad_user_data': consent.includes('performance') ? 'granted' : 'denied',
-            'ad_personalization': consent.includes('performance') ? 'granted' : 'denied',
-            'analytics_storage': consent.includes('performance') ? 'granted' : 'denied',
+            'ad_storage': consent.includes('marketing') ? 'granted' : 'denied',
+            'ad_user_data': consent.includes('marketing') ? 'granted' : 'denied',
+            'ad_personalization': consent.includes('marketing') ? 'granted' : 'denied',
+            'analytics_storage': consent.includes('statistics') ? 'granted' : 'denied',
             'functionality_storage': consent.includes('necessary') ? 'granted' : 'denied',
             'personalization_storage': consent.includes('preferences') ? 'granted' : 'denied',
             'security_storage': consent.includes('necessary') ? 'granted' : 'denied',
@@ -323,6 +323,10 @@ $(function() {
         gtag('consent', 'update', consentMode);
         localStorage.setItem('consentMode', JSON.stringify(consentMode));
     }
+
+    $('body').on('click', '.js-open-cookie-panel', function () {
+        $('.js-cookies').removeClass('hidden');
+    });
 
     $('body').on('click', '.js-toggle-cookie-details', function () {
         var toggleBtn = $(this);
@@ -343,8 +347,8 @@ $(function() {
 
     $('body').on('click', '.js-cookie-submit', function () {
         var this_button = $(this);
-        var currentURL = window.location.href;
-        var currentPath = new URL(currentURL).pathname;
+        const pathname = window.location.pathname;
+        const currentLang = pathname.split('/')[1];
 
         if (this_button.hasClass('js-cookie-all')) {
             $('.js-cookie-input').each(function () {
@@ -372,7 +376,7 @@ $(function() {
 
         $.ajax({
             type: 'post',
-            url: `${ currentPath }/gdpr/handle`,
+            url: `${ currentLang }/gdpr/handle`,
             dataType: 'json',
             data: {
                 allowed_cookies: checkedTypes,
@@ -388,7 +392,7 @@ $(function() {
                     $("meta[name='csrf-token']").attr("content", response.csrfToken);
                 }
 
-                if (response.status == 'success') {
+                if (response.status == 'success' && (process.env.GTAG_ID || false)) {
                     setConsent(checkedTypes);
                 }
 

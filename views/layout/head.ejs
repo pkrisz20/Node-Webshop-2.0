@@ -69,10 +69,10 @@
                         });
 
                         const consentMode = {
-                            'ad_storage': checkedTypes.includes('performance') ? 'granted' : 'denied',
-                            'ad_user_data': checkedTypes.includes('performance') ? 'granted' : 'denied',
-                            'ad_personalization': checkedTypes.includes('performance') ? 'granted' : 'denied',
-                            'analytics_storage': checkedTypes.includes('performance') ? 'granted' : 'denied',
+                            'ad_storage': checkedTypes.includes('marketing') ? 'granted' : 'denied',
+                            'ad_user_data': checkedTypes.includes('marketing') ? 'granted' : 'denied',
+                            'ad_personalization': checkedTypes.includes('marketing') ? 'granted' : 'denied',
+                            'analytics_storage': checkedTypes.includes('statistics') ? 'granted' : 'denied',
                             'functionality_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied',
                             'personalization_storage': checkedTypes.includes('preferences') ? 'granted' : 'denied',
                             'security_storage': checkedTypes.includes('necessary') ? 'granted' : 'denied',

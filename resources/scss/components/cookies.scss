@@ -2,6 +2,25 @@
 
 .cookie {
 
+    &__opener {
+        position: fixed;
+        bottom: 0;
+        left: 15px;
+        z-index: 999;
+        min-width: auto !important;
+        font-size: 12px !important;
+        padding: 6px !important;
+
+        & > span {
+            display: none;
+            margin-left: 5px;
+
+            @media #{ $r-min-m } {
+                display: inline-block;
+            }
+        }
+    }
+
     &-consent {
         &-banner {
             overflow-y: auto;
@@ -35,19 +54,16 @@
                 font-size: 16px;
                 line-height: 21px;
                 text-transform: uppercase;
+
+                @media #{ $r-max-l } {
+                    display: none;
+                }
             }
 
             &__description {
                 color: $c-gray71;
                 font-size: 14px;
                 line-height: 20px;
-
-                @media #{ $r-max-m } {
-
-                    &:not(div) {
-                        display: none;
-                    }
-                }
 
                 &--long {
                     margin-top: 15px;
@@ -70,7 +86,7 @@
                 cursor: pointer;
                 display: inline-block;
                 min-width: 164px;
-                padding: 6px 10px;
+                padding: 7px 10px;
                 border-radius: 2px;
                 background-color: $c-theme;
                 color: $c-white;
@@ -80,8 +96,7 @@
                 transition: background-color .3s ease-in-out;
 
                 @media #{ $r-min-xl } {
-                    font-size: 16px;
-                    padding: 11px 13px;
+                    padding: 10px 12px;
                 }
 
                 &:hover {
