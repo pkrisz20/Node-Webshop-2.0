@@ -19,6 +19,10 @@ const otherLangs = [
         langCode: 'hu',
         langPath: 'hu'
     },
+    {
+        langCode: 'en',
+        langPath: 'en'
+    }
 ];
 
 const generateSitemap = () => {
@@ -48,8 +52,11 @@ const generateSitemap = () => {
         staticUrls.forEach(url => {
             xml += '  <url>\n';
             xml += `    <loc>${ url.loc }</loc>\n`;
-            xml += `    <xhtml:link rel="alternate" hreflang="en" href="https://example.com/en/page1" />`
-            xml += `    <xhtml:link rel="alternate" hreflang="de" href="https://example.com/de/page1" />`
+            if (url.alternate.length > 0) {
+                url.alternate.forEach(alternateLink => {
+                    xml += `    <xhtml:link rel="alternate" hreflang="${ alternateLink.hreflang }" href="${ alternateLink.href }"/>\n`
+                });
+            }
             xml += `    <lastmod>${ url.lastmod }</lastmod>\n`;
             xml += `    <changefreq>${ url.changefreq }</changefreq>\n`;
             xml += `    <priority>${ url.priority }</priority>\n`;
@@ -59,7 +66,9 @@ const generateSitemap = () => {
         xml += '</urlset>';
 
         // Save the sitemap to a file
-        fs.writeFileSync('sitemap.xml', xml);
+        fs.writeFileSync('../public/sitemap.xml', xml);
+        // Update the robots.txt file
+        fs.writeFileSync('../public/robots.txt', `User-agent: *\nDisallow: /admin/\nSitemap: ${ process.env.APP_URL }/sitemap.xml`);
 
         logEvents("Sitemap successfully generated", "messages.log");
     }

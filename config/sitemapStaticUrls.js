@@ -1,5 +1,4 @@
 const { format } = require("date-fns");
-const defaultLang = process.env.FALLBACK_LANG ?? "en";
 const validLangs = process.env.VALID_LANGS.split(',');
 const staticPathnames = ['/', '/contact', '/faq', '/about', '/gallery', '/blogs', '/products', '/wishlist'];
 const currentDate = format(new Date(), "yyyy-MM-dd");
@@ -19,6 +18,7 @@ const alternateLangs = [
     },
 ];
 
+// Generate the base structure
 validLangs.forEach(lang => {
     staticPathnames.forEach(pathname => {
         staticUrls.push({
@@ -31,19 +31,14 @@ validLangs.forEach(lang => {
     });
 });
 
-// Add alternate URLs of the other languages
-staticUrls.forEach(item => {
-    alternateLangs.forEach(lang => {
-        var currentAlternate = [];
-        var regexPattern = new RegExp(`\/${ lang.langPath }(?=\/|$)`, 'i');
+// Generate alternate links for each available language
+staticUrls.forEach(sitemapItem => {
+    alternateLangs.forEach(({ langCode, langPath }) => {
 
-        currentAlternate.push({
-            hreflang: lang.langCode,
-            langUrl: item.loc.replace(regexPattern, '/' + lang.langPath)
-        });
+        // Generate hreflang alternate link for the language
+        let alternateUrl = sitemapItem.loc.replace(/\/[a-z]{2}\//i, `/${ langPath }/`);
+        sitemapItem.alternate.push({ hreflang: langCode, href: alternateUrl });
     });
 });
-
-// console.log(staticUrls[2]);
 
 module.exports = staticUrls;
