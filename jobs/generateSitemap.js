@@ -10,7 +10,7 @@ const { format } = require("date-fns");
 const { db } = require('../config/db-connection');
 const { logEvents } = require("../middleware/logEvents");
 const staticUrls = require('../config/sitemapStaticUrls');
-const validLanguages = [
+var validLanguages = [
     {
         langCode: 'sr-Latn',
         langPath: 'sr'
@@ -75,18 +75,20 @@ async function selectSlugsFromTables () {
 const generateSitemap = async () => {
     try {
         const dateTime = format(new Date(), "yyyy-MM-dd");
-        let dinamicSlugs = await selectSlugsFromTables();
+        let dbSlugs = await selectSlugsFromTables();
+        let dinamicUrls = [];
 
-        // TODO: Fix this part of the code & done
-        // let dinamicUrls = dinamicSlugs.map(url => {
-        //     return {
-        //         loc: process.env.APP_URL + url,
-        //         alternate: [],
-        //         lastmod: dateTime,
-        //         changefreq: 'daily',
-        //         priority: 0.9
-        //     }
-        // });
+        validLanguages.forEach(validLang => {
+            dbSlugs.forEach(slug => {
+                dinamicUrls.push({
+                    loc: process.env.APP_URL + '/' + validLang.langPath + slug,
+                    alternate: [],
+                    lastmod: dateTime,
+                    changefreq: 'daily',
+                    priority: 0.9
+                });
+            });
+        });
 
         dinamicUrls.forEach(sitemapItem => {
             validLanguages.forEach(({ langCode, langPath }) => {
@@ -97,13 +99,25 @@ const generateSitemap = async () => {
             });
         });
 
-        console.log(dinamicUrls[0]);
-
         // Generate the sitemap XML content
         let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
         xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
         staticUrls.forEach(url => {
+            xml += '  <url>\n';
+            xml += `    <loc>${ url.loc }</loc>\n`;
+            if (url.alternate.length > 0) {
+                url.alternate.forEach(alternateLink => {
+                    xml += `    <xhtml:link rel="alternate" hreflang="${ alternateLink.hreflang }" href="${ alternateLink.href }"/>\n`
+                });
+            }
+            xml += `    <lastmod>${ url.lastmod }</lastmod>\n`;
+            xml += `    <changefreq>${ url.changefreq }</changefreq>\n`;
+            xml += `    <priority>${ url.priority }</priority>\n`;
+            xml += '  </url>\n';
+        });
+
+        dinamicUrls.forEach(url => {
             xml += '  <url>\n';
             xml += `    <loc>${ url.loc }</loc>\n`;
             if (url.alternate.length > 0) {
@@ -130,5 +144,3 @@ const generateSitemap = async () => {
         logEvents(`Sitemap generating failed! Error name: ${ error.name }, Error message: ${ error.message }`, "errors.log");
     }
 }
-
-module.exports = generateSitemap;
