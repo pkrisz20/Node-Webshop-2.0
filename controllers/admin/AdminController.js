@@ -7,7 +7,10 @@ const { showServerErrorPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require('../../helpers/admin/getValidFormValues');
 const getValueByLanguage = require('../../helpers/getValueByLanguage');
 const languageHandler = require('../../helpers/languageHandler');
+const errorHandler = require("../../middleware/errorHandler");
+const { logEvents } = require("../../middleware/logEvents");
 const moment = require("moment");
+const { spawn } = require('child_process');
 const multer = require("multer");
 const path = require("path");
 const fs = require('fs');
@@ -151,116 +154,201 @@ const getDashboard = (req, res) => {
 
 const uploadImageFiles = (req, res) => {
 
-    const fileStorageImage = multer.diskStorage({
-        destination: (req, file, callback) => {
-            // Set the exact destination inside the files folder
-            callback(null, path.join('./files/' + req.params.folder));
-        },
-        filename: (req, file, callback) => {
-            callback(null, createUniqueID() + "-" + file.originalname);
-        }
-    });
+    try {
+        const fileStorageImage = multer.diskStorage({
+            destination: (req, file, callback) => {
+                // Set the exact destination inside the files folder
+                callback(null, path.join('./files/' + req.params.folder));
+            },
+            filename: (req, file, callback) => {
+                callback(null, createUniqueID() + "-" + file.originalname);
+            }
+        });
 
-    const uploadImage = multer({
-        storage: fileStorageImage,
-        limits: { fileSize: 4000000 },
-        fileFilter: function (req, file, callback) {
-            const enabledFileTypes = /jpeg|jpg|png/;    // Enable only jpg, jpeg, and png formats
-            const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
-            const mimetype = enabledFileTypes.test(file.mimetype);
+        const uploadImage = multer({
+            storage: fileStorageImage,
+            limits: { fileSize: 4000000 },
+            fileFilter: function (req, file, callback) {
+                const enabledFileTypes = /jpeg|jpg|png/;    // Enable only jpg, jpeg, and png formats
+                const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
+                const mimetype = enabledFileTypes.test(file.mimetype);
 
-            if (mimetype && extname) {
-                return callback(null, true);
+                if (mimetype && extname) {
+                    return callback(null, true);
+                }
+                else {
+                    return res.status(200).json({
+                        status: 'error',
+                        title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
+                        message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+            }
+        }).single("files");
+
+        uploadImage(req, res, (err) => {
+            if (err) {
+                console.error(err);
+
+                return res.status(200).json({
+                    status: 'error',
+                    csrfToken: req.csrfToken()
+                });
             }
             else {
-                return res.status(200).json({
-                    status: 'error',
-                    title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
-                    message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
-                    csrfToken: req.csrfToken()
-                });
+                if (req.file == undefined) {
+                    return res.status(200).json({
+                        status: 'error',
+                        message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                // Webp generating
+                const cwebpCommand = 'cweb';
+                let filenameLastDotIndex = req.file.filename.lastIndexOf('.');
+                let outputWebpName = req.file.filename.substring(0, filenameLastDotIndex) + '.webp';
+
+                let webpArguments = [
+                    path.join('./files/' + req.params.folder + '/' + req.file.filename),
+                    '-o',
+                    path.join('./files/' + req.params.folder + '/' + outputWebpName)
+                ];
+
+                const cwebpProcess = spawn(cwebpCommand, webpArguments);
+                // TODO: Fix this piece of sh*t
+
+                // Handle process events
+                // cwebpProcess.stdout.on('data', (data) => {
+                //     logEvents(`Webp generating failed: ${ data }`, "messages.log");
+                // });
+
+                // cwebpProcess.stderr.on('data', (data) => { // Error event handler
+                //     logEvents(`Webp generating failed: ${ data }`, "errors.log");
+                // });
+
+                // cwebpProcess.on('close', (code) => { // Finished event handler
+                //     if (code === 0) {
+                //         saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
+                //         logEvents("WebP image generated successfully.", "messages.log");
+                //     }
+                //     else {
+                //         logEvents("Error generating WebP image.", "errors.log");
+
+                //         return response.status(200).json({
+                //             status: 'error',
+                //             message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
+                //         });
+                //     }
+                // });
             }
-        }
-    }).single("files");
-
-    uploadImage(req, res, (err) => {
-        if (err) {
-            console.error(err);
-
-            return res.status(200).json({
-                status: 'error',
-                csrfToken: req.csrfToken()
-            });
-        }
-        else {
-            if (req.file == undefined) {
-                return res.status(200).json({
-                    status: 'error',
-                    message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
-                    csrfToken: req.csrfToken()
-                });
-            }
-
-            saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
-        }
-    });
+        });
+    } catch (err) {
+        return errorHandler(err, req, res);
+    }
 };
 
 const uploadMultipleImages = (req, res) => {
 
-    const fileStorageImage = multer.diskStorage({
-        destination: (req, file, callback) => {
-            // Set the exact destination inside the files folder
-            callback(null, path.join('./files/' + req.params.folder));
-        },
-        filename: (req, file, callback) => {
-            callback(null, createUniqueID() + "-" + file.originalname);
-        }
-    });
+    try {
+        const fileStorageImage = multer.diskStorage({
+            destination: (req, file, callback) => {
+                // Set the exact destination inside the files folder
+                callback(null, path.join('./files/' + req.params.folder));
+            },
+            filename: (req, file, callback) => {
+                callback(null, createUniqueID() + "-" + file.originalname);
+            }
+        });
 
-    const uploadImage = multer({
-        storage: fileStorageImage,
-        limits: { fileSize: 4000000 },
-        fileFilter: function (req, file, callback) {
-            const enabledFileTypes = /jpeg|jpg|png/;
-            const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
-            const mimetype = enabledFileTypes.test(file.mimetype);
+        const uploadImage = multer({
+            storage: fileStorageImage,
+            limits: { fileSize: 4000000 },
+            fileFilter: function (req, file, callback) {
+                const enabledFileTypes = /jpeg|jpg|png/;
+                const extname = enabledFileTypes.test(path.extname(file.originalname).toLowerCase());
+                const mimetype = enabledFileTypes.test(file.mimetype);
 
-            if (mimetype && extname) {
-                return callback(null, true);
+                if (mimetype && extname) {
+                    return callback(null, true);
+                }
+                else {
+                    return res.status(200).json({
+                        status: 'error',
+                        title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
+                        message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+            }
+        }).any("files");
+
+        uploadImage(req, res, (err) => {
+            if (err) {
+                console.error(err);
+
+                return res.status(200).json({
+                    status: 'error',
+                    csrfToken: req.csrfToken()
+                });
             }
             else {
-                return res.status(200).json({
-                    status: 'error',
-                    title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
-                    message: languageHandler('errors.enabled_image_format', process.env.ADMIN_LANG, 'jpg, jpeg, png'),
-                    csrfToken: req.csrfToken()
-                });
+                if (req.files == undefined) {
+                    return res.status(200).json({
+                        status: 'error',
+                        message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
+                        csrfToken: req.csrfToken()
+                    });
+                }
+
+                // Webp generating
+                const cwebpCommand = 'cweb';
+                // TODO: Fix this piece of sh*t
+
+                // req.files.forEach((imageItem, index) => {
+                //     let filenameLastDotIndex = imageItem.filename.lastIndexOf('.');
+                //     let outputWebpName = imageItem.filename.substring(0, filenameLastDotIndex) + '.webp';
+
+                //     console.log('outputWebpName', outputWebpName)
+                //     console.log('imageItem.filename', imageItem.filename)
+
+                //     let webpArguments = [
+                //         path.join('./files/' + req.params.folder + '/' + imageItem.filename),
+                //         '-o',
+                //         path.join('./files/' + req.params.folder + '/' + outputWebpName)
+                //     ];
+
+                //     // Spawn a child process to execute the cwebp command
+                //     const cwebpProcess = spawn(cwebpCommand, webpArguments);
+
+                //     // Handle process events
+                //     cwebpProcess.stderr.on('data', (data) => { // Error event handler
+                //         console.error(`stderr: ${ data }`);
+                //         logEvents(`Webp generating failed (multiple images): ${ data }`, "errors.log");
+                //     });
+
+                //     cwebpProcess.on('close', (code) => { // Finished event handler
+
+                //         if (code === 0 && req.files.length === (index + 1)) {
+                //             logEvents("WebP image generated successfully. (multiple images)", "messages.log");
+                //             saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
+                //         }
+                //         else {
+                //             logEvents("Error generating WebP image. (multiple images)", "errors.log");
+
+                //             return response.status(200).json({
+                //                 status: 'error',
+                //                 message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
+                //             });
+                //         }
+                //     });
+                // });
             }
-        }
-    }).any("files");
-
-    uploadImage(req, res, (err) => {
-        if (err) {
-            console.error(err);
-
-            return res.status(200).json({
-                status: 'error',
-                csrfToken: req.csrfToken()
-            });
-        }
-        else {
-            if (req.files == undefined) {
-                return res.status(200).json({
-                    status: 'error',
-                    message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
-                    csrfToken: req.csrfToken()
-                });
-            }
-
-            saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
-        }
-    });
+        });
+    } catch (err) {
+        return errorHandler(err, req, res);
+    }
 };
 
 const deleteImageFile = (req, res) => {
