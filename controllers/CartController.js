@@ -3,6 +3,7 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');
+const { getCartListItemsHTML, generateCartItemsHTML } = require("../helpers/getCartItems");
 
 const deleteCartItem = (req, res) => {
     let { productId } = req.body;
@@ -143,34 +144,22 @@ const addCartItem = (req, res) => {
                 return { ...item, price: numberWithCommas(item.price) }
             });
 
+            var cartResponse = {
+                status: 'success',
+                title: languageHandler('general.process_success', lang),
+                content: languageHandler('orders.added_to_cart', lang),
+            };
+
             if (req.session.cart.length > 1) {
-                return res.status(200).json({
-                    status: 'success',
-                    title: languageHandler('general.process_success', lang),
-                    content: languageHandler('orders.added_to_cart', lang),
-                    totalPrice: numberWithCommas(totalPrice),
-                    totalCount: totalCount,
-                    results: formattedCart,
-                    current_locale: lang,
-                    remove_text: languageHandler('general.remove', lang)
-                });
+                cartResponse.totalPrice = numberWithCommas(totalPrice);
+                cartResponse.totalCount = totalCount;
+                cartResponse.cartItemsHTML = getCartListItemsHTML(formattedCart, lang);
+            }
+            else if (req.session.cart.length == 1) {
+                cartResponse.cartItemsHTML = generateCartItemsHTML(formattedCart, lang, totalCount, numberWithCommas(totalPrice));
             }
 
-            else if (req.session.cart.length == 1) {
-                return res.status(200).json({
-                    status: 'success',
-                    title: languageHandler('general.process_success', lang),
-                    content: languageHandler('orders.added_to_cart', lang),
-                    totalPrice: numberWithCommas(totalPrice),
-                    totalCount: totalCount,
-                    results: formattedCart,
-                    current_locale: lang,
-                    remove_text: languageHandler('general.remove', lang),
-                    ordersCartCountText: languageHandler('orders.cart_count', lang),
-                    orderPageText: languageHandler('orders.order', lang),
-                    totalPriceText: languageHandler('orders.total_price', lang)
-                });
-            }
+            return res.status(200).json(cartResponse);
         }
     });
 }

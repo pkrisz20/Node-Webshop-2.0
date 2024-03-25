@@ -320,7 +320,10 @@ $(function() {
             'wait_for_update': 500
         };
 
-        gtag('consent', 'update', consentMode);
+        if (typeof gtag !== 'undefined') {
+            gtag('consent', 'update', consentMode);
+        }
+
         localStorage.setItem('consentMode', JSON.stringify(consentMode));
     }
 
@@ -565,91 +568,16 @@ $('body').on("click", ".js-add-to-cart", function (event) {
         },
         success: function (response) {
             if (response.status == 'success') {
-                var cartItems = '';
 
                 if ($('.js-cart-list').length > 0) {
-                    $.each(response.results, function (index, item) {
-                        cartItems += `
-                            <li class="cart-container-list-item js-cart-item">
-                                <div class="cart-product">
-                                    <div class="cart-product-image">
-                                        <picture>
-                                            <source srcset="${ item.image || '' }">
-                                            <img class="cart-product-img" alt="${ item.productName }" loading="lazy" src="images/no-picture.jpg">
-                                        </picture>
-                                    </div>
-
-                                    <div class="cart-product-desc">
-                                        <h5 class="cart-product-desc_name">${ item.productName }</h5>
-
-                                        <div class="quantities">
-                                            <div class="quantities-container js-quantities">
-                                                <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>
-                                                <input class="quantities-input js-product-quantity" data-id="${ item.productId }" type="number" value="${ item.quantity }" min="1" max="${ item.maxQuantity }" />
-                                                <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
-                                            </div>
-
-                                            <small class="quantities-price"><i class="fas fa-times"></i> <span>${ item.price } RSD</span></small>
-                                        </div>
-
-                                        <div class="functions">
-                                            <a href="/${ response.current_locale }/products/${ item.slug }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                            <button type="button" value="${ response.remove_text } %>" data-id="${ item.productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>`;
-                    });
-
-                    $('.js-cart-list').html(cartItems);
+                    $('.js-cart-list').html(response.cartItemsHTML);
                     $('span.js-cart-counter').text(response.totalCount);
                     $('span.js-total-price').text(response.totalPrice);
                 }
                 else {
                     $('.js-cart-empty').removeClass('show');
                     $('.js-cart-empty').addClass('hide');
-
-                    $('.js-cart').append(
-                        `<h5 class="cart-counter">${ response.ordersCartCountText }: <span class="js-cart-counter">${ response.totalCount }</span></h5>
-                        <div class="cart-container">
-                            <div class="cart-container-top">
-                                <a href="/${ response.current_locale }/order" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">${ response.orderPageText }</a>
-                                <strong class="cart-container-top_total">${ response.totalPriceText }: <span class="js-total-price">${ response.totalPrice }</span><small>RSD</small></strong>
-                            </div>
-
-                            <ul class="cart-container-list js-cart-list">
-                                <li class="cart-container-list-item js-cart-item">
-                                    <div class="cart-product">
-                                        <div class="cart-product-image">
-                                            <picture>
-                                                <source srcset="${ response.results[0].image || '' }">
-                                                <img class="cart-product-img" alt="${ response.results[0].productName }" loading="lazy" src="images/no-picture.jpg">
-                                            </picture>
-                                        </div>
-
-                                        <div class="cart-product-desc">
-                                            <h5 class="cart-product-desc_name">${ response.results[0].productName }</h5>
-
-                                            <div class="quantities">
-                                                <div class="quantities-container js-quantities">
-                                                    <button type="button" class="quantities-btn js-quantity-btn minus"><i class="fas fa-minus"></i></button>
-                                                    <input class="quantities-input js-product-quantity" data-id="${ response.results[0].productId }" type="number" value="${ response.results[0].quantity }" min="1" max="${ response.results[0].maxQuantity }" />
-                                                    <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
-                                                </div>
-
-                                                <small class="quantities-price"><i class="fas fa-times"></i> <span>${ response.results[0].price } RSD</span></small>
-                                            </div>
-
-                                            <div class="functions">
-                                                <a href="/${ response.current_locale }/products/${ response.results[0].slug }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                                <button type="button" value="${ response.remove_text }" data-id="${ response.results[0].productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>`
-                    );
+                    $('.js-cart').append(response.cartItemsHTML);
                 }
 
                 $(".js-cart").addClass('open');
