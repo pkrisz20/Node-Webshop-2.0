@@ -139,7 +139,7 @@ const handleGDPR = (req, res) => {
                 res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies), {
                     httpOnly: true,
                     maxAge: 1000 * 60 * 60 * 24 * 365,
-                    secure: Boolean(process.env.APP_DEBUG || false) === false,
+                    secure: process.env.APP_DEBUG === 'false',
                 });
             }
 

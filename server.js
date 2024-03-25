@@ -40,12 +40,13 @@ app.use(cookieParser());
 app.use(session({
     store: new FileStore(fileStoreOptions),
     secret: process.env.SESSION_SECRET,
+    key: "website_session",
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 30,
-        secure: Boolean(process.env.APP_DEBUG || false) === false,
+        secure: process.env.APP_DEBUG === 'false',
     }
 }));
 
