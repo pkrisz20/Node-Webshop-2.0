@@ -25,6 +25,7 @@ const getEmployees = (req, res) => {
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("nav.about", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",

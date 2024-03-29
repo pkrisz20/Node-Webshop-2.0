@@ -32,6 +32,7 @@ const getData = (req, res) => {
     var lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
+        ...metaDefault,
         lang: metaDefault.langs[lang],
         title: languageHandler("nav.home", lang) + metaDefault['separator'] + metaDefault['title'],
         type: metaDefault["og:type"],

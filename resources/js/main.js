@@ -301,13 +301,6 @@ $(function() {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
     }
 
-    function setCookie (cname, cvalue, exdays) {
-        const date = new Date();
-        date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        let expires = "expires="+date.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
     function setConsent (consent) {
         const consentMode = {
             'ad_storage': consent.includes('marketing') ? 'granted' : 'denied',
@@ -373,8 +366,6 @@ $(function() {
             checkedTypes.push($(this).val());
         });
 
-        setCookie('website_cookie_consent_done', '1', 365);
-
         $('.js-cookies').addClass('hidden');
 
         $.ajax({
@@ -395,7 +386,7 @@ $(function() {
                     $("meta[name='csrf-token']").attr("content", response.csrfToken);
                 }
 
-                if (response.status == 'success' && (process.env.GTAG_ID || false)) {
+                if (response.status == 'success') {
                     setConsent(checkedTypes);
                 }
 

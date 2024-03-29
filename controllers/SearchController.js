@@ -32,6 +32,7 @@ const handleSearch = (req, res) => {
     });
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("general.search", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",

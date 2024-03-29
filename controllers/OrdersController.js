@@ -20,6 +20,7 @@ const getOrderPage = (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
+        ...metaDefault,
         title: languageHandler('orders.order', lang),
         type: "website",
         url: `${ process.env.APP_URL }/${ lang }/order`,
@@ -29,6 +30,7 @@ const getOrderPage = (req, res) => {
     };
 
     var metas = {
+        ...metaDefault,
         title: languageHandler('orders.order', lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",

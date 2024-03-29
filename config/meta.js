@@ -16,7 +16,7 @@ const metaDefault = {
     'og:image:width': 1200,
     'og:image:height': 630,
     robots: 'index, follow',
-    // 'google-site-verification' : 'g7ppJE9S4-8rTQBHnsQ73yl1P0D3ZG8JmWPdTmIkfSU',
+    'google-site-verification': process.env.GOOGLE_SITE_VERIFICATION ?? false,
     googlebot: "noodp",
     slurp: "noydir",
     msnbot: "noodp",

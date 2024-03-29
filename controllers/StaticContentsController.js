@@ -25,6 +25,7 @@ const getFAQ = (req, res) => {
     let result = [];
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("nav.FAQ", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
@@ -90,6 +91,7 @@ const getGDPR = (req, res) => {
 
     var { DB_CONFIG } = req;
     var metas = {
+        ...metaDefault,
         title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
         type: "website",
         url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/gdpr`,

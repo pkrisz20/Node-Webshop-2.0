@@ -66,6 +66,7 @@ const getProductDetails = (req, res) => {
             }
 
             var metas = {
+                ...metaDefault,
                 title: limitText(result.name, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "article",
@@ -259,6 +260,7 @@ const getAllProducts = (req, res) => {
     let result = [];
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("general.products", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
@@ -447,6 +449,7 @@ const getCategoryProducts = (req, res) => {
             const selectedCategoryShortDescription = category_data[0].category_short_description ? getValueByLanguage(category_data[0].category_short_description, lang) : null;
 
             var metas = {
+                ...metaDefault,
                 title: limitText(selectedCategoryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "website",
@@ -777,6 +780,7 @@ const getWishlistListPage = ( req, res, next ) => {
     let wishlistProductsList = [];
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("general.wishlist", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",

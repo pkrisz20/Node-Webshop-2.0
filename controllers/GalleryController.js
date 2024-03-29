@@ -33,6 +33,7 @@ const getAllGallery = (req, res) => {
 
     let result = [];
     var metas = {
+        ...metaDefault,
         title: languageHandler("nav.gallery", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
@@ -179,6 +180,7 @@ const getGalleryDetails = (req, res) => {
         }
 
         var metas = {
+            ...metaDefault,
             title: limitText(result.galleryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
             lang: metaDefault.langs[lang],
             type: "article",

@@ -64,6 +64,7 @@ const getBlogDetails = (req, res) => {
             }
 
             var metas = {
+                ...metaDefault,
                 title: limitText(result.title, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "article",
@@ -262,6 +263,7 @@ const getAllBlogs = (req, res) => {
     let result = [];
 
     var metas = {
+        ...metaDefault,
         title: languageHandler("nav.blog", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",

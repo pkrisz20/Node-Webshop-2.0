@@ -39,7 +39,7 @@ const en = {
 		gallery: "Gallery",
 		gallery_subtitle: "Some featured moment",
 		blog: "Our blog",
-		blog_subtitle: "You can see the events, what happened to us",
+		blog_subtitle: "You can see the events that happened to us",
 		contact_title: "Contact with us",
 		contact_subtitle: "Write to us about anything",
 		contact_datas: "Contact datas",
