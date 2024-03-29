@@ -64,6 +64,9 @@ app.use(function (err, req, res, next) {
 
 // Add the getAssetPath function globally
 app.use((req, res, next) => {
+    const XSRFToken = req.cookies['_csrf'];
+    res.cookie('_csrf', XSRFToken, { httpOnly: true });
+
     res.locals.getAssetPath = getAssetPath;
     next();
 });
