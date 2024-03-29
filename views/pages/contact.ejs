@@ -36,7 +36,7 @@
                                     <a class="data" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
                                 <% } %>
                                 <% if (DB_CONFIG["company_street"]) { %>
-                                    <a class="data" aria-label="Link to the map" href="https://www.google.com/maps/place/Tornjo%C5%A1/@45.9117162,19.7342732,11z/data=!4m6!3m5!1s0x4744a53fb7e1f7dd:0x4783b2f37bdb4082!8m2!3d45.8782551!4d19.831876!16s%2Fm%2F02x5v_4?entry=ttu" target="_blank"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
+                                    <span class="data" aria-label="Link to the map"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></span>
                                 <% } %>
 
                                 <% if (DB_CONFIG["facebook"]) { %>
