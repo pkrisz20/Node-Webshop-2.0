@@ -12,14 +12,13 @@
                     <% if (data.subText) { %>
                         <p class="box-subtitle"><%= data.subText %></p>
                     <% } %>
+
                     <% if (data.link) { %>
                         <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button || languageHandler("general.read_more", current_locale) %></a>
                     <% } %>
                 </div>
-                <picture>
-                    <source srcset="<%= data.image %>">
-                    <img alt="<%= data.text %>" loading="lazy" src="images/no-picture.jpg">
-                </picture>
+
+                <%- include('./picture.ejs', { imageSrc: data.image, alt: data.text }) %>
             </div>
         <% }) %>
     </div>

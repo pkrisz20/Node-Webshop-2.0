@@ -205,43 +205,42 @@ const uploadImageFiles = (req, res) => {
                     });
                 }
 
-                // Webp generating
-                const cwebpCommand = 'cweb';
-                let filenameLastDotIndex = req.file.filename.lastIndexOf('.');
-                let outputWebpName = req.file.filename.substring(0, filenameLastDotIndex) + '.webp';
+                else if (req.file) {
+                    // Webp generating
+                    let filenameLastDotIndex = req.file.filename.lastIndexOf('.');
+                    let outputWebpName = req.file.filename.substring(0, filenameLastDotIndex) + '.webp';
 
-                let webpArguments = [
-                    path.join('./files/' + req.params.folder + '/' + req.file.filename),
-                    '-o',
-                    path.join('./files/' + req.params.folder + '/' + outputWebpName)
-                ];
+                    let webpArguments = [
+                        path.join('./files/' + req.params.folder + '/' + req.file.filename),
+                        '-o',
+                        path.join('./files/' + req.params.folder + '/' + outputWebpName)
+                    ];
 
-                const cwebpProcess = spawn(cwebpCommand, webpArguments);
-                // TODO: Fix this piece of sh*t
+                    const cwebpProcess = spawn('cwebp', webpArguments);
+                    // Handle process events
+                    cwebpProcess.stdout.on('data', (data) => {
+                        logEvents(`Webp generating failed: ${ data }`, "messages.log");
+                    });
 
-                // Handle process events
-                // cwebpProcess.stdout.on('data', (data) => {
-                //     logEvents(`Webp generating failed: ${ data }`, "messages.log");
-                // });
+                    cwebpProcess.stderr.on('data', (data) => { // Error event handler
+                        logEvents(`Webp generating failed: ${ data }`, "errors.log");
+                    });
 
-                // cwebpProcess.stderr.on('data', (data) => { // Error event handler
-                //     logEvents(`Webp generating failed: ${ data }`, "errors.log");
-                // });
+                    cwebpProcess.on('close', (code) => { // Finished event handler
+                        if (code === 0) {
+                            logEvents("WebP image generated successfully.", "messages.log");
+                            saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
+                        }
+                        else {
+                            logEvents("Error generating WebP image.", "errors.log");
 
-                // cwebpProcess.on('close', (code) => { // Finished event handler
-                //     if (code === 0) {
-                //         saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
-                //         logEvents("WebP image generated successfully.", "messages.log");
-                //     }
-                //     else {
-                //         logEvents("Error generating WebP image.", "errors.log");
-
-                //         return response.status(200).json({
-                //             status: 'error',
-                //             message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
-                //         });
-                //     }
-                // });
+                            return response.status(200).json({
+                                status: 'error',
+                                message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
+                            });
+                        }
+                    });
+                }
             }
         });
     } catch (err) {
@@ -302,48 +301,45 @@ const uploadMultipleImages = (req, res) => {
                     });
                 }
 
-                // Webp generating
-                const cwebpCommand = 'cweb';
-                // TODO: Fix this piece of sh*t
+                else if (req.files) {
 
-                // req.files.forEach((imageItem, index) => {
-                //     let filenameLastDotIndex = imageItem.filename.lastIndexOf('.');
-                //     let outputWebpName = imageItem.filename.substring(0, filenameLastDotIndex) + '.webp';
+                    // Webp generating
+                    req.files.forEach((imageItem, index) => {
+                        let filenameLastDotIndex = imageItem.filename.lastIndexOf('.');
+                        let outputWebpName = imageItem.filename.substring(0, filenameLastDotIndex) + '.webp';
 
-                //     console.log('outputWebpName', outputWebpName)
-                //     console.log('imageItem.filename', imageItem.filename)
+                        let webpArguments = [
+                            path.join('./files/' + req.params.folder + '/' + imageItem.filename),
+                            '-o',
+                            path.join('./files/' + req.params.folder + '/' + outputWebpName)
+                        ];
 
-                //     let webpArguments = [
-                //         path.join('./files/' + req.params.folder + '/' + imageItem.filename),
-                //         '-o',
-                //         path.join('./files/' + req.params.folder + '/' + outputWebpName)
-                //     ];
+                        // Spawn a child process to execute the cwebp command
+                        const cwebpProcess = spawn('cwebp', webpArguments);
 
-                //     // Spawn a child process to execute the cwebp command
-                //     const cwebpProcess = spawn(cwebpCommand, webpArguments);
+                        // Handle process events
+                        cwebpProcess.stderr.on('data', (data) => { // Error event handler
+                            console.error(`stderr: ${ data }`);
+                            logEvents(`Webp generating failed (multiple images): ${ data }`, "errors.log");
+                        });
 
-                //     // Handle process events
-                //     cwebpProcess.stderr.on('data', (data) => { // Error event handler
-                //         console.error(`stderr: ${ data }`);
-                //         logEvents(`Webp generating failed (multiple images): ${ data }`, "errors.log");
-                //     });
+                        cwebpProcess.on('close', (code) => { // Finished event handler
 
-                //     cwebpProcess.on('close', (code) => { // Finished event handler
+                            if (code === 0 && req.files.length === (index + 1)) {
+                                logEvents("WebP image generated successfully. (multiple images)", "messages.log");
+                                saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
+                            }
+                            else if (code !== 0) {
+                                logEvents("Error generating WebP image. (multiple images)", "errors.log");
 
-                //         if (code === 0 && req.files.length === (index + 1)) {
-                //             logEvents("WebP image generated successfully. (multiple images)", "messages.log");
-                //             saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
-                //         }
-                //         else {
-                //             logEvents("Error generating WebP image. (multiple images)", "errors.log");
-
-                //             return response.status(200).json({
-                //                 status: 'error',
-                //                 message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
-                //             });
-                //         }
-                //     });
-                // });
+                                return res.status(200).json({
+                                    status: 'error',
+                                    message: languageHandler('errors.can_not_generate_webp', process.env.ADMIN_LANG),
+                                });
+                            }
+                        });
+                    });
+                }
             }
         });
     } catch (err) {
