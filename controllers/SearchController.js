@@ -8,6 +8,7 @@ const formatDateByLang = require("../helpers/formatDateByLocale");
 const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const searchLimit = 10;
 
 const handleSearch = (req, res) => {
     let { keywords } = req.query;
@@ -248,6 +249,8 @@ const ajaxSearch = (req, res) => {
         searchProductsQuery += formattedParams;
     }
 
+    searchProductsQuery += ` LIMIT ${ searchLimit }`;
+
     // Add percentage to the keywords
     words = words.map(item => `%${ item }%`);
 
@@ -299,6 +302,8 @@ const ajaxSearch = (req, res) => {
             blogsQuery += formattedParams;
         }
 
+        blogsQuery += ` LIMIT ${ searchLimit }`;
+
         db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
             if (err_blog) {
                 console.log(err_blog);
@@ -348,6 +353,8 @@ const ajaxSearch = (req, res) => {
 
                 galleryQuery += formattedParams;
             }
+
+            galleryQuery += ` LIMIT ${ searchLimit }`;
 
             db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
                 if (err_gallery) {
