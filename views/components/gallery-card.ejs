@@ -1,10 +1,9 @@
 <a class="gallery-card" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= galleryItem.slug %>">
     <time class="gallery-card-date"><%= galleryItem.date %></time>
     <figure class="gallery-card-image">
-        <picture>
-            <source srcset="<%= galleryItem.thumbnailImage %>">
-            <img loading="lazy" src="/images/no-picture.jpg" alt="<%= galleryItem.name %>" />
-        </picture>
+
+        <%- include('./picture.ejs', { imageSrc: galleryItem.thumbnailImage, alt: galleryItem.name }) %>
+
         <div class="icon">
             <i class="far fa-eye"></i>
         </div>

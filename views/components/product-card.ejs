@@ -9,10 +9,8 @@
         <% if (product.isPostable) { %>
             <span class="badge badge--postable"><i class="fas fa-truck"></i></span>
         <% } %>
-        <picture>
-            <source srcset="<%= product.image %>">
-            <img alt="<%= product.name %>" loading="lazy" src="/images/no-picture.jpg">
-        </picture>
+
+        <%- include('./picture.ejs', { imageSrc: product.image, alt: product.name }) %>
     </a>
     <div class="product_desc">
         <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>

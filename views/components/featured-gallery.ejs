@@ -4,12 +4,11 @@
         <div class="gallery-list">
             <% images.forEach(item => { %>
                 <figure class="gallery-list-card">
+
                     <% if (item.source) { %>
-                        <picture>
-                            <source srcset="<%= item.source %>">
-                            <img loading="lazy" alt="<%= item.name %>" src="/images/no-picture.jpg">
-                        </picture>
+                        <%- include('./picture.ejs', { imageSrc: item.source, alt: item.name }) %>
                     <% } %>
+
                     <div class="overlay">
                         <figcaption class="overlay_content">
                             <div class="icons">
