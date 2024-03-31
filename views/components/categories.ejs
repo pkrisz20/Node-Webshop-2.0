@@ -4,7 +4,8 @@
             <% webshopCategories.forEach(item => { %>
                 <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/category/<%= item.category_slug %>" aria-label="<%= item.name %>" title="<%= item.name %>">
                     <div class="card">
-                        <img src="<%= item.category_image %>" class="card-icon" alt="<%= item.name %>" />
+
+                        <%- include('./picture.ejs', { imageSrc: item.category_image, imgClass: "card-icon", alt: item.name }) %>
                         <h3 class="card-text"><%= item.name %></h3>
                     </div>
                 </a>

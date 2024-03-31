@@ -1,5 +1,5 @@
 <% if (imageSrc) { %>
-    <picture <%= locals.pictureClass ? "class='" + locals.pictureClass + "'" : '' %>>
+    <picture class="<%= locals.pictureClass ? locals.pictureClass : '' %>">
         <% if (imageSrc) { %>
             <source
                 srcset="<%= imageSrc.substring(0, imageSrc.lastIndexOf('.')) + '.webp' %>"
@@ -9,12 +9,13 @@
         <img
             src="<%= imageSrc %>"
             alt="<%= locals.alt || '' %>"
-            <%= locals.imgClass ? "class='" + locals.imgClass + "'" : '' %>
+            class="<%= locals.imgClass ? locals.imgClass : '' %>"
             loading="<%= locals.loading || 'lazy' %>"
+            onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
         />
     </picture>
 <% } else { %>
-    <picture <%= locals.pictureClass ? "class='" + locals.pictureClass + "'" : '' %>>
+    <picture class="<%= locals.pictureClass ? locals.pictureClass : '' %>">
         <source
             srcset="<%= getAssetPath('/images/no-picture.webp') %>"
             type="image/webp"
@@ -22,7 +23,7 @@
         <img
             src="<%= getAssetPath('/images/no-picture.jpg') %>"
             alt="<%= locals.alt || '' %>"
-            <%= locals.imgClass ? "class='" + locals.imgClass + "'" : '' %>
+            class="<%= locals.imgClass ? locals.imgClass : '' %>"
             loading="<%= locals.loading || 'eager' %>"
         />
     </picture>
