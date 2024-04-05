@@ -15,10 +15,12 @@
                     <li class="cart-container-list-item js-cart-item">
                         <div class="cart-product">
                             <div class="cart-product-image">
-                                <picture>
-                                    <source srcset="<%= cartItem.image %>">
-                                    <img class="cart-product-img" alt="<%= cartItem.productName %>" loading="lazy" src="images/no-picture.jpg">
-                                </picture>
+
+                                <%- include('../components/picture.ejs', {
+                                    imgClass: "cart-product-img",
+                                    imageSrc: cartItem.image,
+                                    alt: cartItem.productName
+                                }) %>
                             </div>
 
                             <div class="cart-product-desc">

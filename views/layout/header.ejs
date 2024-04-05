@@ -30,10 +30,15 @@
 
       <div class="lang dropdown js-dropdown-opener">
         <button type="button" class="dropdown-link" title="<%= languageHandler('general.lang', current_locale) %>" aria-label="<%= languageHandler('general.lang', current_locale) %>">
-          <picture>
-            <source srcset='<%= getAssetPath("/images/flag-" + current_locale + ".webp") %>' type="image/webp" />
-            <img alt="<%= current_locale.toUpperCase() %> <%= languageHandler('general.flag', current_locale) %>" loading="lazy" src='<%= getAssetPath("/images/flag-" + current_locale + ".png") %>' />
-          </picture>
+
+          <%- include('../components/picture.ejs', {
+            imageURL: true,
+            loading: "eager",
+            webpImage: getAssetPath("/images/flag-" + current_locale + ".webp"),
+            imageSrc: getAssetPath("/images/flag-" + current_locale + ".png"),
+            alt: current_locale.toUpperCase() + " " + languageHandler('general.flag', current_locale),
+          }) %>
+
           <%= current_locale %>
         </button>
 
@@ -42,10 +47,15 @@
             <% if(lang != current_locale) { %>
               <li class="dropdown-list-item">
                 <a href="<%= process.env.APP_URL %>/<%= lang %>" target="_self" class="dropdown-link" title="<%= lang.toUpperCase() %>" aria-label="<%= lang.toUpperCase() %>">
-                  <picture>
-                    <source srcset='<%= getAssetPath("/images/flag-" + lang + ".webp") %>' type="image/webp" />
-                    <img alt="<%= lang.toUpperCase() %>" loading="egaer" src='<%= getAssetPath("/images/flag-" + lang + ".png") %>' />
-                  </picture>
+
+                  <%- include('../components/picture.ejs', {
+                    imageURL: true,
+                    loading: "eager",
+                    webpImage: getAssetPath("/images/flag-" + lang + ".webp"),
+                    imageSrc: getAssetPath("/images/flag-" + lang + ".png"),
+                    alt: lang.toUpperCase(),
+                  }) %>
+
                   <%= lang %>
                 </a>
               </li>
@@ -59,10 +69,15 @@
   <div class="header-middle">
     <div class="wrapper">
       <a href="<%= process.env.APP_URL %>/<%= current_locale %>" class="logo" aria-label="<%= process.env.SITE_NAME %> home page link" target="_self">
-        <picture>
-          <source srcset="<%= getAssetPath('/images/logo.webp') %>" type="image/webp" />
-          <img class="logo-img" loading="lazy" src="<%= getAssetPath('/images/logo.png') %>" alt="<%= process.env.SITE_NAME %> logo" />
-        </picture>
+
+        <%- include('../components/picture.ejs', {
+          imageURL: true,
+          loading: "eager",
+          imgClass: "logo-img",
+          webpImage: getAssetPath('/images/logo.webp'),
+          imageSrc: getAssetPath('/images/logo.png'),
+          alt: process.env.SITE_NAME + " logo",
+        }) %>
       </a>
 
       <nav class="nav">

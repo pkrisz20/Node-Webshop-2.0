@@ -30,10 +30,11 @@
                             </header>
                             <div class="blog-thumbnail <%= blogDetails.images.length > 0 ? 'icon--hover js-gallery-thumb' : ''%>">
                                 <i class="fas fa-search-plus search-icon"></i>
-                                <picture>
-                                    <source srcset="<%= blogDetails.thumb_image %>">
-                                    <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= blogDetails.title %>" />
-                                </picture>
+
+                                <%- include('../components/picture.ejs', {
+                                    imageSrc: blogDetails.thumb_image,
+                                    alt: blogDetails.title
+                                }) %>
                             </div>
 
                             <% if (blogDetails.images.length > 0) { %>
@@ -45,7 +46,10 @@
                                         <div class="icon--hover" data-src="<%= image %>">
                                             <i class="fas fa-search-plus search-icon"></i>
 
-                                            <img src="<%= image %>" alt="<%= blogDetails.title %> #<%= index + 1 %>" />
+                                            <%- include('../components/picture.ejs', {
+                                                imageSrc: image,
+                                                alt: blogDetails.title + " #" + (index + 1)
+                                            }) %>
                                         </div>
                                     <% }) %>
                                 </div>
@@ -65,10 +69,10 @@
                                 <% nextEvents.forEach((event, index) => { %>
                                     <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= event.slug %>" title="<%= event.title %>" aria-label="<%= event.title %>">
                                         <div class="blog-aside-article-image">
-                                            <picture>
-                                                <source srcset="<%= event.image %>">
-                                                <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= event.title %>" />
-                                            </picture>
+                                            <%- include('../components/picture.ejs', {
+                                                imageSrc: event.image,
+                                                alt: event.title
+                                            }) %>
                                         </div>
 
                                         <div class="texts">

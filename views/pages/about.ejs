@@ -29,10 +29,12 @@
                             <% employees.forEach(employee => { %>
                                 <div class="workers-container">
                                     <figure class="workers-container-box">
-                                        <picture>
-                                            <source srcset="<%= employee.image %>">
-                                            <img loading="lazy" src="/images/no-picture.jpg" alt="<%= employee.name %> - <%= employee.position %>" />
-                                        </picture>
+
+                                        <%- include('../components/picture.ejs', {
+                                            imageSrc: employee.image,
+                                            alt: employee.name + " - " + employee.position
+                                        }) %>
+
                                         <figcaption>
                                             <h3 class="workers-container-name"><%= employee.name %></h3>
                                             <h4 class="workers-container-position"><%= employee.position %></h4>

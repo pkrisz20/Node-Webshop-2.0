@@ -26,10 +26,11 @@
                                 <% cart.items.forEach(cartItem => { %>
                                     <div class="order-container-items-card js-order-item">
                                         <div class="order-image">
-                                            <picture>
-                                                <source srcset="<%= cartItem.image %>">
-                                                <img loading="lazy" src="/images/no-picture.jpg" alt="<%= cartItem.productName %>" />
-                                            </picture>
+
+                                            <%- include('../components/picture.ejs', {
+                                                imageSrc: cartItem.image,
+                                                alt: cartItem.productName
+                                            }) %>
                                         </div>
                                         <div class="order-infos">
                                             <h3 class="order-infos-title"><%= cartItem.productName %></h3>

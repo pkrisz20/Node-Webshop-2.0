@@ -2,10 +2,14 @@
     <div class="footer-top">
         <div class="wrapper">
             <a class="footer-logo" target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>" aria-label="<%= process.env.SITE_NAME %> home page link">
-                <picture>
-                    <source srcset="/images/logo.webp" type="image/webp" />
-                    <img alt="<%= process.env.SITE_NAME %> footer logo" loading="lazy" src="/images/logo.png" />
-                </picture>
+
+                <%- include('../components/picture.ejs', {
+                    imageURL: true,
+                    imgClass: "logo-img",
+                    webpImage: getAssetPath('/images/logo.webp'),
+                    imageSrc: getAssetPath('/images/logo.png'),
+                    alt: process.env.SITE_NAME + " footer logo",
+                }) %>
             </a>
         </div>
     </div>

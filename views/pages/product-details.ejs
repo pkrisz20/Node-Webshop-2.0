@@ -21,10 +21,12 @@
                             <div class="details-gallery">
                                 <div class="details-gallery__lead-image icon--hover js-gallery-thumb">
                                     <i class="fas fa-search-plus search-icon"></i>
-                                    <picture>
-                                        <source srcset="<%= productDetails.thumbnailImage %>" />
-                                        <img class="details-thumbnail" loading="lazy" src="/images/no-picture.jpg" alt="<%= productDetails.name %>" />
-                                    </picture>
+
+                                    <%- include('../components/picture.ejs', {
+                                        imgClass: "details-thumbnail",
+                                        imageSrc: productDetails.thumbnailImage,
+                                        alt: productDetails.name
+                                    }) %>
                                 </div>
 
                                 <% if (productDetails.images.length > 0) { %>
@@ -36,7 +38,10 @@
                                             <div class="icon--hover" data-src="<%= image %>">
                                                 <i class="fas fa-search-plus search-icon"></i>
 
-                                                <img src="<%= image %>" alt="<%= productDetails.name %> #<%= index + 1 %>" />
+                                                <%- include('../components/picture.ejs', {
+                                                    imageSrc: image,
+                                                    alt: productDetails.name + " #" + (index + 1)
+                                                }) %>
                                             </div>
                                         <% }) %>
                                     </div>

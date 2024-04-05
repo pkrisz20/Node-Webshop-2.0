@@ -19,10 +19,14 @@
         onclick="window.open(this.href,'','scrollbars=yes,menubar=no,width=700,height=600,resizable=yes,toolbar=no,location=no,status=no'); return false;"
         rel="noopener"
     >
-        <picture>
-            <source srcset="<%= getAssetPath('/images/Twitter-X-White-Logo.webp') %>" type="image/webp" />
-            <img src="<%= getAssetPath('/images/Twitter-X-White-Logo.png') %>" width="15" height="15" alt="Twitter X logo" />
-        </picture>
+        <%- include('picture.ejs', {
+            imageURL: true,
+            webpImage: getAssetPath('/images/Twitter-X-White-Logo.webp'),
+            imageSrc: getAssetPath('/images/Twitter-X-White-Logo.png'),
+            alt: "Twitter X logo",
+            imageWidth: "15",
+            imageHeight: "15",
+        }) %>
     </a>
     <% if (mail_subject) { %>
         <a

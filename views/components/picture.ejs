@@ -1,4 +1,4 @@
-<% if (imageSrc) { %>
+<% if (imageSrc && !locals.imageURL) { %>
     <picture class="<%= locals.pictureClass ? locals.pictureClass : '' %>">
         <% if (imageSrc) { %>
             <source
@@ -11,6 +11,34 @@
             alt="<%= locals.alt || '' %>"
             class="<%= locals.imgClass ? locals.imgClass : '' %>"
             loading="<%= locals.loading || 'lazy' %>"
+            <% if (locals.imageWidth) {  %>
+                width="<%= locals.imageWidth %>"
+            <% } %>
+            <% if (locals.imageHeight) {  %>
+                height="<%= locals.imageHeight %>"
+            <% } %>
+            onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
+        />
+    </picture>
+<% } else if (imageSrc && locals.imageURL) { %>
+    <picture class="<%= locals.pictureClass ? locals.pictureClass : '' %>">
+        <% if (webpImage) { %>
+            <source
+                srcset="<%= webpImage %>"
+                type="image/webp"
+            />
+        <% } %>
+        <img
+            src="<%= imageSrc %>"
+            alt="<%= locals.alt || '' %>"
+            class="<%= locals.imgClass ? locals.imgClass : '' %>"
+            loading="<%= locals.loading || 'lazy' %>"
+            <% if (locals.imageWidth) {  %>
+                width="<%= locals.imageWidth %>"
+            <% } %>
+            <% if (locals.imageHeight) {  %>
+                height="<%= locals.imageHeight %>"
+            <% } %>
             onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
         />
     </picture>

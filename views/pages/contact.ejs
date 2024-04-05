@@ -4,7 +4,12 @@
 
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
         <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+        <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
     <% } %>
+
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/contact.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
@@ -226,10 +231,6 @@
     <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
 
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
-        <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-        <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-        <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-        <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
         <script type="text/javascript">
             var platform = new H.service.Platform({
                 apikey: 'BbrImBFdudPWuw_p4_-YDUzsq1ZzwhpZjqbuEtAD6AA'

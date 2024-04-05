@@ -69,7 +69,7 @@
                 }
             }
             &-thumbnail {
-                @include respImage(math.div(500, 820));
+                @include respImage(0.62);
                 margin-bottom: 10px;
 
                 img {

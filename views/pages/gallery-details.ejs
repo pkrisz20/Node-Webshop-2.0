@@ -30,10 +30,10 @@
                                 <i class="far fa-eye"></i>
                             </figcaption>
 
-                            <picture>
-                                <source srcset="<%= image %>">
-                                <img loading="lazy" src="<%= process.env.APP_URL %>/images/no-picture.jpg" alt="<%= galleryData.galleryName %> #<%= index + 1 %>" />
-                            </picture>
+                            <%- include('../components/picture.ejs', {
+                                imageSrc: image,
+                                alt: galleryData.galleryName + " #" + (index + 1),
+                            }) %>
                         </figure>
                     <% }) %>
                 </section>
