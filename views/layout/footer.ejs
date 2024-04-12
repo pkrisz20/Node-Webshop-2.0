@@ -44,8 +44,10 @@
                 <div class="footer-middle-col">
                     <h3 class="footer-title"><%= languageHandler('nav.support', current_locale) %></h3>
                     <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/faq" aria-label="<%= languageHandler('nav.FAQ', current_locale) %>" class="footer-title-link"><i class="fas fa-question-circle"></i> <%= languageHandler('nav.FAQ', current_locale) %></a>
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/termsofuse" aria-label="<%= languageHandler('nav.terms_of_use', current_locale) %>" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= languageHandler('nav.terms_of_use', current_locale) %></a>
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/policy" aria-label="<%= languageHandler('nav.privacy_policy', current_locale) %>" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= languageHandler('nav.privacy_policy', current_locale) %></a>
+
+                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= staticContent['terms_of_use']['slug'] %>" aria-label="<%= staticContent['terms_of_use']['title'] %>" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= staticContent['terms_of_use']['title'] %></a>
+
+                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= staticContent['privacy_policy']['slug'] %>" aria-label="<%= staticContent['privacy_policy']['title'] %>" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= staticContent['privacy_policy']['title'] %></a>
                 </div>
                 <% if (DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
                     <div class="footer-middle-col">

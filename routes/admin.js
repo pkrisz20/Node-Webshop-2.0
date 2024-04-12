@@ -104,4 +104,7 @@ adminRouter.route("/order/get-info/:orderId")
 adminRouter.route("/order/change-status/:orderId")
     .post(checkAuthentication, AdminOrdersController.changeOrderStatus);
 
+adminRouter.route("/static-contents/list")
+    .get(checkAuthentication, AdminStaticContentsController.getStaticListPage);
+
 module.exports = adminRouter;

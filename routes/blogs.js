@@ -7,13 +7,14 @@ const commentsSchema = require("../validations/commentValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const selectStaticContents = require("../middleware/selectStaticContents");
 const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 blogsRouter.route("/blogs")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, BlogsController.getAllBlogs);
+    .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, BlogsController.getAllBlogs);
 
 blogsRouter.route("/blog/:slug")
-    .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, BlogsController.getBlogDetails);
+    .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, BlogsController.getBlogDetails);
 
 blogsRouter.route("/blog/comment/load-more")
     .post(BlogsController.ajaxLoadMoreComments);

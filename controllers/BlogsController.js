@@ -155,6 +155,7 @@ const getBlogDetails = (req, res) => {
                                     DB_CONFIG: DB_CONFIG,
                                     wishlistTotalNumber: req.wishlistTotalNumber,
                                     webshopCategories: req.webshopCategories,
+                                    staticContent: req.static_content,
                                     gdprCookies: gdprCookies,
                                     gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                     csrfToken: req.csrfToken()
@@ -208,6 +209,7 @@ const getBlogDetails = (req, res) => {
                                         DB_CONFIG: DB_CONFIG,
                                         wishlistTotalNumber: req.wishlistTotalNumber,
                                         webshopCategories: req.webshopCategories,
+                                        staticContent: req.static_content,
                                         gdprCookies: gdprCookies,
                                         gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                         csrfToken: req.csrfToken()
@@ -232,6 +234,7 @@ const getBlogDetails = (req, res) => {
                             wishlistTotalNumber: req.wishlistTotalNumber,
                             DB_CONFIG: DB_CONFIG,
                             webshopCategories: req.webshopCategories,
+                            staticContent: req.static_content,
                             gdprCookies: gdprCookies,
                             gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                             csrfToken: req.csrfToken()
@@ -304,6 +307,7 @@ const getAllBlogs = (req, res) => {
                 DB_CONFIG: DB_CONFIG,
                 wishlistTotalNumber: wishlist.length,
                 webshopCategories: req.webshopCategories,
+                staticContent: req.static_content,
                 locales: ['hu', 'sr', 'en'],
                 languageHandler: languageHandler,
                 gdprCookies: gdprCookies,
@@ -365,6 +369,7 @@ const getAllBlogs = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
+                        staticContent: req.static_content,
                         gdprCookies: gdprCookies,
                         gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()

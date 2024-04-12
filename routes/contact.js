@@ -6,10 +6,11 @@ const contactSchema = require("../validations/contactValidation");
 const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
+const selectStaticContents = require("../middleware/selectStaticContents");
 const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 
 contactRouter.route("/contact")
-    .get(getConfigFromDb, selectWebshopCategories, filterActiveWishlistItems, ContactController.getContactPage);
+    .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, filterActiveWishlistItems, ContactController.getContactPage);
 
 contactRouter.route("/contact/handle")
     .post(validationMiddleware(contactSchema), recaptchaValidation, ContactController.handleContactMessage);

@@ -64,6 +64,7 @@ const getAllGallery = (req, res) => {
                 meta: metas,
                 DB_CONFIG: DB_CONFIG,
                 webshopCategories: req.webshopCategories,
+                staticContent: req.static_content,
                 wishlistTotalNumber: req.wishlistTotalNumber,
                 current_locale: req.session.lang,
                 cart: cart,
@@ -122,6 +123,7 @@ const getAllGallery = (req, res) => {
                         DB_CONFIG: DB_CONFIG,
                         wishlistTotalNumber: req.wishlistTotalNumber,
                         webshopCategories: req.webshopCategories,
+                        staticContent: req.static_content,
                         gdprCookies: gdprCookies,
                         gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                         csrfToken: req.csrfToken()
@@ -225,6 +227,7 @@ const getGalleryDetails = (req, res) => {
                 DB_CONFIG: DB_CONFIG,
                 wishlistTotalNumber: req.wishlistTotalNumber,
                 webshopCategories: req.webshopCategories,
+                staticContent: req.static_content,
                 gdprCookies: gdprCookies,
                 gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                 csrfToken: req.csrfToken()

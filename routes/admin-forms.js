@@ -88,4 +88,10 @@ adminFormsRouter.route("/slider/edit/:sliderId")
 adminFormsRouter.route("/slider/edit/handle/:sliderId")
     .post(checkAuthentication, AdminSliderController.handleEditSlider);
 
+adminFormsRouter.route("/static-contents/edit/:staticContentID")
+    .get(checkAuthentication, AdminStaticContentsController.getStaticContentEditPage);
+
+adminFormsRouter.route("/static-contents/edit/handle/:staticContentID")
+    .post(checkAuthentication, AdminStaticContentsController.handleEditStaticPage);
+
 module.exports = adminFormsRouter;

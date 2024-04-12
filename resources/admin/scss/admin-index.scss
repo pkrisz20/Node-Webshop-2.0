@@ -394,7 +394,7 @@ button:not(:disabled),
 
 *:disabled {
   cursor: not-allowed !important;
-  opacity: .5 !important;
+  opacity: .6 !important;
 }
 
 ::-moz-focus-inner {
@@ -2272,11 +2272,11 @@ textarea.form-control-lg {
 .form-check-input:disabled {
   pointer-events: none;
   filter: none;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 .form-check-input[disabled] ~ .form-check-label, .form-check-input:disabled ~ .form-check-label {
   cursor: default;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .form-switch {

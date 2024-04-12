@@ -46,6 +46,7 @@ const getContactPage = (req, res) => {
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
         webshopCategories: req.webshopCategories,
+        staticContent: req.static_content,
         wishlistTotalNumber: req.wishlistTotalNumber,
         gdprCookies: gdprCookies,
         gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),

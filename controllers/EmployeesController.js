@@ -79,6 +79,7 @@ const getEmployees = (req, res) => {
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
             webshopCategories: req.webshopCategories,
+            staticContent: req.static_content,
             wishlistTotalNumber: req.wishlistTotalNumber,
             gdprCookies: gdprCookies,
             gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
