@@ -54,7 +54,7 @@ app.use(session({
 app.use(cors(corsOptions));
 
 // CSRF
-app.use(csrfProtection({ cookie: true }));
+app.use(csrfProtection({ cookie: { httpOnly: true } }));
 
 // error handler for bad CSRF token
 app.use(function (err, req, res, next) {
@@ -64,9 +64,6 @@ app.use(function (err, req, res, next) {
 
 // Add the getAssetPath function globally
 app.use((req, res, next) => {
-    const XSRFToken = req.cookies['_csrf'];
-    res.cookie('_csrf', XSRFToken, { httpOnly: true });
-
     res.locals.getAssetPath = getAssetPath;
     next();
 });
