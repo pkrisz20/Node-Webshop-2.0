@@ -241,7 +241,7 @@
                                     />
                                     <span class="checkmark"></span>
                                 </label>
-                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/policy"><%= languageHandler('nav.privacy_policy', current_locale) %></a></span>
+                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
                             </div>
 
                             <button type="submit" class="form-submit"><i class="fas fa-coins"></i> <%= languageHandler('orders.order', current_locale) %></button>
