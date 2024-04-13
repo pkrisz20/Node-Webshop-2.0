@@ -1,0 +1,31 @@
+@use 'sass:math';
+@import "../variables.scss";
+@import "../mixins.scss";
+
+@import "../components/sharing-buttons.scss";
+@import "../components/plain-text.scss";
+
+.static {
+    padding: 40px 0;
+    background-color: $c-grayF9;
+
+    &-short {
+        width: 100%;
+        font-size: 16px;
+        color: $c-dark;
+        font-weight: 400;
+        line-height: 22px;
+    }
+
+    &-section {
+        padding: 0 0 40px;
+
+        & > .main-title {
+            margin: 0 0 60px;
+
+            @media #{ $r-min-m } {
+                margin: 0 0 100px;
+            }
+        }
+    }
+}

@@ -116,9 +116,6 @@ app.use("/:lang", galleryRouter);
 const blogsRouter = require("./routes/blogs");
 app.use("/:lang", blogsRouter);
 
-const staticContentsRouter = require("./routes/staticContents");
-app.use("/:lang", staticContentsRouter);
-
 const searchRouter = require("./routes/search");
 app.use("/:lang", searchRouter);
 
@@ -127,6 +124,9 @@ app.use("/:lang", contactRouter);
 
 const ordersRouter = require("./routes/orders");
 app.use("/:lang", ordersRouter);
+
+const staticContentsRouter = require("./routes/staticContents");
+app.use("/:lang", staticContentsRouter);
 
 app.get("*", (req, res) => {
     return showNotFoundPage(req, res);

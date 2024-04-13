@@ -2,7 +2,7 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const { showServerErrorPage, showNotFoundPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -76,6 +76,7 @@ const getFAQ = (req, res) => {
     });
 }
 
+// Not used
 const getGDPR = (req, res) => {
     // Cart converting stuffs
     var cart = {
@@ -173,4 +174,70 @@ const handleGDPR = (req, res) => {
     }
 }
 
-module.exports = { getFAQ, getGDPR, handleGDPR };
+const getStaticPage = (req, res) => {
+    // Cart converting stuffs
+    var cart = {
+        items: req.session.cart ?? [],
+        totalCount: req.session.totalCount,
+        totalPrice: numberWithCommas(req.session.totalPrice)
+    };
+    cart.items = cart.items.map(item => {
+        return {
+            ...item,
+            price: numberWithCommas(item.price)
+        }
+    });
+
+    let { routeName } = req.params;
+    var { DB_CONFIG } = req;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
+
+    db.query("SELECT title, short_description, description, slug FROM static_contents WHERE slug = ?", routeName, (err, content) => {
+        if (err) {
+            console.log(err);
+            return showNotFoundPage(req, res);
+        }
+
+        else if (content.length > 0) {
+            const staticSiteTitle = getValueByLanguage(content[0].title, lang);
+            const staticSiteShort = getValueByLanguage(content[0].short_description, lang);
+            const staticSiteDescription = getValueByLanguage(content[0].description, lang);
+            const contentSlug = content[0].slug;
+
+            var metas = {
+                ...metaDefault,
+                title: staticSiteTitle + metaDefault['separator'] + metaDefault['title'],
+                lang: metaDefault.langs[lang],
+                type: "website",
+                url: `${ process.env.APP_URL }/${ lang }/${ contentSlug }`,
+                description: staticSiteShort ? staticSiteShort : languageHandler('meta.description', lang),
+                image: {
+                    src: metaDefault['default_og_images'],
+                    width: metaDefault['og:image:width'],
+                    height: metaDefault['og:image:height'],
+                },
+            };
+
+            return res.render("pages/static-page", {
+                meta: metas,
+                contentTitle: staticSiteTitle,
+                contentShortDescription: staticSiteShort,
+                contentDescription: staticSiteDescription,
+                contentSlug: contentSlug,
+                current_locale: lang,
+                cart: cart,
+                locales: ['hu', 'sr', 'en'],
+                languageHandler: languageHandler,
+                DB_CONFIG: DB_CONFIG,
+                webshopCategories: req.webshopCategories,
+                staticContent: req.static_content,
+                wishlistTotalNumber: req.wishlistTotalNumber,
+                gdprCookies: gdprCookies,
+                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+                csrfToken: req.csrfToken()
+            });
+        }
+    });
+}
+
+module.exports = { getFAQ, getGDPR, handleGDPR, getStaticPage };
