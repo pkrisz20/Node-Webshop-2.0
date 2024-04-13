@@ -1,6 +1,6 @@
 const { format } = require("date-fns");
 const validLangs = process.env.VALID_LANGS.split(',');
-const staticPathnames = ['/', '/contact', '/faq', '/about', '/gallery', '/blogs', '/products', '/wishlist'];
+const staticPathnames = ['/', '/contact', '/faq', '/about', '/gallery', '/blogs', '/products', '/wishlist', '/terms-of-use', '/privacy-policy'];
 const currentDate = format(new Date(), "yyyy-MM-dd");
 let staticUrls = [];
 const alternateLangs = [
