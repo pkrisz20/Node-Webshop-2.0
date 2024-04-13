@@ -1,7 +1,7 @@
 .products-carousel {
     padding: 40px 0;
 
-    @media #{ $r-min-l } {
+    @media #{ $min-1025 } {
         padding: 60px 0 40px;
     }
 
@@ -31,7 +31,7 @@
                 font-size: 24px;
                 color: $c-white;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     font-size: 30px;
                 }
             }

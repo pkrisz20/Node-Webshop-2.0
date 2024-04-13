@@ -4,31 +4,11 @@
     display: flex;
     flex-direction: column;
 
-    @media(max-width: $r-max-xxl) {
-        width: 65%;
-    }
-
-    @media(max-width: $r-max-xl) {
-        width: 100%;
-    }
-
-    @media(max-width: $r-max-l) {
-        width: 60%;
-    }
-
-    @media(max-width: $r-max-m) {
-        width: 75%;
-    }
-
-    @media(max-width: $r-max-s) {
-        width: 90%;
-    }
-
     & > .row {
         display: flex;
         flex-direction: column;
 
-        @media #{ $r-min-m } {
+        @media #{ $min-768 } {
             flex-direction: row;
             gap: 25px;
         }
@@ -62,7 +42,7 @@
                 -ms-user-select: none;
                 user-select: none;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     font-size: 16px;
                 }
 
@@ -113,7 +93,7 @@
                 color: $c-9;
                 font-size: 14px;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     font-size: 16px;
                 }
 
@@ -276,7 +256,7 @@
         cursor: pointer;
         transition: all .3s ease-in-out;
 
-        @media #{ $r-min-m } {
+        @media #{ $min-768 } {
             width: 250px;
             font-size: 18px;
             line-height: 16px;

@@ -8,7 +8,7 @@
     .main-title {
         margin: 0 0 35px;
 
-        @media #{ $r-min-m } {
+        @media #{ $min-768 } {
             margin: 0 0 75px;
         }
     }

@@ -15,11 +15,11 @@
   padding-top: 200px;
   min-height: 100vh;
 
-  @media #{$r-max-xl} {
+  @media #{ $max-1199 } {
     padding-top: 190px;
   }
 
-  @media #{$r-max-l} {
+  @media #{ $max-1024 } {
     padding-top: 110px;
   }
 }

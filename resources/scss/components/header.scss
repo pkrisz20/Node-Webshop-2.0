@@ -6,12 +6,12 @@
     width: 100%;
     transition: all .3s ease-in-out;
 
-    @media #{$r-max-l} {
+    @media #{$max-1024} {
       height: auto;
     }
 
     &-mobile-nav {
-      @media #{$r-min-l} { display: none; }
+      @media #{ $min-1025 } { display: none; }
 
       position: absolute;
       z-index: 50;
@@ -277,7 +277,7 @@
     &-top {
       background-color: $c-dark-blue;
 
-      @media #{$r-max-l} {
+      @media #{$max-1024} {
         display: none;
       }
 
@@ -295,7 +295,7 @@
           transition: .3s ease-in-out;
           font-size: 16px;
 
-          @media #{$r-max-l} {
+          @media #{$max-1024} {
             font-size: 14px;
           }
 
@@ -313,7 +313,7 @@
           color: $c-a;
           font-weight: 400;
           font-size: 16px;
-          @media #{$r-max-l} {
+          @media #{$max-1024} {
             font-size: 14px;
           }
         }
@@ -322,7 +322,7 @@
           font-size: 20px;
           color: $c-a;
           transition: .3s ease-in-out;
-          @media #{$r-max-l} {
+          @media #{$max-1024} {
             font-size: 17px;
           }
 
@@ -341,7 +341,7 @@
         padding: 15px;
         @include flexBox("space-between");
 
-        @media #{$r-max-xl} {
+        @media #{ $max-1199 } {
           padding: 10px 30px;
         }
 
@@ -350,7 +350,7 @@
           align-items: center;
           gap: 24px;
 
-          @media #{$r-max-l} {
+          @media #{$max-1024} {
             display: flex;
           }
 
@@ -387,7 +387,7 @@
         width: 200px;
         transition: width .2s ease-in-out;
 
-        @media #{$r-max-l} {
+        @media #{$max-1024} {
           width: 130px;
         }
 
@@ -400,7 +400,7 @@
       }
 
       .nav {
-        @media #{$r-max-l} {
+        @media #{$max-1024} {
           display: none;
         }
 
@@ -454,11 +454,11 @@
         padding: 10px 15px;
         @include flexBox("space-between");
 
-        @media #{$r-max-xl} {
+        @media #{ $max-1199 } {
           padding: 10px 30px;
         }
 
-        @media #{$r-max-l} {
+        @media #{$max-1024} {
           padding: 7px 30px;
           @include flexBox("center");
         }
@@ -485,7 +485,7 @@
             font-size: 20px;
             cursor: pointer;
 
-            @media #{$r-max-l} {
+            @media #{$max-1024} {
               right: 50px;
               font-size: 18px;
             }
@@ -500,12 +500,12 @@
             outline: none;
             background-color: $c-e;
 
-            @media #{$r-max-l} {
+            @media #{$max-1024} {
               height: 30px;
               font-size: 14px;
             }
 
-            @media #{$r-max-s} {
+            @media #{ $max-539 } {
               width: auto;
             }
 
@@ -528,7 +528,7 @@
             cursor: pointer;
             border-radius: 0 25px 25px 0;
 
-            @media #{$r-max-l} {
+            @media #{$max-1024} {
               width: 40px;
               height: 30px;
             }
@@ -537,7 +537,7 @@
               font-size: 18px;
               color: $c-e;
 
-              @media #{$r-max-l} {
+              @media #{$max-1024} {
                 font-size: 14px;
               }
             }
@@ -563,7 +563,7 @@
               margin-bottom: 5px;
             }
 
-            @media #{$r-max-l} {
+            @media #{$max-1024} {
               width: 300px;
               top: 30px;
               left: 50%;
@@ -621,7 +621,7 @@
                   border-bottom: 1px solid $c-6;
                 }
 
-                @media #{$r-max-l} {
+                @media #{$max-1024} {
                   flex-direction: column;
                   height: auto;
                 }
@@ -647,7 +647,7 @@
                   font-weight: 700;
                   text-align: center;
 
-                  @media #{$r-max-l} {
+                  @media #{$max-1024} {
                     margin: 5px 0;
                   }
                 }
@@ -668,7 +668,7 @@
           align-items: center;
           gap: 30px;
 
-          @media #{$r-max-l} {
+          @media #{$max-1024} {
             display: none;
           }
 
@@ -705,7 +705,7 @@
       width: auto;
       display: none;
 
-      @media #{ $r-min-l } {
+      @media #{ $min-1025 } {
         display: block;
       }
 
@@ -741,11 +741,11 @@
 
     .upscroller {
 
-      @media #{$r-max-m} {
+      @media #{ $max-767 } {
         display: none !important;
       }
 
-      @media #{$r-min-m} {
+      @media #{ $min-768 } {
         position: fixed;
         z-index: 25;
         right: 30px;
@@ -765,7 +765,7 @@
       }
     }
 
-    @media #{$r-min-l} {
+    @media #{ $min-1025 } {
       &-sticky {
         .header-middle > .wrapper {
           padding: 5px 15px;

@@ -9,7 +9,7 @@
     .main-title {
         margin: 0 0 25px;
 
-        @media #{ $r-min-m } {
+        @media #{ $min-768 } {
             margin: 0 0 60px;
         }
     }
@@ -23,7 +23,7 @@
             font-weight: 600;
             line-height: 22px;
 
-            @media #{ $r-min-m } {
+            @media #{ $min-768 } {
                 line-height: 27px;
             }
         }
@@ -49,12 +49,12 @@
             flex-direction: column;
             width: 100%;
 
-            @media #{ $r-max-m } {
+            @media #{ $max-767 } {
                 margin: 0 auto;
                 max-width: 430px;
             }
 
-            @media #{ $r-min-m } {
+            @media #{ $min-768 } {
                 @include gridBox("center", 2, 25px, 25px);
             }
 

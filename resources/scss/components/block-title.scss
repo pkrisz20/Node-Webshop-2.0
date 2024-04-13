@@ -34,7 +34,7 @@
         font-size: 20px;
         margin-top: 20px;
 
-        @media #{$r-max-l} {
+        @media #{ $max-1024 } {
             font-size: 18px;
         }
     }

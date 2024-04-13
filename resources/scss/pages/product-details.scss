@@ -19,7 +19,7 @@
       @include flexBox("center", "flex-start", 15px);
       flex-direction: column;
 
-      @media #{ $r-min-xl } {
+      @media #{ $min-1200 } {
         @include flexBox("space-between", "flex-start", 15px);
         flex-direction: row;
       }
@@ -73,14 +73,14 @@
           }
         }
 
-        @media #{ $r-min-xl } {
+        @media #{ $min-1200 } {
           max-width: 50%;
         }
 
         &__thumbs {
           display: none;
 
-          @media #{ $r-min-m } {
+          @media #{ $min-768 } {
             margin-top: 10px;
             display: flex;
             flex-wrap: wrap;
@@ -117,7 +117,7 @@
         }
 
         &-short {
-          @media #{ $r-max-l } {
+          @media #{ $max-1024 } {
             font-size: 14px;
           }
         }
@@ -126,7 +126,7 @@
           @include flexBox('flex-start', 'center', 15px);
           flex-wrap: wrap;
 
-          @media #{ $r-min-l } {
+          @media #{ $min-1025 } {
             margin: 10px 0;
           }
 
@@ -135,7 +135,7 @@
             font-weight: 700;
             color: $c-3;
 
-            @media #{ $r-min-l } {
+            @media #{ $min-1025 } {
               font-size: 26px;
             }
           }
@@ -145,7 +145,7 @@
             color: $c-9;
             font-weight: 600;
 
-            @media #{ $r-min-l } {
+            @media #{ $min-1025 } {
               font-size: 20px;
             }
           }
@@ -165,11 +165,11 @@
             flex-direction: column;
             align-items: baseline;
 
-            @media #{ $r-min-xl } {
+            @media #{ $min-1200 } {
               flex-direction: row;
             }
 
-            @media #{ $r-min-s } {
+            @media #{ $min-540 } {
               font-size: 18px;
             }
 
@@ -181,7 +181,7 @@
               color: $c-dark2;
               margin: 10px 0 0;
 
-              @media #{ $r-min-xl } {
+              @media #{ $min-1200 } {
                 margin: 0 0 0 10px;
               }
 
@@ -220,7 +220,7 @@
           @include flexBox("flex-start", "center", 10px);
           width: 100%;
 
-          @media #{ $r-max-xs } {
+          @media #{ $max-419 } {
             flex-direction: column;
             align-items: flex-start;
           }
@@ -293,7 +293,7 @@
               cursor: pointer;
               transition: all .2s ease-in-out;
 
-              @media #{ $r-min-l } {
+              @media #{ $min-1025 } {
                 font-size: 16px;
                 width: 40px;
                 height: 40px;
@@ -308,7 +308,7 @@
                 border-top-left-radius: 30px;
                 border-bottom-left-radius: 30px;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                   border-top-left-radius: 40px;
                   border-bottom-left-radius: 40px;
                 }
@@ -317,7 +317,7 @@
                 border-top-right-radius: 30px;
                 border-bottom-right-radius: 30px;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                   border-top-right-radius: 40px;
                   border-bottom-right-radius: 40px;
                 }
@@ -333,7 +333,7 @@
               font-size: 16px;
               text-align: center;
 
-              @media #{ $r-min-l } {
+              @media #{ $min-1025 } {
                 font-size: 18px;
                 height: 40px;
                 width: 70px;
@@ -348,7 +348,7 @@
             border-radius: 25px;
             text-transform: uppercase;
 
-            @media #{ $r-min-l } {
+            @media #{ $min-1025 } {
               padding: 15px 30px;
             }
 

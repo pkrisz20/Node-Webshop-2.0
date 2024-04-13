@@ -15,7 +15,7 @@
             display: none;
             margin-left: 5px;
 
-            @media #{ $r-min-m } {
+            @media #{ $min-768 } {
                 display: inline-block;
             }
         }
@@ -55,7 +55,7 @@
                 line-height: 21px;
                 text-transform: uppercase;
 
-                @media #{ $r-max-l } {
+                @media #{ $max-1024 } {
                     display: none;
                 }
             }
@@ -95,7 +95,7 @@
                 font-weight: 500;
                 transition: background-color .3s ease-in-out;
 
-                @media #{ $r-min-xl } {
+                @media #{ $min-1200 } {
                     padding: 10px 12px;
                 }
 
@@ -112,7 +112,7 @@
                     font-weight: 500;
                     transition: all .3s ease-in-out;
 
-                    @media #{ $r-min-xl } {
+                    @media #{ $min-1200 } {
                         padding: 9px 13px;
                     }
 
@@ -193,11 +193,11 @@
             width: 100%;
             cursor: pointer;
 
-            @media #{ $r-min-xs } {
+            @media #{ $min-420 } {
                 width: 50%;
             }
 
-            @media #{ $r-min-l } {
+            @media #{ $min-1025 } {
                 width: auto;
             }
 

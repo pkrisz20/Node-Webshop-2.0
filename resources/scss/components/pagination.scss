@@ -20,7 +20,7 @@
         }
       }
 
-      @media #{ $r-max-m } {
+      @media #{ $max-767 } {
         &:not(.arrow) {
           display: none;
         }

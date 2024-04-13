@@ -31,7 +31,7 @@
                 font-size: 24px;
                 color: $c-white;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     font-size: 30px;
                 }
             }
@@ -40,7 +40,7 @@
         &-prev {
             left: 5px !important;
 
-            @media #{ $r-min-xl } {
+            @media #{ $min-1200 } {
                 left: 20px !important;
             }
         }
@@ -48,7 +48,7 @@
         &-next {
             right: 5px !important;
 
-            @media #{ $r-min-xl } {
+            @media #{ $min-1200 } {
                 right: 20px !important;
             }
         }
@@ -68,7 +68,7 @@
             background-color: rgba($c-black, .6);
         }
 
-        @media #{ $r-min-xl } {
+        @media #{ $min-1200 } {
             width: 260px;
             height: 260px;
             margin: 0;

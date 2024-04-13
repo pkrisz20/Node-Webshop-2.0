@@ -33,7 +33,7 @@
                 font-size: 24px;
                 color: $c-white;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     font-size: 30px;
                 }
             }

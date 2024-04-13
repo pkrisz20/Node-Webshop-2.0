@@ -19,7 +19,7 @@
         & > .main-title {
             margin: 0 0 60px;
 
-            @media #{ $r-min-m } {
+            @media #{ $min-768 } {
                 margin: 0 0 100px;
             }
         }
@@ -30,7 +30,7 @@
                 flex-direction: column;
                 gap: 20px;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     flex-direction: row;
                 }
 
@@ -87,7 +87,7 @@
                 }
 
                 &.has-sidebar {
-                    @media #{ $r-min-m } {
+                    @media #{ $min-768 } {
                         width: calc(100% - 320px);
                     }
                 }
@@ -103,7 +103,7 @@
                 &__thumbs {
                     display: none;
 
-                    @media #{ $r-min-m } {
+                    @media #{ $min-768 } {
                         display: flex;
                         flex-wrap: wrap;
                     }
@@ -138,7 +138,7 @@
                 @include flexBox("flex-start", "flex-start", 15px);
                 flex-direction: column;
 
-                @media #{ $r-min-m } {
+                @media #{ $min-768 } {
                     width: 300px;
                 }
 
@@ -174,7 +174,7 @@
                             color: $c-9;
                             transition: all .2s ease-in-out;
 
-                            @media #{ $r-min-xl } {
+                            @media #{ $min-1200 } {
                                 font-size: 15px;
                             }
                         }

@@ -251,7 +251,7 @@
         margin-bottom: 10px;
     }
 
-    @media #{ $r-max-xl } {
+    @media #{ $max-1199 } {
         table {
             display: block;
             max-width: 100% !important;

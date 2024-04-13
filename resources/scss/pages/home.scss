@@ -17,7 +17,7 @@
       margin: 0 auto 50px;
       @include flexBox();
 
-      @media #{$r-max-m} {
+      @media #{ $max-767 } {
         margin: 0 auto 30px;
       }
 
@@ -54,7 +54,7 @@
           gap: 20px;
         }
 
-        @media #{ $r-min-xl } {
+        @media #{ $min-1200 } {
           display: flex;
           flex-direction: row;
           justify-content: center;
@@ -125,7 +125,7 @@
           padding: 0 15px;
           text-align: center;
 
-          @media #{$r-max-s} {
+          @media #{ $max-539 } {
             width: 100%;
           }
 
@@ -136,15 +136,15 @@
               font-weight: 700;
               margin: 30px 0 0;
 
-              @media #{$r-max-xl} {
+              @media #{ $max-1199 } {
                   font-size: 32px;
               }
 
-              @media #{$r-max-l} {
+              @media #{ $max-1024 } {
                   font-size: 32px;
               }
 
-              @media #{$r-max-m} {
+              @media #{ $max-767 } {
                   font-size: 26px;
               }
           }
@@ -156,7 +156,7 @@
               font-weight: 400;
               margin-top: 20px;
 
-              @media #{$r-max-s} {
+              @media #{ $max-539 } {
                 font-size: 14px;
                 line-height: 22px;
               }
@@ -182,7 +182,7 @@
                 background-color: $c-middleblue;
               }
 
-              @media #{$r-max-xs} {
+              @media #{ $max-419 } {
                 margin: 15px;
               }
 
@@ -203,7 +203,7 @@
           }
       }
 
-      @media #{$r-max-m} {
+      @media #{ $max-767 } {
         height: 80vh;
       }
     }

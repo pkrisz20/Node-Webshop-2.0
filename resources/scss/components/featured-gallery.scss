@@ -1,7 +1,7 @@
 .gallery {
     background-color: rgba($c-d, .5);
 
-    @media #{$r-max-l} {
+    @media #{ $max-1024 } {
         padding: 40px 0;
     }
 
@@ -81,21 +81,21 @@
                                 color: $c-white;
                             }
 
-                            @media #{$r-max-m} {
+                            @media #{$max-767} {
                                 padding: 10px;
                                 margin: 0 5px;
                             }
 
-                            @media #{$r-max-s} {
+                            @media #{$max-539} {
                                 padding: 8px;
                             }
                         }
 
-                        @media #{$r-max-l} {
+                        @media #{ $max-1024 } {
                             margin: 10px 0 0;
                         }
 
-                        @media #{$r-max-m} {
+                        @media #{$max-767} {
                             margin: 5px 0;
                         }
                     }
@@ -108,11 +108,11 @@
                         font-weight: 700;
                         text-transform: uppercase;
 
-                        @media #{$r-max-m} {
+                        @media #{$max-767} {
                             margin: 0;
                         }
 
-                        @media #{$r-max-s} {
+                        @media #{$max-539} {
                             font-size: 13px;
                         }
                     }
@@ -124,7 +124,7 @@
                         color: $c-4;
                         font-weight: 300;
 
-                        @media #{$r-max-m} {
+                        @media #{$max-767} {
                             margin: 0;
                         }
                     }
@@ -149,17 +149,17 @@
             }
         }
 
-        @media #{$r-max-m} {
+        @media #{$max-767} {
             display: grid;
             grid-template-columns: repeat(3, 33%);
         }
 
-        @media #{$r-max-s} {
+        @media #{$max-539} {
             display: grid;
             grid-template-columns: repeat(2, 50%);
         }
 
-        @media #{ $r-max-xs } {
+        @media #{ $max-419 } {
             display: flex;
             flex-direction: column;
         }

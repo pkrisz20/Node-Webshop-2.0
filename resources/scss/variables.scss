@@ -62,16 +62,16 @@ $c-2: #222;
 $c-1: #111;
 $c-black: #000;
 
-$r-min-xs: "(min-width: 420px)";
-$r-min-s: "(min-width: 540px)";
-$r-min-m: "(min-width: 768px)";
-$r-min-l: "(min-width: 1025px)";
-$r-min-xl: "(min-width: 1200px)";
-$r-min-xxl: "(min-width: 1500px)";
+$min-420: "(min-width: 420px)";
+$min-540: "(min-width: 540px)";
+$min-768: "(min-width: 768px)";
+$min-1025: "(min-width: 1025px)";
+$min-1200: "(min-width: 1200px)";
+$min-1500: "(min-width: 1500px)";
 
-$r-max-xs: "(max-width: 419px)";
-$r-max-s: "(max-width: 539px)";
-$r-max-m: "(max-width: 767px)";
-$r-max-l: "(max-width: 1024px)";
-$r-max-xl: "(max-width: 1199px)";
-$r-max-xxl: "(max-width: 1499px)";
+$max-419: "(max-width: 419px)";
+$max-539: "(max-width: 539px)";
+$max-767: "(max-width: 767px)";
+$max-1024: "(max-width: 1024px)";
+$max-1199: "(max-width: 1199px)";
+$max-1499: "(max-width: 1499px)";
