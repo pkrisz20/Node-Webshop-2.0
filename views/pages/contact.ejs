@@ -107,7 +107,6 @@
                                 <input
                                     id="contact-phone"
                                     data-rule-required="true"
-                                    data-rule-digits="true"
                                     name="phone"
                                     type="text"
                                     placeholder="<%= languageHandler('validations.phone_number', current_locale) %>"
@@ -237,12 +236,25 @@
             });
             var defaultLayers = platform.createDefaultLayers();
 
-            var map = new H.Map(document.getElementById('map'),
-            defaultLayers.vector.normal.map, {
-                center: { lat: <%- DB_CONFIG["map_lat"] %>, lng: <%- DB_CONFIG["map_long"] %> },
-                zoom: 11,
-                pixelRatio: window.devicePixelRatio || 1
-            });
+            var map = new H.Map(
+                document.getElementById('map'),
+                defaultLayers.vector.normal.map,
+                {
+                    center: { lat: <%- DB_CONFIG["map_lat"] %>, lng: <%- DB_CONFIG["map_long"] %> },
+                    zoom: 11,
+                    pixelRatio: window.devicePixelRatio || 1
+                }
+            );
+
+            var mapEvents = new H.mapevents.MapEvents(map);
+            var behavior = new H.mapevents.Behavior(mapEvents);
+            var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+            behavior.disable(H.mapevents.Behavior.WHEELZOOM);
+
+            var mapSettings = ui.getControl('mapsettings');
+            var zoom = ui.getControl('zoom');
+            var scalebar = ui.getControl('scalebar');
 
             var cityMarker = new H.map.Marker({ lat: <%- DB_CONFIG["map_lat"] %>, lng: <%- DB_CONFIG["map_long"] %> });
             map.addObject(cityMarker);
@@ -250,9 +262,6 @@
             window.addEventListener('resize', function () {
                 map.getViewPort().resize();
             });
-
-            var mapEvents = new H.mapevents.MapEvents(map);
-            var behavior = new H.mapevents.Behavior(mapEvents);
         </script>
     <% } %>
 </body>

@@ -3,7 +3,7 @@ const contactRouter = express.Router();
 const ContactController = require("../controllers/ContactController");
 const validationMiddleware = require("../middleware/validationMiddleware");
 const contactSchema = require("../validations/contactValidation");
-const recaptchaValidation = require("../validations/recaptchaValidation");
+// const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 const selectStaticContents = require("../middleware/selectStaticContents");
@@ -13,6 +13,6 @@ contactRouter.route("/contact")
     .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, filterActiveWishlistItems, ContactController.getContactPage);
 
 contactRouter.route("/contact/handle")
-    .post(validationMiddleware(contactSchema), recaptchaValidation, ContactController.handleContactMessage);
+    .post(validationMiddleware(contactSchema), ContactController.handleContactMessage);
 
 module.exports = contactRouter;

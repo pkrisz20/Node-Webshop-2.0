@@ -4,7 +4,7 @@ const { getCartItems } = require("../helpers/getCartItems");
 const OrdersController = require("../controllers/OrdersController");
 const validationMiddleware = require("../middleware/validationMiddleware");
 const orderSchema = require("../validations/orderValidation");
-const recaptchaValidation = require("../validations/recaptchaValidation");
+// const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 const selectStaticContents = require("../middleware/selectStaticContents");
@@ -14,6 +14,6 @@ ordersRouter.route("/order")
     .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, OrdersController.getOrderPage);
 
 ordersRouter.route("/order/handle")
-    .post(validationMiddleware(orderSchema), recaptchaValidation, OrdersController.createOrder);
+    .post(validationMiddleware(orderSchema), OrdersController.createOrder);
 
 module.exports = ordersRouter;

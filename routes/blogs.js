@@ -4,7 +4,7 @@ const BlogsController = require("../controllers/BlogsController");
 const { getCartItems } = require("../helpers/getCartItems");
 const validationMiddleware = require("../middleware/validationMiddleware");
 const commentsSchema = require("../validations/commentValidation");
-const recaptchaValidation = require("../validations/recaptchaValidation");
+// const recaptchaValidation = require("../validations/recaptchaValidation");
 const getConfigFromDb = require("../helpers/getConfigFromDb");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 const selectStaticContents = require("../middleware/selectStaticContents");
@@ -20,6 +20,6 @@ blogsRouter.route("/blog/comment/load-more")
     .post(BlogsController.ajaxLoadMoreComments);
 
 blogsRouter.route("/blog/comment/:itemId")
-    .post(validationMiddleware(commentsSchema), recaptchaValidation, BlogsController.handleBlogComment);
+    .post(validationMiddleware(commentsSchema), BlogsController.handleBlogComment);
 
 module.exports = blogsRouter;

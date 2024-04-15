@@ -42,7 +42,7 @@ const en = {
 		blog_subtitle: "You can see the events that happened to us",
 		contact_title: "Contact with us",
 		contact_subtitle: "Write to us about anything",
-		contact_datas: "Contact datas",
+		contact_datas: "Contact data",
 		comments: "Comments",
 		comment: "Comment",
 		comments_subtitle: "Send us what are you thinking about",
