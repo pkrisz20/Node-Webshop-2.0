@@ -75,63 +75,22 @@
                 <small class="characters-count js-counter"><span>1000</span> / 1000</small>
             </div>
 
-            <style>
-                .rating {
-                    display: flex;
-                    flex-direction: row-reverse;
-                    justify-content: flex-end;
-                }
-
-                .rating input {
-                    display: none;
-                }
-
-                .rating label {
-                    cursor: pointer;
-                    font-size: 24px;
-                    color: #ccc;
-                }
-
-                .rating label:hover,
-                .rating input:checked + label {
-                    color: #ffdd36;
-                }
-
-                .rating label:hover ~ label,
-                .rating input:checked ~ label {
-                    color: #ffdd36;
-                }
-            </style>
-                <div class="rating">
-                    <input type="radio" id="star5" name="rating" value="5">
-                    <label for="star5">&#9733;</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star4">&#9733;</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star3">&#9733;</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star2">&#9733;</label>
-                    <input type="radio" id="star1" name="rating" value="1">
-                    <label for="star1">&#9733;</label>
+            <% if (articleType === 'product') { %>
+                <div class="form-row">
+                    <div class="rating js-ratings-option">
+                        <input type="radio" id="star5" name="rating" value="5">
+                        <label for="star5">&#9733;</label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4">&#9733;</label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3">&#9733;</label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2">&#9733;</label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1">&#9733;</label>
+                    </div>
                 </div>
-            <script>
-                const ratingInputs = document.querySelectorAll('.rating input');
-
-                ratingInputs.forEach(input => {
-                    input.addEventListener('click', function() {
-                        const rating = parseInt(this.value);
-                        const labels = this.parentElement.querySelectorAll('label');
-
-                        labels.forEach((label, index) => {
-                            if (index < rating) {
-                                label.classList.add('selected');
-                            } else {
-                                label.classList.remove('selected');
-                            }
-                        });
-                    });
-                });
-            </script>
+            <% } %>
 
             <div class="form-row gdpr">
                 <label
@@ -163,6 +122,13 @@
                                 <strong class="content__top-name"><%= comment.name %></strong>
                                 <% if (comment.is_verified) { %>
                                     <span class="content__top-badge"><i class="fas fa-check-circle icon"></i><%= languageHandler('products.verified_purchase', current_locale) %></span>
+                                <% } %>
+                                <% if (comment.rating > 0) { %>
+                                    <span class="content__top-rating">
+                                        <% for (var index = 0; index < comment.rating; index++) { %>
+                                            <i class="fas fa-star"></i>
+                                        <% } %>
+                                    </span>
                                 <% } %>
                             </div>
                             <p class="content-comment"><%= comment.description %></p>

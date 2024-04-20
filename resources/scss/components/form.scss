@@ -28,6 +28,33 @@
         position: relative;
         margin-bottom: 28px;
 
+        .rating {
+            line-height: 1;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+
+            input {
+                display: none;
+
+                &:checked + label,
+                &:checked ~ label {
+                    color: $c-yellow;
+                }
+            }
+
+            label {
+                cursor: pointer;
+                font-size: 35px;
+                color: $c-c;
+
+                &:hover,
+                &:hover ~ label {
+                    color: $c-yellow;
+                }
+            }
+        }
+
         &.gdpr {
             & > label {
                 all: unset;

@@ -134,6 +134,3 @@ app.get("*", (req, res) => {
 
 // Crons
 cron.schedule('0 0 0 * * *', deleteLogs);
-
-// Log the errors
-app.use(errorHandler);

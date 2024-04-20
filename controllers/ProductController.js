@@ -3,8 +3,9 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText, escapeHtml } = require("../helpers/globalFunctions");
 const moment = require("moment");
+const errorHandler = require('../middleware/errorHandler');
 const languageHandler = require("../helpers/languageHandler");
-const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -32,12 +33,11 @@ const getProductDetails = (req, res) => {
     let isAlreadyInCart = false;
     let showLoadMoreButton = false;
 
-    const sqlQuery = "SELECT products.id, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND products.slug = ?";
+    const sqlQuery = "SELECT products.id, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.slug = ?";
 
     db.query(sqlQuery, [1, slug], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'productController', 40);
         }
 
         else if (data.length === 0) {
@@ -58,6 +58,8 @@ const getProductDetails = (req, res) => {
                 isOnDiscount: Boolean(data[0].discount_value),
                 discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
                 savings: data[0].discount_value != null ? numberWithCommas(data[0].price - data[0].discount_value) : null,
+                averageRating: Math.ceil(data[0].average_rating),
+                allRatingsCount: data[0].all_ratings_count,
                 isAvailable: Boolean(data[0].is_available),
                 isPostable: Boolean(data[0].is_delivered),
                 maxQuantity: parseInt(data[0].max_order_count),
@@ -85,8 +87,7 @@ const getProductDetails = (req, res) => {
 
             db.query(similarProductsQuery, [1, parseInt(data[0].category_id), result.id], (err, similars) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'productController', 89);
                 }
 
                 else if (similars.length > 0) {
@@ -121,12 +122,11 @@ const getProductDetails = (req, res) => {
 
                 // Select product comments, if they are not disabled
                 if (result.isAllowed) {
-                    const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ?";
+                    const selectProductComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.rating, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ?";
 
                     db.query(selectProductComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)], (comments_err, comments_data) => {
                         if (comments_err) {
-                            console.log(comments_err);
-                            return showServerErrorPage(req, res);
+                            return errorHandler(comments_err, req, res, 'productController', 128);
                         }
 
                         else if ( comments_data.length === 0 ) {
@@ -157,6 +157,7 @@ const getProductDetails = (req, res) => {
                             comments_data.forEach(element => {
                                 let tempObject = {
                                     id: parseInt(element.id),
+                                    rating: parseInt(element.rating),
                                     name: element.name,
                                     is_verified: Boolean(element.is_verified_purchase ?? false),
                                     description: element.comment,
@@ -178,8 +179,7 @@ const getProductDetails = (req, res) => {
 
                             db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
                                 if ( comments_count_err ) {
-                                    console.log(comments_count_err);
-                                    return showServerErrorPage(req, res);
+                                    return errorHandler(comments_count_err, req, res, 'productController', 181);
                                 }
 
                                 else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
@@ -282,8 +282,7 @@ const getAllProducts = (req, res) => {
 
     db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'productController', 285);
         }
 
         else if (data.length == 0) {
@@ -343,8 +342,7 @@ const getAllProducts = (req, res) => {
             // Select for pagination count
             db.query(selectForPagination, 1, (err, elementsCount) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'productController', 345);
                 }
 
                 else if (elementsCount) {
@@ -385,10 +383,11 @@ const handleProductComment = (req, res) => {
     const { fullName } = req.body;
     const { email } = req.body;
     const { comment } = req.body;
+    const { rating } = req.body;
 
-    const sqlQueryInsertComment = "INSERT INTO product_comments (name, email, comment, date, product_id) VALUES (?, ?, ?, ?, ?)";
+    const sqlQueryInsertComment = "INSERT INTO product_comments (name, email, comment, date, rating, product_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-    db.query(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), req.params.itemId], (err, result) => {
+    db.query(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), rating, req.params.itemId], (err, result) => {
         if (err) {
             console.log(err);
             return res.status(200).json({
@@ -441,8 +440,7 @@ const getCategoryProducts = (req, res) => {
 
     db.query(checkForCategory, slug, (checking_err, category_data) => {
         if (checking_err) {
-            console.log(checking_err);
-            return showServerErrorPage(req, res);
+            return errorHandler(checking_err, req, res, 'productController', 443);
         }
 
         else if (category_data.length === 0) {
@@ -473,8 +471,7 @@ const getCategoryProducts = (req, res) => {
 
             db.query(sqlQuery, [1, slug, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'productController', 474);
                 }
 
                 else if (data.length === 0) {
@@ -534,8 +531,7 @@ const getCategoryProducts = (req, res) => {
                     // Select for pagination count
                     db.query(selectForPagination, [1, slug], (err_count, elementsCount) => {
                         if (err_count) {
-                            console.log(err_count);
-                            return showServerErrorPage(req, res);
+                            return errorHandler(err_count, req, res, 'productController', 534);
                         }
 
                         else if (elementsCount) {
@@ -822,8 +818,7 @@ const getWishlistListPage = ( req, res, next ) => {
 
     db.query(selectWishlistProducts, [...wishlistProductIds, 1], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'productController', 821);
         }
 
         else if (data.length === 0) {

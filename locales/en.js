@@ -107,6 +107,7 @@ const en = {
 		add_cart: "Add to cart",
 		new: "New",
 		verified_purchase: "Verified purchase",
+		average_rating: "Average rating",
 		postable: "This product can be delivered by post",
 		not_postable: "This product CAN NOT be delivered by post",
 		no_comment_yet: "There is no any comment under this article yet. Be You the first!",

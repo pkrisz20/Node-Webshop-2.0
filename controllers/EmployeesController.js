@@ -2,8 +2,8 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
+const errorHandler = require('../middleware/errorHandler');
 const { numberWithCommas } = require('../helpers/globalFunctions');
-const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -42,8 +42,7 @@ const getEmployees = (req, res) => {
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'employeesController', 46);
         }
 
         else if (data.length > 0) {

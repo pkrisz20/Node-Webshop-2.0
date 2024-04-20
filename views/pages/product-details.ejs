@@ -73,6 +73,18 @@
                                     <% if (productDetails.savings) { %>
                                         <div class="table_label"><%= languageHandler('products.savings', current_locale) %>: <strong class="savings"><%= productDetails.savings %> RSD</strong></div>
                                     <% } %>
+
+                                    <% if (productDetails.averageRating > 0 && productDetails.allRatingsCount > 0) { %>
+                                        <div class="table_label">
+                                            <%= languageHandler('products.average_rating', current_locale) %>:
+                                            <strong class="rating">
+                                                <% for (var index = 0; index < productDetails.averageRating; index++) { %>
+                                                    <i class="fas fa-star"></i>
+                                                <% } %>
+                                                (<%= productDetails.allRatingsCount %>)
+                                            </strong>
+                                        </div>
+                                    <% } %>
                                 </div>
 
                                 <div class="prices">

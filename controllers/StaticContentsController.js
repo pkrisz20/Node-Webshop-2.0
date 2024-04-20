@@ -2,7 +2,8 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
-const { showServerErrorPage, showNotFoundPage } = require("../helpers/showErrorPages");
+const errorHandler = require('../middleware/errorHandler');
+const { showNotFoundPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -42,8 +43,7 @@ const getFAQ = (req, res) => {
 
     db.query(sqlQuery, 1, (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'staticController', 46);
         }
 
         else if (data.length > 0) {
@@ -194,7 +194,6 @@ const getStaticPage = (req, res) => {
 
     db.query("SELECT title, short_description, description, slug FROM static_contents WHERE slug = ?", routeName, (err, content) => {
         if (err) {
-            console.log(err);
             return showNotFoundPage(req, res);
         }
 

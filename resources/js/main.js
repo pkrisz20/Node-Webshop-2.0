@@ -260,6 +260,27 @@ $(function() {
         });
     }
 
+    // Comments rating
+    if ($('.js-ratings-option').length > 0) {
+        var ratingInputs = $('.js-ratings-option input');
+
+        ratingInputs.each(function() {
+            $(this).on('click', function() {
+                const rating = parseInt($(this).val());
+                const labels = $(this).closest('label');
+
+                labels.each(function (label, index) {
+                    if (index < rating) {
+                        label.addCLass('selected');
+                    }
+                    else {
+                        label.removeClass('selected');
+                    }
+                });
+            });
+        });
+    }
+
     // Tabs functionality
     if ($('.js-tabs').length > 0) {
 

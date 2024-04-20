@@ -5,7 +5,8 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText, escapeHtml } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require('../helpers/formatDateByLocale');
-const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const errorHandler = require('../middleware/errorHandler');
+const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -39,8 +40,7 @@ const getBlogDetails = (req, res) => {
 
     db.query(blogDetailsQuery, [1, slug], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'blogsController', 43);
         }
 
         else if (data.length == 0) {
@@ -80,8 +80,7 @@ const getBlogDetails = (req, res) => {
             db.query(newestBlogsQuery, [1, result.id, moment(new Date()).subtract(3, 'months').format("YYYY-MM-DD"), moment(new Date()).format("YYYY-MM-DD"), 15], (err, newestBlog) => {
 
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'blogsController', 83);
                 }
 
                 else if (newestBlog.length > 0) {
@@ -112,8 +111,7 @@ const getBlogDetails = (req, res) => {
 
                 db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), result.id, 12], (err, incommingEvent) => {
                     if (err) {
-                        console.log(err);
-                        return showServerErrorPage(req, res);
+                        return errorHandler(err, req, res, 'blogsController', 114);
                     }
 
                     else if (incommingEvent.length > 0) {
@@ -136,8 +134,7 @@ const getBlogDetails = (req, res) => {
 
                         db.query(selectBlogComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)], (comments_err, comments_data) => {
                             if (comments_err) {
-                                console.log(comments_err);
-                                return showServerErrorPage(req, res);
+                                return errorHandler(comments_err, req, res, 'blogsController', 137);
                             }
 
                             else if ( comments_data.length === 0 ) {
@@ -187,8 +184,7 @@ const getBlogDetails = (req, res) => {
 
                                 db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
                                     if ( comments_count_err ) {
-                                        console.log(comments_count_err);
-                                        return showServerErrorPage(req, res);
+                                        return errorHandler(comments_count_err, req, res, 'blogsController', 187);
                                     }
 
                                     else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
@@ -293,8 +289,7 @@ const getAllBlogs = (req, res) => {
     // Select limit - offset elements
     db.query(sqlQueryPaginatedBlogs, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'blogsController', 292);
         }
 
         else if (data.length == 0) {
@@ -346,8 +341,7 @@ const getAllBlogs = (req, res) => {
             // Select for pagination count
             db.query("SELECT COUNT(blogs.id) AS 'each_article_count' FROM blogs WHERE blogs.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'blogsController', 344);
                 }
 
                 else if (elementsCount) {

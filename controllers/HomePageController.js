@@ -4,6 +4,7 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const errorHandler = require('../middleware/errorHandler');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
@@ -58,8 +59,7 @@ const getData = (req, res) => {
 
     db.query(sqlQueryProducts, [1, 1], (product_err, product_items) => {
         if (product_err) {
-            console.log(product_err);
-            return showServerErrorPage(req, res);
+            return errorHandler(product_err, req, res, 'homePageController', 62);
         }
 
         else if (product_items.length > 0) {
@@ -92,8 +92,7 @@ const getData = (req, res) => {
 
             db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
                 if (blog_err) {
-                    console.log(blog_err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(blog_err, req, res, 'homePageController', 95);
                 }
 
                 else if (blog_data.length > 0) {
@@ -125,8 +124,7 @@ const getData = (req, res) => {
 
                     db.query(sqlQuerySliders, 1, (hero_err, heros_data) => {
                         if (hero_err) {
-                            console.log(hero_err);
-                            return showServerErrorPage(req, res);
+                            return errorHandler(hero_err, req, res, 'homePageController', 127);
                         }
 
                         else if (heros_data.length > 0) {
@@ -146,8 +144,7 @@ const getData = (req, res) => {
 
                             db.query(sqlQueryGallery, [1, 1], (gallery_err, gallery_data) => {
                                 if (gallery_err) {
-                                    console.log(gallery_err);
-                                    return showServerErrorPage(req, res);
+                                    return errorHandler(gallery_err, req, res, 'homePageController', 147);
                                 }
 
                                 else if (gallery_data.length > 0) {

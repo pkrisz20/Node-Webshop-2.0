@@ -3,8 +3,9 @@ const { createUniqueID, numberWithCommas } = require("../helpers/globalFunctions
 // const getValueByLanguage = require("../helpers/getValueByLanguage"); -> for the email translations
 // const nodemailer = require("nodemailer"); -> for the mail sending
 const moment = require("moment");
+const errorHandler = require('../middleware/errorHandler');
 const languageHandler = require("../helpers/languageHandler");
-const { showBadRequestPage, showServerErrorPage } = require("../helpers/showErrorPages");
+const { showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -91,8 +92,7 @@ const createOrder = (req, res) => {
 
     db.query(`SELECT id, name, price, discount_value, is_active, is_available, max_order_count FROM products WHERE id IN (${ countParams })`, productIds, (err, result) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'ordersController', 95);
         }
 
         else if (result) {
@@ -144,8 +144,7 @@ const createOrder = (req, res) => {
             // Register the order in db
             db.query(SQLInsertOrder, bindingParams, (err, order_result) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'ordersController', 147);
                 }
 
                 else if (order_result) {
@@ -154,8 +153,7 @@ const createOrder = (req, res) => {
                         db.query("INSERT INTO order_details (order_id, product_id, quantity) VALUES (?, ?, ?)", [randomOrderId, orderedItem.productId, orderedItem.quantity], (err, order_details_result) => {
 
                             if (err) {
-                                console.log(err);
-                                return showServerErrorPage(req, res);
+                                return errorHandler(err, req, res, 'ordersController', 156);
                             }
                         });
                     });

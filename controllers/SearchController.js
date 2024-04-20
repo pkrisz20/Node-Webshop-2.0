@@ -4,8 +4,8 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas, setMomentLocale, capitalizeFirstLetter } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const moment = require("moment");
+const errorHandler = require('../middleware/errorHandler');
 const formatDateByLang = require("../helpers/formatDateByLocale");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 const searchLimit = 10;
@@ -79,8 +79,7 @@ const handleSearch = (req, res) => {
 
     db.query(searchProductsQuery, [1, ...words], (err_product, product_result) => {
         if (err_product) {
-            console.log(err_product);
-            return showServerErrorPage(req, res);
+            return errorHandler(err_product, req, res, 'searchController', 83);
         }
 
         else if (product_result.length > 0) {
@@ -123,8 +122,7 @@ const handleSearch = (req, res) => {
 
         db.query(blogsQuery, [1, ...words], (err_blog, blog_result) => {
             if (err_blog) {
-                console.log(err_blog);
-                return showServerErrorPage(req, res);
+                return errorHandler(err_blog, req, res, 'searchController', 126);
             }
 
             else if (blog_result.length > 0) {
@@ -175,8 +173,7 @@ const handleSearch = (req, res) => {
 
             db.query(galleryQuery, [1, ...words], (err_gallery, gallery_result) => {
                 if (err_gallery) {
-                    console.log(err_gallery);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err_gallery, req, res, 'searchController', 177);
                 }
 
                 else if (gallery_result.length > 0) {

@@ -4,7 +4,8 @@ const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const languageHandler = require("../helpers/languageHandler");
-const { showServerErrorPage, showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
+const errorHandler = require('../middleware/errorHandler');
+const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
@@ -53,8 +54,7 @@ const getAllGallery = (req, res) => {
 
     db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'galleryController', 57);
         }
 
         else if (data.length == 0) {
@@ -100,8 +100,7 @@ const getAllGallery = (req, res) => {
             // Select for pagination count
             db.query("SELECT COUNT(galleries.id) AS 'each_article_count' FROM galleries WHERE galleries.is_active = ?", 1, (err, elementsCount) => {
                 if (err) {
-                    console.log(err);
-                    return showServerErrorPage(req, res);
+                    return errorHandler(err, req, res, 'galleryController', 103);
                 }
 
                 else if (elementsCount) {
@@ -162,8 +161,7 @@ const getGalleryDetails = (req, res) => {
 
     db.query(sqlGalleryDetails, [1, slug], (err, data) => {
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, 'galleryController', 164);
         }
 
         else if (data.length == 0) {
@@ -198,8 +196,7 @@ const getGalleryDetails = (req, res) => {
         db.query(relatedGalleriesQuery, [1, data[0].id, 15], (related_err, related_galleries) => {
 
             if (related_err) {
-                console.log(related_err);
-                return showServerErrorPage(req, res);
+                return errorHandler(related_err, req, res, 'galleryController', 199);
             }
 
             else if (related_galleries.length > 0) {

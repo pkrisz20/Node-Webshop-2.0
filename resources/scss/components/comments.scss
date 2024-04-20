@@ -127,6 +127,11 @@
                             font-size: 18px;
                         }
                     }
+
+                    &-rating {
+                        display: inline-block;
+                        color: $c-yellow;
+                    }
                 }
 
                 &-comment {
