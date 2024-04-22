@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const logEvents = require('../middleware/logEvents');
 
 // Function to read the mix-manifest.json file and return versioned asset paths
 function getAssetPath (fileName) {
@@ -15,7 +16,7 @@ function getAssetPath (fileName) {
         return process.env.APP_URL + mixManifest[fileName];
 
     } catch (error) {
-        console.error('Error reading mix-manifest.json: ', error.message);
+        logEvents(`Error reading asset path from mix-manifest.json: ${ err.message }\nFile: getAssetPath.js Row: 18\n-------------------------`, "errors.log");
         return "";
     }
 }

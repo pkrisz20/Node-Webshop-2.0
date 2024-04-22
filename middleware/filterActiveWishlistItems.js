@@ -1,5 +1,5 @@
 const { db } = require("../config/db-connection");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const errorHandler = require("./errorHandler");
 
 function filterActiveWishlistItems (req, res, next) {
     let wishlist = req?.session?.wishlist ?? [];
@@ -11,7 +11,7 @@ function filterActiveWishlistItems (req, res, next) {
         db.query(selectWishlistProducts, [...wishlist, 1], (err, products) => {
 
             if (err) {
-                return showServerErrorPage(req, res);
+                return errorHandler(err, req, res, 'filterActiveWishlistItems', 15);
             }
 
             else if ( products.length === 0 ) {

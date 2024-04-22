@@ -8,7 +8,6 @@ const errorHandler = require('../middleware/errorHandler');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
 
 const getData = (req, res) => {
     // Cart converting stuffs

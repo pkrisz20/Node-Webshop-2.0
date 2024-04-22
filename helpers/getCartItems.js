@@ -2,7 +2,7 @@ const { db } = require("../config/db-connection");
 const languageHandler = require("../helpers/languageHandler");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const errorHandler = require("../middleware/errorHandler");
 
 const getCartItems = (req, res, next) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
@@ -20,7 +20,7 @@ const getCartItems = (req, res, next) => {
         db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, max_order_count, is_available FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 console.log(err);
-                return showServerErrorPage(req, res);
+                return errorHandler(err, req, res, "getCartItems", 24);
             }
 
             else if (result.length > 0) {

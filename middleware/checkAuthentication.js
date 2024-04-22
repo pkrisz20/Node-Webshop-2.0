@@ -1,4 +1,5 @@
-const { showServerErrorPage, showUnauthorizedUserPage } = require("../helpers/showErrorPages");
+const { showUnauthorizedUserPage } = require("../helpers/showErrorPages");
+const errorHandler = require('./errorHandler');
 
 const isAuthenticated = async (req, res, next) => {
     try {
@@ -12,7 +13,7 @@ const isAuthenticated = async (req, res, next) => {
         }
     }
     catch (error) {
-        return showServerErrorPage(req, res);
+        return errorHandler(error, req, res, "checkAuthentication", 16);
     }
 };
 

@@ -1,5 +1,5 @@
 const { db } = require("../config/db-connection");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const errorHandler = require("../middleware/errorHandler");
 const getValueByLanguage = require("./getValueByLanguage");
 
 const getConfigFromDb = ( req, res, next ) => {
@@ -10,7 +10,7 @@ const getConfigFromDb = ( req, res, next ) => {
     db.query("SELECT config_key, config_value FROM config", (err, config_data) => {
 
         if (err) {
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, "getConfigFromDb", 13);
         }
 
         else if ( config_data.length > 0 ) {

@@ -1,7 +1,7 @@
 const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const errorHandler = require("../middleware/errorHandler");
 
 const selectWebshopCategories = ( req, res, next ) => {
 
@@ -12,8 +12,7 @@ const selectWebshopCategories = ( req, res, next ) => {
     db.query(webshopCategoriesSQL, (err, category_list) => {
 
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, "selectWebshopCategories", 16);
         }
 
         if (category_list.length > 0) {

@@ -1,6 +1,6 @@
 const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
-const { showServerErrorPage } = require("../helpers/showErrorPages");
+const errorHandler = require("./errorHandler");
 
 const selectStaticContents = ( req, res, next ) => {
 
@@ -11,8 +11,7 @@ const selectStaticContents = ( req, res, next ) => {
     db.query(staticContentsSQL, (err, contents_list) => {
 
         if (err) {
-            console.log(err);
-            return showServerErrorPage(req, res);
+            return errorHandler(err, req, res, "selectStaticContents", 16);
         }
 
         if (contents_list.length > 0) {
