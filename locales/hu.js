@@ -123,6 +123,8 @@ const hu = {
 		removed_from_wishlist: "Sikeresen eltávolítva a kívánságlistából!",
         add_to_wishlist: "Hozzáadás a kívánságlistához",
 		remove_from_wishlist: "Eltávolít a kívánságlistából",
+		modificated_cart_information: "Néhány terméket eltávoltottunk a kosarából, mert időközben már nem elérhető vagy nem rendelhető.",
+		check_my_cart: "Kosaram ellenőrzése",
     },
     orders: {
         total_price: "Összeg",

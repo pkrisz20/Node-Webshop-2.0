@@ -173,6 +173,7 @@ const getData = (req, res) => {
                                         webshopCategories: req.webshopCategories ?? [],
                                         staticContent: req.static_content,
                                         wishlistTotalNumber: req.wishlistTotalNumber,
+                                        showPopupCartInformation: req.session.showPopupCartInformation,
                                         gdprCookies: gdprCookies,
                                         gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
                                         csrfToken: req.csrfToken()

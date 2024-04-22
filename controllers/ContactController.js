@@ -45,6 +45,7 @@ const getContactPage = (req, res) => {
         locales: ['hu', 'sr', 'en'],
         languageHandler: languageHandler,
         DB_CONFIG: DB_CONFIG,
+        showPopupCartInformation: req.session.showPopupCartInformation,
         webshopCategories: req.webshopCategories,
         staticContent: req.static_content,
         wishlistTotalNumber: req.wishlistTotalNumber,

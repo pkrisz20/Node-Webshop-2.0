@@ -123,6 +123,8 @@ const en = {
 		removed_from_wishlist: "Successfully removed from wishlist!",
 		add_to_wishlist: "Add to wishlist",
 		remove_from_wishlist: "Remove from wishlist",
+		modificated_cart_information: "Some products have been removed from your shopping cart because they are no longer available or cannot be ordered.",
+		check_my_cart: "Check my cart",
 	},
 	orders: {
 		total_price: "Total",

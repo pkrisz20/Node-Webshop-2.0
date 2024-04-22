@@ -208,6 +208,7 @@ const handleSearch = (req, res) => {
                     galleryFound: galleryFound,
                     keywords: words.join(' '),
                     meta: metas,
+                    showPopupCartInformation: req.session.showPopupCartInformation,
                     current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
                     cart: cart,
                     locales: ['hu', 'sr', 'en'],

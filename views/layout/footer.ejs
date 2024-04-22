@@ -84,3 +84,29 @@
         gtag('config', '<%= process.env.GTAG_ID %>');
     </script>
 <% } %>
+
+<% if (showPopupCartInformation) { %>
+    <script type="text/javascript">
+        setTimeout(function () {
+            $.confirm({
+                useBootstrap: false,
+                boxWidth: '450px',
+                title: "<%= languageHandler('general.information', current_locale) %>",
+                content: "<%= languageHandler('products.modificated_cart_information', current_locale) %>",
+                buttons: {
+                    OK: {
+                        action: function() {
+                            // do nothing
+                        }
+                    },
+                    confirm: {
+                        text: "<%= languageHandler('products.check_my_cart', current_locale) %>",
+                        action: function() {
+                            $(".js-cart").addClass('open');
+                        }
+                    },
+                }
+            });
+        }, 2000);
+    </script>
+<% } %>

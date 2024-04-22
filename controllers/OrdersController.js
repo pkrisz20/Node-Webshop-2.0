@@ -52,6 +52,7 @@ const getOrderPage = (req, res) => {
         languageHandler: languageHandler,
         numberWithCommas: numberWithCommas,
         DB_CONFIG: DB_CONFIG,
+        showPopupCartInformation: req.session.showPopupCartInformation,
         webshopCategories: req.webshopCategories,
         staticContent: req.static_content,
         wishlistTotalNumber: req.wishlistTotalNumber,

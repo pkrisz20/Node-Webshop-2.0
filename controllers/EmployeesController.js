@@ -77,6 +77,7 @@ const getEmployees = (req, res) => {
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
+            showPopupCartInformation: req.session.showPopupCartInformation,
             webshopCategories: req.webshopCategories,
             staticContent: req.static_content,
             wishlistTotalNumber: req.wishlistTotalNumber,
