@@ -596,7 +596,7 @@ const ajaxLoadMoreComments = (req, res) => {
 
     offsetNumber = offsetNumber * parseInt(process.env.COUNT_COMMENTS_SHOW);
 
-    const selectMoreComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ? OFFSET ?";
+    const selectMoreComments = "SELECT product_comments.id, product_comments.name, product_comments.is_verified_purchase, product_comments.comment, product_comments.rating, product_comments.date FROM product_comments WHERE product_comments.is_active = ? AND product_comments.product_id = ? ORDER BY product_comments.date DESC LIMIT ? OFFSET ?";
 
     db.query(selectMoreComments, [1, productID, parseInt(process.env.COUNT_COMMENTS_SHOW), offsetNumber], (comments_err, comments_data) => {
         if (comments_err) {
@@ -615,6 +615,7 @@ const ajaxLoadMoreComments = (req, res) => {
             comments_data.forEach(element => {
                 let tempObject = {
                     id: parseInt(element.id),
+                    rating: parseInt(element.rating),
                     name: element.name,
                     is_verified: Boolean(element.is_verified_purchase ?? false),
                     description: element.comment,
@@ -643,7 +644,17 @@ const ajaxLoadMoreComments = (req, res) => {
                                 commentsHtml += '<span class="content__top-badge"><i class="fas fa-check-circle icon"></i>' + languageHandler("products.verified_purchase", lang) + '</span>';
                             }
 
-                        commentsHtml += `</div>
+                            if ( comment.rating && comment.rating > 0 ) {
+                                commentsHtml += '<span class="content__top-rating">'
+
+                                for (var index = 0; index < comment.rating; index++) {
+                                    commentsHtml+= '<i class="fas fa-star"></i>';
+                                }
+
+                                commentsHtml += '</span>';
+                            }
+
+                            commentsHtml += `</div>
                         <p class="content-comment">${ escapeHtml(comment.description) }</p>
                         <time class="content-date"><i class="fas fa-history"></i> ${ comment.date }</time>
                     </div>
