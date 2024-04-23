@@ -1,7 +1,7 @@
 const { logEvents } = require("./logEvents");
 const moment = require('moment');
 const { showServerErrorPage } = require("../helpers/showErrorPages");
-const db = require("../config/db-connection");
+const { db } = require("../config/db-connection");
 
 const errorHandler = (err, req, res, fileName = null, errorRow = null, next) => {
     if (fileName != null && errorRow != null) {
