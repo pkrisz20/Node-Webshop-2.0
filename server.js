@@ -19,6 +19,11 @@ const getAssetPath = require("./helpers/getAssetPath");
 // Custom middleware logger
 app.use(logger);
 
+// Trust proxy if it's in production
+if (process.env.APP_DEBUG === 'false') {
+    app.set('trust proxy', 1);
+}
+
 // View template engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, 'views'));
