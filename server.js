@@ -11,7 +11,6 @@ const fileStoreOptions = require("./config/session-config");
 const csrfProtection = require('csurf');
 const cron = require("node-cron");
 const { logger } = require("./middleware/logEvents");
-const errorHandler = require("./middleware/errorHandler");
 const deleteLogs = require("./jobs/deleteLogs");
 const corsOptions = require("./config/cors");
 const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
@@ -54,7 +53,7 @@ app.use(session({
 app.use(cors(corsOptions));
 
 // CSRF
-app.use(csrfProtection({ cookie: { httpOnly: true } }));
+app.use(csrfProtection({ cookie: { httpOnly: true, secure: process.env.APP_DEBUG === 'false' } }));
 
 // error handler for bad CSRF token
 app.use(function (err, req, res, next) {
