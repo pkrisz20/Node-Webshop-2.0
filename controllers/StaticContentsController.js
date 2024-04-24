@@ -137,18 +137,12 @@ const handleGDPR = (req, res) => {
                 allowed_cookies.push('necessary');
             }
 
-            if (req.cookies['allowed_cookie_types']) {
-                // Set the cookie new consent value
-                res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies));
-            }
-            else if (!req.cookies['allowed_cookie_types']) {
-                // Set the new cookie with settings for accepted consent types
-                res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies), {
-                    httpOnly: true,
-                    maxAge: 1000 * 60 * 60 * 24 * 365,
-                    secure: process.env.APP_DEBUG === 'false',
-                });
-            }
+            // Set the new cookie with settings for accepted consent types
+            res.cookie('allowed_cookie_types', JSON.stringify(allowed_cookies), {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * 365,
+                secure: process.env.APP_DEBUG === 'false',
+            });
 
             return res.status(200).json({
                 status: "success",
