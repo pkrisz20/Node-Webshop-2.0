@@ -3,7 +3,7 @@
 /dist
 /build
 *.todo
-# /sessions/*
+/sessions/*
 /files
 /logs
 
