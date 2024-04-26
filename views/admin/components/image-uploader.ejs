@@ -24,8 +24,10 @@
         <% } else if (locals.multiple) { %>
             <label for="files" class="form-label">Képek feltöltése</label>
             <input class="form-control js-file-input" data-id="<%= databaseID %>" name="files" type="file" id="files" multiple />
-            <small class="text-muted">Kiválaszthatsz akár több képet is egyszerre. (max. 20 darab)</small>
+            <small class="text-muted">Kiválaszthatsz akár több képet is egyszerre. (max. 10 darab)</small>
         <% } %>
+
+        <small class="text-muted d-block">Engedélyezett képformátumok: png, jpg, jpeg</small>
     </div>
 
     <button class="btn btn-primary js-upload-submit" type="submit">Feltöltés</button>

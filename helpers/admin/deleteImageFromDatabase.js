@@ -1,16 +1,18 @@
 const { db } = require('../../config/db-connection');
 const languageHandler = require('../../helpers/languageHandler');
+const { logEvents } = require('../../middleware/logEvents');
 
 function deleteImageFromDatabase ( response, file, databaseTable, columnId, fileType = 'single' ) {
 
     if ( fileType !== 'single' && fileType !== 'multiple' ) {
+        logEvents(`Filetype is not sinle nor multiple. Error at delete image from database function ~8\n-------------------------`, "errors.log");
         return response.status(200).json({ status: 'error' });
     }
 
     // databaseTable : databaseColumn
     const database_values_single_upload = {
         products: 'image_thumbnail',
-        hero: 'image',
+        heros: 'image',
         galleries: 'gallery_thumbnail',
         employees: 'image',
         categories: 'image',
@@ -34,6 +36,7 @@ function deleteImageFromDatabase ( response, file, databaseTable, columnId, file
         db.query(sqlSingleImageDelete, [null, columnId], (error, result) => {
             if (error) {
                 console.log(error);
+                logEvents(`Error at delete image from database function ~38\n-------------------------`, "errors.log");
                 return response.status(200).json({ status: 'error' });
             }
 
@@ -43,7 +46,6 @@ function deleteImageFromDatabase ( response, file, databaseTable, columnId, file
         });
     }
 
-    // TODO: Test this feature
     else if ( fileType === 'multiple' ) {
         databaseColumn = database_values_multiple_upload[databaseTable];
 
@@ -51,6 +53,7 @@ function deleteImageFromDatabase ( response, file, databaseTable, columnId, file
 
         db.query(sqlSelectQuery, columnId, (err, databaseImages) => {
             if (err) {
+                logEvents(`Error at delete image from database function ~56\n-------------------------`, "errors.log");
                 console.log(err);
                 return response.status(200).json({ status: 'error' });
             }
@@ -73,6 +76,7 @@ function deleteImageFromDatabase ( response, file, databaseTable, columnId, file
 
                 db.query(sqlImageUpdate, [imagesArray, columnId], (error, result) => {
                     if (error) {
+                        logEvents(`Error at delete image from database function ~79\n-------------------------`, "errors.log");
                         console.log(error);
                         return response.status(200).json({ status: 'error' });
                     }

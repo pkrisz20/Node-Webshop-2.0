@@ -189,7 +189,7 @@ const uploadImageFiles = (req, res) => {
 
         uploadImage(req, res, (err) => {
             if (err) {
-                console.error(err);
+                errorHandler(err, req, res, 'adminController', 192, true);
 
                 return res.status(200).json({
                     status: 'error',
@@ -217,22 +217,15 @@ const uploadImageFiles = (req, res) => {
                     ];
 
                     const cwebpProcess = spawn('cwebp', webpArguments);
+
                     // Handle process events
-                    cwebpProcess.stdout.on('data', (data) => {
-                        logEvents(`Webp generating failed: ${ data }`, "messages.log");
-                    });
-
-                    cwebpProcess.stderr.on('data', (data) => { // Error event handler
-                        logEvents(`Webp generating failed: ${ data }`, "errors.log");
-                    });
-
                     cwebpProcess.on('close', (code) => { // Finished event handler
                         if (code === 0) {
                             logEvents("WebP image generated successfully.", "messages.log");
                             saveImageToDatabase(res, req.file, req.params.folder, req.body.databaseId, true);
                         }
                         else {
-                            logEvents("Error generating WebP image.", "errors.log");
+                            logEvents("Error generating WebP image. AdminController ~228", "errors.log");
 
                             return response.status(200).json({
                                 status: 'error',
@@ -244,7 +237,7 @@ const uploadImageFiles = (req, res) => {
             }
         });
     } catch (err) {
-        return errorHandler(err, req, res);
+        return errorHandler(err, req, res, 'adminController', 247, true);
     }
 };
 
@@ -285,7 +278,7 @@ const uploadMultipleImages = (req, res) => {
 
         uploadImage(req, res, (err) => {
             if (err) {
-                console.error(err);
+                errorHandler(err, req, res, 'adminController', 288, true);
 
                 return res.status(200).json({
                     status: 'error',
@@ -318,19 +311,13 @@ const uploadMultipleImages = (req, res) => {
                         const cwebpProcess = spawn('cwebp', webpArguments);
 
                         // Handle process events
-                        cwebpProcess.stderr.on('data', (data) => { // Error event handler
-                            console.error(`stderr: ${ data }`);
-                            logEvents(`Webp generating failed (multiple images): ${ data }`, "errors.log");
-                        });
-
                         cwebpProcess.on('close', (code) => { // Finished event handler
-
                             if (code === 0 && req.files.length === (index + 1)) {
                                 logEvents("WebP image generated successfully. (multiple images)", "messages.log");
                                 saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
                             }
                             else if (code !== 0) {
-                                logEvents("Error generating WebP image. (multiple images)", "errors.log");
+                                logEvents("Error generating WebP image. (multiple images) - AdminController ~320", "errors.log");
 
                                 return res.status(200).json({
                                     status: 'error',
@@ -343,19 +330,21 @@ const uploadMultipleImages = (req, res) => {
             }
         });
     } catch (err) {
-        return errorHandler(err, req, res);
+        return errorHandler(err, req, res, 'adminController', 346, true);
     }
 };
 
 const deleteImageFile = (req, res) => {
     const { databaseId, fileSource, fileType } = req.body;
     const { folder } = req.params;
+    const pathToOrigianlFile = path.join('./files' + fileSource.replace(process.env.APP_URL, ''));
+    const pathToFileWEBPImage = pathToOrigianlFile.substring(0, pathToOrigianlFile.lastIndexOf('.')) + '.webp';
 
-    // TODO: Optimize the path converter
-    const pathToFile = path.join('./files' + fileSource.replace(process.env.APP_URL, ''));
+    // Delete the original image
+    fs.unlink(pathToOrigianlFile, function (error) {
+        if (error && error.code == 'ENOENT') {
 
-    fs.unlink(pathToFile, function (error) {
-        if(error && error.code == 'ENOENT') {
+            errorHandler(error, req, res, 'adminController', 359, true);
             // file doens't exist
             return res.status(200).json({
                 status: 'error',
@@ -363,19 +352,42 @@ const deleteImageFile = (req, res) => {
                 message: languageHandler('errors.file_does_not_exist', process.env.ADMIN_LANG)
             });
 
-        } else if (error) {
+        }
+        else if (error) {
+            errorHandler(error, req, res, 'adminController', 369, true);
             // other errors occur
             return res.status(200).json({ status: 'error' });
-        } else {
+        }
+        else {
+            // Delete the webp image
+            fs.unlink(pathToFileWEBPImage, function (webp_error) {
+                if(webp_error && webp_error.code == 'ENOENT') {
 
-            // Example: duck.jpg
-            var exactSourceFileName = getLast(pathToFile.split('\\'));  // Split by single back slash
+                    errorHandler(webp_error, req, res, 'adminController', 380, true);
 
-            // NOTE: The folder name is the same like the database table name
-            deleteImageFromDatabase(res, exactSourceFileName, folder, databaseId, fileType);
+                    // WEBP file doens't exist
+                    return res.status(200).json({
+                        status: 'error',
+                        title: languageHandler('errors.error', process.env.ADMIN_LANG),
+                        message: languageHandler('errors.file_does_not_exist', process.env.ADMIN_LANG)
+                    });
+                }
+                else if (webp_error) {
+                    errorHandler(webp_error, req, res, 'adminController', 390, true);
+
+                    // other errors occur
+                    return res.status(200).json({ status: 'error' });
+                }
+                else {
+                    // Example: duck.jpg
+                    var exactSourceFileName = getLast(pathToOrigianlFile.split('\\'));  // Split by single back slash
+
+                    // NOTE: The folder name is the same like the database table name
+                    deleteImageFromDatabase(res, exactSourceFileName, folder, databaseId, fileType);
+                }
+            });
         }
     });
-
 };
 
 const getGlobalSettingsPage = (req, res) => {

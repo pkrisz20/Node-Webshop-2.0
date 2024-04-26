@@ -309,4 +309,20 @@ const handleEditSlider = (req, res) => {
     );
 };
 
-module.exports = { getSlidersListPage, getSliderUploadPage, handleSliderUpload, getSliderEditPage, handleEditSlider };
+const deleteSlider = (req, res) => {
+    let { sliderId } = req.params;
+
+    const deleteSliderQuery = "DELETE FROM heros WHERE id = ?";
+
+    db.query(deleteSliderQuery, sliderId, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(200).json({ status: "error" });
+        }
+        else {
+            return res.status(200).json({ status: "success" });
+        }
+    });
+};
+
+module.exports = { getSlidersListPage, getSliderUploadPage, handleSliderUpload, getSliderEditPage, handleEditSlider, deleteSlider };

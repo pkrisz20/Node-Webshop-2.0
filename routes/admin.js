@@ -41,6 +41,9 @@ adminRouter.route("/statistics")
 adminRouter.route("/sliders/list")
     .get(checkAuthentication, SliderController.getSlidersListPage);
 
+adminRouter.route("/sliders/delete/:sliderId")
+    .get(checkAuthentication, SliderController.deleteSlider);
+
 adminRouter.route("/category/list")
     .get(checkAuthentication, webshopCategoryController.getWebshopCategoryList);
 
