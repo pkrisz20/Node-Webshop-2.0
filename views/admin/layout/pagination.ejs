@@ -6,7 +6,38 @@
             </li>
         <% } %>
 
-        <div class="d-flex align-items-center fw-medium text-bg-dark px-3 rounded"><%= currentPage %> / <%= pageCount %></div>
+        <% if (currentPage > 3) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=1">1</a>
+            </li>
+            <% if (currentPage > 4) { %>
+                <li class="mx-2 pe-none">
+                    <span class="btn btn-primary" role="button">...</span>
+                </li>
+            <% } %>
+        <% } %>
+
+        <%
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(pageCount, currentPage + 2);
+        %>
+
+        <% for (var index = startPage; index <= endPage; index++) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary <%= currentPage == index ? 'fw-medium text-bg-dark' : '' %>" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= index %>"><%= index %></a>
+            </li>
+        <% } %>
+
+        <% if (currentPage < pageCount - 2) { %>
+            <% if (currentPage < pageCount - 3) { %>
+                <li class="mx-2 pe-none">
+                    <span class="btn btn-primary" role="button">...</span>
+                </li>
+            <% } %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= pageCount %>"><%= pageCount %></a>
+            </li>
+        <% } %>
 
         <% if ( currentPage < pageCount ) { %>
             <li class="mx-2">

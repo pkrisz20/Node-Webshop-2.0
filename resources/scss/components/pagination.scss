@@ -1,48 +1,52 @@
 .pagination {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
+  @include flexBox();
+  flex-wrap: wrap;
+
+  &-item {
+    background-color: $c-success;
+    transition: all .3s ease;
+    border-radius: 3px;
     @include flexBox();
-    flex-wrap: wrap;
+    margin: 0 5px 5px;
 
-    li {
-      background-color: $c-success;
-      transition: all .3s ease;
-      border-radius: 3px;
-      @include flexBox();
-      margin: 0 5px 5px;
+    &.active {
+      background-color: $c-warning;
+    }
 
-      &.active {
-        background-color: $c-warning;
-      }
+    &.disabled {
+      pointer-events: none;
+    }
 
-      &:hover {
-        &:not(.active) {
-          background-color: $c-light-green2;
-        }
-      }
-
-      @media #{ $max-767 } {
-        &:not(.arrow) {
-          display: none;
-        }
-      }
-
-      a, span {
-        padding: 10px;
-        color: $c-white;
-
-        i {
-          color: $c-white;
-          font-size: 18px;
-          margin: 0 5px;
-        }
-      }
-
-      &:first-child {
-        margin-right: 10px;
-      }
-
-      &:last-child {
-        margin-left: 10px;
+    &:hover {
+      &:not(.active) {
+        background-color: $c-light-green2;
       }
     }
+
+    @media #{ $max-767 } {
+      &:not(.arrow) {
+        display: none;
+      }
+    }
+
+    a, span {
+      padding: 10px;
+      color: $c-white;
+
+      i {
+        color: $c-white;
+        font-size: 18px;
+        margin: 0 5px;
+      }
+    }
+
+    &:first-child {
+      margin-right: 10px;
+    }
+
+    &:last-child {
+      margin-left: 10px;
+    }
   }
+}
