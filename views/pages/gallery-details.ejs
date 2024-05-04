@@ -23,20 +23,22 @@
                     <p class="gallery-details-desc"><%= galleryData.description %></p>
                 <% } %>
 
-                <section class="gallery-grid js-gallery">
-                    <% galleryData.galleryImages.forEach((image, index) => { %>
-                        <figure class="gallery-grid-item" data-src="<%= image %>">
-                            <figcaption class="icon">
-                                <i class="far fa-eye"></i>
-                            </figcaption>
+                <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
+                    <section class="gallery-grid js-gallery">
+                        <% galleryData.galleryImages.forEach((image, index) => { %>
+                            <figure class="gallery-grid-item" data-src="<%= image %>">
+                                <figcaption class="icon">
+                                    <i class="far fa-eye"></i>
+                                </figcaption>
 
-                            <%- include('../components/picture.ejs', {
-                                imageSrc: image,
-                                alt: galleryData.galleryName + " #" + (index + 1),
-                            }) %>
-                        </figure>
-                    <% }) %>
-                </section>
+                                <%- include('../components/picture.ejs', {
+                                    imageSrc: image,
+                                    alt: galleryData.galleryName + " #" + (index + 1),
+                                }) %>
+                            </figure>
+                        <% }) %>
+                    </section>
+                <% } %>
 
                 <%- include('../components/sharing-buttons.ejs', { page_url: `gallery/${ galleryData.slug }`, mail_subject: galleryData.galleryName }) %>
             </div>
