@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const moment = require("moment");
@@ -9,7 +9,7 @@ const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = 
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
 
-const getData = (req, res) => {
+const getData = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -56,12 +56,10 @@ const getData = (req, res) => {
 
     setMomentLocale(lang);
 
-    db.query(sqlQueryProducts, [1, 1], (product_err, product_items) => {
-        if (product_err) {
-            return errorHandler(product_err, req, res, 'homePageController', 62);
-        }
+    try {
+        const product_items = await DoDatabaseQuery(sqlQueryProducts, [1, 1]);
 
-        else if (product_items.length > 0) {
+        if (product_items.length > 0) {
             product_items.forEach(product_element => {
                 let tempObjectProduct = {
                     id: parseInt(product_element.id),
@@ -88,104 +86,95 @@ const getData = (req, res) => {
                 resultItem.already_in_cart = productIdsInCart.includes(resultItem.id);
                 resultItem.saved_in_wishlist = wishlist.includes(resultItem.id);
             });
+        }
 
-            db.query(sqlQueryBlogs, [1, 1], (blog_err, blog_data) => {
-                if (blog_err) {
-                    return errorHandler(blog_err, req, res, 'homePageController', 95);
+        const blog_data = await DoDatabaseQuery(sqlQueryBlogs, [1, 1]);
+
+        if (blog_data.length > 0) {
+
+            blog_data.forEach(blog_element => {
+                let tempObjectBlog = {
+                    id: parseInt(blog_element.id),
+                    title: getValueByLanguage(blog_element.title, lang),
+                    slug: blog_element.slug,
+                    shortDescription: getValueByLanguage(blog_element.short_description, lang),
+                    image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
+                    author: blog_element.author,
+                    fullDate: blog_element.date,
+                    commentsCount: blog_element.comments_count,
+                    isImportant: Boolean(blog_element.is_important) ?? false
                 }
 
-                else if (blog_data.length > 0) {
+                blogs.push(tempObjectBlog);
+            });
 
-                    blog_data.forEach(blog_element => {
-                        let tempObjectBlog = {
-                            id: parseInt(blog_element.id),
-                            title: getValueByLanguage(blog_element.title, lang),
-                            slug: blog_element.slug,
-                            shortDescription: getValueByLanguage(blog_element.short_description, lang),
-                            image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
-                            author: blog_element.author,
-                            fullDate: blog_element.date,
-                            commentsCount: blog_element.comments_count,
-                            isImportant: Boolean(blog_element.is_important) ?? false
-                        }
-
-                        blogs.push(tempObjectBlog);
-                    });
-
-                    blogs = blogs.map(item => {
-                        return {
-                            ...item,
-                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
-                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
-                            shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
-                        };
-                    });
-
-                    db.query(sqlQuerySliders, 1, (hero_err, heros_data) => {
-                        if (hero_err) {
-                            return errorHandler(hero_err, req, res, 'homePageController', 127);
-                        }
-
-                        else if (heros_data.length > 0) {
-                            heros_data.forEach(hero_element => {
-                                let tempObjectSlider = {
-                                    id: parseInt(hero_element.id),
-                                    text: getValueByLanguage(hero_element.title, lang),
-                                    subText: getValueByLanguage(hero_element.subtitle, lang),
-                                    image: imagePathConverter(hero_element.image, "heros"),
-                                    link: getValueByLanguage(hero_element.link, lang),
-                                    button: getValueByLanguage(hero_element.button_text, lang),
-                                    targetPage: hero_element.target_page ?? "_blank"
-                                }
-
-                                sliders.push(tempObjectSlider);
-                            });
-
-                            db.query(sqlQueryGallery, [1, 1], (gallery_err, gallery_data) => {
-                                if (gallery_err) {
-                                    return errorHandler(gallery_err, req, res, 'homePageController', 147);
-                                }
-
-                                else if (gallery_data.length > 0) {
-
-                                    gallery_data.forEach(gallery_element => {
-                                        let tempObjectGallery = {
-                                            id: parseInt(gallery_element.id),
-                                            name: getValueByLanguage(gallery_element.gallery_name, lang),
-                                            slug: gallery_element.slug,
-                                            source: imagePathConverter(gallery_element.gallery_thumbnail, "galleries"),
-                                        }
-
-                                        galleries.push(tempObjectGallery);
-                                    });
-
-                                    return res.render("home", {
-                                        heros: sliders ?? [],
-                                        galleries: galleries ?? [],
-                                        blogs: blogs ?? [],
-                                        products: products ?? [],
-                                        meta: metas,
-                                        current_locale: req.session.lang,
-                                        cart: cart,
-                                        locales: ['hu', 'sr', 'en'],
-                                        languageHandler: languageHandler,
-                                        DB_CONFIG: DB_CONFIG,
-                                        webshopCategories: req.webshopCategories ?? [],
-                                        staticContent: req.static_content,
-                                        wishlistTotalNumber: req.wishlistTotalNumber,
-                                        showPopupCartInformation: req.session.showPopupCartInformation,
-                                        gdprCookies: gdprCookies,
-                                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                                        csrfToken: req.csrfToken()
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
+            blogs = blogs.map(item => {
+                return {
+                    ...item,
+                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
+                    shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
+                };
             });
         }
-    });
+
+        const heros_data = await DoDatabaseQuery(sqlQuerySliders, [1]);
+
+        if (heros_data.length > 0) {
+            heros_data.forEach(hero_element => {
+                let tempObjectSlider = {
+                    id: parseInt(hero_element.id),
+                    text: getValueByLanguage(hero_element.title, lang),
+                    subText: getValueByLanguage(hero_element.subtitle, lang),
+                    image: imagePathConverter(hero_element.image, "heros"),
+                    link: getValueByLanguage(hero_element.link, lang),
+                    button: getValueByLanguage(hero_element.button_text, lang),
+                    targetPage: hero_element.target_page ?? "_blank"
+                }
+
+                sliders.push(tempObjectSlider);
+            });
+        }
+
+        const gallery_data = await DoDatabaseQuery(sqlQueryGallery, [1, 1]);
+
+        if (gallery_data.length > 0) {
+
+            gallery_data.forEach(gallery_element => {
+                let tempObjectGallery = {
+                    id: parseInt(gallery_element.id),
+                    name: getValueByLanguage(gallery_element.gallery_name, lang),
+                    slug: gallery_element.slug,
+                    source: imagePathConverter(gallery_element.gallery_thumbnail, "galleries"),
+                }
+
+                galleries.push(tempObjectGallery);
+            });
+        }
+
+        return res.render("home", {
+            heros: sliders ?? [],
+            galleries: galleries ?? [],
+            blogs: blogs ?? [],
+            products: products ?? [],
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
+            webshopCategories: req.webshopCategories ?? [],
+            staticContent: req.static_content,
+            wishlistTotalNumber: req.wishlistTotalNumber,
+            showPopupCartInformation: req.session.showPopupCartInformation,
+            gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+            csrfToken: req.csrfToken()
+        });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'homePageController');
+    }
 }
 
 module.exports = { getData };

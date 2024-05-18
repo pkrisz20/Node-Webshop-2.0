@@ -13,13 +13,17 @@
         <%- include('components/cart.ejs') %>
 
         <main class="home">
-            <%- include('components/hero.ejs') %>
+            <% if (heros.length > 0) { %>
+                <%- include('components/hero.ejs') %>
+            <% } %>
 
-            <%- include('components/categories.ejs') %>
-
-            <%- include('components/featured-products.ejs') %>
+            <% if (webshopCategories.length > 0) { %>
+                <%- include('components/categories.ejs') %>
+            <% } %>
 
             <% if (products.length > 0) { %>
+                <%- include('components/featured-products.ejs', { products: products }) %>
+
                 <div class="more">
                     <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("products.all_products", current_locale) %> <i class="far fa-angle-double-right"></i></a>
                 </div>

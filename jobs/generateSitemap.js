@@ -7,7 +7,7 @@ dotenv.config({ path: envPath });
 // Include required packages
 const fs = require('fs');
 const { format } = require("date-fns");
-const { db } = require('../config/db-connection');
+const DoDatabaseQuery = require('../helpers/databaseQueryHelper');
 const { logEvents } = require("../middleware/logEvents");
 const staticUrls = require('../config/sitemapStaticUrls');
 var validLanguages = [
@@ -43,15 +43,6 @@ const DbTablesWithSlugs = [
         startSlug: "/gallery/",
     }
 ];
-
-function DoDatabaseQuery (sql) {
-    return new Promise((resolve, reject) => {
-        db.query(sql, (err, rows) => {
-            if (err) return reject(err);
-            return resolve(rows);
-        });
-    });
-}
 
 async function selectSlugsFromTables () {
     try {
