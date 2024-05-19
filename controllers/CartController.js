@@ -1,5 +1,6 @@
 const languageHandler = require("../helpers/languageHandler");
-const { db } = require("../config/db-connection");
+const errorHandler = require("../middleware/errorHandler");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');
@@ -53,7 +54,7 @@ const deleteCartItem = (req, res) => {
     }
 }
 
-const addCartItem = (req, res) => {
+const addCartItem = async (req, res) => {
     let { productId, quantity } = req.body;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     var cart = req.session.cart ?? [];
@@ -92,17 +93,10 @@ const addCartItem = (req, res) => {
 
     const cartQuery = "SELECT id, name, slug, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
 
-    db.query(cartQuery, productId, (err, data) => {
-        if (err) {
-            console.log(err);
-            return res.status(200).json({
-                status: "error",
-                title: languageHandler('errors.error', lang),
-                message: languageHandler('errors.server_error', lang)
-            });
-        }
+    try {
+        const data = await DoDatabaseQuery(cartQuery, [productId]);
 
-        else if (data.length > 0) {
+        if (data.length > 0) {
             // Check if this product is orderable
             let isAvailableEachProduct = data[0].is_active !== 0 && data[0].is_available !== 0;
 
@@ -161,7 +155,23 @@ const addCartItem = (req, res) => {
 
             return res.status(200).json(cartResponse);
         }
-    });
+        else {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', lang),
+                message: languageHandler('errors.common_error', lang)
+            });
+        }
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'cartController', 166, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.server_error', lang)
+        });
+    }
 }
 
 const updateCartItem = (req, res) => {

@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const moment = require("moment");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
@@ -10,7 +10,7 @@ const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPa
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
-const getBlogDetails = (req, res) => {
+const getBlogDetails = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -38,15 +38,12 @@ const getBlogDetails = (req, res) => {
 
     const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ? AND blogs.id != ? ORDER BY blogs.id DESC LIMIT ?";
 
-    db.query(blogDetailsQuery, [1, slug], (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'blogsController', 43);
-        }
+    try {
+        const data = await DoDatabaseQuery(blogDetailsQuery, [1, slug]);
 
-        else if (data.length == 0) {
+        if (data.length == 0) {
             return showNotFoundPage(req, res);
         }
-
         else if (data.length > 0) {
             setMomentLocale(lang);
 
@@ -75,177 +72,116 @@ const getBlogDetails = (req, res) => {
                     width: metaDefault['og:image:width'],
                     height: metaDefault['og:image:height'],
                 },
-            };
+            }
+        }
 
-            db.query(newestBlogsQuery, [1, result.id, moment(new Date()).subtract(3, 'months').format("YYYY-MM-DD"), moment(new Date()).format("YYYY-MM-DD"), 15], (err, newestBlog) => {
+        const newestBlog = await DoDatabaseQuery(newestBlogsQuery, [1, result.id, moment(new Date()).subtract(3, 'months').format("YYYY-MM-DD"), moment(new Date()).format("YYYY-MM-DD"), 15]);
 
-                if (err) {
-                    return errorHandler(err, req, res, 'blogsController', 83);
+        if (newestBlog.length > 0) {
+            newestBlog.forEach(element => {
+                let tempObject = {
+                    id: parseInt(element.id),
+                    title: getValueByLanguage(element.title, lang),
+                    slug: element.slug,
+                    shortDescription: getValueByLanguage(element.short_description, lang),
+                    image: imagePathConverter(element.image_thumbnail, "blogs"),
+                    author: element.author,
+                    fullDate: element.date,
+                    commentsCount: element.comments_count,
+                    isImportant: Boolean(element.is_important) ?? false
                 }
 
-                else if (newestBlog.length > 0) {
-                    newestBlog.forEach(element => {
-                        let tempObject = {
-                            id: parseInt(element.id),
-                            title: getValueByLanguage(element.title, lang),
-                            slug: element.slug,
-                            shortDescription: getValueByLanguage(element.short_description, lang),
-                            image: imagePathConverter(element.image_thumbnail, "blogs"),
-                            author: element.author,
-                            fullDate: element.date,
-                            commentsCount: element.comments_count,
-                            isImportant: Boolean(element.is_important) ?? false
-                        }
+                newestBlogsArray.push(tempObject);
+            });
 
-                        newestBlogsArray.push(tempObject);
-                    });
-
-                    newestBlogsArray = newestBlogsArray.map(item => {
-                        return {
-                            ...item,
-                            fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
-                            relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
-                        };
-                    });
-                }
-
-                db.query(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), result.id, 12], (err, incommingEvent) => {
-                    if (err) {
-                        return errorHandler(err, req, res, 'blogsController', 114);
-                    }
-
-                    else if (incommingEvent.length > 0) {
-                        incommingEvent.forEach(element => {
-                            let tempObject = {
-                                id: parseInt(element.id),
-                                title: getValueByLanguage(element.title, lang),
-                                slug: element.slug,
-                                image: imagePathConverter(element.image_thumbnail, "blogs"),
-                                date: moment(element.date).fromNow(),
-                            }
-
-                            incommingEvents.push(tempObject);
-                        });
-                    }
-
-                    // Select article comments, if they are not disabled
-                    if (result.isAllowed) {
-                        const selectBlogComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ? ORDER BY blog_comments.date DESC LIMIT ?";
-
-                        db.query(selectBlogComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)], (comments_err, comments_data) => {
-                            if (comments_err) {
-                                return errorHandler(comments_err, req, res, 'blogsController', 137);
-                            }
-
-                            else if ( comments_data.length === 0 ) {
-                                return res.render("pages/blog-details", {
-                                    blogDetails: result,
-                                    newestBlogs: newestBlogsArray ?? [],
-                                    nextEvents: incommingEvents ?? [],
-                                    articleComments: articleComments ?? [],
-                                    showLoadMoreButton: showLoadMoreButton ?? false,
-                                    meta: metas,
-                                    current_locale: req.session.lang,
-                                    cart: cart,
-                                    locales: ['hu', 'sr', 'en'],
-                                    languageHandler: languageHandler,
-                                    DB_CONFIG: DB_CONFIG,
-                                    showPopupCartInformation: req.session.showPopupCartInformation,
-                                    wishlistTotalNumber: req.wishlistTotalNumber,
-                                    webshopCategories: req.webshopCategories,
-                                    staticContent: req.static_content,
-                                    gdprCookies: gdprCookies,
-                                    gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                                    csrfToken: req.csrfToken()
-                                });
-                            }
-
-                            else if (comments_data.length > 0) {
-
-                                comments_data.forEach(element => {
-                                    let tempObject = {
-                                        id: parseInt(element.id),
-                                        name: element.name,
-                                        description: element.comment,
-                                        date: element.date,
-                                    }
-
-                                    articleComments.push(tempObject);
-                                });
-
-                                articleComments = articleComments.map(item => {
-                                    return {
-                                        ...item,
-                                        date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
-                                    };
-                                });
-
-                                // Select the active comments count for this blog article to show the load more button or not
-                                const selectCommentsCountSQL = "SELECT COUNT(blog_comments.id) AS 'each_comments_count' FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
-
-                                db.query(selectCommentsCountSQL, [1, result.id], (comments_count_err, comments_count) => {
-                                    if ( comments_count_err ) {
-                                        return errorHandler(comments_count_err, req, res, 'blogsController', 187);
-                                    }
-
-                                    else if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
-                                        showLoadMoreButton = true;
-                                    }
-
-                                    return res.render("pages/blog-details", {
-                                        blogDetails: result,
-                                        newestBlogs: newestBlogsArray ?? [],
-                                        nextEvents: incommingEvents ?? [],
-                                        articleComments: articleComments ?? [],
-                                        showLoadMoreButton: showLoadMoreButton ?? false,
-                                        meta: metas,
-                                        current_locale: req.session.lang,
-                                        cart: cart,
-                                        locales: ['hu', 'sr', 'en'],
-                                        languageHandler: languageHandler,
-                                        DB_CONFIG: DB_CONFIG,
-                                        showPopupCartInformation: req.session.showPopupCartInformation,
-                                        wishlistTotalNumber: req.wishlistTotalNumber,
-                                        webshopCategories: req.webshopCategories,
-                                        staticContent: req.static_content,
-                                        gdprCookies: gdprCookies,
-                                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                                        csrfToken: req.csrfToken()
-                                    });
-                                });
-                            }
-                        });
-                    }
-
-                    else if (!result.isAllowed) {
-                        return res.render("pages/blog-details", {
-                            blogDetails: result,
-                            newestBlogs: newestBlogsArray ?? [],
-                            nextEvents: incommingEvents ?? [],
-                            articleComments: articleComments ?? [],
-                            showLoadMoreButton: showLoadMoreButton ?? false,
-                            meta: metas,
-                            current_locale: req.session.lang,
-                            cart: cart,
-                            locales: ['hu', 'sr', 'en'],
-                            languageHandler: languageHandler,
-                            wishlistTotalNumber: req.wishlistTotalNumber,
-                            DB_CONFIG: DB_CONFIG,
-                            showPopupCartInformation: req.session.showPopupCartInformation,
-                            webshopCategories: req.webshopCategories,
-                            staticContent: req.static_content,
-                            gdprCookies: gdprCookies,
-                            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                            csrfToken: req.csrfToken()
-                        });
-                    }
-                });
+            newestBlogsArray = newestBlogsArray.map(item => {
+                return {
+                    ...item,
+                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
+                };
             });
         }
-    });
+
+        const incommingEvent = await DoDatabaseQuery(incommingEventsQuery, [1, moment(new Date()).format("YYYY-MM-DD"), result.id, 12]);
+
+        if (incommingEvent.length > 0) {
+            incommingEvent.forEach(element => {
+                let tempObject = {
+                    id: parseInt(element.id),
+                    title: getValueByLanguage(element.title, lang),
+                    slug: element.slug,
+                    image: imagePathConverter(element.image_thumbnail, "blogs"),
+                    date: moment(element.date).fromNow(),
+                }
+
+                incommingEvents.push(tempObject);
+            });
+        }
+
+        // Select article comments, if they are not disabled
+        if (result.isAllowed) {
+            const selectBlogComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ? ORDER BY blog_comments.date DESC LIMIT ?";
+
+            const comments_data = await DoDatabaseQuery(selectBlogComments, [1, result.id, parseInt(process.env.COUNT_COMMENTS_SHOW)]);
+
+            if (comments_data.length > 0) {
+
+                comments_data.forEach(element => {
+                    let tempObject = {
+                        id: parseInt(element.id),
+                        name: element.name,
+                        description: element.comment,
+                        date: element.date,
+                    }
+
+                    articleComments.push(tempObject);
+                });
+
+                articleComments = articleComments.map(item => {
+                    return {
+                        ...item,
+                        date: moment(item.date, "YYYY-MM-DD HH:mm").fromNow()
+                    };
+                });
+
+                // Select the active comments count for this blog article to show the load more button or not
+                const selectCommentsCountSQL = "SELECT COUNT(blog_comments.id) AS 'each_comments_count' FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
+                const comments_count = await DoDatabaseQuery(selectCommentsCountSQL, [1, result.id]);
+
+                if (comments_count[0].each_comments_count > parseInt(process.env.COUNT_COMMENTS_SHOW)) {
+                    showLoadMoreButton = true;
+                }
+            }
+        }
+
+        return res.render("pages/blog-details", {
+            blogDetails: result,
+            newestBlogs: newestBlogsArray ?? [],
+            nextEvents: incommingEvents ?? [],
+            articleComments: articleComments ?? [],
+            showLoadMoreButton: showLoadMoreButton ?? false,
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler,
+            wishlistTotalNumber: req.wishlistTotalNumber,
+            DB_CONFIG: DB_CONFIG,
+            showPopupCartInformation: req.session.showPopupCartInformation,
+            webshopCategories: req.webshopCategories,
+            staticContent: req.static_content,
+            gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+            csrfToken: req.csrfToken()
+        });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'blogsController');
+    }
 }
 
-const getAllBlogs = (req, res) => {
+const getAllBlogs = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -258,11 +194,11 @@ const getAllBlogs = (req, res) => {
             price: numberWithCommas(item.price)
         }
     });
-    var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
     let result = [];
+    let pageCount = 0;
 
     var metas = {
         ...metaDefault,
@@ -289,33 +225,11 @@ const getAllBlogs = (req, res) => {
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
 
-    // Select limit - offset elements
-    db.query(sqlQueryPaginatedBlogs, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'blogsController', 292);
-        }
+    try {
+        // Select limit - offset elements
+        const data = await DoDatabaseQuery(sqlQueryPaginatedBlogs, [1, parseInt(process.env.PAGINATION), pageOffset]);
 
-        else if (data.length == 0) {
-            return res.render("pages/blogs", {
-                pageCount: 0,
-                blogs: [],
-                meta: metas,
-                current_locale: req.session.lang,
-                cart: cart,
-                DB_CONFIG: DB_CONFIG,
-                wishlistTotalNumber: wishlist.length,
-                webshopCategories: req.webshopCategories,
-                staticContent: req.static_content,
-                showPopupCartInformation: req.session.showPopupCartInformation,
-                locales: ['hu', 'sr', 'en'],
-                languageHandler: languageHandler,
-                gdprCookies: gdprCookies,
-                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                csrfToken: req.csrfToken()
-            });
-        }
-
-        else if (data.length > 0) {
+        if (data.length > 0) {
 
             data.forEach(element => {
                 let tempObject = {
@@ -343,74 +257,76 @@ const getAllBlogs = (req, res) => {
             });
 
             // Select for pagination count
-            db.query("SELECT COUNT(blogs.id) AS 'each_article_count' FROM blogs WHERE blogs.is_active = ?", 1, (err, elementsCount) => {
-                if (err) {
-                    return errorHandler(err, req, res, 'blogsController', 344);
-                }
+            const elementsCount = await DoDatabaseQuery("SELECT COUNT(blogs.id) AS 'each_article_count' FROM blogs WHERE blogs.is_active = ?", [1]);
 
-                else if (elementsCount) {
-
-                    let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
-                    let pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
-                    pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
-
-                    return res.render("pages/blogs", {
-                        pageCount: parseInt(pageCount),
-                        currentPage: parseInt(page),
-                        articleLink: "blogs",
-                        blogs: result ?? [],
-                        meta: metas,
-                        current_locale: req.session.lang,
-                        cart: cart,
-                        locales: ['hu', 'sr', 'en'],
-                        languageHandler: languageHandler,
-                        DB_CONFIG: DB_CONFIG,
-                        showPopupCartInformation: req.session.showPopupCartInformation,
-                        wishlistTotalNumber: req.wishlistTotalNumber,
-                        webshopCategories: req.webshopCategories,
-                        staticContent: req.static_content,
-                        gdprCookies: gdprCookies,
-                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                        csrfToken: req.csrfToken()
-                    });
-                }
-            });
+            if (elementsCount) {
+                let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
+                pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
+                pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
+            }
         }
-    });
+
+        return res.render("pages/blogs", {
+            pageCount: parseInt(pageCount ?? 0),
+            currentPage: parseInt(page ?? 0),
+            articleLink: "blogs" ?? null,
+            blogs: result ?? [],
+            meta: metas,
+            current_locale: req.session.lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
+            showPopupCartInformation: req.session.showPopupCartInformation,
+            wishlistTotalNumber: req.wishlistTotalNumber,
+            webshopCategories: req.webshopCategories,
+            staticContent: req.static_content,
+            gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+            csrfToken: req.csrfToken()
+        });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'blogsController');
+    }
 }
 
-const handleBlogComment = (req, res) => {
-    const lang = req.session.lang;
+const handleBlogComment = async (req, res) => {
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     const { fullName } = req.body;
     const { email } = req.body;
     const { comment } = req.body;
 
     const sqlQueryInsertComment = "INSERT INTO blog_comments (name, email, comment, date, blog_id) VALUES (?, ?, ?, ?, ?)";
 
-    db.query(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), req.params.itemId], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.status(200).json({
-                status: "error",
-                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
-                content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
-            });
-        }
+    try {
+        const result = await DoDatabaseQuery(sqlQueryInsertComment, [fullName, email, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), req.params.itemId]);
 
         if (!result) {
             return res.status(200).json({
                 status: "error",
-                title: languageHandler("errors.error", lang ?? process.env.FALLBACK_LANG),
-                content: languageHandler("errors.common_error", lang ?? process.env.FALLBACK_LANG)
+                title: languageHandler("errors.error", lang),
+                content: languageHandler("errors.common_error", lang),
+                csrfToken: req.csrfToken()
             });
         }
         else if (result) {
-            return res.status(200).json({ status: "success", title: languageHandler("general.process_success", lang ?? process.env.FALLBACK_LANG) });
+            return res.status(200).json({ status: "success", title: languageHandler("general.process_success", lang) });
         }
-    });
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'blogsController', 317, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler("errors.error", lang),
+            content: languageHandler("errors.common_error", lang),
+            csrfToken: req.csrfToken()
+        });
+    }
 }
 
-const ajaxLoadMoreComments = (req, res) => {
+const ajaxLoadMoreComments = async (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { offsetNumber, blogID } = req.body;
     let selectedComments = [];
@@ -432,18 +348,10 @@ const ajaxLoadMoreComments = (req, res) => {
 
     const selectMoreComments = "SELECT blog_comments.id, blog_comments.name, blog_comments.comment, blog_comments.date FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ? ORDER BY blog_comments.date DESC LIMIT ? OFFSET ?";
 
-    db.query(selectMoreComments, [1, blogID, parseInt(process.env.COUNT_COMMENTS_SHOW), offsetNumber], (comments_err, comments_data) => {
-        if (comments_err) {
-            console.log(comments_err);
-            return res.status(200).json({
-                status: "error",
-                title: languageHandler('errors.error', lang),
-                message: languageHandler('errors.common_error', lang),
-                csrfToken: req.csrfToken()
-            });
-        }
+    try {
+        const comments_data = await DoDatabaseQuery(selectMoreComments, [1, blogID, parseInt(process.env.COUNT_COMMENTS_SHOW), offsetNumber]);
 
-        else if (comments_data.length > 0) {
+        if (comments_data.length > 0) {
             setMomentLocale(lang);
 
             comments_data.forEach(element => {
@@ -481,34 +389,34 @@ const ajaxLoadMoreComments = (req, res) => {
             // Calculate the leftover comments from db (still show load more button or not)
             const selectCommentsCountSQL = "SELECT COUNT(blog_comments.id) AS 'each_comments_count' FROM blog_comments WHERE blog_comments.is_active = ? AND blog_comments.blog_id = ?";
 
-            db.query(selectCommentsCountSQL, [1, blogID], (comments_count_err, comments_count) => {
-                if ( comments_count_err ) {
-                    console.log(comments_count_err);
-                    return res.status(200).json({
-                        status: "error",
-                        title: languageHandler('errors.error', lang),
-                        message: languageHandler('errors.common_error', lang),
-                        csrfToken: req.csrfToken()
-                    });
-                }
+            const comments_count = await DoDatabaseQuery(selectCommentsCountSQL, [1, blogID]);
 
-                // Offsetnumber => the number of comments which have to skipped
-                // COUNT_COMMENTS_SHOW => the number of comments which can be loaded by default & on button click to load more
-                // In this if statement has to be Offsetnumber + the COUNT_COMMENTS_SHOW, because already the first comments are loaded
-                else if (comments_count[0].each_comments_count > (offsetNumber + parseInt(process.env.COUNT_COMMENTS_SHOW))) {
-                    removeLoadButton = false;
-                }
-
-                return res.status(200).json({
-                    status: "success",
-                    html_response_with_comments: commentsHtml ?? '',
-                    removeLoadButton: removeLoadButton ?? true,
-                    offsetNumber: (offsetNumber / parseInt(process.env.COUNT_COMMENTS_SHOW)) + 1,
-                    csrfToken: req.csrfToken()
-                });
-            });
+            // Offsetnumber => the number of comments which have to skipped
+            // COUNT_COMMENTS_SHOW => the number of comments which can be loaded by default & on button click to load more
+            // In this if statement has to be Offsetnumber + the COUNT_COMMENTS_SHOW, because already the first comments are loaded
+            if (comments_count[0].each_comments_count > (offsetNumber + parseInt(process.env.COUNT_COMMENTS_SHOW))) {
+                removeLoadButton = false;
+            }
         }
-    });
+
+        return res.status(200).json({
+            status: "success",
+            html_response_with_comments: commentsHtml ?? '',
+            removeLoadButton: removeLoadButton ?? true,
+            offsetNumber: (offsetNumber / parseInt(process.env.COUNT_COMMENTS_SHOW)) + 1,
+            csrfToken: req.csrfToken()
+        });
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'blogsController', 410, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', lang),
+            message: languageHandler('errors.common_error', lang),
+            csrfToken: req.csrfToken()
+        });
+    }
 };
 
 module.exports = { getAllBlogs, getBlogDetails, handleBlogComment, ajaxLoadMoreComments };

@@ -11,7 +11,7 @@ const errorHandler = (err, req, res, fileName = null, errorRow = null, isAjax = 
         logEvents(`${err.name}: ${err.message}\n-------------------------`, "errors.log");
     }
 
-    db.query("INSERT INTO activity_log (log_name, log_description, log_date) VALUES(?, ?, ?)",
+    db.query("INSERT INTO errors_log (log_name, log_description, log_date) VALUES(?, ?, ?)",
     [err.name, `${err.message}\nFile: ${fileName} || Row: ~${errorRow}`, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")],
     (err, result) => {
         if (!isAjax) {

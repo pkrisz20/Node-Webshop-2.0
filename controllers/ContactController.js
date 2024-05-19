@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 // const nodemailer = require("nodemailer");
 // const xoauth2 = require('xoauth2');
 const languageHandler = require("../helpers/languageHandler");
@@ -55,22 +55,16 @@ const getContactPage = (req, res) => {
     });
 };
 
-const handleContactMessage = (req, res) => {
+const handleContactMessage = async (req, res) => {
     const { firstName, lastName, email, phone, city, comment } = req.body;
     moment.locale("hu");
 
-    db.query("INSERT INTO contact_messages (first_name, last_name, email, phone, city, client_message, date) VALUES (?,?,?,?,?,?,?)", [firstName, lastName, email, phone, city, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.status(200).json({
-                status: "error",
-                title: languageHandler('errors.error', req.session.lang),
-                message: languageHandler('errors.common_error', req.session.lang)
-            });
-        }
+    const insertContactMessageQuery = "INSERT INTO contact_messages (first_name, last_name, email, phone, city, client_message, date) VALUES (?,?,?,?,?,?,?)";
 
-        else if (result) {
+    try {
+        const result = await DoDatabaseQuery(insertContactMessageQuery, [firstName, lastName, email, phone, city, comment, moment(new Date()).format("YYYY-MM-DD HH:mm:ss")]);
 
+        if (result) {
             // var smtpTransport = nodemailer.createTransport({
             //     service: "gmail",
             //     auth: {
@@ -131,7 +125,23 @@ const handleContactMessage = (req, res) => {
                 redirect_url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/contact`
             });
         }
-    });
+        else {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler('errors.error', req.session.lang),
+                message: languageHandler('errors.common_error', req.session.lang)
+            });
+        }
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'contactController', 137, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler('errors.error', req.session.lang),
+            message: languageHandler('errors.common_error', req.session.lang)
+        });
+    }
 };
 
 module.exports = { handleContactMessage, getContactPage };

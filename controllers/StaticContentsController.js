@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
@@ -7,7 +7,7 @@ const { showNotFoundPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
-const getFAQ = (req, res) => {
+const getFAQ = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -41,12 +41,10 @@ const getFAQ = (req, res) => {
 
     const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ? ORDER BY id DESC";
 
-    db.query(sqlQuery, 1, (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'staticController', 46);
-        }
+    try {
+        const data = await DoDatabaseQuery(sqlQuery);
 
-        else if (data.length > 0) {
+        if (data.length > 0) {
 
             data.forEach(element => {
                 let tempObject = {
@@ -74,7 +72,10 @@ const getFAQ = (req, res) => {
             gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
             csrfToken: req.csrfToken()
         });
-    });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'staticController');
+    }
 }
 
 // Not used
@@ -156,10 +157,9 @@ const handleGDPR = (req, res) => {
                 csrfToken: req.csrfToken()
             });
         }
-
-    } catch (err) {
-
-        console.log(err.message);
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'staticContentsController', 162, true);
 
         return res.status(200).json({
             status: "error",
@@ -170,7 +170,7 @@ const handleGDPR = (req, res) => {
     }
 }
 
-const getStaticPage = (req, res) => {
+const getStaticPage = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -188,12 +188,10 @@ const getStaticPage = (req, res) => {
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
-    db.query("SELECT title, short_description, description, slug FROM static_contents WHERE slug = ?", routeName, (err, content) => {
-        if (err) {
-            return showNotFoundPage(req, res);
-        }
+    try {
+        const content = await DoDatabaseQuery("SELECT title, short_description, description, slug FROM static_contents WHERE slug = ?", [routeName]);
 
-        else if (content.length > 0) {
+        if (content.length > 0) {
             const staticSiteTitle = getValueByLanguage(content[0].title, lang);
             const staticSiteShort = getValueByLanguage(content[0].short_description, lang);
             const staticSiteDescription = getValueByLanguage(content[0].description, lang);
@@ -233,7 +231,12 @@ const getStaticPage = (req, res) => {
                 csrfToken: req.csrfToken()
             });
         }
-    });
+
+        return showNotFoundPage(req, res);
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'staticController', 238);
+    }
 }
 
 module.exports = { getFAQ, getGDPR, handleGDPR, getStaticPage };
