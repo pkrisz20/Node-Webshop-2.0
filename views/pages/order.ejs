@@ -68,13 +68,15 @@
                         <%- include('../components/block-title.ejs', { title: languageHandler('orders.order_form', current_locale), subtitle: languageHandler('orders.order_form_sub', current_locale) }) %>
 
                         <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/order/handle">
-                            <input
-                                id="recaptcha"
-                                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                                name="recaptcha"
-                                type="hidden"
-                                class="g-recaptcha"
-                            />
+                            <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+                                <input
+                                    id="recaptcha"
+                                    value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                                    name="recaptcha"
+                                    type="hidden"
+                                    class="g-recaptcha"
+                                />
+                            <% } %>
 
                             <div class="row">
                                 <div class="form-row">
@@ -136,7 +138,6 @@
                                     <input
                                         id="order-phone"
                                         data-rule-required="true"
-                                        data-rule-digits="true"
                                         name="phone"
                                         type="text"
                                         placeholder="<%= languageHandler('validations.phone_number', current_locale) %>"
@@ -263,7 +264,9 @@
     </script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+    <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+        <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+    <% } %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
 
     <% if (current_locale != 'en') { %>

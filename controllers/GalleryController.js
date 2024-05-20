@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
@@ -9,7 +9,7 @@ const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPa
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
-const getAllGallery = (req, res) => {
+const getAllGallery = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -24,7 +24,7 @@ const getAllGallery = (req, res) => {
     });
 
     var { DB_CONFIG } = req;
-    const lang = req.session.lang;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { page = 1 } = req.query;
     page = parseInt(page);
 
@@ -32,6 +32,7 @@ const getAllGallery = (req, res) => {
         return showBadRequestPage(req, res);
     }
 
+    let pageCount = 0;
     let result = [];
     var metas = {
         ...metaDefault,
@@ -52,33 +53,10 @@ const getAllGallery = (req, res) => {
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
     setMomentLocale(lang);
 
-    db.query(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset], (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'galleryController', 57);
-        }
+    try {
+        const data = await DoDatabaseQuery(sqlQuery, [1, parseInt(process.env.PAGINATION), pageOffset]);
 
-        else if (data.length == 0) {
-            return res.render("pages/galleries", {
-                pageCount: 0,
-                galleries: [],
-                meta: metas,
-                DB_CONFIG: DB_CONFIG,
-                showPopupCartInformation: req.session.showPopupCartInformation,
-                webshopCategories: req.webshopCategories,
-                staticContent: req.static_content,
-                wishlistTotalNumber: req.wishlistTotalNumber,
-                current_locale: req.session.lang,
-                cart: cart,
-                locales: ['hu', 'sr', 'en'],
-                languageHandler: languageHandler,
-                gdprCookies: gdprCookies,
-                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                csrfToken: req.csrfToken()
-            });
-        }
-
-        else if (data.length > 0) {
-
+        if (data.length > 0) {
             data.forEach(element => {
                 let tempObject = {
                     id: parseInt(element.id),
@@ -98,44 +76,41 @@ const getAllGallery = (req, res) => {
                 };
             });
 
+            const elementsCount = await DoDatabaseQuery("SELECT COUNT(galleries.id) AS 'each_article_count' FROM galleries WHERE galleries.is_active = ?", [1]);
             // Select for pagination count
-            db.query("SELECT COUNT(galleries.id) AS 'each_article_count' FROM galleries WHERE galleries.is_active = ?", 1, (err, elementsCount) => {
-                if (err) {
-                    return errorHandler(err, req, res, 'galleryController', 103);
-                }
-
-                else if (elementsCount) {
-
-                    let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
-                    let pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
-                    pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
-
-                    return res.render("pages/galleries", {
-                        pageCount: parseInt(pageCount),
-                        currentPage: parseInt(page),
-                        articleLink: "gallery",
-                        galleries: result ?? [],
-                        meta: metas,
-                        current_locale: req.session.lang,
-                        cart: cart,
-                        locales: ['hu', 'sr', 'en'],
-                        languageHandler: languageHandler,
-                        DB_CONFIG: DB_CONFIG,
-                        showPopupCartInformation: req.session.showPopupCartInformation,
-                        wishlistTotalNumber: req.wishlistTotalNumber,
-                        webshopCategories: req.webshopCategories,
-                        staticContent: req.static_content,
-                        gdprCookies: gdprCookies,
-                        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                        csrfToken: req.csrfToken()
-                    });
-                }
-            });
+            if (elementsCount) {
+                let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
+                pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
+                pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
+            }
         }
-    });
+
+        return res.render("pages/galleries", {
+            pageCount: parseInt(pageCount ?? 0),
+            currentPage: parseInt(page ?? 0),
+            articleLink: "gallery",
+            galleries: result ?? [],
+            meta: metas,
+            current_locale: lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
+            showPopupCartInformation: req.session.showPopupCartInformation,
+            wishlistTotalNumber: req.wishlistTotalNumber,
+            webshopCategories: req.webshopCategories,
+            staticContent: req.static_content,
+            gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+            csrfToken: req.csrfToken()
+        });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'galleryController', 109);
+    }
 }
 
-const getGalleryDetails = (req, res) => {
+const getGalleryDetails = async (req, res) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -161,15 +136,12 @@ const getGalleryDetails = (req, res) => {
 
     setMomentLocale(lang);
 
-    db.query(sqlGalleryDetails, [1, slug], (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'galleryController', 164);
-        }
+    try {
+        const data = await DoDatabaseQuery(sqlGalleryDetails, [1, slug]);
 
-        else if (data.length == 0) {
+        if (data.length === 0) {
             return showNotFoundPage(req, res);
         }
-
         else if (data.length > 0) {
             result = {
                 slug: slug,
@@ -195,45 +167,42 @@ const getGalleryDetails = (req, res) => {
             },
         };
 
-        db.query(relatedGalleriesQuery, [1, data[0].id, 15], (related_err, related_galleries) => {
+        const related_galleries = await DoDatabaseQuery(relatedGalleriesQuery, [1, data[0].id, 15]);
 
-            if (related_err) {
-                return errorHandler(related_err, req, res, 'galleryController', 199);
-            }
+        if (related_galleries.length > 0) {
+            related_galleries.forEach(item => {
+                let tempObject = {
+                    name: getValueByLanguage(item.gallery_name, lang),
+                    slug: item.slug,
+                    thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
+                    date: formatDateByLang(item.gallery_date, lang),
+                }
 
-            else if (related_galleries.length > 0) {
-
-                related_galleries.forEach(item => {
-                    let tempObject = {
-                        name: getValueByLanguage(item.gallery_name, lang),
-                        slug: item.slug,
-                        thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
-                        date: formatDateByLang(item.gallery_date, lang),
-                    }
-
-                    relatedGalleries.push(tempObject);
-                });
-            }
-
-            return res.render("pages/gallery-details", {
-                galleryData: result,
-                meta: metas,
-                relatedGalleries: relatedGalleries ?? [],
-                current_locale: lang,
-                cart: cart,
-                locales: ['hu', 'sr', 'en'],
-                languageHandler: languageHandler,
-                DB_CONFIG: DB_CONFIG,
-                showPopupCartInformation: req.session.showPopupCartInformation,
-                wishlistTotalNumber: req.wishlistTotalNumber,
-                webshopCategories: req.webshopCategories,
-                staticContent: req.static_content,
-                gdprCookies: gdprCookies,
-                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                csrfToken: req.csrfToken()
+                relatedGalleries.push(tempObject);
             });
+        }
+
+        return res.render("pages/gallery-details", {
+            galleryData: result,
+            meta: metas,
+            relatedGalleries: relatedGalleries ?? [],
+            current_locale: lang,
+            cart: cart,
+            locales: ['hu', 'sr', 'en'],
+            languageHandler: languageHandler,
+            DB_CONFIG: DB_CONFIG,
+            showPopupCartInformation: req.session.showPopupCartInformation,
+            wishlistTotalNumber: req.wishlistTotalNumber,
+            webshopCategories: req.webshopCategories,
+            staticContent: req.static_content,
+            gdprCookies: gdprCookies,
+            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
+            csrfToken: req.csrfToken()
         });
-    });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'galleryController', 204);
+    }
 }
 
 module.exports = { getAllGallery, getGalleryDetails };

@@ -1,4 +1,4 @@
-const { db } = require("../config/db-connection");
+const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const languageHandler = require("../helpers/languageHandler");
@@ -7,7 +7,7 @@ const { numberWithCommas } = require('../helpers/globalFunctions');
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 
-const getEmployees = (req, res) => {
+const getEmployees = async (req, res) => {
     var cart = {
         items: req.session.cart ?? [],
         totalCount: req.session.totalCount,
@@ -40,12 +40,10 @@ const getEmployees = (req, res) => {
 
     const sqlQuery = "SELECT name, position, image, facebook, tiktok, instagram, email, phone FROM employees WHERE is_active = ?";
 
-    db.query(sqlQuery, 1, (err, data) => {
-        if (err) {
-            return errorHandler(err, req, res, 'employeesController', 46);
-        }
+    try {
+        const data = await DoDatabaseQuery(sqlQuery, [1]);
 
-        else if (data.length > 0) {
+        if (data.length > 0) {
 
             data.forEach(element => {
                 let tempObject = {
@@ -85,7 +83,10 @@ const getEmployees = (req, res) => {
             gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
             csrfToken: req.csrfToken()
         });
-    });
+    }
+    catch (error) {
+        return errorHandler(error, req, res, 'employeesController', 88);
+    }
 }
 
 module.exports= { getEmployees };

@@ -10,14 +10,10 @@ const FileStore = require('session-file-store')(session);
 const fileStoreOptions = require("./config/session-config");
 const csrfProtection = require('csurf');
 const cron = require("node-cron");
-const { logger } = require("./middleware/logEvents");
 const deleteLogs = require("./jobs/deleteLogs");
 const corsOptions = require("./config/cors");
 const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
 const getAssetPath = require("./helpers/getAssetPath");
-
-// Custom middleware logger
-app.use(logger);
 
 // Trust proxy if it's in production
 if (process.env.APP_DEBUG === 'false') {

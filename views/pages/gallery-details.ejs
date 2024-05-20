@@ -23,8 +23,8 @@
                     <p class="gallery-details-desc"><%= galleryData.description %></p>
                 <% } %>
 
-                <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
-                    <section class="gallery-grid js-gallery">
+                <section class="<%= (galleryData.galleryImages && galleryData.galleryImages.length > 0) ? 'gallery-grid js-gallery' : '' %>">
+                    <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
                         <% galleryData.galleryImages.forEach((image, index) => { %>
                             <figure class="gallery-grid-item" data-src="<%= image %>">
                                 <figcaption class="icon">
@@ -37,8 +37,12 @@
                                 }) %>
                             </figure>
                         <% }) %>
-                    </section>
-                <% } %>
+                    <% } else if (!galleryData.galleryImages || galleryData.galleryImages.length === 0) { %>
+                        <div class="system-info">
+                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_images_in_this_gallery', current_locale) %></strong>
+                        </div>
+                    <% } %>
+                </section>
 
                 <%- include('../components/sharing-buttons.ejs', { page_url: `gallery/${ galleryData.slug }`, mail_subject: galleryData.galleryName }) %>
             </div>

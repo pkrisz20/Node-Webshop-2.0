@@ -114,6 +114,7 @@ const sr = {
         no_product_like_this: "Ne postoji takav proizvod",
         no_category_like_this: "Ne postoji takva kategorija",
 		no_gallery_like_this: "Ne postoji takva galerija.",
+		no_images_in_this_gallery: "Još nema sadržaja u galeriju.",
 		no_blogs_like_this: "Ne postoji takvi blogovi.",
         decrease_quantity: "Smanjenje količine",
 		increase_quantity: "Povećanje količine",

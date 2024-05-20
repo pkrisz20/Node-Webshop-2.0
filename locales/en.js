@@ -114,6 +114,7 @@ const en = {
 		no_product_like_this: "There is no product like this",
 		no_category_like_this: "There is no category like this",
 		no_gallery_like_this: "There is no gallery like this.",
+		no_images_in_this_gallery: "There is no content yet in this gallery.",
 		no_blogs_like_this: "There is no blogs like this.",
 		decrease_quantity: "Decrease quantity",
 		increase_quantity: "Increase quantity",

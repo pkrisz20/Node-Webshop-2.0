@@ -114,6 +114,7 @@ const hu = {
         no_product_like_this: "Nincs ilyen termék.",
         no_category_like_this: "Nincs ilyen kategória.",
 		no_gallery_like_this: "Nincs ilyen galléria.",
+		no_images_in_this_gallery: "Ebben a gallériában még nincs tartalom.",
 		no_blogs_like_this: "Nincs ilyen blog.",
         decrease_quantity: "Mennyiség csökkentése",
 		increase_quantity: "Mennyiség növelése",

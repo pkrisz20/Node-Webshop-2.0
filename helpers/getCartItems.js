@@ -88,7 +88,13 @@ const getCartListItemsHTML = (cartItems, currentLang) => {
                 <div class="cart-product-image">
                     <picture>
                         <source srcset="${ item.image || '' }">
-                        <img class="cart-product-img" alt="${ item.productName }" loading="lazy" src="images/no-picture.jpg">
+                        <img
+                            class="cart-product-img"
+                            alt="${ item.productName }"
+                            loading="lazy"
+                            src="images/no-picture.jpg"
+                            onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
+                        />
                     </picture>
                 </div>
 
@@ -133,7 +139,13 @@ const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) =
                             <div class="cart-product-image">
                                 <picture>
                                     <source srcset="${ cartItems[0].image || '' }">
-                                    <img class="cart-product-img" alt="${ cartItems[0].productName }" loading="lazy" src="images/no-picture.jpg">
+                                    <img
+                                        class="cart-product-img"
+                                        alt="${ cartItems[0].productName }"
+                                        loading="lazy"
+                                        src="images/no-picture.jpg"
+                                        onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
+                                    />
                                 </picture>
                             </div>
 
