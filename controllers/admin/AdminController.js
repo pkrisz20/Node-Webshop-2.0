@@ -266,6 +266,27 @@ const uploadMultipleImages = (req, res) => {
                     return callback(null, true);
                 }
                 else {
+                    const error = new Error('Wrong image format');
+                    error.status = 400;
+                    return callback(error);
+                }
+            }
+        }).any("files");
+
+        uploadImage(req, res, (err) => {
+            if (err) {
+                // Multer-specific errors
+                if (err instanceof multer.MulterError) {
+                    errorHandler(err, req, res, 'adminController', 278, true);
+
+                    return res.status(200).json({
+                        status: 'error',
+                        csrfToken: req.csrfToken()
+                    });
+                }
+                else if (err.status === 400 && err.message === 'Wrong image format') {
+                    errorHandler(err, req, res, 'adminController', 288, true);
+
                     return res.status(200).json({
                         status: 'error',
                         title: languageHandler('errors.wrong_image_format', process.env.ADMIN_LANG),
@@ -274,19 +295,10 @@ const uploadMultipleImages = (req, res) => {
                     });
                 }
             }
-        }).any("files");
-
-        uploadImage(req, res, (err) => {
-            if (err) {
-                errorHandler(err, req, res, 'adminController', 288, true);
-
-                return res.status(200).json({
-                    status: 'error',
-                    csrfToken: req.csrfToken()
-                });
-            }
             else {
                 if (req.files == undefined) {
+                    errorHandler(err, req, res, 'adminController', 300, true);
+
                     return res.status(200).json({
                         status: 'error',
                         message: languageHandler('errors.no_selected_file', process.env.ADMIN_LANG),
@@ -317,7 +329,10 @@ const uploadMultipleImages = (req, res) => {
                                 saveImageToDatabase(res, req.files, req.params.folder, req.body.databaseId);
                             }
                             else if (code !== 0) {
-                                logEvents("Error generating WebP image. (multiple images) - AdminController ~320", "errors.log");
+                                const processingWebpError = new Error('Error occured during the WEBP process with multiple images');
+                                processingWebpError.name = "Webp processing Error";
+
+                                errorHandler(processingWebpError, req, res, 'adminController', 335, true);
 
                                 return res.status(200).json({
                                     status: 'error',

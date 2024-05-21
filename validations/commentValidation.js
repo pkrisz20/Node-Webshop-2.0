@@ -5,7 +5,6 @@ const commentsSchema = yup.object({
     email: yup.string().email().required().max(100),
     comment: yup.string().max(1000).required(),
     rating: yup.number().max(5),
-    recaptcha: yup.string().required()
 });
 
 module.exports = commentsSchema;

@@ -957,7 +957,7 @@ $('body').on("click", ".js-wishlist-btn", function (event) {
                 useBootstrap: false,
                 boxWidth: '350px',
                 title: response.title,
-                content: false,
+                content: response.message || false,
                 buttons: {
                     OK: {
                         action: function() {

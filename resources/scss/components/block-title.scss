@@ -13,6 +13,15 @@
     font-family: $main-font;
     color: $c-2;
 
+    &--center {
+        text-align: center;
+
+        .header_title-main::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
     &-main {
         text-transform: uppercase;
         width: auto;

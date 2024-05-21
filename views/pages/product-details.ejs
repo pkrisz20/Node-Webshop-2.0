@@ -195,7 +195,11 @@
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <% if (productDetails.isAllowed) { %>
-        <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+
+        <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+            <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+        <% } %>
+
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
     <% } %>
 

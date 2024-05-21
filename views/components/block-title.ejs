@@ -1,4 +1,4 @@
-<header class="header_title">
+<header class="header_title <%= locals.centerTitle ? 'header_title--center' : '' %>">
     <h2 class="header_title-main"><%= title %></h2>
     <% if (locals.subtitle) { %>
         <p class="header_title-sub"><%= subtitle %></p>

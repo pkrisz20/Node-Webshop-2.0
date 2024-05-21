@@ -10,13 +10,16 @@
         </div>
 
         <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/<%= articleType %>/comment/<%= itemId %>">
-            <input
-                id="recaptcha"
-                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                name="recaptcha"
-                type="hidden"
-                class="g-recaptcha"
-            />
+            <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+                <input
+                    id="recaptcha"
+                    value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                    name="recaptcha"
+                    type="hidden"
+                    class="g-recaptcha"
+                />
+            <% } %>
+
             <div class="row">
                 <div class="form-row">
                     <input
