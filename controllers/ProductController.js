@@ -204,6 +204,7 @@ const getAllProducts = async (req, res) => {
     }
 
     let result = [];
+    var elementsCount = 0;
 
     var metas = {
         ...metaDefault,
@@ -256,7 +257,7 @@ const getAllProducts = async (req, res) => {
 
             // Select for pagination count
             let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products WHERE products.is_active = ?";
-            const elementsCount = await DoDatabaseQuery(selectForPagination, [1]);
+            elementsCount = await DoDatabaseQuery(selectForPagination, [1]);
 
             if (elementsCount) {
                 let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
@@ -360,6 +361,7 @@ const getCategoryProducts = async (req, res) => {
 
     let { slug } = req.params;
     let result = [];
+    var elementsCount = 0;
 
     let checkForCategory = "SELECT name, short_description AS 'category_short_description' FROM categories WHERE slug = ?";
 
@@ -425,7 +427,7 @@ const getCategoryProducts = async (req, res) => {
                 let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ?";
 
                 // Select for pagination count
-                const elementsCount = await DoDatabaseQuery(selectForPagination, [1, slug]);
+                elementsCount = await DoDatabaseQuery(selectForPagination, [1, slug]);
 
                 if (elementsCount) {
                     let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);

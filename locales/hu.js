@@ -203,6 +203,23 @@ const hu = {
         cookie_settings: "Süti beállítások",
 		last_updated: "Utoljára módosítva: {0}"
 	},
+    slugs: {
+		products: 'termekek',
+		product: 'termek',
+		article: 'cikk',
+		blogs: 'cikkek',
+		content: 'tartalom',
+		faq: 'gyakori-kerdesek',
+		cart: 'kosar',
+		wishlist: 'kedvencek',
+		about_us: 'rolunk',
+		galleries: 'galleriak',
+		gallery: 'galleria',
+		search: 'kereses',
+		contact: 'kapcsolat',
+		terms_of_use: 'altalanos-szerzodesi-feltetelek',
+		privacy_policy: 'adatvedelmi-nyilatkozat',
+	}
 };
 
 module.exports = hu;

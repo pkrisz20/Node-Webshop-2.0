@@ -202,6 +202,23 @@ const sr = {
         cookie_settings: "Podešavanje kolačići",
 		last_updated: "Poslednje izmene: {0}"
 	},
+    slugs: {
+		products: 'proizvodi',
+		product: 'proizvod',
+		article: 'clanak',
+		blogs: 'clanci',
+		content: 'sadrzaj',
+		faq: 'najcesca-pitanja',
+		cart: 'korpa',
+		wishlist: 'lista-zelja',
+		about_us: 'o-nama',
+		galleries: 'galerije',
+		gallery: 'galerija',
+		search: 'pretraga',
+		contact: 'kontakt',
+		terms_of_use: 'opsti-uslovi-koriscenja',
+		privacy_policy: 'zastita-privatnost',
+	}
 };
 
 module.exports = sr;

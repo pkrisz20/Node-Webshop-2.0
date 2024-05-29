@@ -202,6 +202,23 @@ const en = {
         cookie_settings: "Cookie settings",
 		last_updated: "Last updated: {0}"
 	},
+	slugs: {
+		products: 'products',
+		product: 'product',
+		article: 'article',
+		blogs: 'blogs',
+		content: 'content',
+		faq: 'frequently-asked-questions',
+		cart: 'cart',
+		wishlist: 'wishlist',
+		about_us: 'about-us',
+		galleries: 'galleries',
+		gallery: 'gallery',
+		search: 'search',
+		contact: 'contact',
+		terms_of_use: 'terms-of-use',
+		privacy_policy: 'privacy-policy',
+	}
 };
 
 module.exports = en;

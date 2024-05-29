@@ -42,7 +42,7 @@ const getFAQ = async (req, res) => {
     const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ? ORDER BY id DESC";
 
     try {
-        const data = await DoDatabaseQuery(sqlQuery);
+        const data = await DoDatabaseQuery(sqlQuery, [1]);
 
         if (data.length > 0) {
 
