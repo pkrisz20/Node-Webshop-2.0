@@ -150,7 +150,7 @@
                         <div class="ck-content"><%- productDetails.description %></div>
                     <% } %>
 
-                        <%- include('../components/sharing-buttons.ejs', { page_url: `products/${ productDetails.slug }`, mail_subject: productDetails.name }) %>
+                        <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.product', current_locale) + "/" + productDetails.slug + "/" + productDetails.id, mail_subject: productDetails.name }) %>
                     </div>
                 </section>
 
@@ -222,7 +222,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: `/${ locale }/product/comment/load-more`,
+                    url: "/ajax/product/comment/load-more",
                     dataType: 'json',
                     data: {
                         offsetNumber: offsetNum,

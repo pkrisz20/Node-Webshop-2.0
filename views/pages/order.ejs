@@ -50,7 +50,7 @@
                                         <strong class="order-price"><span class="js-order-alone-price"><%= numberWithCommas(cartItem.quantity * cartItem.price) %></span> RSD</strong>
 
                                         <div class="order-functions">
-                                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= cartItem.slug %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.product', current_locale) %>/<%= cartItem.slug %>/<%= cartItem.productId %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                             <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" class="order-functions-remove js-remove-cart" data-id="<%= cartItem.productId %>"><i class="fas fa-times"></i></button>
                                         </div>
                                     </div>
@@ -67,7 +67,7 @@
                     <section class="order-form">
                         <%- include('../components/block-title.ejs', { title: languageHandler('orders.order_form', current_locale), subtitle: languageHandler('orders.order_form_sub', current_locale) }) %>
 
-                        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/order/handle">
+                        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/order/handle">
                             <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
                                 <input
                                     id="recaptcha"
@@ -242,7 +242,7 @@
                                     />
                                     <span class="checkmark"></span>
                                 </label>
-                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
+                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content') %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
                             </div>
 
                             <button type="submit" class="form-submit"><i class="fas fa-coins"></i> <%= languageHandler('orders.order', current_locale) %></button>

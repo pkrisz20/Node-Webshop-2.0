@@ -5,7 +5,7 @@ const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/global
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
-const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
+const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -412,7 +412,7 @@ const handleProductUpload = (req, res) => {
             else if (data.affectedRows > 0) {
 
                 // Slug generate for product with inserted id
-                let generatedSlug = generateUniqueSlug(productData["name[en]"], data.insertId);
+                let generatedSlug = generateUniqueSlug(productNames);
 
                 if ( generatedSlug === false ) {
                     return res.status(200).json({
@@ -505,6 +505,10 @@ const handleEditProduct = (req, res) => {
         sr: escapeHtml(productData['name[sr]']),
         hu: escapeHtml(productData['name[hu]']),
     };
+
+    let productNameParam = JSON.stringify(productNames);
+    let newSlugs = generateUniqueSlug(productNames);
+
     // The short description simple textarea, it's a string
     let shortDescriptions = {
         en: productData['short_description[en]'].length > 0 ? escapeHtml(productData['short_description[en]']) : null,
@@ -519,14 +523,15 @@ const handleEditProduct = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, slug = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateProduct,
         [
-            JSON.stringify(productNames),
+            productNameParam,
             JSON.stringify(shortDescriptions),
             JSON.stringify(longDescriptions),
+            newSlugs,
             basePrice,
             discountPrice,
             is_active,

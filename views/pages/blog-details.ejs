@@ -59,7 +59,7 @@
                                 <%- blogDetails.description %>
                             </div>
 
-                            <%- include('../components/sharing-buttons.ejs', { page_url: `blog/${ blogDetails.slug }`, mail_subject: blogDetails.title }) %>
+                            <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.article', current_locale) + "/" + blogDetails.slug + "/" + blogDetails.id, mail_subject: blogDetails.title }) %>
                         </article>
 
                         <% if (nextEvents.length > 0) { %>
@@ -67,7 +67,7 @@
                                 <%- include('../components/block-title.ejs', { title: languageHandler('general.next_events', current_locale) }) %>
 
                                 <% nextEvents.forEach((event, index) => { %>
-                                    <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= event.slug %>" title="<%= event.title %>" aria-label="<%= event.title %>">
+                                    <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.article', current_locale) %>/<%= event.slug %>/<%= event.id %>" title="<%= event.title %>" aria-label="<%= event.title %>">
                                         <div class="blog-aside-article-image">
                                             <%- include('../components/picture.ejs', {
                                                 imageSrc: event.image,
@@ -152,7 +152,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: `/${ locale }/blog/comment/load-more`,
+                    url: "/ajax/blog/comment/load-more",
                     dataType: 'json',
                     data: {
                         offsetNumber: offsetNum,

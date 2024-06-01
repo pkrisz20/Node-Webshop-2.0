@@ -4,7 +4,7 @@ const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, escapeHtml } = require("../../helpers/globalFunctions");
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
-const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
+const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -136,7 +136,7 @@ const addNewCategory = (req, res) => {
             else if (data.affectedRows > 0) {
 
                 // Slug generate for product with inserted id
-                let generatedSlug = generateUniqueSlug(categoryData["name[en]"], data.insertId);
+                let generatedSlug = generateUniqueSlug(categoryNames);
 
                 if ( generatedSlug === false ) {
                     return res.status(200).json({
@@ -262,6 +262,10 @@ const handleEditCategory = (req, res) => {
         sr: escapeHtml(categoryData['name[sr]']),
         hu: escapeHtml(categoryData['name[hu]']),
     };
+
+    let categoryNameParam = JSON.stringify(categoryNames);
+    let newSlugs = generateUniqueSlug(categoryNames);
+
     // The short description simple textarea, it's a string
     let shortDescriptions = {
         en: categoryData['short_description[en]'].length > 0 ? escapeHtml(categoryData['short_description[en]']) : null,
@@ -269,13 +273,14 @@ const handleEditCategory = (req, res) => {
         hu: categoryData['short_description[hu]'].length > 0 ? escapeHtml(categoryData['short_description[hu]']) : null
     };
 
-    const SQLUpdateCategory = "UPDATE categories SET name = ?, short_description = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateCategory = "UPDATE categories SET name = ?, short_description = ?, slug = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateCategory,
         [
-            JSON.stringify(categoryNames),
+            categoryNameParam,
             JSON.stringify(shortDescriptions),
+            newSlugs,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
             categoryId
         ],

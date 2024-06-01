@@ -44,7 +44,7 @@
                     <% } %>
                 </section>
 
-                <%- include('../components/sharing-buttons.ejs', { page_url: `gallery/${ galleryData.slug }`, mail_subject: galleryData.galleryName }) %>
+                <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.gallery', current_locale) + "/" + galleryData.slug + "/" + galleryData.id, mail_subject: galleryData.galleryName }) %>
             </div>
 
             <% if (relatedGalleries.length > 0) { %>

@@ -18,7 +18,7 @@
                 <section class="gdpr-container">
                     <p class="gdpr-container-information"><%= languageHandler('general.gdpr_db_info', current_locale) %></p>
 
-                    <form class="form form-gdpr js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/gdpr/handle">
+                    <form class="form form-gdpr js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/gdpr/handle">
                         <input
                             id="recaptcha"
                             value="<%= process.env.RECAPTCHA_SITE_KEY %>"

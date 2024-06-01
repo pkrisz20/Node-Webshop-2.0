@@ -364,8 +364,6 @@ $(function() {
 
     $('body').on('click', '.js-cookie-submit', function () {
         var this_button = $(this);
-        const pathname = window.location.pathname;
-        const currentLang = pathname.split('/')[1];
 
         if (this_button.hasClass('js-cookie-all')) {
             $('.js-cookie-input').each(function () {
@@ -391,7 +389,7 @@ $(function() {
 
         $.ajax({
             type: 'post',
-            url: `${ currentLang }/gdpr/handle`,
+            url: 'ajax/gdpr/handle',
             dataType: 'json',
             data: {
                 allowed_cookies: checkedTypes,
@@ -566,7 +564,7 @@ $('body').on("click", ".js-add-to-cart", function (event) {
 
     $.ajax({
         type: 'post',
-        url: "/api/cart/add",
+        url: "/ajax/cart/add",
         dataType: 'json',
         data: {
             productId: this_button.data('id'),
@@ -631,7 +629,7 @@ $('body').on("click", ".js-remove-cart", function (event) {
 
     $.ajax({
         type: 'post',
-        url: "/api/cart/delete",
+        url: "/ajax/cart/delete",
         dataType: 'json',
         data: {
             productId: this_button.data('id'),
@@ -726,7 +724,7 @@ $('body').on("change", ".js-product-quantity", function (event, targetInput) {
 
     $.ajax({
         type: 'post',
-        url: "/api/cart/update",
+        url: "/ajax/cart/update",
         dataType: 'json',
         data: {
             productId: productId,
@@ -874,7 +872,7 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
 
         $.ajax({
             type: 'post',
-            url: `/${ locale }/ajax-search`,
+            url: 'ajax/search',
             dataType: 'json',
             data: {
                 keywords: $(this).val(),

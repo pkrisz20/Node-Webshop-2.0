@@ -19,7 +19,7 @@
                                     >
                                         <i class="fas fa-link"></i>
                                     </button>
-                                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery/<%= item.slug %>"><i class="far fa-eye"></i></a>
+                                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.gallery", current_locale) %>/<%= item.slug %>/<%= item.id %>"><i class="far fa-eye"></i></a>
                                 </div>
                                 <% if (item.name) { %>
                                     <h3 class="hover_title"><%= item.name %></h3>
@@ -32,6 +32,6 @@
         </div>
     </div>
     <div class="more">
-        <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler("nav.watch_gallery", current_locale) %> <i class="far fa-angle-double-right"></i></a>
+        <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"><%= languageHandler("nav.watch_gallery", current_locale) %> <i class="far fa-angle-double-right"></i></a>
     </div>
 </section>

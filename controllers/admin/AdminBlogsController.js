@@ -5,7 +5,7 @@ const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/global
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
-const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
+const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -387,7 +387,7 @@ const handleArticleUpload = (req, res) => {
             else if (data.affectedRows > 0) {
 
                 // Slug generate for product with inserted id
-                let generatedSlug = generateUniqueSlug(articleData["name[en]"], data.insertId);
+                let generatedSlug = generateUniqueSlug(articleTitles);
 
                 if ( generatedSlug === false ) {
                     return res.status(200).json({
@@ -536,6 +536,10 @@ const handleEditArticle = (req, res) => {
         sr: escapeHtml(articleData['title[sr]']),
         hu: escapeHtml(articleData['title[hu]']),
     };
+
+    let articleNameParam = JSON.stringify(titleNames);
+    let newSlugs = generateUniqueSlug(titleNames);
+
     // The short description simple textarea, it's a string
     let shortDescriptions = {
         en: articleData['short_description[en]'].length > 0 ? escapeHtml(articleData['short_description[en]']) : null,
@@ -550,14 +554,15 @@ const handleEditArticle = (req, res) => {
         hu: articleData['article_description[hu]'] ?? null
     };
 
-    const SQLUpdateArticle = "UPDATE blogs SET title = ?, short_description = ?, description = ?, date = ?, author = ?, is_active = ?, is_important = ?, is_featured = ?, comments_allowed = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateArticle = "UPDATE blogs SET title = ?, short_description = ?, description = ?, slug = ?, date = ?, author = ?, is_active = ?, is_important = ?, is_featured = ?, comments_allowed = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateArticle,
         [
-            JSON.stringify(titleNames),
+            articleNameParam,
             JSON.stringify(shortDescriptions),
             JSON.stringify(longDescriptions),
+            newSlugs,
             articleData['date'],
             articleData['author'],
             is_active,

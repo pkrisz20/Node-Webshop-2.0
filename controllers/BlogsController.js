@@ -269,7 +269,7 @@ const getAllBlogs = async (req, res) => {
         return res.render("pages/blogs", {
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
-            articleLink: "blogs" ?? null,
+            articleLink: languageHandler('slugs.blogs', lang) ?? null,
             blogs: result ?? [],
             meta: metas,
             current_locale: req.session.lang,

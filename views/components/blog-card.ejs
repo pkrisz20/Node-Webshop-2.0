@@ -10,13 +10,13 @@
     <a
         class="image"
         title="<%= blog.title %>"
-        href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>"
-        aria-label="Navigation to the current blog article - <%= blog.title %>">
-
+        href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>"
+        aria-label="Navigation to the current blog article - <%= blog.title %>"
+    >
         <%- include('./picture.ejs', { imageSrc: blog.image, alt: blog.title }) %>
     </a>
     <div class="blog-card-content">
-        <a href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
+        <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
 
         <div class="bottom">
             <div class="bottom-author"><i class="fas fa-user"></i> <%= blog.author %></div>
@@ -28,5 +28,5 @@
             <p class="short"><%= blog.shortDescription %></p>
         <% } %>
     </div>
-    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/blog/<%= blog.slug %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link btn"><%= languageHandler('general.read_more', current_locale) %> <i class="far fa-angle-double-right"></i></a>
+    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link btn"><%= languageHandler('general.read_more', current_locale) %> <i class="far fa-angle-double-right"></i></a>
 </div>

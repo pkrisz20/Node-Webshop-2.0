@@ -5,7 +5,7 @@ const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/global
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
-const { generateUniqueSlug } = require("../../helpers/admin/generateSlug");
+const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -192,7 +192,7 @@ const handleGalleryUpload = (req, res) => {
             else if (data.affectedRows > 0) {
 
                 // Slug generate for product with inserted id
-                let generatedSlug = generateUniqueSlug(galleryData["name[en]"], data.insertId);
+                let generatedSlug = generateUniqueSlug(galleryNames);
 
                 if ( generatedSlug === false ) {
                     return res.status(200).json({
@@ -336,6 +336,10 @@ const handleEditGallery = (req, res) => {
         sr: escapeHtml(galleryData['name[sr]']),
         hu: escapeHtml(galleryData['name[hu]']),
     };
+
+    let galleryNameParam = JSON.stringify(names);
+    let newSlugs = generateUniqueSlug(names);
+
     // The short description simple textarea, it's a string
     let descriptions = {
         en: galleryData['description[en]'].length > 0 ? escapeHtml(galleryData['description[en]']) : null,
@@ -343,13 +347,14 @@ const handleEditGallery = (req, res) => {
         hu: galleryData['description[hu]'].length > 0 ? escapeHtml(galleryData['description[hu]']) : null
     };
 
-    const SQLUpdateGallery = "UPDATE galleries SET gallery_name = ?, description = ?, gallery_date = ?, is_active = ?, is_featured = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateGallery = "UPDATE galleries SET gallery_name = ?, description = ?, slug = ?, gallery_date = ?, is_active = ?, is_featured = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateGallery,
         [
-            JSON.stringify(names),
+            galleryNameParam,
             JSON.stringify(descriptions),
+            newSlugs,
             galleryData['date'],
             is_active,
             is_featured,

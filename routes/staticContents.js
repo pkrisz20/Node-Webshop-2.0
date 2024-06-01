@@ -14,9 +14,6 @@ staticContentsRouter.route("/faq")
 // staticContentsRouter.route("/gdpr")
 //     .get(getConfigFromDb, selectWebshopCategories, getCartItems, filterActiveWishlistItems, StaticContentsController.getGDPR);
 
-staticContentsRouter.route("/gdpr/handle")
-    .post(StaticContentsController.handleGDPR);
-
 staticContentsRouter.route("/:routeName")
     .get(getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, StaticContentsController.getStaticPage);
 

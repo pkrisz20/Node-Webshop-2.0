@@ -72,9 +72,9 @@ app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
 });
 
-// API routes
-const cartRouter = require("./routes/cart");
-app.use("/api", cartRouter);
+// Ajax routes
+const ajaxRouter = require('./routes/ajaxRoutes');
+app.use("/ajax", ajaxRouter);
 
 // Admin routes
 const adminRouter = require("./routes/admin");
@@ -100,33 +100,27 @@ app.use("/:lang", function (req, res, next) {
     return next();
 });
 
-// Web routes
+// Import routers
 const homeRouter = require("./routes/home");
+const employeesRouter = require('./routes/employees');
+const productsRouter = require('./routes/products');
+const galleryRouter = require('./routes/gallery');
+const blogsRouter = require('./routes/blogs');
+const searchRouter = require('./routes/search');
+const contactRouter = require('./routes/contact');
+const ordersRouter = require('./routes/orders');
+const staticContentsRouter = require('./routes/staticContents');
+
+// Use the middleware in routes
 app.use("/:lang", homeRouter);
-
-const employeesRouter = require("./routes/employees");
-app.use("/:lang", employeesRouter);
-
-const productsRouter = require("./routes/products");
-app.use("/:lang", productsRouter);
-
-const galleryRouter = require("./routes/gallery");
-app.use("/:lang", galleryRouter);
-
-const blogsRouter = require("./routes/blogs");
-app.use("/:lang", blogsRouter);
-
-const searchRouter = require("./routes/search");
-app.use("/:lang", searchRouter);
-
-const contactRouter = require("./routes/contact");
-app.use("/:lang", contactRouter);
-
-const ordersRouter = require("./routes/orders");
-app.use("/:lang", ordersRouter);
-
-const staticContentsRouter = require("./routes/staticContents");
-app.use("/:lang", staticContentsRouter);
+app.use('/:lang/:slug', employeesRouter);
+app.use('/:lang/:slug', contactRouter);
+app.use('/:lang/:slug', ordersRouter);
+app.use('/:lang/:slug', searchRouter);
+app.use('/:lang/:slug/', staticContentsRouter);
+app.use('/:lang/:slug', productsRouter);
+app.use('/:lang/:slug', galleryRouter);
+app.use('/:lang/:slug', blogsRouter);
 
 app.get("*", (req, res) => {
     return showNotFoundPage(req, res);

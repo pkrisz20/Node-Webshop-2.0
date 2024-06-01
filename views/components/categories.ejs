@@ -2,9 +2,13 @@
     <div class="wrapper">
         <div class="featured-categories-carousel js-categories-carousel">
             <% webshopCategories.forEach(item => { %>
-                <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/category/<%= item.category_slug %>" aria-label="<%= item.name %>" title="<%= item.name %>">
+                <a
+                    target="_self"
+                    href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= item.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= item.id %>"
+                    aria-label="<%= item.name %>"
+                    title="<%= item.name %>"
+                >
                     <div class="card">
-
                         <%- include('./picture.ejs', { imageSrc: item.category_image, imgClass: "card-icon", alt: item.name }) %>
                         <h3 class="card-text"><%= item.name %></h3>
                     </div>

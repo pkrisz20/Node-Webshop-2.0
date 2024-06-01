@@ -269,7 +269,7 @@ const getAllProducts = async (req, res) => {
         return res.render("pages/products", {
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
-            articleLink: "products",
+            articleLink: languageHandler('slugs.products') ?? null,
             products: result ?? [],
             productsTotalCount: elementsCount[0].each_article_count ?? 0,
             main_title: languageHandler('general.products', lang),
@@ -363,7 +363,7 @@ const getCategoryProducts = async (req, res) => {
     let result = [];
     var elementsCount = 0;
 
-    let checkForCategory = "SELECT name, short_description AS 'category_short_description' FROM categories WHERE slug = ?";
+    let checkForCategory = "SELECT id, name, slug, short_description AS 'category_short_description' FROM categories WHERE slug = ?";
 
     try {
         const category_data = await DoDatabaseQuery(checkForCategory, [slug]);
@@ -439,7 +439,7 @@ const getCategoryProducts = async (req, res) => {
             return res.render("pages/products", {
                 pageCount: parseInt(pageCount ?? 0),
                 currentPage: parseInt(page ?? 0),
-                articleLink: `products/category/${ slug }`,
+                articleLink: category_data[0].slug + "/" + languageHandler('slugs.products') + "/" + category_data[0].id,
                 productsTotalCount: elementsCount[0].each_article_count ?? 0,
                 products: result ?? [],
                 main_title: selectedCategoryName,

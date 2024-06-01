@@ -1,5 +1,5 @@
 <div class="product">
-    <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="<%= product.name %>">
+    <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.product", current_locale) %>/<%= product.slug %>/<%= product.id %>" aria-label="<%= product.name %>">
         <% if (product.isOnDiscount) { %>
             <span class="badge badge--discount"><%= languageHandler("products.discount", current_locale) %></span>
         <% } %>
@@ -13,7 +13,7 @@
         <%- include('./picture.ejs', { imageSrc: product.image, alt: product.name }) %>
     </a>
     <div class="product_desc">
-        <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/<%= product.slug %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
+        <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.product", current_locale) %>/<%= product.slug %>/<%= product.id %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
 
         <div class="price__wrap">
             <strong class="price__wrap-price"><%= product.isOnDiscount ? product.discount : product.price %> <small>RSD</small></strong>
@@ -38,7 +38,7 @@
                 type="button"
                 class="wishlist-btn js-wishlist-btn <%= product.saved_in_wishlist ? 'saved' : '' %>"
                 data-operation="<%= product.saved_in_wishlist ? 'remove' : 'add' %>"
-                data-url="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist-handle/<%= product.id %>"
+                data-url="<%= process.env.APP_URL %>/ajax/wishlist-handle/<%= product.id %>"
             >
                 <i class="far fa-heart"></i>
                 <i class="fas fa-heart"></i>

@@ -2,7 +2,7 @@
 <html lang="<%= meta.lang %>">
     <%- include('../layout/head.ejs') %>
 
-    <link rel="canonical" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery" />
+    <link rel="canonical" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= articleLink %>" />
     <link rel="preload" href="<%= getAssetPath('/css/gallery-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 

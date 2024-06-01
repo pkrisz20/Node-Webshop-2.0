@@ -88,7 +88,7 @@ const getAllGallery = async (req, res) => {
         return res.render("pages/galleries", {
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
-            articleLink: "gallery",
+            articleLink: languageHandler('slugs.galleries', lang) ?? null,
             galleries: result ?? [],
             meta: metas,
             current_locale: lang,
@@ -144,6 +144,7 @@ const getGalleryDetails = async (req, res) => {
         }
         else if (data.length > 0) {
             result = {
+                id: parseInt(data[0].id),
                 slug: slug,
                 thumbImage: imagePathConverter(data[0].gallery_thumbnail, "galleries"),
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),

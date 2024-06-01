@@ -83,17 +83,17 @@
       <nav class="nav">
         <ul>
           <li><a target="_self" aria-label="<%= languageHandler("nav.home", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>"><%= languageHandler("nav.home", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.about", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler("nav.about", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("general.products", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("general.products", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.gallery", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.blog", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler("nav.blog", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.contact", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/contact"><%= languageHandler("nav.contact", current_locale) %></a></li>
+          <li><a target="_self" aria-label="<%= languageHandler("nav.about", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>"><%= languageHandler("nav.about", current_locale) %></a></li>
+          <li><a target="_self" aria-label="<%= languageHandler("general.products", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler("general.products", current_locale) %></a></li>
+          <li><a target="_self" aria-label="<%= languageHandler("nav.gallery", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"><%= languageHandler("nav.gallery", current_locale) %></a></li>
+          <li><a target="_self" aria-label="<%= languageHandler("nav.blog", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler("nav.blog", current_locale) %></a></li>
+          <li><a target="_self" aria-label="<%= languageHandler("nav.contact", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %>"><%= languageHandler("nav.contact", current_locale) %></a></li>
         </ul>
       </nav>
 
       <div class="functions">
         <a
-          href="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist"
+          href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.wishlist", current_locale) %>"
           target="_self"
           class="functions-btn"
           aria-label="<%= languageHandler("general.wishlist", current_locale) %>"
@@ -127,7 +127,14 @@
           <ul class="header__categories-dropdown dropdown-list js-dropdown-list">
             <% webshopCategories.forEach(category => { %>
               <li class="dropdown-list-item">
-                <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/products/category/<%= category.category_slug %>" aria-label="<%= category.name %>" title="<%= category.name %>"><%= category.name %></a>
+                <a
+                  target="_self"
+                  href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= category.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= category.id %>"
+                  aria-label="<%= category.name %>"
+                  title="<%= category.name %>"
+                >
+                  <%= category.name %>
+                </a>
               </li>
             <% }) %>
           </ul>
@@ -163,7 +170,7 @@
 
       <div class="functions">
         <a
-          href="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist"
+          href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.wishlist", current_locale) %>"
           target="_self"
           class="functions-btn"
           aria-label="<%= languageHandler("general.wishlist", current_locale) %>"
@@ -227,9 +234,32 @@
 
       <nav class="nav">
         <ul>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.home", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>"><%= languageHandler("nav.home", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.about", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/about"><%= languageHandler("nav.about", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("general.products", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/products"><%= languageHandler("general.products", current_locale) %></a></li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("nav.home", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>">
+                <%= languageHandler("nav.home", current_locale) %>
+            </a>
+          </li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("nav.about", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>"
+            >
+              <%= languageHandler("nav.about", current_locale) %>
+            </a>
+          </li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("general.products", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"
+            >
+              <%= languageHandler("general.products", current_locale) %>
+            </a>
+          </li>
 
           <li class="js-toggle-container">
             <button
@@ -248,7 +278,7 @@
                       target="_self"
                       title="<%= category.name %>"
                       aria-label="<%= category.name %>"
-                      href="<%= process.env.APP_URL %>/<%= current_locale %>/products/category/<%= category.category_slug %>"
+                      href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= category.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= category.id %>"
                     >
                       <%= category.name %>
                     </a>
@@ -258,13 +288,44 @@
             </div>
           </li>
 
-          <li><a target="_self" aria-label="<%= languageHandler("nav.gallery", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/gallery"><%= languageHandler("nav.gallery", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.blog", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/blogs"><%= languageHandler("nav.blog", current_locale) %></a></li>
-          <li><a target="_self" aria-label="<%= languageHandler("nav.contact", current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/contact"><%= languageHandler("nav.contact", current_locale) %></a></li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("nav.gallery", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"
+            >
+              <%= languageHandler("nav.gallery", current_locale) %>
+            </a>
+          </li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("nav.blog", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"
+            >
+              <%= languageHandler("nav.blog", current_locale) %>
+            </a>
+          </li>
+          <li>
+            <a
+              target="_self"
+              aria-label="<%= languageHandler("nav.contact", current_locale) %>"
+              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %>"
+            >
+              <%= languageHandler("nav.contact", current_locale) %>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
   </div>
 
-  <button type="button" class="upscroller js-upscroll" aria-label="<%= languageHandler('general.scroll_to_up', current_locale) %>" title="<%= languageHandler('general.scroll_to_up', current_locale) %>"><i class="fas fa-chevron-up"></i></button>
+  <button
+    type="button"
+    class="upscroller js-upscroll"
+    aria-label="<%= languageHandler('general.scroll_to_up', current_locale) %>"
+    title="<%= languageHandler('general.scroll_to_up', current_locale) %>"
+  >
+    <i class="fas fa-chevron-up"></i>
+  </button>
 </header>

@@ -60,7 +60,7 @@
                     <div class="container-form">
                         <%- include('../components/block-title.ejs', { title: languageHandler('general.contact_title', current_locale), subtitle: languageHandler('general.contact_subtitle', current_locale) }) %>
 
-                        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/<%= current_locale %>/contact/handle">
+                        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/contact/handle">
                             <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
                                 <input
                                     id="recaptcha"
@@ -194,7 +194,7 @@
                                     />
                                     <span class="checkmark"></span>
                                 </label>
-                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
+                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content') %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
                             </div>
 
                             <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
