@@ -8,6 +8,7 @@ const languageHandler = require("../helpers/languageHandler");
 const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const { getSlug } = require("../helpers/admin/slugHelper");
 
 const getProductDetails = async (req, res) => {
     // Cart converting stuffs
@@ -715,7 +716,7 @@ const getWishlistListPage = async ( req, res, next ) => {
                 let result = {
                     id: parseInt(wishlistItem.id),
                     name: getValueByLanguage(wishlistItem.name, lang),
-                    slug: wishlistItem.slug,
+                    slug: getSlug(wishlistItem.slug, lang),
                     short: wishlistItem.short_description ? limitText(getValueByLanguage(wishlistItem.short_description, lang)) : null,
                     image: imagePathConverter(wishlistItem.image_thumbnail, "products"),
                     price: numberWithCommas(wishlistItem.price),

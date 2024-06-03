@@ -1,4 +1,5 @@
 const { db } = require("../config/db-connection");
+const { getSlug } = require("../helpers/admin/slugHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const errorHandler = require("./errorHandler");
 
@@ -20,7 +21,7 @@ const selectStaticContents = ( req, res, next ) => {
                 static_contents[staticContent.content_name] = {
                     id: parseInt(staticContent.id),
                     title: getValueByLanguage(staticContent.title, lang),
-                    slug: staticContent.slug
+                    slug: getSlug(staticContent.slug, lang)
                 }
             });
         }

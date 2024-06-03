@@ -5,6 +5,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { numberWithCommas } = require('../helpers/globalFunctions');
 const { getCartListItemsHTML, generateCartItemsHTML } = require("../helpers/getCartItems");
+const { getSlug } = require("../helpers/admin/slugHelper");
 
 const deleteCartItem = (req, res) => {
     let { productId } = req.body;
@@ -120,7 +121,7 @@ const addCartItem = async (req, res) => {
             let resultItem = {
                 productId: data[0].id,
                 productName: getValueByLanguage(data[0].name, lang),
-                slug: data[0].slug,
+                slug: getSlug(data[0].slug, lang),
                 maxQuantity: data[0].max_order_count,
                 quantity: quantity,
                 price: data[0].discount_value ? data[0].discount_value : data[0].price,

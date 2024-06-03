@@ -113,14 +113,14 @@ const staticContentsRouter = require('./routes/staticContents');
 
 // Use the middleware in routes
 app.use("/:lang", homeRouter);
-app.use('/:lang/:slug', employeesRouter);
-app.use('/:lang/:slug', contactRouter);
-app.use('/:lang/:slug', ordersRouter);
-app.use('/:lang/:slug', searchRouter);
-app.use('/:lang/:slug/', staticContentsRouter);
-app.use('/:lang/:slug', productsRouter);
-app.use('/:lang/:slug', galleryRouter);
-app.use('/:lang/:slug', blogsRouter);
+app.use('/', employeesRouter);
+app.use('/', contactRouter);
+app.use('/', ordersRouter);
+app.use('/', searchRouter);
+app.use('/', staticContentsRouter);
+app.use('/', productsRouter); // Not working properly
+app.use('/', galleryRouter); // Not working properly
+app.use('/', blogsRouter); // Not working properly
 
 app.get("*", (req, res) => {
     return showNotFoundPage(req, res);

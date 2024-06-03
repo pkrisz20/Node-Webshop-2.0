@@ -6,7 +6,7 @@
         <h5 class="cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span class="js-cart-counter"><%= cart.totalCount %></span></h5>
         <div class="cart-container">
             <div class="cart-container-top">
-                <a href="/<%= current_locale %>/<%= languageHandler("slugs.cart", current_locale) %>" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= languageHandler('orders.order', current_locale) %></a>
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.cart", current_locale) %>" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= languageHandler('orders.order', current_locale) %></a>
                 <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-total-price"><%= cart.totalPrice %></span><small>RSD</small></strong>
             </div>
 

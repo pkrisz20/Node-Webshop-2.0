@@ -8,6 +8,7 @@ const errorHandler = require('../middleware/errorHandler');
 const formatDateByLang = require("../helpers/formatDateByLocale");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const { getSlug } = require("../helpers/admin/slugHelper");
 const searchLimit = 10;
 
 const handleSearch = async (req, res) => {
@@ -17,7 +18,7 @@ const handleSearch = async (req, res) => {
 
     // Redirect if something is fishy with the query param
     if ( typeof keywords !== "string" || keywords.length === 0 ) {
-        return res.redirect(`/${ lang ?? process.env.FALLBACK_LANG }`);
+        return res.redirect(`/${ lang }`);
     }
     // Cart converting stuffs
     var cart = {
@@ -85,7 +86,7 @@ const handleSearch = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.name, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     image: imagePathConverter(element.image_thumbnail, "products") ?? '',
                     price: numberWithCommas(element.price),
                     isOnDiscount: Boolean(element.discount_value),
@@ -124,7 +125,7 @@ const handleSearch = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     title: getValueByLanguage(element.title, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     shortDescription: getValueByLanguage(element.short_description, lang),
                     image: imagePathConverter(element.image_thumbnail, "blogs") ?? '',
                     author: element.author,
@@ -140,7 +141,7 @@ const handleSearch = async (req, res) => {
             blogsFound.results = blogsFound.results.map(item => {
                 return {
                     ...item,
-                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    fullDate: formatDateByLang(item.fullDate, lang),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
                 };
             });
@@ -170,10 +171,10 @@ const handleSearch = async (req, res) => {
             gallery_result.forEach(element => {
                 let tempObject = {
                     id: parseInt(element.id),
-                    name: getValueByLanguage(element.gallery_name, lang ?? process.env.FALLBACK_LANG),
-                    slug: element.slug,
+                    name: getValueByLanguage(element.gallery_name, lang),
+                    slug: getSlug(element.slug, lang),
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries") ?? '',
-                    date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
+                    date: formatDateByLang(element.gallery_date, lang),
                 }
 
                 galleryFound.results.push(tempObject);
@@ -199,7 +200,7 @@ const handleSearch = async (req, res) => {
             keywords: words.join(' '),
             meta: metas,
             showPopupCartInformation: req.session.showPopupCartInformation,
-            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
+            current_locale: lang,
             cart: cart,
             locales: ['hu', 'sr', 'en'],
             languageHandler: languageHandler,
@@ -254,7 +255,7 @@ const ajaxSearch = async (req, res) => {
 
             product_result.forEach(element => {
                 productsHtml += `
-                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/products/${ element.slug }" aria-label="${ getValueByLanguage(element.name, lang) }">
+                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.product') + "/" + getSlug(element.slug, lang) + "/" + element.id + `" aria-label="${ getValueByLanguage(element.name, lang) }">
                         <div class="container_box--image">
                             <picture>
                                 <source srcset="${ imagePathConverter(element.image_thumbnail, "products") ?? '' }">
@@ -300,7 +301,7 @@ const ajaxSearch = async (req, res) => {
             blog_result.forEach(element => {
                 blogsHtml += `
                     <div style="margin-bottom: 10px;">
-                        <a class="container_box" href="${ process.env.APP_URL }/${ lang }/blog/${ element.slug }" aria-label="${ getValueByLanguage(element.title, lang) }">
+                        <a class="container_box" href="${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.article') + "/" + getSlug(element.slug, lang) + "/" + element.id + `" aria-label="${ getValueByLanguage(element.title, lang) }">
                             <div class="container_box--image">
                                 <picture>
                                     <source srcset="${ imagePathConverter(element.image_thumbnail, "blogs") ?? '' }">
@@ -347,7 +348,7 @@ const ajaxSearch = async (req, res) => {
             gallery_result.forEach(element => {
                 galleriesHtml += `
                     <div style="margin-bottom: 10px;">
-                        <a class="container_box" href="${ process.env.APP_URL }/${ lang }/gallery/${ element.slug }" aria-label="${ getValueByLanguage(element.gallery_name, lang) }">
+                        <a class="container_box" href="${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.gallery') + "/" + getSlug(element.slug) + "/" + element.id `" aria-label="${ getValueByLanguage(element.gallery_name, lang) }">
                             <div class="container_box--image">
                                 <picture>
                                     <source srcset="${ imagePathConverter(element.gallery_thumbnail, "galleries") ?? '' }">

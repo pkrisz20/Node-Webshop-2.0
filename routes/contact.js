@@ -9,7 +9,7 @@ const selectStaticContents = require("../middleware/selectStaticContents");
 const filterActiveWishlistItems = require('../middleware/filterActiveWishlistItems');
 const checkSlug = require('../middleware/checkSlug');
 
-contactRouter.route("/")
-    .get(checkSlug('contact'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, ContactController.getContactPage);
+contactRouter.route("/:lang/:slug")
+    .get(checkSlug('slugs.contact'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, ContactController.getContactPage);
 
 module.exports = contactRouter;

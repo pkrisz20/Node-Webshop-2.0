@@ -157,7 +157,7 @@ const createOrder = async (req, res) => {
                     status: 'success',
                     title: languageHandler('general.process_success', lang),
                     content: languageHandler('orders.order_succes_message', lang),
-                    redirect_url: `${ process.env.APP_URL }/${ lang }/products`
+                    redirect_url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.products', lang)
                 });
 
                 // var HTMLproductListToClient = "";
