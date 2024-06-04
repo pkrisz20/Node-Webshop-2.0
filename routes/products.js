@@ -15,7 +15,7 @@ productsRouter.route("/:lang/:slug")
 productsRouter.route("/:lang/:slug")
     .get(checkSlug('slugs.wishlist'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, ProductController.getWishlistListPage);
 
-productsRouter.route("/:lang/:categorySlug/:slugs/:categoryId")
+productsRouter.route("/:lang/:categorySlug/:slug/:categoryId")
     .get(checkSlug('slugs.products'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, ProductController.getCategoryProducts);
 
 productsRouter.route("/:lang/:slug/:slugName/:productId")

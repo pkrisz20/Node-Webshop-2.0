@@ -120,7 +120,7 @@ app.use('/', searchRouter);
 app.use('/', staticContentsRouter);
 app.use('/', productsRouter); // Not working properly
 app.use('/', galleryRouter); // Not working properly
-app.use('/', blogsRouter); // Not working properly
+app.use('/', blogsRouter);
 
 app.get("*", (req, res) => {
     return showNotFoundPage(req, res);

@@ -8,6 +8,7 @@ const errorHandler = require('../middleware/errorHandler');
 const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const { getSlug } = require("../helpers/admin/slugHelper");
 
 const getAllGallery = async (req, res) => {
     // Cart converting stuffs
@@ -39,7 +40,7 @@ const getAllGallery = async (req, res) => {
         title: languageHandler("nav.gallery", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/gallery`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.gallery', lang),
         description: languageHandler('meta.gallery_description', lang),
         image: {
             src: metaDefault['default_og_images'],
@@ -61,7 +62,7 @@ const getAllGallery = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.gallery_name, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries"),
                     date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                 }
@@ -126,26 +127,32 @@ const getGalleryDetails = async (req, res) => {
 
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    let { slug } = req.params;
+    let { slugName, galleryId } = req.params;
     let result = {};
     let relatedGalleries = [];
 
-    const sqlGalleryDetails = "SELECT id, gallery_name, gallery_thumbnail, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND slug = ?";
+    const sqlGalleryDetails = "SELECT id, slug, gallery_name, gallery_thumbnail, gallery_date, description, gallery_images FROM galleries WHERE is_active = ? AND id = ?";
 
     const relatedGalleriesQuery = "SELECT id, gallery_name, slug, gallery_thumbnail, gallery_date FROM galleries WHERE is_active = ? AND id != ? ORDER BY id DESC LIMIT ?";
 
     setMomentLocale(lang);
 
     try {
-        const data = await DoDatabaseQuery(sqlGalleryDetails, [1, slug]);
+        const data = await DoDatabaseQuery(sqlGalleryDetails, [1, galleryId]);
 
         if (data.length === 0) {
             return showNotFoundPage(req, res);
         }
         else if (data.length > 0) {
+            var currentSlug = getSlug(data[0].slug, lang);
+
+            if (slugName !== currentSlug) {
+                return res.redirect(301, process.env.APP_URL + `/${ lang }/` + languageHandler('slugs.gallery', lang) + `/${ currentSlug }/${ galleryId }`);
+            }
+
             result = {
                 id: parseInt(data[0].id),
-                slug: slug,
+                slug: currentSlug,
                 thumbImage: imagePathConverter(data[0].gallery_thumbnail, "galleries"),
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
@@ -159,7 +166,7 @@ const getGalleryDetails = async (req, res) => {
             title: limitText(result.galleryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
             lang: metaDefault.langs[lang],
             type: "article",
-            url: `${ process.env.APP_URL }/${ lang }/gallery/${ slug }`,
+            url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.gallery', lang) + `/${ currentSlug }/${ galleryId }`,
             description: limitText(result.description ?? languageHandler('meta.gallery_description', lang), metaDefault.limits['description']),
             image: {
                 src: result.thumbImage ?? metaDefault['default_og_images'],
@@ -174,7 +181,7 @@ const getGalleryDetails = async (req, res) => {
             related_galleries.forEach(item => {
                 let tempObject = {
                     name: getValueByLanguage(item.gallery_name, lang),
-                    slug: item.slug,
+                    slug: getSlug(item.slug, lang) + `/${ item.id }`,
                     thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
                     date: formatDateByLang(item.gallery_date, lang),
                 }

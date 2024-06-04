@@ -26,7 +26,7 @@ const getBlogDetails = async (req, res) => {
     });
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
-    let { slug, articleId } = req.params;
+    let { slugName, articleId } = req.params;
     let result = {};
     let newestBlogsArray = [];
     let incommingEvents = [];
@@ -46,10 +46,10 @@ const getBlogDetails = async (req, res) => {
             return showNotFoundPage(req, res);
         }
         else if (data.length > 0) {
-            var currentSlug = getSlug(data[0].slug);
+            var currentSlug = getSlug(data[0].slug, lang);
 
-            if (slug !== currentSlug) {
-                return res.redirect(301, process.env.APP_URL + `/${ lang }/${ currentSlug }/${ articleId }`);
+            if (slugName !== currentSlug) {
+                return res.redirect(301, process.env.APP_URL + `/${ lang }/` + languageHandler('slugs.article', lang) + `/${ currentSlug }/${ articleId }`);
             }
 
             setMomentLocale(lang);
@@ -72,7 +72,7 @@ const getBlogDetails = async (req, res) => {
                 title: limitText(result.title, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "article",
-                url: `${ process.env.APP_URL }/${ lang }/blog/${ slug }`,
+                url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.article', lang) + `/${ currentSlug }/${ articleId }`,
                 description: limitText(result.short_description ?? languageHandler('meta.description', lang), metaDefault.limits['description']),
                 image: {
                     src: result.thumb_image ?? metaDefault['default_og_images'],
@@ -89,7 +89,7 @@ const getBlogDetails = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     title: getValueByLanguage(element.title, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     shortDescription: getValueByLanguage(element.short_description, lang),
                     image: imagePathConverter(element.image_thumbnail, "blogs"),
                     author: element.author,
@@ -117,7 +117,7 @@ const getBlogDetails = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     title: getValueByLanguage(element.title, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     image: imagePathConverter(element.image_thumbnail, "blogs"),
                     date: moment(element.date).fromNow(),
                 }
@@ -212,7 +212,7 @@ const getAllBlogs = async (req, res) => {
         title: languageHandler("nav.blog", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/blogs`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.blogs', lang),
         description: languageHandler('meta.blog_description', lang),
         image: {
             src: metaDefault['default_og_images'],
@@ -242,7 +242,7 @@ const getAllBlogs = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     title: getValueByLanguage(element.title, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     shortDescription: getValueByLanguage(element.short_description, lang),
                     image: imagePathConverter(element.image_thumbnail, "blogs"),
                     author: element.author,

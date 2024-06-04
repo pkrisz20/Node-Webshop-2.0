@@ -12,7 +12,7 @@ const checkSlug = require("../middleware/checkSlug");
 blogsRouter.route("/:lang/:slug")
     .get(checkSlug('slugs.blogs'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, BlogsController.getAllBlogs);
 
-blogsRouter.route("/:lang/:slug/:articleId")
+blogsRouter.route("/:lang/:slug/:slugName/:articleId")
     .get(checkSlug('slugs.article'), getConfigFromDb, selectWebshopCategories, selectStaticContents, getCartItems, filterActiveWishlistItems, BlogsController.getBlogDetails);
 
 module.exports = blogsRouter;

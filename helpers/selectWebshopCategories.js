@@ -2,6 +2,7 @@ const { db } = require("../config/db-connection");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const errorHandler = require("../middleware/errorHandler");
+const { getSlug } = require("./admin/slugHelper");
 
 const selectWebshopCategories = ( req, res, next ) => {
 
@@ -22,7 +23,7 @@ const selectWebshopCategories = ( req, res, next ) => {
                     id: parseInt(category.id),
                     name: getValueByLanguage(category.name, lang),
                     category_image: imagePathConverter(category.image, "categories"),
-                    category_slug: category.slug
+                    category_slug: getSlug(category.slug, lang)
                 }
 
                 webshopCategories.push(tempObject);

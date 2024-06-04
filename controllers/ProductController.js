@@ -27,25 +27,31 @@ const getProductDetails = async (req, res) => {
     var wishlist = req.session.wishlist ?? [];
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    let { slug } = req.params;
+    let { slugName, productId } = req.params;
     let result = {};
     let similarProducts = [];
     let productComments = [];
     let isAlreadyInCart = false;
     let showLoadMoreButton = false;
 
-    const sqlQuery = "SELECT products.id, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.slug = ?";
+    const sqlQuery = "SELECT products.id, products.slug, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.id = ?";
 
     try {
-        const data = await DoDatabaseQuery(sqlQuery, [1, slug]);
+        const data = await DoDatabaseQuery(sqlQuery, [1, productId]);
 
         if (data.length === 0) {
             return showNotFoundPage(req, res);
         }
         else if (data.length > 0) {
+            var currentSlug = getSlug(data[0].slug, lang);
+
+            if (slugName !== currentSlug) {
+                return res.redirect(301, process.env.APP_URL + `/${ lang }/` + languageHandler('slugs.product', lang) + `/${ currentSlug }/${ productId }`);
+            }
+
             result = {
                 id: parseInt(data[0].id),
-                slug: slug,
+                slug: currentSlug,
                 category_name: getValueByLanguage(data[0].category_name, lang),
                 name: getValueByLanguage(data[0].name, lang),
                 short: data[0].short_description ? getValueByLanguage(data[0].short_description, lang) : null,
@@ -70,7 +76,7 @@ const getProductDetails = async (req, res) => {
                 title: limitText(result.name, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "article",
-                url: `${ process.env.APP_URL }/${ lang }/products/${ slug }`,
+                url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.product', lang) + `/${ currentSlug }/${ productId }`,
                 description: limitText(result.short ?? languageHandler('meta.description', lang), metaDefault.limits['description']),
                 image: {
                     src: result.thumbnailImage ?? metaDefault['default_og_images'],
@@ -91,7 +97,7 @@ const getProductDetails = async (req, res) => {
                         id: parseInt(element.id),
                         name: getValueByLanguage(element.name, lang),
                         short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
-                        slug: element.slug,
+                        slug: getSlug(element.slug, lang),
                         image: imagePathConverter(element.image_thumbnail, "products"),
                         price: numberWithCommas(element.price),
                         isOnDiscount: Boolean(element.discount_value),
@@ -212,7 +218,7 @@ const getAllProducts = async (req, res) => {
         title: languageHandler("general.products", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/poducts`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler("slugs.products", lang),
         description: languageHandler('meta.product_description', lang),
         image: {
             src: metaDefault['default_og_images'],
@@ -233,7 +239,7 @@ const getAllProducts = async (req, res) => {
                 let tempObject = {
                     id: parseInt(element.id),
                     name: getValueByLanguage(element.name, lang),
-                    slug: element.slug,
+                    slug: getSlug(element.slug, lang),
                     short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                     image: imagePathConverter(element.image_thumbnail, "products"),
                     price: numberWithCommas(element.price),
@@ -270,7 +276,7 @@ const getAllProducts = async (req, res) => {
         return res.render("pages/products", {
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
-            articleLink: languageHandler('slugs.products') ?? null,
+            articleLink: languageHandler('slugs.products', lang) ?? null,
             products: result ?? [],
             productsTotalCount: elementsCount[0].each_article_count ?? 0,
             main_title: languageHandler('general.products', lang),
@@ -360,14 +366,14 @@ const getCategoryProducts = async (req, res) => {
         return showBadRequestPage(req, res);
     }
 
-    let { slug } = req.params;
+    let { categorySlug, categoryId } = req.params;
     let result = [];
     var elementsCount = 0;
 
-    let checkForCategory = "SELECT id, name, slug, short_description AS 'category_short_description' FROM categories WHERE slug = ?";
+    let checkForCategory = "SELECT id, name, slug, short_description AS 'category_short_description' FROM categories WHERE id = ?";
 
     try {
-        const category_data = await DoDatabaseQuery(checkForCategory, [slug]);
+        const category_data = await DoDatabaseQuery(checkForCategory, [categoryId]);
 
         if (category_data.length === 0) {
             return showNotFoundPage(req, res);
@@ -375,13 +381,18 @@ const getCategoryProducts = async (req, res) => {
         else if (category_data.length > 0) {
             const selectedCategoryName = getValueByLanguage(category_data[0].name, lang);
             const selectedCategoryShortDescription = category_data[0].category_short_description ? getValueByLanguage(category_data[0].category_short_description, lang) : null;
+            var currentCategorySlug = getSlug(category_data[0].slug, lang);
+
+            if (categorySlug !== currentCategorySlug) {
+                return res.redirect(301, process.env.APP_URL + `/${ lang }/${ currentCategorySlug }/` + languageHandler('slugs.products', lang) + `/${ categoryId }`);
+            }
 
             var metas = {
                 ...metaDefault,
                 title: limitText(selectedCategoryName, metaDefault.limits['title']) + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "website",
-                url: `${ process.env.APP_URL }/${ lang }/products/category/${ slug }`,
+                url: `${ process.env.APP_URL }/${ lang }/${ currentCategorySlug }/` + languageHandler('slugs.products', lang) + `/${ categoryId }`,
                 description: limitText(selectedCategoryShortDescription ?? languageHandler('meta.product_description', lang), metaDefault.limits['description']),
                 image: {
                     src: result.thumbnailImage ?? metaDefault['default_og_images'],
@@ -390,18 +401,18 @@ const getCategoryProducts = async (req, res) => {
                 },
             };
 
-            const sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.is_new, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            const sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.is_new, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.id = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
             let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
-            const data = await DoDatabaseQuery(sqlQuery, [1, slug, parseInt(process.env.PAGINATION), pageOffset]);
+            const data = await DoDatabaseQuery(sqlQuery, [1, categoryId, parseInt(process.env.PAGINATION), pageOffset]);
 
             if (data.length > 0) {
                 data.forEach(element => {
                     let tempObject = {
                         id: parseInt(element.id),
                         name: getValueByLanguage(element.name, lang),
-                        slug: element.slug,
+                        slug: getSlug(element.slug, lang),
                         category_short_description: element.category_short_description ? getValueByLanguage(element.category_short_description, lang) : null,
                         short: element.short_description ? limitText(getValueByLanguage(element.short_description, lang)) : null,
                         image: imagePathConverter(element.image_thumbnail, "products"),
@@ -425,10 +436,10 @@ const getCategoryProducts = async (req, res) => {
                     resultItem.saved_in_wishlist = wishlist.includes(resultItem.id);
                 });
 
-                let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.slug = ?";
+                let selectForPagination = "SELECT COUNT(products.id) AS 'each_article_count' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.id = ?";
 
                 // Select for pagination count
-                elementsCount = await DoDatabaseQuery(selectForPagination, [1, slug]);
+                elementsCount = await DoDatabaseQuery(selectForPagination, [1, categoryId]);
 
                 if (elementsCount) {
                     let leftOver = elementsCount[0].each_article_count % parseInt(process.env.PAGINATION);
@@ -440,7 +451,7 @@ const getCategoryProducts = async (req, res) => {
             return res.render("pages/products", {
                 pageCount: parseInt(pageCount ?? 0),
                 currentPage: parseInt(page ?? 0),
-                articleLink: category_data[0].slug + "/" + languageHandler('slugs.products') + "/" + category_data[0].id,
+                articleLink: currentCategorySlug + "/" + languageHandler('slugs.products', lang) + "/" + categoryId,
                 productsTotalCount: elementsCount[0].each_article_count ?? 0,
                 products: result ?? [],
                 main_title: selectedCategoryName,
@@ -676,7 +687,7 @@ const getWishlistListPage = async ( req, res, next ) => {
         title: languageHandler("general.wishlist", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/wishlist`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler("slugs.wishlist", lang),
         description: languageHandler("meta.wishlist_description", lang) + metaDefault['separator'] + metaDefault['title'],
         image: {
             src: metaDefault['default_og_images'],

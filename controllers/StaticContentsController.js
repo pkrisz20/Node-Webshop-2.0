@@ -189,20 +189,22 @@ const getStaticPage = async (req, res) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     try {
-        const content = await DoDatabaseQuery("SELECT title, short_description, description, slug FROM static_contents WHERE slug = ?", [routeName]);
+        const content = await DoDatabaseQuery("SELECT title, short_description, description, slug FROM static_contents WHERE " + `json_extract(slug, '$.${ lang }')` + "= ?", [routeName]);
 
-        if (content.length > 0) {
+        if (content.length === 0) {
+            return showNotFoundPage(req, res);
+        }
+        else if (content.length > 0) {
             const staticSiteTitle = getValueByLanguage(content[0].title, lang);
             const staticSiteShort = getValueByLanguage(content[0].short_description, lang);
             const staticSiteDescription = getValueByLanguage(content[0].description, lang);
-            const contentSlug = content[0].slug;
 
             var metas = {
                 ...metaDefault,
                 title: staticSiteTitle + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "website",
-                url: `${ process.env.APP_URL }/${ lang }/${ contentSlug }`,
+                url: `${ process.env.APP_URL }/${ lang }/${ routeName }`,
                 description: staticSiteShort ? staticSiteShort : languageHandler('meta.description', lang),
                 image: {
                     src: metaDefault['default_og_images'],
@@ -216,7 +218,7 @@ const getStaticPage = async (req, res) => {
                 contentTitle: staticSiteTitle,
                 contentShortDescription: staticSiteShort,
                 contentDescription: staticSiteDescription,
-                contentSlug: contentSlug,
+                contentSlug: routeName,
                 current_locale: lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
