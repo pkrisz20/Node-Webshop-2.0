@@ -9,6 +9,7 @@ const errorHandler = require('../middleware/errorHandler');
 const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
+const { getSlug } = require("../helpers/admin/slugHelper");
 
 const getBlogDetails = async (req, res) => {
     // Cart converting stuffs
@@ -25,31 +26,37 @@ const getBlogDetails = async (req, res) => {
     });
     var { DB_CONFIG } = req;
     const lang = req.session.lang;
-    let { slug } = req.params;
+    let { slug, articleId } = req.params;
     let result = {};
     let newestBlogsArray = [];
     let incommingEvents = [];
     let articleComments = [];
     let showLoadMoreButton = false;
 
-    const blogDetailsQuery = "SELECT id, title, description, short_description, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND slug = ?";
+    const blogDetailsQuery = "SELECT id, title, description, short_description, slug, author, image_thumbnail, images, date, comments_allowed FROM blogs WHERE is_active = ? AND id = ?";
 
     const newestBlogsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.is_important, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.id != ? AND (blogs.date BETWEEN ? AND ?) ORDER BY blogs.id DESC LIMIT ?";
 
     const incommingEventsQuery = "SELECT blogs.id, blogs.title, blogs.slug, blogs.image_thumbnail, blogs.date FROM blogs WHERE blogs.is_active = ? AND blogs.date > ? AND blogs.id != ? ORDER BY blogs.id DESC LIMIT ?";
 
     try {
-        const data = await DoDatabaseQuery(blogDetailsQuery, [1, slug]);
+        const data = await DoDatabaseQuery(blogDetailsQuery, [1, articleId]);
 
         if (data.length == 0) {
             return showNotFoundPage(req, res);
         }
         else if (data.length > 0) {
+            var currentSlug = getSlug(data[0].slug);
+
+            if (slug !== currentSlug) {
+                return res.redirect(301, process.env.APP_URL + `/${ lang }/${ currentSlug }/${ articleId }`);
+            }
+
             setMomentLocale(lang);
 
             result = {
                 id: parseInt(data[0].id),
-                slug: slug,
+                slug: currentSlug,
                 title: getValueByLanguage(data[0].title, lang),
                 short_description: getValueByLanguage(data[0].short_description, lang),
                 description: getValueByLanguage(data[0].description, lang),

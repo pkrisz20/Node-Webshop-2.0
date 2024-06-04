@@ -4,6 +4,7 @@ const { limitText, setMomentLocale, escapeHtml } = require("../../helpers/global
 const { getIconByActivity } = require("../../helpers/admin/getIconByActivity");
 const { showServerErrorPage, showBadRequestPage, showNotFoundPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
+const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -415,6 +416,10 @@ const handleEditStaticPage = (req, res) => {
         sr: escapeHtml(data['title[sr]']),
         hu: escapeHtml(data['title[hu]']),
     };
+
+    let contentNameParam = JSON.stringify(contentTitle);
+    let newSlugs = generateUniqueSlug(contentTitle);
+
     let shortDescriptions = {
         en: data['short_description[en]'].length > 0 ? escapeHtml(data['short_description[en]']) : null,
         sr: data['short_description[sr]'].length > 0 ? escapeHtml(data['short_description[sr]']) : null,
@@ -426,14 +431,15 @@ const handleEditStaticPage = (req, res) => {
         hu: data['content_description[hu]'] ?? null
     };
 
-    const SQLUpdateStaticContent = "UPDATE static_contents SET title = ?, short_description = ?, description = ?, updated_at = ? WHERE id = ?";
+    const SQLUpdateStaticContent = "UPDATE static_contents SET title = ?, short_description = ?, description = ?, slug = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateStaticContent,
         [
-            JSON.stringify(contentTitle),
+            contentNameParam,
             JSON.stringify(shortDescriptions),
             JSON.stringify(longDescriptions),
+            newSlugs,
             moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
             staticContentID
         ],
