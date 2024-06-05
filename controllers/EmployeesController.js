@@ -22,14 +22,14 @@ const getEmployees = async (req, res) => {
 
     var { DB_CONFIG } = req;
     let employees = [];
-    var lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
         ...metaDefault,
         title: languageHandler("nav.about", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/about`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.about_us', lang),
         description: languageHandler('meta.about_us_description', lang),
         image: {
             src: metaDefault['default_og_images'],

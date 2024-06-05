@@ -29,7 +29,7 @@ const getContactPage = (req, res) => {
         title: languageHandler("nav.contact", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/contact`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.contact', lang),
         description: languageHandler('meta.contact_description', lang),
         image: {
             src: metaDefault['default_og_images'],

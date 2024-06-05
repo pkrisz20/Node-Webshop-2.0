@@ -8,6 +8,7 @@ const errorHandler = require('../middleware/errorHandler');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
 const formatDateByLang = require("../helpers/formatDateByLocale");
+const { getSlug } = require("../helpers/admin/slugHelper");
 
 const getData = async (req, res) => {
     // Cart converting stuffs
@@ -29,7 +30,7 @@ const getData = async (req, res) => {
     let sliders = [];
     var galleries = [];
     var blogs = [];
-    var lang = req.session.lang ?? process.env.FALLBACK_LANG;
+    const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
         ...metaDefault,
@@ -64,7 +65,7 @@ const getData = async (req, res) => {
                 let tempObjectProduct = {
                     id: parseInt(product_element.id),
                     name: getValueByLanguage(product_element.name, lang),
-                    slug: product_element.slug,
+                    slug: getSlug(product_element.slug, lang),
                     short: product_element.short_description ? limitText(getValueByLanguage(product_element.short_description, lang)) : null,
                     image: imagePathConverter(product_element.image_thumbnail, "products"),
                     price: numberWithCommas(product_element.price),
@@ -96,7 +97,7 @@ const getData = async (req, res) => {
                 let tempObjectBlog = {
                     id: parseInt(blog_element.id),
                     title: getValueByLanguage(blog_element.title, lang),
-                    slug: blog_element.slug,
+                    slug: getSlug(blog_element.slug, lang),
                     shortDescription: getValueByLanguage(blog_element.short_description, lang),
                     image: imagePathConverter(blog_element.image_thumbnail, "blogs"),
                     author: blog_element.author,
@@ -144,7 +145,7 @@ const getData = async (req, res) => {
                 let tempObjectGallery = {
                     id: parseInt(gallery_element.id),
                     name: getValueByLanguage(gallery_element.gallery_name, lang),
-                    slug: gallery_element.slug,
+                    slug: getSlug(gallery_element.slug, lang),
                     source: imagePathConverter(gallery_element.gallery_thumbnail, "galleries"),
                 }
 

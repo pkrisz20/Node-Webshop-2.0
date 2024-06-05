@@ -860,9 +860,14 @@ $('body').on('keyup', '.js-search-input', delayExecute(function (event) {
 
     // Enter key pressed
     else if (event.keyCode === 13) {
+        var translatedSlugs = {
+            hu: 'kereses',
+            sr: 'pretraga',
+            en: 'search'
+        }
         var searchInputValue = $('.js-search-input').val();
         var keywords = searchInputValue.replaceAll(' ', '+');
-        window.location.href = `/${ window.location.pathname.split('/')[1] }/search?keywords=${ keywords }`;
+        window.location.href = `/${ window.location.pathname.split('/')[1] }/${ translatedSlugs[locale] }?keywords=${ keywords }`;
     }
 
     else if ($(this).val().length > 0) {

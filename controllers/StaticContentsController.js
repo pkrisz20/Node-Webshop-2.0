@@ -30,7 +30,7 @@ const getFAQ = async (req, res) => {
         title: languageHandler("nav.FAQ", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/faq`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.faq', lang),
         description: languageHandler('meta.FAQ_description', lang),
         image: {
             src: metaDefault['default_og_images'],
@@ -204,7 +204,7 @@ const getStaticPage = async (req, res) => {
                 title: staticSiteTitle + metaDefault['separator'] + metaDefault['title'],
                 lang: metaDefault.langs[lang],
                 type: "website",
-                url: `${ process.env.APP_URL }/${ lang }/${ routeName }`,
+                url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.content', lang) + `/${ routeName }`,
                 description: staticSiteShort ? staticSiteShort : languageHandler('meta.description', lang),
                 image: {
                     src: metaDefault['default_og_images'],

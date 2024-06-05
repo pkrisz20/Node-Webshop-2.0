@@ -113,7 +113,7 @@ const getCartListItemsHTML = (cartItems, currentLang) => {
                     </div>
 
                     <div class="functions">
-                        <a href="/${ currentLang }/` + languageHandler('slugs.product') + `/${ item.slug }/${ item.productId }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                        <a href="/${ currentLang }/` + languageHandler('slugs.product', currentLang) + `/${ item.slug }/${ item.productId }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                         <button type="button" value="${ languageHandler('general.remove', currentLang) }" data-id="${ item.productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
@@ -130,7 +130,7 @@ const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) =
         <h5 class="cart-counter">${ languageHandler('orders.cart_count', currentLang) }: <span class="js-cart-counter">${ totalCount }</span></h5>
             <div class="cart-container">
                 <div class="cart-container-top">
-                    <a href="/${ currentLang }/` + languageHandler('slugs.cart') + `" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">${ languageHandler('orders.order', currentLang) }</a>
+                    <a href="/${ currentLang }/` + languageHandler('slugs.cart', currentLang) + `" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">${ languageHandler('orders.order', currentLang) }</a>
                     <strong class="cart-container-top_total">${ languageHandler('orders.total_price', currentLang) }: <span class="js-total-price">${ totalPrice }</span><small>RSD</small></strong>
                 </div>
 
@@ -164,7 +164,7 @@ const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) =
                                 </div>
 
                                 <div class="functions">
-                                    <a href="/${ currentLang }/` + languageHandler('slugs.product') + `/${ cartItems[0].slug }/${ cartItems[0].productId }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                    <a href="/${ currentLang }/` + languageHandler('slugs.product', currentLang) + `/${ cartItems[0].slug }/${ cartItems[0].productId }" class="functions_details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
                                     <button type="button" value="${ languageHandler('general.remove', currentLang) }" data-id="${ cartItems[0].productId }" class="functions_remove js-remove-cart"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>

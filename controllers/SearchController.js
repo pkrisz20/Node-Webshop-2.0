@@ -38,7 +38,7 @@ const handleSearch = async (req, res) => {
         title: languageHandler("general.search", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/search?keywords=${ keywords }`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.search', lang) + `?keywords=${ keywords }`,
         description: languageHandler("general.search", lang) + metaDefault['separator'] + metaDefault['title'],
         image: {
             src: metaDefault['default_og_images'],
@@ -255,7 +255,7 @@ const ajaxSearch = async (req, res) => {
 
             product_result.forEach(element => {
                 productsHtml += `
-                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.product') + "/" + getSlug(element.slug, lang) + "/" + element.id + `" aria-label="${ getValueByLanguage(element.name, lang) }">
+                    <a class="container_box" href="${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.product', lang) + "/" + getSlug(element.slug, lang) + "/" + element.id + `" aria-label="${ getValueByLanguage(element.name, lang) }">
                         <div class="container_box--image">
                             <picture>
                                 <source srcset="${ imagePathConverter(element.image_thumbnail, "products") ?? '' }">

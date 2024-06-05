@@ -223,6 +223,7 @@
           transform: translate(-50%, -10px);
           transition: opacity .25s, transform .25s, visibility 0s .25s;
           transition-timing-function: cubic-bezier(.53,2,.36,.85);
+          @include scrollbars(2px, $c-a, $c-dark-blue);
 
           &-item {
             width: 100%;

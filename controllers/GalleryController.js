@@ -40,7 +40,7 @@ const getAllGallery = async (req, res) => {
         title: languageHandler("nav.gallery", lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.gallery', lang),
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.galleries', lang),
         description: languageHandler('meta.gallery_description', lang),
         image: {
             src: metaDefault['default_og_images'],

@@ -26,7 +26,7 @@ const getOrderPage = (req, res) => {
         title: languageHandler('orders.order', lang) + metaDefault['separator'] + metaDefault['title'],
         lang: metaDefault.langs[lang],
         type: "website",
-        url: `${ process.env.APP_URL }/${ lang }/order`,
+        url: `${ process.env.APP_URL }/${ lang }/` + languageHandler('slugs.cart', lang),
         description: languageHandler('orders.order', lang) + metaDefault['separator'] + metaDefault['title'],
         image: {
             src: metaDefault['default_og_images'],
