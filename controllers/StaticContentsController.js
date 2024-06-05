@@ -218,7 +218,7 @@ const getStaticPage = async (req, res) => {
                 contentTitle: staticSiteTitle,
                 contentShortDescription: staticSiteShort,
                 contentDescription: staticSiteDescription,
-                contentSlug: routeName,
+                contentSlug: languageHandler('slugs.content', lang) + "/" + routeName,
                 current_locale: lang,
                 cart: cart,
                 locales: ['hu', 'sr', 'en'],
