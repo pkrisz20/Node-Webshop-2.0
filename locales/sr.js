@@ -126,6 +126,7 @@ const sr = {
 		remove_from_wishlist: "Ukloni iz lista želja",
 		modificated_cart_information: "Neki proizvodi su uklonjeni iz vaše korpe jer više nisu dostupni ili se mogu naručiti.",
 		check_my_cart: "Proverim moja korpa",
+		discount_expires_in: "Akcija ističe za:",
     },
     orders: {
         total_price: "Ukupno",

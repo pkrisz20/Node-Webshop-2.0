@@ -126,6 +126,7 @@ const en = {
 		remove_from_wishlist: "Remove from wishlist",
 		modificated_cart_information: "Some products have been removed from your shopping cart because they are no longer available or cannot be ordered.",
 		check_my_cart: "Check my cart",
+		discount_expires_in: "Discount expires in:",
 	},
 	orders: {
 		total_price: "Total",

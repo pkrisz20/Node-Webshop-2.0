@@ -87,6 +87,13 @@
                                     <% } %>
                                 </div>
 
+                                <% if (productDetails.isOnDiscount) { %>
+                                    <div class="details-desc__timer">
+                                        <strong class="details-desc__timer-title"><%= languageHandler('products.discount_expires_in', current_locale) %></strong>
+                                        <div class="details-desc__timer-timer js-countdown-timer" data-expires="2024-06-15 23:59:59"></div>
+                                    </div>
+                                <% } %>
+
                                 <div class="prices">
                                     <strong class="prices-price"><%= productDetails.isOnDiscount ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
                                     <% if (productDetails.isOnDiscount) { %>
@@ -192,6 +199,10 @@
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <% if (productDetails.isOnDiscount) { %>
+        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.plugin.min.js') %>"></script>
+        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countdown.min.js') %>"></script>
+    <% } %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <% if (productDetails.isAllowed) { %>

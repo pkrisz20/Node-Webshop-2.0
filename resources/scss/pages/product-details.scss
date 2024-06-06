@@ -6,6 +6,7 @@
 @import "../components/comments.scss";
 @import "../components/sharing-buttons.scss";
 @import "../components/plain-text.scss";
+@import "../components/countdown.scss";
 
 .product-details {
     padding: 40px 0;
@@ -125,10 +126,7 @@
         .prices {
           @include flexBox('flex-start', 'center', 15px);
           flex-wrap: wrap;
-
-          @media #{ $min-1025 } {
-            margin: 10px 0;
-          }
+          margin: 10px 0;
 
           &-price {
             font-size: 23px;
@@ -219,6 +217,17 @@
                 }
               }
             }
+          }
+        }
+
+        &__timer {
+          margin: 20px 0 0;
+
+          &-title {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: $c-dark-blue;
           }
         }
 

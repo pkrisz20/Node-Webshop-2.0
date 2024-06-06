@@ -427,6 +427,48 @@ $(function() {
             }
         });
     });
+
+    if ($('.js-countdown-timer').length > 0) {
+        var timerTranslations = {
+            sr: {
+                day: 'Dan',
+                hours: 'Sati',
+                minutes: 'Min',
+                seconds: 'Sek'
+            },
+            en: {
+                day: 'Day',
+                hours: 'Hours',
+                minutes: 'Mins',
+                seconds: 'Sec'
+            },
+            hu: {
+                day: 'Nap',
+                hours: 'Óra',
+                minutes: 'Perc',
+                seconds: 'Mp'
+            },
+        }
+
+        $('.js-countdown-timer').not('.is-countdown').each(function () {
+            var $this_element = $(this),
+                expires = $this_element.data('expires'),
+                date = expires.split(' ')[0],
+                time = expires.split(' ')[1],
+                year = parseInt(date.split('-')[0],10),
+                month = parseInt(date.split('-')[1],10) - 1,
+                day = parseInt(date.split('-')[2],10),
+                hours = parseInt(time.split(':')[0],10),
+                minutes = parseInt(time.split(':')[1],10),
+                seconds = parseInt(time.split(':')[2],10);
+
+            $this_element.countdown({
+                until: new Date(year, month, day, hours, minutes, seconds),
+                format: 'dHMS',
+                layout: '<span class="countdown-row countdown-show4">{d<}<span class="countdown-section countdown-section--days"><span class="countdown-amount">{dn}</span> <span class="countdown-label">' + timerTranslations[locale].day + '</span></span>{d>}<span class="countdown-section"><span class="countdown-amount">{hnn}</span><span class="countdown-label">' + timerTranslations[locale].hours + '</span></span><span class="countdown-section"><span class="countdown-amount">{mnn}</span><span class="countdown-label">' + timerTranslations[locale].minutes + '</span></span><span class="countdown-section"><span class="countdown-amount">{snn}</span><span class="countdown-label">' + timerTranslations[locale].seconds + '</span></span></span>'
+            });
+        });
+    }
 });
 
 $('body').on('keyup', '.js-characters-count', function () {
