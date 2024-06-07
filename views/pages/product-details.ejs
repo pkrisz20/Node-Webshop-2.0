@@ -87,16 +87,17 @@
                                     <% } %>
                                 </div>
 
-                                <% if (productDetails.isOnDiscount) { %>
+                                <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
                                     <div class="details-desc__timer">
                                         <strong class="details-desc__timer-title"><%= languageHandler('products.discount_expires_in', current_locale) %></strong>
-                                        <div class="details-desc__timer-timer js-countdown-timer" data-expires="2024-06-15 23:59:59"></div>
+                                        <div class="details-desc__timer-timer js-countdown-timer" data-expires="<%= productDetails.discountEndDate %> 23:59:59"></div>
                                     </div>
                                 <% } %>
 
                                 <div class="prices">
-                                    <strong class="prices-price"><%= productDetails.isOnDiscount ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
-                                    <% if (productDetails.isOnDiscount) { %>
+                                    <strong class="prices-price"><%= (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
+
+                                    <% if (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) { %>
                                         <del class="prices-discount-price"><%= productDetails.price %> RSD</del>
                                     <% } %>
                                 </div>

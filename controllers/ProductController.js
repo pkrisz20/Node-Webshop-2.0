@@ -34,7 +34,7 @@ const getProductDetails = async (req, res) => {
     let isAlreadyInCart = false;
     let showLoadMoreButton = false;
 
-    const sqlQuery = "SELECT products.id, products.slug, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.id = ?";
+    const sqlQuery = "SELECT products.id, products.slug, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.id = ?";
 
     try {
         const data = await DoDatabaseQuery(sqlQuery, [1, productId]);
@@ -60,6 +60,7 @@ const getProductDetails = async (req, res) => {
                 images: imagePathConverter(JSON.parse(data[0].images), "products") ?? [],
                 price: numberWithCommas(data[0].price),
                 isOnDiscount: Boolean(data[0].discount_value),
+                discountEndDate: data[0].discount_end_date ? moment(data[0].discount_end_date).format("YYYY-MM-DD") : null,
                 discount: data[0].discount_value != null ? numberWithCommas(data[0].discount_value) : null,
                 savings: data[0].discount_value != null ? numberWithCommas(data[0].price - data[0].discount_value) : null,
                 averageRating: Math.ceil(data[0].average_rating),

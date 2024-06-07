@@ -56,9 +56,13 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <div class="form-row">
+                                        <div class="form-row mb-3">
                                             <label for="product-short-hu" class="form-label">Rövid leírás</label>
                                             <textarea id="product-short-hu" rows="5" name="short_description[hu]" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
+                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="<%= formValues.max_order_count %>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 js-price-wrapper">
@@ -75,11 +79,18 @@
                                             <input class="form-check-input js-discount-input-toggle" type="checkbox" <%= formValues.discount_value ? 'checked' : '' %> id="discount-price" role="switch" />
                                             <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
                                         </div>
-                                        <div class="form-row js-input-container" style="<%= !formValues.discount_value ? 'display: none;' : '' %>">
-                                            <div class="input-group">
-                                                <span class="input-group-text">RSD</span>
-                                                <input type="text" name="discount_value" value="<%= formValues.discount_value ? formValues.discount_value : '' %>" class="form-control js-discount-input" />
-                                                <span class="input-group-text">.00</span>
+                                        <div class="js-input-container" style="<%= !formValues.discount_value ? 'display: none;' : '' %>">
+                                            <div class="form-row mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">RSD</span>
+                                                    <input type="text" name="discount_value" value="<%= formValues.discount_value ? formValues.discount_value : '' %>" class="form-control js-discount-input" />
+                                                    <span class="input-group-text">.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <label for="product-discount-end-date" class="form-label">Az akció tart eddig:</label>
+                                                <input type="date" id="product-discount-end-date" class="form-control" name="discount_end_date" value="<%= formValues.discount_end_date ? formValues.discount_end_date : '' %>" />
+                                                <small class="text-muted">Aktiválódik, ha az aktuális dátumtól későbbi érték van megadva</small>
                                             </div>
                                         </div>
                                     </div>
@@ -111,12 +122,6 @@
                                                 <input class="form-check-input js-boolean-checkbox" type="checkbox" <%= formValues.is_allowed === 1 ? 'checked' : '' %> value="<%= formValues.is_allowed %>" name="comments_allowed" id="product-comments-allowed" role="switch" />
                                                 <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
-                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="<%= formValues.max_order_count %>" />
                                         </div>
                                     </div>
                                 </div>

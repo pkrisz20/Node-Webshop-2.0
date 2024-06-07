@@ -6,6 +6,7 @@ const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
 const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
+const dateTimeHelper = require("../../helpers/dateTimeHelper");
 const languageHandler = require("../../helpers/languageHandler");
 const moment = require("moment");
 
@@ -298,6 +299,7 @@ const getProductEditPage = (req, res) => {
             formattedValues.images = formValues.images != null ? imagePathConverter(JSON.parse(formValues.images), 'products') : null;
             formattedValues.image_thumbnail = formValues.image_thumbnail != null ? imagePathConverter(formValues.image_thumbnail, 'products') : null;
             formattedValues.discount_value = formValues.discount_value != null ? parseInt(formValues.discount_value) : null;
+            formattedValues.discount_end_date = moment(formValues.discount_end_date).format("YYYY-MM-DD") ?? null;
             formattedValues.price = parseInt(formValues.price);
             formattedValues.id = parseInt(formValues.id);
             formattedValues.is_active = parseInt(formValues.is_active);
@@ -383,7 +385,9 @@ const handleProductUpload = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, is_active, is_featured, is_available, is_delivered, max_order_count, is_new, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    var discountEndDate = dateTimeHelper.isValidDate(productData.discount_end_date) ? productData.discount_end_date : null;
+
+    const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, discount_end_date, is_active, is_featured, is_available, is_delivered, max_order_count, is_new, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
         SQLInsertProduct,
@@ -393,6 +397,7 @@ const handleProductUpload = (req, res) => {
             JSON.stringify(longDescriptions),
             basePrice,
             discountPrice,
+            discountEndDate,
             is_active,
             is_featured,
             is_available,
@@ -523,7 +528,9 @@ const handleEditProduct = (req, res) => {
         hu: productData['product_description[hu]'] ?? null
     };
 
-    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, slug = ?, price = ?, discount_value = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
+    var discountEndDate = dateTimeHelper.isValidDate(productData.discount_end_date) ? productData.discount_end_date : null;
+
+    const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, slug = ?, price = ?, discount_value = ?, discount_end_date = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
     db.query(
         SQLUpdateProduct,
@@ -534,6 +541,7 @@ const handleEditProduct = (req, res) => {
             newSlugs,
             basePrice,
             discountPrice,
+            discountEndDate,
             is_active,
             is_featured,
             is_available,
