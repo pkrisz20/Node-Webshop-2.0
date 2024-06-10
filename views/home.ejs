@@ -68,7 +68,7 @@
                 </section>
             <% } %>
 
-            <% if (galleries.length > 0) { %>
+            <% if (galleries.length > 0 && showGalleriesSection) { %>
                 <%- include('components/featured-gallery.ejs', { images: galleries }) %>
             <% } %>
 

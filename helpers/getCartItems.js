@@ -19,7 +19,7 @@ const getCartItems = (req, res, next) => {
 
         let countParams = Array(cartProductIds.length).fill("?").join(",");
 
-        db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, max_order_count, is_available, is_active FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
+        db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, discount_end_date, max_order_count, is_available, is_active FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
             if (err) {
                 return errorHandler(err, req, res, "getCartItems", 24);
             }
@@ -34,7 +34,7 @@ const getCartItems = (req, res, next) => {
                             cartItem.productName = getValueByLanguage(databaseItem.name, lang),
                             cartItem.slug = getSlug(databaseItem.slug, lang),
                             cartItem.maxQuantity = parseInt(databaseItem.max_order_count),
-                            cartItem.price = databaseItem.discount_value != null ? parseInt(databaseItem.discount_value) : parseInt(databaseItem.price),
+                            cartItem.price = (databaseItem.discount_value !== null && ((databaseItem.discount_end_date && new Date(databaseItem.discount_end_date).getTime() > Date.now()) || !databaseItem.discount_end_date)) ? parseInt(databaseItem.discount_value) : parseInt(databaseItem.price),
                             cartItem.image = imagePathConverter(databaseItem.image_thumbnail, "products"),
                             cartItem.is_available = parseInt(databaseItem.is_available),
                             cartItem.is_active = parseInt(databaseItem.is_active)

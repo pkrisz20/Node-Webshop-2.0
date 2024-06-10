@@ -30,6 +30,7 @@ const getData = async (req, res) => {
     let sliders = [];
     var galleries = [];
     var blogs = [];
+    var showGalleriesSection;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     var metas = {
@@ -47,7 +48,7 @@ const getData = async (req, res) => {
     };
 
     // PRODUCTS
-    const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, is_available, is_delivered, is_new, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
+    const sqlQueryProducts = "SELECT id, name, slug, short_description, image_thumbnail, price, discount_value, discount_end_date, is_available, is_delivered, is_new, max_order_count FROM products WHERE is_active = ? AND is_featured = ? ORDER BY id DESC";
     // BLOGS
     const sqlQueryBlogs = "SELECT blogs.id, blogs.title, blogs.slug, blogs.short_description, blogs.image_thumbnail, blogs.date, blogs.is_important, blogs.author, (SELECT COUNT(blog_comments.id) FROM blog_comments WHERE blog_comments.blog_id = blogs.id) AS 'comments_count' FROM blogs WHERE blogs.is_active = ? AND blogs.is_featured = ? ORDER BY blogs.date DESC";
     // GALLERIES
@@ -69,6 +70,7 @@ const getData = async (req, res) => {
                     short: product_element.short_description ? limitText(getValueByLanguage(product_element.short_description, lang)) : null,
                     image: imagePathConverter(product_element.image_thumbnail, "products"),
                     price: numberWithCommas(product_element.price),
+                    discountEndDate: product_element.discount_end_date ? moment(product_element.discount_end_date).format("YYYY-MM-DD") : null,
                     isOnDiscount: Boolean(product_element.discount_value),
                     discount: product_element.discount_value != null ? numberWithCommas(product_element.discount_value) : null,
                     isAvailable: Boolean(product_element.is_available),
@@ -151,11 +153,14 @@ const getData = async (req, res) => {
 
                 galleries.push(tempObjectGallery);
             });
+
+            showGalleriesSection = galleries.some(gallery => gallery.source !== null);
         }
 
         return res.render("home", {
             heros: sliders ?? [],
             galleries: galleries ?? [],
+            showGalleriesSection: showGalleriesSection ?? false,
             blogs: blogs ?? [],
             products: products ?? [],
             meta: metas,

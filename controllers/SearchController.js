@@ -60,7 +60,7 @@ const handleSearch = async (req, res) => {
         results: []
     };
 
-    let searchProductsQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND (";
+    let searchProductsQuery = "SELECT products.id, products.name, products.slug, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND (";
     let words = keywords.split(' ');
     let formattedParams = '';
 
@@ -91,6 +91,7 @@ const handleSearch = async (req, res) => {
                     price: numberWithCommas(element.price),
                     isOnDiscount: Boolean(element.discount_value),
                     discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
+                    discountEndDate: element.discount_end_date ? moment(element.discount_end_date).format("YYYY-MM-DD") : null,
                     isAvailable: Boolean(element.is_available),
                     isPostable: Boolean(element.is_delivered),
                     category: getValueByLanguage(element.category_name, lang)

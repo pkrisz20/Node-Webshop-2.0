@@ -1,7 +1,10 @@
 .pagination {
   margin-bottom: 40px;
-  @include flexBox();
-  flex-wrap: wrap;
+
+  &-list {
+    @include flexBox();
+    flex-wrap: wrap;
+  }
 
   &-item {
     background-color: $c-success;
@@ -41,11 +44,11 @@
       }
     }
 
-    &:first-child {
+    &.prev-arrow {
       margin-right: 10px;
     }
 
-    &:last-child {
+    &.next-arrow {
       margin-left: 10px;
     }
   }

@@ -88,7 +88,7 @@ const getProductDetails = async (req, res) => {
 
             isAlreadyInCart = cart?.items?.some(cartItem => cartItem.productId == result.id);
 
-            const similarProductsQuery = "SELECT products.id, products.name, products.short_description, products.slug, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
+            const similarProductsQuery = "SELECT products.id, products.name, products.short_description, products.slug, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, products.max_order_count FROM products WHERE (products.is_active = ? AND products.category_id = ? AND products.id != ?)";
 
             const similars = await DoDatabaseQuery(similarProductsQuery, [1, parseInt(data[0].category_id), result.id]);
 
@@ -103,6 +103,7 @@ const getProductDetails = async (req, res) => {
                         price: numberWithCommas(element.price),
                         isOnDiscount: Boolean(element.discount_value),
                         discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
+                        discountEndDate: element.discount_end_date ? moment(element.discount_end_date).format("YYYY-MM-DD") : null,
                         isAvailable: Boolean(element.is_available),
                         isPostable: Boolean(element.is_delivered),
                         maxQuantity: parseInt(element.max_order_count)
@@ -228,7 +229,7 @@ const getAllProducts = async (req, res) => {
         },
     };
 
-    let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_new, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+    let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, discount_end_date, is_new, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -246,6 +247,7 @@ const getAllProducts = async (req, res) => {
                     price: numberWithCommas(element.price),
                     isOnDiscount: Boolean(element.discount_value),
                     discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
+                    discountEndDate: element.discount_end_date ? moment(element.discount_end_date).format("YYYY-MM-DD") : null,
                     isAvailable: Boolean(element.is_available),
                     isPostable: Boolean(element.is_delivered),
                     isNew: Boolean(element.is_new),
@@ -402,7 +404,7 @@ const getCategoryProducts = async (req, res) => {
                 },
             };
 
-            const sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.is_available, products.is_delivered, products.is_new, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.id = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+            const sqlQuery = "SELECT products.id, products.name, products.slug, products.short_description, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, products.is_new, products.max_order_count FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.is_active = ? AND categories.id = ? ORDER BY id DESC LIMIT ? OFFSET ?";
 
             let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -420,6 +422,7 @@ const getCategoryProducts = async (req, res) => {
                         price: numberWithCommas(element.price),
                         isOnDiscount: Boolean(element.discount_value),
                         discount: element.discount_value != null ? numberWithCommas(element.discount_value) : null,
+                        discountEndDate: element.discount_end_date ? moment(element.discount_end_date).format("YYYY-MM-DD") : null,
                         isAvailable: Boolean(element.is_available),
                         isPostable: Boolean(element.is_delivered),
                         isNew: Boolean(element.is_new),
@@ -717,7 +720,7 @@ const getWishlistListPage = async ( req, res, next ) => {
         });
     }
 
-    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, is_available, is_new, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) AND is_active = ? ORDER BY id DESC`;
+    const selectWishlistProducts = `SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, discount_end_date, is_available, is_new, is_delivered, max_order_count FROM products WHERE id IN (${ countParams }) AND is_active = ? ORDER BY id DESC`;
 
     try {
         const data = await DoDatabaseQuery(selectWishlistProducts, [...wishlistProductIds, 1]);
@@ -734,6 +737,7 @@ const getWishlistListPage = async ( req, res, next ) => {
                     price: numberWithCommas(wishlistItem.price),
                     isOnDiscount: Boolean(wishlistItem.discount_value),
                     discount: wishlistItem.discount_value != null ? numberWithCommas(wishlistItem.discount_value) : null,
+                    discountEndDate: wishlistItem.discount_end_date ? moment(wishlistItem.discount_end_date).format("YYYY-MM-DD") : null,
                     isAvailable: Boolean(wishlistItem.is_available),
                     isPostable: Boolean(wishlistItem.is_delivered),
                     isNew: Boolean(wishlistItem.is_new),

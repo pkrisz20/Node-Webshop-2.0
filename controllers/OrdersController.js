@@ -83,7 +83,7 @@ const createOrder = async (req, res) => {
     let countParams = Array(productIds.length).fill("?").join(",");
 
     try {
-        const result = await DoDatabaseQuery(`SELECT id, name, price, discount_value, is_active, is_available, max_order_count FROM products WHERE id IN (${ countParams })`, productIds);
+        const result = await DoDatabaseQuery(`SELECT id, name, price, discount_value, discount_end_date, is_active, is_available, max_order_count FROM products WHERE id IN (${ countParams })`, productIds);
 
         if (result) {
             // Check if any product is not orderable
@@ -112,7 +112,12 @@ const createOrder = async (req, res) => {
 
                 result.forEach(item => {
                     if ( element.productId === item.id ) {
-                        orderDetails.push({ productId: item.id, productName: item.name, quantity: element.quantity, price: item.discount_value != null ? item.discount_value : item.price });
+                        orderDetails.push({
+                            productId: item.id,
+                            productName: item.name,
+                            quantity: element.quantity,
+                            price: (item.discount_value !== null && ((item.discount_end_date && new Date(item.discount_end_date).getTime() > Date.now()) || !item.discount_end_date)) ? item.discount_value : item.price
+                        });
                     }
                 });
             });
@@ -334,7 +339,7 @@ const createOrder = async (req, res) => {
         return res.status(200).json({
             status: "error",
             title: languageHandler('errors.error', lang),
-            content: languageHandler('errors.common_error', lang),
+            content: languageHandler('errors.server_error', lang),
             csrfToken: req.csrfToken()
         });
     }

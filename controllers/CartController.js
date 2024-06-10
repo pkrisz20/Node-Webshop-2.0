@@ -92,7 +92,7 @@ const addCartItem = async (req, res) => {
         }
     }
 
-    const cartQuery = "SELECT id, name, slug, price, image_thumbnail, discount_value, is_active, is_available, max_order_count FROM products WHERE id = ?";
+    const cartQuery = "SELECT id, name, slug, price, image_thumbnail, discount_value, discount_end_date, is_active, is_available, max_order_count FROM products WHERE id = ?";
 
     try {
         const data = await DoDatabaseQuery(cartQuery, [productId]);
@@ -124,7 +124,7 @@ const addCartItem = async (req, res) => {
                 slug: getSlug(data[0].slug, lang),
                 maxQuantity: data[0].max_order_count,
                 quantity: quantity,
-                price: data[0].discount_value ? data[0].discount_value : data[0].price,
+                price: (data[0].discount_value !== null && ((data[0].discount_end_date && new Date(data[0].discount_end_date).getTime() > Date.now()) || !data[0].discount_end_date)) ? parseInt(data[0].discount_value) : parseInt(data[0].price),
                 image: imagePathConverter(data[0].image_thumbnail, "products") ?? null,
                 is_available: parseInt(data[0].is_available),
             };
