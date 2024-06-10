@@ -17,6 +17,12 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', {
+            currentLinkName: blogDetails.title,
+            previousLinkName: languageHandler('nav.blog', current_locale),
+            previousLink: languageHandler('slugs.blogs', current_locale)
+        }) %>
+
         <main class="blog-details">
             <section class="blog-details-section">
                 <div class="wrapper">

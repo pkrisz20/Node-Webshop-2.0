@@ -13,6 +13,12 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', {
+            currentLinkName: productDetails.name,
+            previousLinkName: productDetails.category_name,
+            previousLink: productDetails.categorySlug + "/" + languageHandler('slugs.products', current_locale) + "/" + productDetails.categoryID
+        }) %>
+
         <main class="product-details">
 
                 <section class="product-details-section">

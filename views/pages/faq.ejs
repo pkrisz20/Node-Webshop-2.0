@@ -11,6 +11,8 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.FAQ', current_locale) }) %>
+
         <main class="faq">
             <div class="wrapper">
                 <h1 class="main-title"><%= languageHandler('nav.FAQ', current_locale) %></h1>

@@ -1,0 +1,19 @@
+<div class="breadcrumbs">
+    <nav class="wrapper">
+        <ul class="breadcrumbs-list">
+            <li class="breadcrumbs-list-item">
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>" target="_self" title="<%= languageHandler('nav.home', current_locale) %>"><%= languageHandler('nav.home', current_locale) %></a>
+            </li>
+
+            <% if (locals.previousLink) { %>
+                <li class="breadcrumbs-list-item">
+                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= locals.previousLink %>" target="_self" title="<%= previousLinkName %>"><%= previousLinkName %></a>
+                </li>
+            <% } %>
+
+            <li class="breadcrumbs-list-item">
+                <span><%= currentLinkName %></span>
+            </li>
+        </ul>
+    </nav>
+</div>

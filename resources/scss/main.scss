@@ -10,17 +10,18 @@
 @import "./components/form.scss";
 @import "./components/block-title.scss";
 @import "./components/cookies.scss";
+@import "./components/breadcrumbs.scss";
 
 .site-wrap {
-  padding-top: 200px;
+  padding-top: 205px;
   min-height: 100vh;
 
   @media #{ $max-1199 } {
-    padding-top: 190px;
+    padding-top: 195px;
   }
 
   @media #{ $max-1024 } {
-    padding-top: 110px;
+    padding-top: 113px;
   }
 }
 

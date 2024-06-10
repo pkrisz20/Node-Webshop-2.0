@@ -1,0 +1,40 @@
+.breadcrumbs {
+    background-color: $c-grayE6;
+
+    &-list {
+        padding: 8px 0;
+        list-style: none;
+
+        &-item {
+            display: inline-block;
+
+            &:not(:last-child)::after {
+                content: ">";
+                display: inline-block;
+                font-size: 13px;
+                margin: 0 5px;
+                transform: translateY(1px);
+            }
+
+            a, span {
+                font-size: 14px;
+                vertical-align: bottom;
+            }
+
+            a {
+                transition: color .3s ease;
+                color: $c-gray71;
+                font-weight: 600;
+
+                &:hover {
+                    color: $c-warning;
+                }
+            }
+
+            span {
+                color: $c-dark;
+                font-weight: 700;
+            }
+        }
+    }
+}

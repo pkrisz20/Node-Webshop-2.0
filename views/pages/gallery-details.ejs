@@ -13,6 +13,12 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', {
+            currentLinkName: galleryData.galleryName,
+            previousLinkName: languageHandler('nav.gallery', current_locale),
+            previousLink: languageHandler('slugs.galleries', current_locale)
+        }) %>
+
         <main class="gallery-details">
             <div class="wrapper">
                 <h1 class="main-title"><%= galleryData.galleryName %></h1>

@@ -11,6 +11,8 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.wishlist', current_locale) }) %>
+
         <main class="list">
             <div class="wrapper">
                 <h1 class="main-title"><%= languageHandler('general.wishlist', current_locale) %></h1>

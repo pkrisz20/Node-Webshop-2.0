@@ -12,6 +12,8 @@
 
         <%- include('../components/cart.ejs') %>
 
+        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.search', current_locale) }) %>
+
         <main class="search-list">
             <div class="wrapper">
                 <h1 class="main-title"><%= languageHandler('general.results_for', current_locale) %>: <%= keywords %></h1>
