@@ -4,7 +4,6 @@
 
 .about {
     background-color: $c-grayF9;
-    padding: 50px 0 0;
 
     .main-title {
         margin: 0 0 25px;
@@ -40,98 +39,114 @@
     &-content {
         padding: 20px 0;
 
-        & > .header_title {
+        & .header_title {
             margin-bottom: 30px;
         }
 
         .workers {
-            @include flexBox("center", "center", 25px);
+            @include flexBox("center", "center", 1px);
             flex-direction: column;
             width: 100%;
 
-            @media #{ $max-767 } {
-                margin: 0 auto;
-                max-width: 430px;
-            }
-
-            @media #{ $min-768 } {
-                @include gridBox("center", 2, 25px, 25px);
-            }
-
             &-container {
                 width: 100%;
-                height: 100%;
+                @include flexBox("space-between", "stretch");
                 overflow: hidden;
-                border-radius: 10px;
                 position: relative;
 
-                &::before {
-                    @include absoluteFullSize();
-                    content: "";
-                    z-index: 3;
-                    background-color: rgba($c-dark-blue, .6);
-                    transition: all .3s ease-in-out;
+                @media #{ $max-767 } {
+                    flex-direction: column;
                 }
 
-                &:hover::before {
-                    background-color: rgba($c-dark-blue, .4);
+                @media #{ $min-768 } {
+                    max-height: 550px;
                 }
 
-                &-box {
+                &:nth-child(even) {
+                    background-color: $c-dark-blue;
+
+                    @media #{ $min-768 } {
+                        flex-direction: row-reverse;
+
+                        img {
+                            clip-path: polygon(100% 0%, 100% 50%, 100% 100%, 0 100%, 8% 50%, 0 0);
+                        }
+                    }
+                }
+                &:nth-child(odd) {
+                    background-color: $c-dark3;
+
+                    @media #{ $min-768 } {
+                        flex-direction: row;
+
+                        img {
+                            clip-path: polygon(100% 0%, 92% 50%, 100% 100%, 0 100%, 0% 50%, 0 0);
+                        }
+                    }
+                }
+
+                &-image {
                     width: 100%;
-                    height: 100%;
 
-                    picture {
-                        @include respImage(0.75);
+                    @media #{ $min-768 } {
+                        flex: 1 1 50%;
                     }
 
-                    figcaption {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        z-index: 5;
-                        width: auto;
-                        padding: 20px;
-                        pointer-events: none;
+                    img {
+                        vertical-align: middle;
+                        object-fit: cover;
+                        object-position: center;
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                &-text {
+                    @include flexBox("center", "center", 10px);
+                    flex-direction: column;
+                    color: $c-white;
+                    padding: 30px;
+
+                    @media #{ $min-768 } {
+                        padding: 0 15px;
+                        flex: 1 1 50%;
                     }
                 }
 
                 &-name {
-                    color: $c-white;
-                    font-size: 26px;
-                    font-weight: 400;
+                    text-transform: capitalize;
+                    font-weight: 900;
+                    letter-spacing: 1.5px;
                     margin-bottom: 10px;
-                    @include resp('font-size', 17px, 26px, 767px);
-                    transition: color .2s ease;
+                    @include resp('font-size', 22px, 32px, 767px);
                 }
+
                 &-position {
-                    transition: color .2s ease;
+                    margin-bottom: 10px;
                     font-weight: 600;
                     text-transform: uppercase;
-                    font-size: 18px;
-                    color: $c-b;
-                    @include resp('font-size', 14px, 18px, 767px);
+                    @include resp('font-size', 17px, 22px, 767px);
                 }
-                &-contacts {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    z-index: 5;
-                    width: auto;
-                    padding: 20px;
-                    @include flexBox("center", "center", 20px);
+
+                &-desc {
+                    font-size: 14px;
+
+                    @media #{ $min-768 } {
+                        font-size: 16px;
+                    }
+                }
+
+                &-links {
+                    margin-top: 12px;
+                    @include flexBox("center", "center", 15px);
 
                     & > a {
-                        transition: background-color .2s ease-in-out;
-                        @include resp('font-size', 18px, 20px, 767px);
-                        color: $c-white;
-                        border-radius: 3px;
-                        width: 32px;
-                        height: 32px;
-                        @include flexBox();
+                        transition: all .3s ease;
+                        color: inherit;
+                        font-size: 25px;
 
                         &:hover {
-                            background-color: $c-theme;
+                            color: $c-yellow;
                         }
                     }
                 }

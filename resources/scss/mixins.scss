@@ -32,10 +32,9 @@
 @mixin gridBox($justify: "center", $cols: 4, $gap-cols: 30px, $gap-rows: 50px) {
     display: grid;
     justify-content: #{$justify};
-    grid-template-columns: repeat($cols, percentage(math.div(1, $cols)));
+    grid-template-columns: repeat($cols, 1fr);
     column-gap: $gap-cols;
     row-gap: $gap-rows;
-    padding: 0 math.div((($cols - 1) * $gap-cols), 2);
 }
 
 @mixin btn($color: $c-white, $bg: $c-black, $hover: rgba($bg, .75)) {

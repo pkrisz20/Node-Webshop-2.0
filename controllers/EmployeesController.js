@@ -38,7 +38,7 @@ const getEmployees = async (req, res) => {
         },
     };
 
-    const sqlQuery = "SELECT name, position, image, facebook, tiktok, instagram, email, phone FROM employees WHERE is_active = ?";
+    const sqlQuery = "SELECT name, description, position, image, facebook, tiktok, instagram, email, phone FROM employees WHERE is_active = ?";
 
     try {
         const data = await DoDatabaseQuery(sqlQuery, [1]);
@@ -48,6 +48,7 @@ const getEmployees = async (req, res) => {
             data.forEach(element => {
                 let tempObject = {
                     name: element.name,
+                    desc: getValueByLanguage(element.description, lang),
                     image: imagePathConverter(element.image, "employees"),
                     position: getValueByLanguage(element.position, lang),
                     contact: {
