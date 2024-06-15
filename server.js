@@ -11,6 +11,7 @@ const fileStoreOptions = require("./config/session-config");
 const csrfProtection = require('csurf');
 const cron = require("node-cron");
 const deleteLogs = require("./jobs/deleteLogs");
+const generateSitemap = require("./jobs/generateSitemap");
 const corsOptions = require("./config/cors");
 const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
 const getAssetPath = require("./helpers/getAssetPath");
@@ -127,4 +128,5 @@ app.get("*", (req, res) => {
 });
 
 // Crons
-cron.schedule('0 0 0 * * *', deleteLogs);
+cron.schedule('0 0 0 * * 1', deleteLogs); // -> Run weekly at Mondays midnight
+cron.schedule('0 0 2 * * *', generateSitemap); // -> Run daily at 2AM

@@ -9,38 +9,26 @@ const fs = require('fs');
 const { format } = require("date-fns");
 const DoDatabaseQuery = require('../helpers/databaseQueryHelper');
 const { logEvents } = require("../middleware/logEvents");
-const staticUrls = require('../config/sitemapStaticUrls');
-var validLanguages = [
-    {
-        langCode: 'sr-Latn',
-        langPath: 'sr'
-    },
-    {
-        langCode: 'hu',
-        langPath: 'hu'
-    },
-    {
-        langCode: 'en',
-        langPath: 'en'
-    }
-];
+const validLangs = process.env.VALID_LANGS.split(',');
+const languageHandler = require('../helpers/languageHandler');
+const staticUrls = require('./sitemapStaticUrls');
 
 const DbTablesWithSlugs = [
     {
         table: "products",
-        startSlug: "/products/",
+        translationSlugKey: "slugs.product",
     },
     {
         table: "blogs",
-        startSlug: "/blog/",
+        translationSlugKey: "slugs.article",
     },
     {
         table: "categories",
-        startSlug: "/products/category/",
+        translationSlugKey: "slugs.products",
     },
     {
         table: "galleries",
-        startSlug: "/gallery/",
+        translationSlugKey: "slugs.gallery",
     }
 ];
 
@@ -49,11 +37,23 @@ async function selectSlugsFromTables () {
         let slugResults = [];
         let dbArray = [];
 
-        for (const tableName of DbTablesWithSlugs) {
-            const rows = await DoDatabaseQuery(`SELECT slug FROM ${ tableName.table }`);
+        for (const currentLang of validLangs) {
+            for (const tableName of DbTablesWithSlugs) {
 
-            dbArray.push(rows.map(({ slug }) => tableName.startSlug + slug));
-            slugResults = [].concat(...dbArray);
+                let query = tableName.table !== "categories" ? `SELECT id, json_extract(slug, '$.${ currentLang }') as 'slug' FROM ${ tableName.table } WHERE is_active = ?` : `SELECT id, json_extract(slug, '$.${ currentLang }') as 'slug' FROM ${ tableName.table }`;
+                let queryParam = tableName.table !== "categories" ? [1] : [];
+
+                const rows = await DoDatabaseQuery(query, queryParam);
+
+                if (tableName.table !== "categories") {
+                    dbArray.push(rows.map(({ slug, id }) => currentLang + '/' + languageHandler(tableName.translationSlugKey, currentLang) + '/' + slug.substr(1).slice(0, -1) + '/' + id));
+                }
+                else if (tableName.table === "categories") {
+                    dbArray.push(rows.map(({ slug, id }) => currentLang + '/' + slug.substr(1).slice(0, -1) + '/' + languageHandler(tableName.translationSlugKey, currentLang) + '/' + id));
+                }
+
+                slugResults = [].concat(...dbArray);
+            }
         }
 
         return slugResults;
@@ -66,27 +66,15 @@ async function selectSlugsFromTables () {
 const generateSitemap = async () => {
     try {
         const dateTime = format(new Date(), "yyyy-MM-dd");
-        let dbSlugs = await selectSlugsFromTables();
+        let generatedDinamicSlugs = await selectSlugsFromTables();
         let dinamicUrls = [];
 
-        validLanguages.forEach(validLang => {
-            dbSlugs.forEach(slug => {
-                dinamicUrls.push({
-                    loc: process.env.APP_URL + '/' + validLang.langPath + slug,
-                    alternate: [],
-                    lastmod: dateTime,
-                    changefreq: 'daily',
-                    priority: 0.9
-                });
-            });
-        });
-
-        dinamicUrls.forEach(sitemapItem => {
-            validLanguages.forEach(({ langCode, langPath }) => {
-
-                // Generate hreflang alternate link for the language
-                let alternateUrl = sitemapItem.loc.replace(/\/[a-z]{2}\//i, `/${ langPath }/`);
-                sitemapItem.alternate.push({ hreflang: langCode, href: alternateUrl });
+        generatedDinamicSlugs.forEach(slug => {
+            dinamicUrls.push({
+                loc: process.env.APP_URL + '/' + slug,
+                lastmod: dateTime,
+                changefreq: 'daily',
+                priority: 0.9
             });
         });
 
@@ -97,11 +85,6 @@ const generateSitemap = async () => {
         staticUrls.forEach(url => {
             xml += '  <url>\n';
             xml += `    <loc>${ url.loc }</loc>\n`;
-            if (url.alternate.length > 0) {
-                url.alternate.forEach(alternateLink => {
-                    xml += `    <xhtml:link rel="alternate" hreflang="${ alternateLink.hreflang }" href="${ alternateLink.href }"/>\n`
-                });
-            }
             xml += `    <lastmod>${ url.lastmod }</lastmod>\n`;
             xml += `    <changefreq>${ url.changefreq }</changefreq>\n`;
             xml += `    <priority>${ url.priority }</priority>\n`;
@@ -111,11 +94,6 @@ const generateSitemap = async () => {
         dinamicUrls.forEach(url => {
             xml += '  <url>\n';
             xml += `    <loc>${ url.loc }</loc>\n`;
-            if (url.alternate.length > 0) {
-                url.alternate.forEach(alternateLink => {
-                    xml += `    <xhtml:link rel="alternate" hreflang="${ alternateLink.hreflang }" href="${ alternateLink.href }"/>\n`
-                });
-            }
             xml += `    <lastmod>${ url.lastmod }</lastmod>\n`;
             xml += `    <changefreq>${ url.changefreq }</changefreq>\n`;
             xml += `    <priority>${ url.priority }</priority>\n`;
@@ -127,7 +105,10 @@ const generateSitemap = async () => {
         // Save the sitemap to a file
         fs.writeFileSync('../public/sitemap.xml', xml);
         // Update the robots.txt file
-        fs.writeFileSync('../public/robots.txt', `User-agent: *\nDisallow: /admin/\nSitemap: ${ process.env.APP_URL }/sitemap.xml`);
+        fs.writeFileSync(
+            '../public/robots.txt',
+            `User-agent: JoobleBot\nDisallow: /\nUser-agent: *\nDisallow: /admin\nSitemap: ${ process.env.APP_URL }/sitemap.xml`
+        );
 
         logEvents("Sitemap successfully generated", "messages.log");
     }
@@ -135,3 +116,5 @@ const generateSitemap = async () => {
         logEvents(`Sitemap generating failed! Error name: ${ error.name }, Error message: ${ error.message }`, "errors.log");
     }
 }
+
+module.exports = generateSitemap;
