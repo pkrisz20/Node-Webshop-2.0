@@ -175,6 +175,12 @@ $(function() {
         }
     });
 
+    $(window).on('load', function() {
+        setTimeout(function () {
+            scrollTo(location.hash);
+        }, 200);
+    });
+
     var header = $(".js-header");
     var upscrollButton = $('.js-upscroll');
 
@@ -320,6 +326,25 @@ $(function() {
     // If the site is loaded and unexpectedly the search input has value then make it empty by default
     if ( $('body .js-search-input').length > 0 ) {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
+    }
+
+    function scrollTo (pathname, direct, event) {
+        var direct = direct || false;
+        var reg = /#/;
+        event = event || false;
+        if (reg.test(pathname)) {
+            pathname = pathname.split('#').pop();
+            var toElementId = '[data-anchor="' + pathname + '"]';
+
+            if ($(toElementId).length > 0) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                var topY = $(toElementId).offset().top - $('.js-header').outerHeight() - 10;
+                window.scrollTo({ top: topY, behavior: 'smooth' });
+            }
+        }
     }
 
     function setConsent (consent) {
