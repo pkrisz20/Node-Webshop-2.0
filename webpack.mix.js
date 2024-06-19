@@ -40,3 +40,4 @@ mix
     // Admin assets
     .copyDirectory('resources/admin/scss/plugins', 'public/admin/css/plugins')
     .copyDirectory('resources/admin/js/plugins', 'public/admin/js/plugins')
+    .copyDirectory('resources/admin/js/select2', 'public/admin/js/select2')
