@@ -127,6 +127,8 @@ const en = {
 		modificated_cart_information: "Some products have been removed from your shopping cart because they are no longer available or cannot be ordered.",
 		check_my_cart: "Check my cart",
 		discount_expires_in: "Discount expires in:",
+		product_desc: "Description",
+		product_params: "Parameters",
 	},
 	orders: {
 		total_price: "Total",

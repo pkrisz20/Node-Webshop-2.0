@@ -127,6 +127,8 @@ const hu = {
 		modificated_cart_information: "Néhány terméket eltávoltottunk a kosarából, mert időközben már nem elérhető vagy nem rendelhető.",
 		check_my_cart: "Kosaram ellenőrzése",
         discount_expires_in: "Az akció lejár:",
+        product_desc: "Leírás",
+		product_params: "Paraméterek",
     },
     orders: {
         total_price: "Összeg",

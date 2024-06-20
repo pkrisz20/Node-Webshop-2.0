@@ -150,8 +150,8 @@
         }
 
         .table {
-          border-top: 1px solid $c-9;
-          border-bottom: 1px solid $c-9;
+          border-top: 1px solid $c-grayE6;;
+          border-bottom: 1px solid $c-grayE6;;
           padding: 10px 0;
           margin-top: 10px;
           width: 100%;
@@ -374,6 +374,99 @@
             &:hover {
               background-color: $c-theme;
               color: $c-white;
+            }
+          }
+        }
+      }
+    }
+
+    .tabs {
+      .ck-content {
+        margin: 0;
+      }
+
+      &__header {
+        margin-bottom: 15px;
+
+        &-list {
+          @include flexBox("center", "center");
+          width: 100%;
+
+          @media #{ $min-540 } {
+            border-bottom: 1px solid $c-grayE6;
+          }
+
+          @media #{ $max-539 } {
+            & > li {
+              width: 100%;
+            }
+
+            flex-direction: column;
+          }
+        }
+
+        &-btn {
+          width: 100%;
+          padding: 15px 26px;
+          background-color: transparent;
+          font-size: 18px;
+          color: $c-8;
+          cursor: pointer;
+          font-weight: 500;
+          border-bottom: 2px solid transparent;
+          transition: all .2s ease-in-out;
+
+          &.selected {
+            color: $c-dark2;
+
+            @media #{ $min-540 } {
+              border-bottom-color: $c-theme;
+            }
+
+            @media #{ $max-539 } {
+              background-color: $c-grayE6;
+            }
+          }
+        }
+      }
+
+      &__content {
+
+        #product-params {
+          ul {
+            display: block;
+            column-count: 2;
+            column-gap: 20px;
+
+            @media #{ $min-1025 } {
+              column-count: 4;
+            }
+
+            @media #{ $max-419 } {
+              column-count: 1;
+            }
+
+            li {
+              break-inside: avoid;
+              display: block;
+              font-size: 15px;
+
+              &:not(:first-child) {
+                margin-top: 20px;
+              }
+
+              dt {
+                display: block;
+                line-height: 21px;
+                color: $c-dark;
+                font-weight: 600;
+              }
+              dd {
+                display: block;
+                line-height: 21px;
+                color: $c-9;
+                font-weight: 500;
+              }
             }
           }
         }
