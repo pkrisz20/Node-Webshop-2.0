@@ -92,6 +92,100 @@ $(document).ready(function() {
       }
     });
   }
+
+  var select2SelectionTemplates = {}
+
+  if ($().select2 && $('.js-select2').length > 0) {
+    $('.js-select2').not('.inited').each(function () {
+      var this_remote = $(this);
+      var url = this_remote.data('url');
+      var text_index = this_remote.data('textIndex');
+      var minimumInputLength = this_remote.data('minInputLength');
+      var selectionTemplateName = this_remote.data('formStateName');
+
+      if (typeof minimumInputLength === 'undefined') {
+        minimumInputLength = 1;
+      }
+
+      var select_options = {
+        language: 'hu',
+        minimumInputLength: minimumInputLength,
+        allowClear: this_remote.data('allowClear') || false,
+        placeholder: this_remote.data('placeholder'),
+        templateSelection: selectionTemplateName ? select2SelectionTemplates[selectionTemplateName] : undefined,
+      };
+
+      if (url) {
+        select_options.ajax = {
+          url: url,
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            var current_select = this;
+            var this_form = current_select.closest('form');
+            var extra_inputs = $('input.js-extra-data, textarea.js-extra-data, select.js-extra-data' + (this_remote.data('extra-data-selector') !== undefined ? ', ' + this_remote.data('extra-data-selector') : ''), this_form);
+            var global_extra_inputs = $(this_remote.data('global-extra-input-selector'));
+
+            var data = {
+              query: params.term, // search term
+              page: params.page
+            };
+
+            if (extra_inputs.length > 0 || global_extra_inputs.length > 0) {
+              var extra_data = $.merge(extra_inputs.serializeArray(), global_extra_inputs.serializeArray());
+
+              $.each( extra_data, function( extra_key, extra_value ) {
+                if (extra_value.name != current_select.prop('name')) {
+                  data[extra_value.name] = extra_value.value;
+                }
+              });
+            }
+
+            if (this_remote.data('exceptions-selector') !== undefined) {
+              data.exceptions = [];
+              $(this_remote.data('exceptions-selector')).each(function () {
+                var val = $(this).val();
+                if (val != null) {
+                  data.exceptions.push(val);
+                }
+              });
+            }
+
+            return data;
+          },
+          processResults: function (results, params) {
+            params.page = params.page || 1;
+            results.data = $.map(results.data, function (obj) {
+              obj.text = obj[text_index] || obj.text || obj.name || obj.title; // replace name with the property used for the text
+              return obj;
+            });
+
+            return {
+              results: results.data,
+              pagination: {
+                more: (params.page * results.per_page) < results.total
+              }
+            };
+          },
+          cache: true
+        };
+      }
+
+      this_remote.select2($.extend({}, select_options, this_remote.data()));
+
+      this_remote.on('select2:open', function () {
+        $('.select2-search__field').focus();
+      });
+
+      var custom_onselect = this_remote.data('onSelect');
+      if (custom_onselect && typeof window[custom_onselect] === 'function') {
+        this_remote.on('select2:select', function (event) {
+          window[custom_onselect](event);
+        });
+      }
+    })
+    .addClass('inited');
+  }
 });
 
 // Delete data

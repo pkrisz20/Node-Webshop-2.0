@@ -2710,6 +2710,10 @@ textarea.form-control-lg {
   display: block;
 }
 
+.form-select.is-invalid + .select2-container--default .select2-selection--single {
+  border-color: #dc3545 !important;
+}
+
 .was-validated .form-control:invalid, .was-validated .datatable-input:invalid, .form-control.is-invalid, .is-invalid.datatable-input {
   border-color: #dc3545;
   padding-right: calc(1.5em + 0.75rem);

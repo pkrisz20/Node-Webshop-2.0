@@ -2,6 +2,7 @@
 <html lang="hu">
         <!-- HEAD + STYLE LINKS -->
         <%- include('../layout/head.ejs') %>
+        <link href="<%= getAssetPath('/admin/css/plugins/select2.min.css') %>" rel="stylesheet" />
     </head>
         <%- include('../layout/sidebar-navs.ejs') %>
 
@@ -40,8 +41,17 @@
                                     <div class="col-md-6">
                                         <div class="form-row">
                                             <label class="form-label" for="product-category">Kategória</label>
-                                            <select class="form-select" data-rule-required="true" name="category_id" id="product-category">
+                                            <select
+                                                data-rule-required="true"
+                                                class="form-select <%= webshopCategories.length > 0 ? 'js-select2' : '' %>"
+                                                data-placeholder="Válassz kategóriát..."
+                                                data-min-input-length="0"
+                                                data-allow-clear="true"
+                                                name="category_id"
+                                                id="product-category"
+                                            >
                                                 <% if (webshopCategories.length > 0) { %>
+                                                    <option></option>
 
                                                     <% webshopCategories.forEach(category => { %>
                                                         <option value="<%= category.id %>" <%= category.id == formValues.category_id ?  'selected' : '' %> ><%= category.name %></option>
@@ -193,6 +203,8 @@
         <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
+        <script src="<%= getAssetPath('/admin/js/select2/select2.full.min.js') %>"></script>
+        <script src="<%= getAssetPath('/admin/js/select2/select2.hu.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/plugins/ckeditor.min.js') %>"></script>
         <script src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
