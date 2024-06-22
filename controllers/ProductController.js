@@ -49,6 +49,16 @@ const getProductDetails = async (req, res) => {
                 return res.redirect(301, process.env.APP_URL + `/${ lang }/` + languageHandler('slugs.product', lang) + `/${ currentSlug }/${ productId }`);
             }
 
+            const selectProductParamsSQL = "SELECT parameters.parameter_name AS 'name', product_parameters.parameter_value AS 'value' FROM parameters INNER JOIN product_parameters ON parameters.id = product_parameters.parameter_id WHERE product_parameters.product_id = ?;";
+
+            let productParams = await DoDatabaseQuery(selectProductParamsSQL, [productId]);
+            productParams = productParams.map(parameter => {
+                return {
+                    name: getValueByLanguage(parameter.name, lang),
+                    value: getValueByLanguage(parameter.value, lang)
+                }
+            });
+
             result = {
                 id: parseInt(data[0].id),
                 slug: currentSlug,
@@ -72,6 +82,7 @@ const getProductDetails = async (req, res) => {
                 maxQuantity: parseInt(data[0].max_order_count),
                 isAllowed: Boolean(data[0].comments_allowed),
                 saved_in_wishlist: wishlist.includes(data[0].id),
+                productParams: productParams ?? [],
             }
 
             var metas = {

@@ -76,7 +76,7 @@
                                         <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong><i class="fas fa-exclamation-circle"></i> <%= languageHandler('products.not_postable', current_locale) %></strong></div>
                                     <% } %>
 
-                                    <% if (productDetails.savings) { %>
+                                    <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
                                         <div class="table_label"><%= languageHandler('products.savings', current_locale) %>: <strong class="savings"><%= productDetails.savings %> RSD</strong></div>
                                     <% } %>
 
@@ -162,43 +162,41 @@
 
                         <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.product', current_locale) + "/" + productDetails.slug + "/" + productDetails.id, mail_subject: productDetails.name }) %>
 
-                        <% if (productDetails.description) { %>
+                        <% if (productDetails.description || productDetails.productParams.length > 0) { %>
 
                             <div class="tabs js-tabs">
                                 <nav class="tabs__header">
                                     <ul class="tabs__header-list">
-                                        <li>
-                                            <button data-tab-link="#product-desc" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_desc', current_locale) %></button>
-                                        </li>
-                                        <li>
-                                            <button data-tab-link="#product-params" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_params', current_locale) %></button>
-                                        </li>
+                                        <% if (productDetails.description) { %>
+                                            <li>
+                                                <button data-tab-link="#product-desc" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_desc', current_locale) %></button>
+                                            </li>
+                                        <% } %>
+                                        <% if (productDetails.productParams.length > 0) { %>
+                                            <li>
+                                                <button data-tab-link="#product-params" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_params', current_locale) %></button>
+                                            </li>
+                                        <% } %>
                                     </ul>
                                 </nav>
                                 <div class="tabs__content js-tabs-content">
-                                    <div id="product-desc">
-                                        <div class="ck-content"><%- productDetails.description %></div>
-                                    </div>
-                                    <dl id="product-params">
-                                        <ul>
-                                            <li>
-                                                <dt>Gyarto</dt>
-                                                <dd>Samsung</dd>
-                                            </li>
-                                            <li>
-                                                <dt>Hossz</dt>
-                                                <dd>3m</dd>
-                                            </li>
-                                            <li>
-                                                <dt>Szelesseg</dt>
-                                                <dd>15m</dd>
-                                            </li>
-                                            <li>
-                                                <dt>Melyseg</dt>
-                                                <dd>2m</dd>
-                                            </li>
-                                        </ul>
-                                    </dl>
+                                    <% if (productDetails.description) { %>
+                                        <div id="product-desc">
+                                            <div class="ck-content"><%- productDetails.description %></div>
+                                        </div>
+                                    <% } %>
+                                    <% if (productDetails.productParams.length > 0) { %>
+                                        <dl id="product-params">
+                                            <ul>
+                                                <% productDetails.productParams.forEach(parameter => { %>
+                                                    <li>
+                                                        <dt><%= parameter.name %></dt>
+                                                        <dd><%= parameter.value %></dd>
+                                                    </li>
+                                                <% }) %>
+                                            </ul>
+                                        </dl>
+                                    <% } %>
                                 </div>
                             </div>
                         <% } %>

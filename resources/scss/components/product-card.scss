@@ -16,6 +16,7 @@
       width: 100%;
       height: 100%;
       margin-bottom: 10px;
+      padding: 10px;
 
       picture {
         @include paddingBottom(100, 130);
@@ -29,21 +30,24 @@
         &--discount,
         &--new {
           text-transform: uppercase;
-          top: 5px;
-          left: 5px;
+          left: 3px;
           font-size: 14px;
           font-weight: 700;
-          background-color: $c-yellow;
-          color: $c-black;
-          border: 1px solid $c-black;
           padding: 4px;
         }
 
+        &--discount {
+          top: 5px;
+          color: $c-black;
+          background-color: $c-yellow;
+          border: 1px solid $c-black;
+        }
+
         &--new {
-          top: 40px !important;
-          color: $c-white !important;
-          border: 1px solid $c-white !important;
-          background-color: $c-instagram !important;
+          top: 40px;
+          color: $c-white;
+          border: 1px solid $c-white;
+          background-color: $c-instagram;
         }
 
         &--postable {
