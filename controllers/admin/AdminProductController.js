@@ -1,4 +1,5 @@
 const { db } = require("../../config/db-connection");
+const DoDatabaseQuery = require("../../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const imagePathConverter = require("../../helpers/imagePathConverter");
 const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/globalFunctions");
@@ -220,7 +221,7 @@ const updateCommentVerficationBadge = (req, res) => {
     });
 }
 
-const getProductUploadPage = (req, res) => {
+const getProductUploadPage = async (req, res) => {
     const lang = process.env.ADMIN_LANG;
     var metas = {
         title: "Új termék",
@@ -230,8 +231,19 @@ const getProductUploadPage = (req, res) => {
         description: "This is the product upload page",
     };
 
+    const selectProductParams = "SELECT * FROM parameters";
+    var webshopParameters = await DoDatabaseQuery(selectProductParams, []);
+
+    webshopParameters = webshopParameters.map(parameter => {
+        return {
+            ...parameter,
+            parameter_name: getValueByLanguage(parameter.parameter_name, lang)
+        }
+    });
+
     return res.render("admin/products/new", {
         webshopCategories: req.webshopCategories ?? [],
+        webshopParameters: webshopParameters ?? [],
         meta: metas,
         current_locale: lang,
         csrfToken: req.csrfToken()

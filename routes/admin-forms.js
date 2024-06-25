@@ -8,6 +8,7 @@ const AdminStaticContentsController = require("../controllers/admin/AdminStaticC
 const AdminGalleryController = require("../controllers/admin/AdminGalleryController");
 const AdminSliderController = require("../controllers/admin/SliderController");
 const AdminSettingsController = require("../controllers/admin/AdminController");
+const AdminWebshopParametersController = require("../controllers/admin/AdminWebshopParametersController");
 const selectWebshopCategories = require("../helpers/selectWebshopCategories");
 
 adminFormsRouter.route("/settings")
@@ -93,5 +94,17 @@ adminFormsRouter.route("/static-contents/edit/:staticContentID")
 
 adminFormsRouter.route("/static-contents/edit/handle/:staticContentID")
     .post(checkAuthentication, AdminStaticContentsController.handleEditStaticPage);
+
+adminFormsRouter.route("/webshop-params/new")
+    .get(checkAuthentication, AdminWebshopParametersController.getWebshopParamsUploadPage);
+
+adminFormsRouter.route("/webshop-params/new/handle")
+    .post(checkAuthentication, AdminWebshopParametersController.handleWebshopParamUpload);
+
+adminFormsRouter.route("/webshop-params/edit/:paramId")
+    .get(checkAuthentication, AdminWebshopParametersController.getWebshopParamsEditPage);
+
+adminFormsRouter.route("/webshop-params/edit/handle/:paramId")
+    .post(checkAuthentication, AdminWebshopParametersController.handleEditWebshopParams);
 
 module.exports = adminFormsRouter;

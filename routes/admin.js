@@ -13,6 +13,7 @@ const AdminContactController = require("../controllers/admin/AdminContactControl
 const AdminStaticContentsController = require("../controllers/admin/AdminStaticContentsController");
 const AdminBlogsController = require("../controllers/admin/AdminBlogsController");
 const StatisticsController = require("../controllers/admin/StatisticsController");
+const AdminWebshopParametersController = require("../controllers/admin/AdminWebshopParametersController");
 
 adminRouter.route("/")
     .get(AdminController.getLoginPage);
@@ -94,6 +95,12 @@ adminRouter.route("/faq/list")
 
 adminRouter.route("/faq/delete/:faqId")
     .get(checkAuthentication, AdminStaticContentsController.deleteFAQItem);
+
+adminRouter.route("/webshop-params/list")
+    .get(checkAuthentication, AdminWebshopParametersController.getWebshopParamsListPage);
+
+adminRouter.route("/webshop-params/delete/:paramId")
+    .get(checkAuthentication, AdminWebshopParametersController.deleteWebshopParam);
 
 adminRouter.route("/orders/list")
     .get(checkAuthentication, AdminOrdersController.getOrdersListPage);

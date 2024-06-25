@@ -19,6 +19,9 @@
                         <li class="nav-item mx-2">
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
                         </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#params">Paraméterek</a>
+                        </li>
                     </ul>
 
                     <div class="tab-content">
@@ -178,6 +181,20 @@
                                 </div>
                             </div>
 
+                            <div class="tab-pane fade" id="params">
+                                <div class="col-12 mb-3 border-bottom border-3 d-flex justify-content-around">
+                                    <strong class="fs-5">Paraméter neve</strong>
+                                    <strong class="fs-5">Paraméter értéke</strong>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <button class="btn btn-primary js-add-parameter" type="button">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Hozzáadás
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Mentés</button>
                             </div>
@@ -197,6 +214,79 @@
         <script src="<%= getAssetPath('/admin/js/plugins/ckeditor.min.js') %>"></script>
         <script src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
         <script src="<%= getAssetPath('/js/plugins/validator_messages_hu.js') %>"></script>
+        <script src="<%= getAssetPath('/admin/js/plugins/jquery.repeatable.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
+        <script type="text/template" id="webshop-parameter-options">
+            <div class="js-repeatable-row">
+                <div class="align-top pl-1 pr-1">
+                    <select
+                        name="webshop_parameters[]"
+                        id="webshop-parameters"
+                        class="form-select js-select2"
+                        data-fouc
+                        data-placeholder="Kiválasztás..."
+                        data-minimum-input-length="0"
+                        data-rule-required="true"
+                    >
+                        <option></option>
+
+                        <% webshopParameters.forEach(webshopParam => { %>
+                            <option value="<%= webshopParam.id %>"><%= webshopParam.parameter_name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <% [...process.env.VALID_LANGS].forEach(frontend_language => { %>
+                    <div class="pl-1 pr-1">
+                        <div class="col-md-4">
+                            <div class="form-row">
+                                <label for="product-parameter-<%= frontend_language %>" class="form-label">Paraméter értéke (<%= frontend_language %>)</label>
+                                <input type="text" data-rule-required="true" id="product-parameter-<%= frontend_language %>" class="form-control" name="name[<%= frontend_language %>]" value="" />
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+
+                <div class="align-top pl-1 pr-1">
+                    <input type="hidden" name="webshop_parameters[{?}][webshop_parameter_option_id]" value="{{ $option_id ?? '' }}" class="js-option-id" />
+                    <div class="btn btn-light btn-icon text-danger js-delete-parameter">
+                        <i class="fas fa-trash-alt link-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                $(".js-container-parameters").repeatable({
+                    template: '#webshop-parameter-options',
+                    addTrigger: '.js-add-parameter',
+                    deleteTrigger: '.js-delete-parameter',
+                    itemContainer: '.js-repeatable-row',
+                    min: 1,
+                    afterAdd: function (event, callback) {
+                        // TODO: Finish the parameter repeating plugin
+                        console.log(event);
+                        // webshopParameters = webshopParameters.filter(item => item.);
+                        globalScripts.initSelectTwo();
+                    },
+                    beforeDelete: function (e, callback) {
+                        Swal.fire({
+                            title: "Biztosan törlöd ezt a paramétert?",
+                            text: "Ez a folyamat visszafordíthatatlan!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#008a00",
+                            cancelButtonColor: "#db3700",
+                            confirmButtonText: "Igen, törlöm!",
+                            cancelButtonText: "Nem, mégsem!"
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                callback();
+                            }
+                        });
+                    },
+                });
+            });
+        </script>
     </body>
 </html>
