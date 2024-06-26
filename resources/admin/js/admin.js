@@ -229,8 +229,8 @@ $('body').on('click', '.js-delete-data', function () {
             setTimeout(function () {
               Swal.fire({
                 icon: 'error',
-                title: 'Hoppá!',
-                text: 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
+                title: response.title || 'Hoppá!',
+                text: response.text || 'Váratlan hiba történt! Szóljatok a Krisztinek, léci ne csináljatok semmit!',
               });
             }, 1000);
           }

@@ -6,7 +6,7 @@
         <%- include('../layout/sidebar-navs.ejs') %>
 
                 <main class="p-4">
-                    <h1 class="h3 mb-3">Kategória szerkesztése</h1>
+                    <h1 class="h3 mb-3">Paraméter szerkesztése</h1>
 
                     <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
                         <li class="nav-item">
@@ -27,14 +27,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
-                                            <label for="category-name-hu" class="form-label">Kategória neve</label>
-                                            <input type="text" data-rule-required="true" id="category-name-hu" class="form-control" name="name[hu]" value="<%= formValues.hu.name %>" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="category-short-hu" class="form-label">Rövid leírás</label>
-                                            <textarea id="category-short-hu" rows="5" name="short_description[hu]" class="form-control"><%= formValues.hu.short_description ? formValues.hu.short_description : '' %></textarea>
+                                            <label for="parameter-name-hu" class="form-label">Paraméter neve</label>
+                                            <input type="text" data-rule-required="true" id="parameter-name-hu" class="form-control" name="parameter_name[hu]" value="<%= formValues.hu.parameter_name %>" />
                                         </div>
                                     </div>
                                 </div>
@@ -44,14 +38,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
-                                            <label for="category-name-sr" class="form-label">Kategória neve szerbül</label>
-                                            <input type="text" data-rule-required="true" id="category-name-sr" class="form-control" name="name[sr]" value="<%= formValues.sr.name %>" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="category-short-sr" class="form-label">Rövid leírás szerbül</label>
-                                            <textarea id="category-short-sr" rows="5" name="short_description[sr]" class="form-control"><%= formValues.sr.short_description ? formValues.sr.short_description : '' %></textarea>
+                                            <label for="parameter-name-sr" class="form-label">Paraméter neve szerbül</label>
+                                            <input type="text" data-rule-required="true" id="parameter-name-sr" class="form-control" name="parameter_name[sr]" value="<%= formValues.sr.parameter_name %>" />
                                         </div>
                                     </div>
                                 </div>
@@ -61,14 +49,8 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
-                                            <label for="category-name-en" class="form-label">Kategória neve angolul</label>
-                                            <input type="text" data-rule-required="true" id="category-name-en" class="form-control" name="name[en]" value="<%= formValues.en.name %>" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="category-short-en" class="form-label">Rövid leírás angolul</label>
-                                            <textarea id="category-short-en" rows="5" name="short_description[en]" class="form-control"><%= formValues.en.short_description ? formValues.en.short_description : '' %></textarea>
+                                            <label for="parameter-name-en" class="form-label">Paraméter neve angolul</label>
+                                            <input type="text" data-rule-required="true" id="parameter-name-en" class="form-control" name="parameter_name[en]" value="<%= formValues.en.parameter_name %>" />
                                         </div>
                                     </div>
                                 </div>
