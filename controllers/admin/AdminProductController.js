@@ -9,6 +9,7 @@ const getValidFormValues = require("../../helpers/admin/getValidFormValues");
 const { generateUniqueSlug } = require("../../helpers/admin/slugHelper");
 const dateTimeHelper = require("../../helpers/dateTimeHelper");
 const languageHandler = require("../../helpers/languageHandler");
+const errorHandler = require('../../middleware/errorHandler');
 const moment = require("moment");
 
 const getWebshopProductList = (req, res) => {
@@ -266,7 +267,7 @@ const deleteProductComment = (req, res) => {
     });
 }
 
-const getProductEditPage = (req, res) => {
+const getProductEditPage = async (req, res) => {
     const lang = process.env.ADMIN_LANG;
     var metas = {
         title: "Szerkesztés",
@@ -282,6 +283,15 @@ const getProductEditPage = (req, res) => {
     if ( isNaN(productId) ) {
         return showBadRequestPage(req, res);
     }
+
+    const selectExistingProductParameters = "SELECT * FROM parameters";
+    var allWebshopParameters = await DoDatabaseQuery(selectExistingProductParameters, []);
+    allWebshopParameters = allWebshopParameters.map(parameter => {
+        return {
+            ...parameter,
+            parameter_name: getValueByLanguage(parameter.parameter_name, lang)
+        }
+    });
 
     // function params => Table, database ID, callback
     getValidFormValues('products', productId, function (err, DBformData) {
@@ -322,13 +332,33 @@ const getProductEditPage = (req, res) => {
             formattedValues.max_order_count = parseInt(formValues.max_order_count);
             formattedValues.comments_allowed = parseInt(formValues.comments_allowed);
             formattedValues.category_id = parseInt(formValues.category_id);
+            formattedValues.allWebshopParameters = allWebshopParameters ?? [];
 
-            return res.render("admin/products/edit", {
-                formValues: formattedValues,
-                webshopCategories: req.webshopCategories ?? [],
-                meta: metas,
-                current_locale: lang,
-                csrfToken: req.csrfToken()
+            // TOOD: Finish this part
+            db.query("SELECT * FROM product_parameters WHERE product_id = ?", productId, (parameters_err, parameters_data) => {
+                var alreadySelectedWebshopParameters = [];
+
+                // if (parameters_err) {
+                //     console.log(parameters_err);
+                //     return showServerErrorPage(req, res);
+                // }
+                // else if (parameters_data.length > 0) {
+                //     alreadySelectedWebshopParameters = parameters_data.map(item => {
+                //         return {
+                //             id: item.id,
+                //             parameter_name: item.parameters_data
+                //         }
+                //     });
+                // }
+
+                return res.render("admin/products/edit", {
+                    formValues: formattedValues,
+                    webshopCategories: req.webshopCategories ?? [],
+                    alreadySelectedWebshopParameters: alreadySelectedWebshopParameters ?? [],
+                    meta: metas,
+                    current_locale: lang,
+                    csrfToken: req.csrfToken()
+                });
             });
         }
 
@@ -339,7 +369,7 @@ const getProductEditPage = (req, res) => {
     });
 }
 
-const handleProductUpload = (req, res) => {
+const handleProductUpload = async (req, res) => {
     const lang = process.env.ADMIN_LANG;
     let productData = req.body;
 
@@ -353,6 +383,8 @@ const handleProductUpload = (req, res) => {
     let is_new = parseInt(productData.is_new ?? 0);
     let comments_allowed = parseInt(productData.comments_allowed ?? 0);
     let max_order_count = parseInt(productData.max_order_count);
+    let webshopParameterId;
+    let productParams;
 
     if (
         isNaN(categoryID)
@@ -401,80 +433,153 @@ const handleProductUpload = (req, res) => {
 
     const SQLInsertProduct = "INSERT INTO products (name, short_description, description, price, discount_value, discount_end_date, is_active, is_featured, is_available, is_delivered, max_order_count, is_new, comments_allowed, category_id, created_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    db.query(
-        SQLInsertProduct,
-        [
-            JSON.stringify(productNames),
-            JSON.stringify(shortDescriptions),
-            JSON.stringify(longDescriptions),
-            basePrice,
-            discountPrice,
-            discountEndDate,
-            is_active,
-            is_featured,
-            is_available,
-            is_delivered,
-            max_order_count,
-            is_new,
-            comments_allowed,
-            categoryID,
-            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-        ],
-        (err, data) => {
-            if (err) {
-                console.log(err);
-                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+    try {
+        const productInsertResult = await DoDatabaseQuery(
+            SQLInsertProduct,
+            [
+                JSON.stringify(productNames),
+                JSON.stringify(shortDescriptions),
+                JSON.stringify(longDescriptions),
+                basePrice,
+                discountPrice,
+                discountEndDate,
+                is_active,
+                is_featured,
+                is_available,
+                is_delivered,
+                max_order_count,
+                is_new,
+                comments_allowed,
+                categoryID,
+                moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+            ],
+        );
+
+        if (!productInsertResult) {
+            return res.status(200).json({
+                status: "error",
+                title: languageHandler("errors.error", lang),
+                content: languageHandler("errors.common_error", lang)
+            });
+        }
+        else if (productInsertResult && productInsertResult.affectedRows > 0) {
+            // Slug generate for product with inserted id
+            let generatedSlugs = generateUniqueSlug(productNames);
+
+            if ( generatedSlugs === false ) {
+                return res.status(200).json({
+                    status: 'error',
+                    title: languageHandler('errors.error', lang),
+                    text: languageHandler('errors.slug_error', lang),
+                    csrfToken: req.csrfToken()
+                });
             }
+            else {
+                const updateSlugForProduct = "UPDATE products SET slug = ? WHERE id = ?";
 
-            else if (data.affectedRows > 0) {
+                const updateSlugForProductResult = await DoDatabaseQuery(
+                    updateSlugForProduct,
+                    [
+                        generatedSlugs,
+                        productInsertResult.insertId
+                    ],
+                );
 
-                // Slug generate for product with inserted id
-                let generatedSlug = generateUniqueSlug(productNames);
-
-                if ( generatedSlug === false ) {
+                if (!updateSlugForProductResult) {
                     return res.status(200).json({
                         status: 'error',
                         title: languageHandler('errors.error', lang),
-                        text: languageHandler('errors.slug_error', lang),
                         csrfToken: req.csrfToken()
                     });
                 }
-                else {
-                    const updateSlugForProduct = "UPDATE products SET slug = ? WHERE id = ?";
+                else if (updateSlugForProductResult.changedRows > 0) {
 
-                    db.query(updateSlugForProduct,
-                        [
-                            generatedSlug,
-                            data.insertId
-                        ],
-                        (update_err, queryStatus) => {
-                            if (update_err) {
-                                console.log(update_err);
-                                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
-                            }
-                            else if (queryStatus.changedRows > 0) {
-                                return res.status(200).json({
-                                    status: "success",
-                                    redirect_url: `/admin/products/edit/${ data.insertId }`,
-                                    csrfToken: req.csrfToken()
-                                });
-                            }
-                            else {
-                                return res.status(200).json({
-                                    status: 'error',
-                                    title: languageHandler('errors.error', lang),
-                                    csrfToken: req.csrfToken()
-                                });
-                            }
-                        }
-                    );
+                    // Insert webshop parameters, if is there any
+                    const insertWebshopParametersQuery = "INSERT INTO product_parameters (parameter_id, product_id, parameter_value) VALUES(?, ?, ?)";
+                    var productParametersInsertResult;
+
+                    // If there is only one parameter, then it's a string
+                    if (productData.parameter_hash && typeof productData.parameter_hash === 'string') {
+                        webshopParameterId = parseInt(productData['webshop_parameter_id[' + productData.parameter_hash + ']']);
+
+                        productParams = {
+                            en: productData['parameter_value[en][' + productData.parameter_hash + ']'],
+                            hu: productData['parameter_value[hu][' + productData.parameter_hash + ']'],
+                            sr: productData['parameter_value[sr][' + productData.parameter_hash + ']'],
+                        };
+
+                        productParametersInsertResult = await DoDatabaseQuery(
+                            insertWebshopParametersQuery,
+                            [
+                                webshopParameterId,
+                                productInsertResult.insertId,
+                                JSON.stringify(productParams)
+                            ],
+                        );
+                    }
+                    // If there are more than one parameter, then it's an array
+                    else if (productData.parameter_hash && Array.isArray(productData.parameter_hash) && productData.parameter_hash.length > 0) {
+                        productParams = [];
+
+                        productData.parameter_hash.forEach(item => {
+                            productParams.push({
+                                webshopParameterId: parseInt(productData['webshop_parameter_id[' + item + ']']),
+                                values: {
+                                    en: productData['parameter_value[en][' + item + ']'],
+                                    hu: productData['parameter_value[hu][' + item + ']'],
+                                    sr: productData['parameter_value[sr][' + item + ']'],
+                                }
+                            });
+                        });
+
+                        productParams.forEach(item => {
+                            db.query(insertWebshopParametersQuery,
+                                [
+                                    item.webshopParameterId,
+                                    productInsertResult.insertId,
+                                    JSON.stringify(item.values)
+                                ],
+                                (webshop_params_err, webshopParamsStatus) => {
+                                    if (webshop_params_err) {
+                                        return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+                                    }
+                                }
+                            );
+                        });
+
+                        productParametersInsertResult = 'success';
+                    }
+
+                    if (productParametersInsertResult) {
+                        return res.status(200).json({
+                            status: "success",
+                            redirect_url: `/admin/products/edit/${ productInsertResult.insertId }`,
+                            csrfToken: req.csrfToken()
+                        });
+                    }
+                    else if (!productParametersInsertResult) {
+                        return res.status(200).json({
+                            status: "error",
+                            title: languageHandler("errors.error", lang),
+                            content: languageHandler("errors.common_error", lang)
+                        });
+                    }
                 }
             }
         }
-    );
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'AdminProductController', 542, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler("errors.error", lang),
+            content: languageHandler("errors.server_error", lang)
+        });
+    }
 }
 
-const handleEditProduct = (req, res) => {
+const handleEditProduct = async (req, res) => {
     const lang = process.env.ADMIN_LANG;
     let productData = req.body;
     let { productId } = req.params;
@@ -490,6 +595,8 @@ const handleEditProduct = (req, res) => {
     let comments_allowed = parseInt(productData.comments_allowed ?? 0);
     let max_order_count = parseInt(productData.max_order_count);
     productId = parseInt(productId);
+    let webshopParameterId;
+    let productParams;
 
     if (
         isNaN(categoryID)
@@ -544,42 +651,117 @@ const handleEditProduct = (req, res) => {
 
     const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, slug = ?, price = ?, discount_value = ?, discount_end_date = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
-    db.query(
-        SQLUpdateProduct,
-        [
-            productNameParam,
-            JSON.stringify(shortDescriptions),
-            JSON.stringify(longDescriptions),
-            newSlugs,
-            basePrice,
-            discountPrice,
-            discountEndDate,
-            is_active,
-            is_featured,
-            is_available,
-            is_delivered,
-            max_order_count,
-            is_new,
-            comments_allowed,
-            categoryID,
-            moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-            productId
-        ],
-        (err, data) => {
-            if (err) {
-                console.log(err);
-                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+    try {
+        const productEditResult = await DoDatabaseQuery(
+            SQLUpdateProduct,
+            [
+                productNameParam,
+                JSON.stringify(shortDescriptions),
+                JSON.stringify(longDescriptions),
+                newSlugs,
+                basePrice,
+                discountPrice,
+                discountEndDate,
+                is_active,
+                is_featured,
+                is_available,
+                is_delivered,
+                max_order_count,
+                is_new,
+                comments_allowed,
+                categoryID,
+                moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+                productId
+            ],
+        );
+
+        if (!productEditResult) {
+            errorHandler(error, req, res, 'AdminProductController', 650, true);
+            return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+        }
+        else if (productEditResult && productEditResult.affectedRows > 0) {
+
+            // Insert webshop parameters, if is there any
+            const insertOrUpdateWebshopParametersQuery = "INSERT INTO product_parameters (parameter_id, product_id, parameter_value) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE parameter_value = VALUES(parameter_value)";
+            var productParametersInsertResult;
+
+            // If there is only one parameter, then it's a string
+            if (productData.parameter_hash && typeof productData.parameter_hash === 'string') {
+                webshopParameterId = parseInt(productData['webshop_parameter_id[' + productData.parameter_hash + ']']);
+
+                productParams = {
+                    en: productData['parameter_value[en][' + productData.parameter_hash + ']'],
+                    hu: productData['parameter_value[hu][' + productData.parameter_hash + ']'],
+                    sr: productData['parameter_value[sr][' + productData.parameter_hash + ']'],
+                };
+
+                productParametersInsertResult = await DoDatabaseQuery(
+                    insertOrUpdateWebshopParametersQuery,
+                    [
+                        webshopParameterId,
+                        productInsertResult.insertId,
+                        JSON.stringify(productParams)
+                    ],
+                );
+            }
+            // If there are more than one parameter, then it's an array
+            else if (productData.parameter_hash && Array.isArray(productData.parameter_hash) && productData.parameter_hash.length > 0) {
+                productParams = [];
+
+                productData.parameter_hash.forEach(item => {
+                    productParams.push({
+                        webshopParameterId: parseInt(productData['webshop_parameter_id[' + item + ']']),
+                        values: {
+                            en: productData['parameter_value[en][' + item + ']'],
+                            hu: productData['parameter_value[hu][' + item + ']'],
+                            sr: productData['parameter_value[sr][' + item + ']'],
+                        }
+                    });
+                });
+
+                productParams.forEach(item => {
+                    db.query(insertOrUpdateWebshopParametersQuery,
+                        [
+                            item.webshopParameterId,
+                            productInsertResult.insertId,
+                            JSON.stringify(item.values)
+                        ],
+                        (webshop_params_err, webshopParamsStatus) => {
+                            if (webshop_params_err) {
+                                return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
+                            }
+                        }
+                    );
+                });
+
+                productParametersInsertResult = 'success';
             }
 
-            else if (data.affectedRows > 0) {
+            if (productParametersInsertResult) {
                 return res.status(200).json({
                     status: "success",
                     redirect_url: `/admin/products/edit/${ productId }`,
                     csrfToken: req.csrfToken()
                 });
             }
+            else if (!productParametersInsertResult) {
+                return res.status(200).json({
+                    status: "error",
+                    title: languageHandler("errors.error", lang),
+                    content: languageHandler("errors.common_error", lang)
+                });
+            }
         }
-    );
+    }
+    catch (error) {
+        errorHandler(error, req, res, 'AdminProductController', 661, true);
+
+        return res.status(200).json({
+            status: "error",
+            title: languageHandler("errors.error", lang),
+            content: languageHandler("errors.server_error", lang)
+        });
+    }
 }
 
 module.exports = {

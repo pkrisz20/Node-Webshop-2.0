@@ -28,11 +28,16 @@ const getProductDetails = async (req, res) => {
     var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
     let { slugName, productId } = req.params;
+    productId = parseInt(productId);
     let result = {};
     let similarProducts = [];
     let productComments = [];
     let isAlreadyInCart = false;
     let showLoadMoreButton = false;
+
+    if (!slugName || isNaN(productId) ) {
+        return showNotFoundPage(req, res);
+    }
 
     const sqlQuery = "SELECT products.id, products.slug, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.slug AS 'category_slug', categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.id = ?";
 
@@ -196,7 +201,7 @@ const getProductDetails = async (req, res) => {
         }
     }
     catch (error) {
-        return errorHandler(error, req, res, 'productController', 177);
+        return errorHandler(error, req, res, 'productController', 199);
     }
 };
 

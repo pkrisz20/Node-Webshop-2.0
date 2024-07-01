@@ -223,7 +223,7 @@
                     <select
                         name="webshop_parameter_id[{?}]"
                         id="webshop-parameter-name-{?}"
-                        class="form-select js-select2"
+                        class="form-select js-select2 js-watch-parameter-change"
                         data-fouc
                         data-placeholder="Kiválasztás..."
                         data-minimum-input-length="0"
@@ -248,6 +248,7 @@
                 <% }) %>
 
                 <div class="d-flex align-items-center justify-content-center border-dark col-1">
+                    <input type="hidden" class="form-control" name="parameter_hash" value="{?}" />
                     <i role=button class="border border-2 fas fa-trash-alt rounded-2 border-danger p-3 link-danger js-delete-parameter"></i>
                 </div>
             </div>
@@ -288,11 +289,11 @@
             function updateSelectTwosData() {
                 let selectedValues = [];
 
-                $('.js-select2').each(function() {
+                $('.js-select2.js-watch-parameter-change').each(function() {
                     selectedValues = selectedValues.concat($(this).val());
                 });
 
-                $('.js-select2').each(function() {
+                $('.js-select2.js-watch-parameter-change').each(function() {
                     let $select = $(this);
                     let currentValues = $select.val() || [];
 

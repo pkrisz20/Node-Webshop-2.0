@@ -20,6 +20,9 @@
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
                         </li>
                         <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#params">Paraméterek</a>
+                        </li>
+                        <li class="nav-item mx-2">
                             <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#media-thumbnail"><i class="fas fa-photo-video"></i> Indexkép</a>
                         </li>
                         <li class="nav-item mx-2">
@@ -185,6 +188,58 @@
                                     <textarea id="product-long-en" name="product_description[en]" class="form-control js-ckeditor"><%= formValues.en.description ? formValues.en.description : '' %></textarea>
                                 </div>
                             </div>
+
+                            <div class="tab-pane fade" id="params">
+                                <div class="col-12 mb-3 d-flex justify-content-between">
+                                    <strong class="fs-5">Termékhez tartozó paraméterek</strong>
+                                </div>
+                                <div class="col-12 mb-4 js-container-parameters">
+                                    <% if (alreadySelectedWebshopParameters.length > 0) { %>
+                                        <div class="row border-top border-3 pt-3 mb-3">
+                                            <div class="col-2 align-top">
+                                                <label for="webshop-parameter-name-{?}" class="form-label">Paraméter neve</label>
+                                                <select
+                                                    name="webshop_parameter_id[{?}]"
+                                                    id="webshop-parameter-name-{?}"
+                                                    class="form-select js-select2 js-watch-parameter-change"
+                                                    data-fouc
+                                                    data-placeholder="Kiválasztás..."
+                                                    data-minimum-input-length="0"
+                                                    data-on-select="updateSelectTwosData"
+                                                    data-rule-required="true"
+                                                >
+                                                    <option></option>
+
+                                                    <% alreadySelectedWebshopParameters.forEach(webshopParam => { %>
+                                                        <option value="<%= webshopParam.id %>"><%= webshopParam.parameter_name %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+
+                                            <% process.env.VALID_LANGS.split(',').forEach(frontend_language => { %>
+                                                <div class="col-3">
+                                                    <div class="form-row">
+                                                        <label for="product-parameter-<%= frontend_language %>-{?}" class="form-label">Paraméter értéke (<span class="text-uppercase"><%= frontend_language %></span>)</label>
+                                                        <input type="text" data-rule-required="true" id="product-parameter-<%= frontend_language %>-{?}" class="form-control" name="parameter_value[<%= frontend_language %>][{?}]" value="" />
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+
+                                            <div class="d-flex align-items-center justify-content-center border-dark col-1">
+                                                <input type="hidden" class="form-control" name="parameter_hash" value="{?}" />
+                                                <i role=button class="border border-2 fas fa-trash-alt rounded-2 border-danger p-3 link-danger js-delete-parameter"></i>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <button class="btn btn-primary js-add-parameter" type="button">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Hozzáadás
+                                    </button>
+                                </div>
+                            </div>
                         </form>
 
                         <div class="tab-pane fade" id="media-thumbnail">
@@ -209,7 +264,100 @@
         <script src="<%= getAssetPath('/admin/js/plugins/ckeditor.min.js') %>"></script>
         <script src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
         <script src="<%= getAssetPath('/js/plugins/validator_messages_hu.js') %>"></script>
+        <script src="<%= getAssetPath('/admin/js/plugins/jquery.repeatable.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
         <script src="<%= getAssetPath('/admin/js/image-uploader.js') %>"></script>
+        <script type="text/template" id="webshop-parameter-options">
+            <div class="row js-repeatable-row border-top border-3 pt-3 mb-3">
+                <div class="col-2 align-top">
+                    <label for="webshop-parameter-name-{?}" class="form-label">Paraméter neve</label>
+                    <select
+                        name="webshop_parameter_id[{?}]"
+                        id="webshop-parameter-name-{?}"
+                        class="form-select js-select2 js-watch-parameter-change"
+                        data-fouc
+                        data-placeholder="Kiválasztás..."
+                        data-minimum-input-length="0"
+                        data-on-select="updateSelectTwosData"
+                        data-rule-required="true"
+                    >
+                        <option></option>
+
+                        <% webshopParameters.forEach(webshopParam => { %>
+                            <option value="<%= webshopParam.id %>"><%= webshopParam.parameter_name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <% process.env.VALID_LANGS.split(',').forEach(frontend_language => { %>
+                    <div class="col-3">
+                        <div class="form-row">
+                            <label for="product-parameter-<%= frontend_language %>-{?}" class="form-label">Paraméter értéke (<span class="text-uppercase"><%= frontend_language %></span>)</label>
+                            <input type="text" data-rule-required="true" id="product-parameter-<%= frontend_language %>-{?}" class="form-control" name="parameter_value[<%= frontend_language %>][{?}]" value="" />
+                        </div>
+                    </div>
+                <% }) %>
+
+                <div class="d-flex align-items-center justify-content-center border-dark col-1">
+                    <input type="hidden" class="form-control" name="parameter_hash" value="{?}" />
+                    <i role=button class="border border-2 fas fa-trash-alt rounded-2 border-danger p-3 link-danger js-delete-parameter"></i>
+                </div>
+            </div>
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                $(".js-container-parameters").repeatable({
+                    template: '#webshop-parameter-options',
+                    addTrigger: '.js-add-parameter',
+                    deleteTrigger: '.js-delete-parameter',
+                    itemContainer: '.js-repeatable-row',
+                    max: <%= webshopParameters.length %>,
+                    min: 0,
+                    afterAdd: function (event, callback) {
+                        updateSelectTwosData();
+                        globalScripts.initSelectTwo();
+                    },
+                    beforeDelete: function (event, callback) {
+                        Swal.fire({
+                            title: "Biztosan törlöd ezt a paramétert?",
+                            text: "Ez a folyamat visszafordíthatatlan!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#008a00",
+                            cancelButtonColor: "#db3700",
+                            confirmButtonText: "Igen, törlöm!",
+                            cancelButtonText: "Nem, mégsem!"
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                callback();
+                                updateSelectTwosData();
+                            }
+                        });
+                    },
+                });
+            });
+
+            function updateSelectTwosData() {
+                let selectedValues = [];
+
+                $('.js-select2.js-watch-parameter-change').each(function() {
+                    selectedValues = selectedValues.concat($(this).val());
+                });
+
+                $('.js-select2.js-watch-parameter-change').each(function() {
+                    let $select = $(this);
+                    let currentValues = $select.val() || [];
+
+                    $select.data('currentValues', currentValues);
+                    $select.find('option').prop('disabled', false);
+
+                    selectedValues.forEach(function(value) {
+                        if (!currentValues.includes(value)) {
+                            $select.find('option[value="' + value + '"]').prop('disabled', true);
+                        }
+                    });
+                });
+            }
+        </script>
     </body>
 </html>
