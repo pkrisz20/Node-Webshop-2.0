@@ -2,7 +2,7 @@ const { db } = require("../../config/db-connection");
 const DoDatabaseQuery = require("../../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../../helpers/getValueByLanguage");
 const imagePathConverter = require("../../helpers/imagePathConverter");
-const { setMomentLocale, limitText, escapeHtml } = require("../../helpers/globalFunctions");
+const { setMomentLocale, limitText, escapeHtml, createUniqueID } = require("../../helpers/globalFunctions");
 const { getIconByActivity } = require('../../helpers/admin/getIconByActivity');
 const { showServerErrorPage, showBadRequestPage } = require("../../helpers/showErrorPages");
 const getValidFormValues = require("../../helpers/admin/getValidFormValues");
@@ -334,27 +334,29 @@ const getProductEditPage = async (req, res) => {
             formattedValues.category_id = parseInt(formValues.category_id);
             formattedValues.allWebshopParameters = allWebshopParameters ?? [];
 
-            // TOOD: Finish this part
-            db.query("SELECT * FROM product_parameters WHERE product_id = ?", productId, (parameters_err, parameters_data) => {
-                var alreadySelectedWebshopParameters = [];
+            db.query("SELECT * FROM product_parameters WHERE product_id = ?", productId, (parameters_err, product_parameters_data) => {
+                var productHasParameters = [];
 
-                // if (parameters_err) {
-                //     console.log(parameters_err);
-                //     return showServerErrorPage(req, res);
-                // }
-                // else if (parameters_data.length > 0) {
-                //     alreadySelectedWebshopParameters = parameters_data.map(item => {
-                //         return {
-                //             id: item.id,
-                //             parameter_name: item.parameters_data
-                //         }
-                //     });
-                // }
+                if (parameters_err) {
+                    console.log(parameters_err);
+                    return showServerErrorPage(req, res);
+                }
+                else if (product_parameters_data.length > 0) {
+                    productHasParameters = product_parameters_data.map(item => {
+                        let indexInsideAllParamsArray = allWebshopParameters.findIndex(webshopParameter => item.parameter_id === webshopParameter.id);
+
+                        return {
+                            id: allWebshopParameters[indexInsideAllParamsArray].id,
+                            values: JSON.parse(item.parameter_value)
+                        }
+                    });
+                }
 
                 return res.render("admin/products/edit", {
                     formValues: formattedValues,
                     webshopCategories: req.webshopCategories ?? [],
-                    alreadySelectedWebshopParameters: alreadySelectedWebshopParameters ?? [],
+                    productHasParameters: productHasParameters ?? [],
+                    createUniqueID: createUniqueID,
                     meta: metas,
                     current_locale: lang,
                     csrfToken: req.csrfToken()
@@ -595,6 +597,7 @@ const handleEditProduct = async (req, res) => {
     let comments_allowed = parseInt(productData.comments_allowed ?? 0);
     let max_order_count = parseInt(productData.max_order_count);
     productId = parseInt(productId);
+    var isProductParamsSuccessfullyDeleted = false;
     let webshopParameterId;
     let productParams;
 
@@ -649,6 +652,10 @@ const handleEditProduct = async (req, res) => {
 
     var discountEndDate = dateTimeHelper.isValidDate(productData.discount_end_date) ? productData.discount_end_date : null;
 
+    // Delete existing webshop parameters from current product to overwrite them with the new parameter values below
+    const removeExistingParameters = "DELETE FROM product_parameters WHERE product_id = ?";
+    isProductParamsSuccessfullyDeleted = await DoDatabaseQuery(removeExistingParameters, [productId]);
+
     const SQLUpdateProduct = "UPDATE products SET name = ?, short_description = ?, description = ?, slug = ?, price = ?, discount_value = ?, discount_end_date = ?, is_active = ?, is_featured = ?, is_available = ?, is_delivered = ?, max_order_count = ?, is_new = ?, comments_allowed = ?, category_id = ?, updated_at = ? WHERE id = ?";
 
     try {
@@ -680,13 +687,12 @@ const handleEditProduct = async (req, res) => {
             return res.status(200).json({ status: "error", csrfToken: req.csrfToken() });
         }
         else if (productEditResult && productEditResult.affectedRows > 0) {
-
             // Insert webshop parameters, if is there any
-            const insertOrUpdateWebshopParametersQuery = "INSERT INTO product_parameters (parameter_id, product_id, parameter_value) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE parameter_value = VALUES(parameter_value)";
+            const insertWebshopParametersQuery = "INSERT INTO product_parameters (parameter_id, product_id, parameter_value) VALUES(?, ?, ?)";
             var productParametersInsertResult;
 
             // If there is only one parameter, then it's a string
-            if (productData.parameter_hash && typeof productData.parameter_hash === 'string') {
+            if (productData.parameter_hash && typeof productData.parameter_hash === 'string' && isProductParamsSuccessfullyDeleted) {
                 webshopParameterId = parseInt(productData['webshop_parameter_id[' + productData.parameter_hash + ']']);
 
                 productParams = {
@@ -696,16 +702,16 @@ const handleEditProduct = async (req, res) => {
                 };
 
                 productParametersInsertResult = await DoDatabaseQuery(
-                    insertOrUpdateWebshopParametersQuery,
+                    insertWebshopParametersQuery,
                     [
                         webshopParameterId,
-                        productInsertResult.insertId,
+                        productId,
                         JSON.stringify(productParams)
                     ],
                 );
             }
             // If there are more than one parameter, then it's an array
-            else if (productData.parameter_hash && Array.isArray(productData.parameter_hash) && productData.parameter_hash.length > 0) {
+            else if (productData.parameter_hash && Array.isArray(productData.parameter_hash) && productData.parameter_hash.length > 0 && isProductParamsSuccessfullyDeleted) {
                 productParams = [];
 
                 productData.parameter_hash.forEach(item => {
@@ -720,10 +726,10 @@ const handleEditProduct = async (req, res) => {
                 });
 
                 productParams.forEach(item => {
-                    db.query(insertOrUpdateWebshopParametersQuery,
+                    db.query(insertWebshopParametersQuery,
                         [
                             item.webshopParameterId,
-                            productInsertResult.insertId,
+                            productId,
                             JSON.stringify(item.values)
                         ],
                         (webshop_params_err, webshopParamsStatus) => {
@@ -737,20 +743,11 @@ const handleEditProduct = async (req, res) => {
                 productParametersInsertResult = 'success';
             }
 
-            if (productParametersInsertResult) {
-                return res.status(200).json({
-                    status: "success",
-                    redirect_url: `/admin/products/edit/${ productId }`,
-                    csrfToken: req.csrfToken()
-                });
-            }
-            else if (!productParametersInsertResult) {
-                return res.status(200).json({
-                    status: "error",
-                    title: languageHandler("errors.error", lang),
-                    content: languageHandler("errors.common_error", lang)
-                });
-            }
+            return res.status(200).json({
+                status: "success",
+                redirect_url: `/admin/products/edit/${ productId }`,
+                csrfToken: req.csrfToken()
+            });
         }
     }
     catch (error) {
