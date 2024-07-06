@@ -29,7 +29,7 @@
                             <a class="footer-title-link" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
                         <% } %>
                         <% if (DB_CONFIG["company_street"]) { %>
-                            <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
+                            <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %><%= (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) ? '#location' : '' %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
                         <% } %>
                     </div>
                 <% } %>

@@ -31,7 +31,7 @@ const getWebshopProductList = (req, res) => {
         return showBadRequestPage(req, res);
     }
 
-    const selectWebshopProducts = "SELECT products.id, products.name, products.discount_value, products.is_active, products.created_at, products.updated_at, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id ORDER BY products.id DESC LIMIT ? OFFSET ?";
+    const selectWebshopProducts = "SELECT products.id, products.name, products.discount_value, products.discount_end_date, products.is_active, products.created_at, products.updated_at, categories.name AS 'category_name' FROM products INNER JOIN categories ON products.category_id = categories.id ORDER BY products.id DESC LIMIT ? OFFSET ?";
 
     let pageOffset = (page - 1) * parseInt(process.env.ADMIN_PAGINATION);
 
@@ -57,7 +57,7 @@ const getWebshopProductList = (req, res) => {
                 let tempObject = {
                     productId: parseInt(product.id),
                     productName: getValueByLanguage(product.name, lang),
-                    isOnDiscount: getIconByActivity(product.discount_value ?? 0),
+                    isOnDiscount: getIconByActivity((product.discount_value && (product.discount_end_date && new Date(product.discount_end_date).getTime() > Date.now()) || !product.discount_end_date) ?? 0),
                     is_active: getIconByActivity(product.is_active ?? 0),
                     date: product.updated_at != null ? product.updated_at : product.created_at,
                     productCategory: getValueByLanguage(product.category_name, lang),
