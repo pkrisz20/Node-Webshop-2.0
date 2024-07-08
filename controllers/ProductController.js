@@ -294,12 +294,53 @@ const getAllProducts = async (req, res) => {
             }
         }
 
+        var webshopFilters = [
+            {
+                name: "Fajta",
+                open: false,
+                filters: [
+                    {
+                        value: "Durok",
+                        id: 1,
+                    },
+                    {
+                        value: "Pietrin",
+                        id: 2,
+                    },
+                    {
+                        value: "Mangalica",
+                        id: 3,
+                    }
+                ]
+            },
+            {
+                name: "Meret",
+                open: true,
+                filters: [
+                    {
+                        value: "Malac",
+                        id: 11,
+                    },
+                    {
+                        value: "Hizo",
+                        id: 21,
+                    },
+                    {
+                        value: "Vagasra",
+                        id: 31,
+                    }
+                ]
+            },
+        ];
+
         return res.render("pages/products", {
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
             articleLink: languageHandler('slugs.products', lang) ?? null,
             products: result ?? [],
             productsTotalCount: elementsCount[0]?.each_article_count ?? 0,
+            webshopFilters: webshopFilters ?? [],
+            selectedFilters: [],
             main_title: languageHandler('general.products', lang),
             category_short_desc: null,
             meta: metas,

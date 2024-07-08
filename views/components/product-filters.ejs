@@ -1,0 +1,83 @@
+<div class="sidebar filter-wrapper js-filter-wrapper">
+    <form method="get" class="js-filter-form">
+        <div class="sidebar__content js-sidebar-content">
+            <div class="sidebar__title"><%= languageHandler('products.filters', current_locale) %></div>
+
+            <div class="filter__group filter--open">
+                <header class="filter__header">
+                    <div class="filter__title"><%= languageHandler('products.price', current_locale) %></div>
+                </header>
+                <div class="filter__content">
+                    <div class="filter__content--inner">
+                        <div class="filter__slider-inputs">
+                            <input type="text" name="price[min]" value="1500" class="filter__slider-input js-price-min js-number-only" placeholder="Ettol" />
+                            <input type="text" name="price[max]" value="22530" class="filter__slider-input filter__slider-input--right js-price-max js-number-only" placeholder="Eddig" />
+                        </div>
+                        <div class="filter__slider js-price-slider"></div>
+                        <div class="filter__labels">
+                            <span class="filter__labels-label"><%= languageHandler('products.price', current_locale) %></span>
+                            <span class="js-slider-label-min">1500</span> RSD
+                             -
+                            <span class="js-slider-label-max">22530</span> RSD
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <% if (webshopFilters.length > 0) { %>
+                <% webshopFilters.forEach(filterGroup => { %>
+                    <div class="filter__group js-filter-box <%= filterGroup.open === true ? 'filter--open' : ''%>">
+                        <header class="filter__header js-trigger-filter">
+                            <div class="filter__title"><%= filterGroup.name %></div>
+                            <span class="filter__icon js-filter-icon"><i class="fas fa-chevron-down"></i></span>
+                        </header>
+                        <div class="filter__content">
+                            <div class="filter__content--inner">
+                                <% filterGroup.filters.forEach((filterOption, index) => { %>
+                                    <% if (index === 0) { %>
+                                        <ul class="filter__options">
+                                    <% } else if (index === 5) { %>
+                                        <div class="filter__options--expandable js-expandable">
+                                            <ul class="filter__options">
+                                    <% } %>
+                                            <li class="filter__row">
+                                                <label class="filter__label" for="filter-<%= filterOption.id %>-<%= filterOption.value %>">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="filters"
+                                                        id="filter-<%= filterOption.id %>-<%= filterOption.value %>"
+                                                        class="js-filter-checkbox"
+                                                        value="<%= filterOption.id %>"
+                                                        <%= selectedFilters.includes(filterOption.id) ? checked="checked" : '' %>
+                                                    />
+
+                                                    <span><%= filterOption.value %></span>
+                                                </label>
+                                            </li>
+                                    <% if (index === 4 || (index + 1) === filterGroup.filters.length) { %>
+                                        </ul>
+                                    <% } %>
+                                    <% if (index >= 5 && (index + 1) === filterGroup.filters.length) { %>
+                                        </div>
+                                        <button type="button" class="filter__show-more js-show-more-filters">
+                                            <i class="fas fa-chevron-down"></i>
+                                            <span><%= languageHandler('products.show_more', current_locale) %></span>
+
+                                            <span class="hide"><%= languageHandler('products.show_less', current_locale) %></span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    <% } %>
+                                <% }) %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+
+                <div class="filter__buttons">
+                    <button type="submit" class="filter__button js-submit-filter"><%= languageHandler('products.filter', current_locale) %></button>
+                    <button type="reset" class="filter__button filter__button--reset"><%= languageHandler('products.reset_filter', current_locale) %></button>
+                </div>
+            <% } %>
+        </div>
+    </form>
+</div>

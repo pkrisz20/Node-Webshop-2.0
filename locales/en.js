@@ -129,6 +129,10 @@ const en = {
 		discount_expires_in: "Discount expires in:",
 		product_desc: "Description",
 		product_params: "Parameters",
+        price: "Price",
+        filter: "Filter",
+        reset_filter: "Reset",
+        show_more: "Show more",
 	},
 	orders: {
 		total_price: "Total",

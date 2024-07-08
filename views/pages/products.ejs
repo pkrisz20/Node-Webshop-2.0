@@ -2,6 +2,7 @@
 <html lang="<%= meta.lang %>">
     <%- include('../layout/head.ejs') %>
 
+    <link rel="preload" href="<%= getAssetPath('/css/plugins/jquery-ui.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/product-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 </head>
 
@@ -21,6 +22,8 @@
                 <% if (category_short_desc) { %>
                     <p class="list__shorts"><%= category_short_desc %></p>
                 <% } %>
+
+                <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
 
                 <section class="listpage products">
                     <% if (productsTotalCount > 0) { %>
@@ -57,7 +60,177 @@
         var locale = <%- JSON.stringify(current_locale) %>;
     </script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.ui.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
+    <script type="text/javascript">
+        function readProducts (clicked_page, reset_link) {
+            var reset_link = reset_link || false;
+            var pager_url = clicked_page.attr('href');
+            var data_wrapper = $('.js-product-list');
+            var prod_page = $('.js-product-page');
+            var base_url = prod_page.data('url');
+            var base_title = prod_page.data('category');
+            var visible_filter = $('.js-filter-form:visible');
+            var filter_inputs = $(':input', visible_filter);
+            var filter_data = filter_inputs.serializeArray();
+
+            // only get the list options
+            var prod_page_inputs = $('select', prod_page);
+            var base_options = prod_page_inputs.serializeArray();
+            var options = base_options;
+
+            $.each(filter_data, function(index, value) {
+                options.push(value);
+            });
+
+            options.push({
+                name: 'ajax',
+                value: '1'
+            });
+
+            $.ajax({
+                type: 'get',
+                url: (reset_link === false ? pager_url : base_url),
+                dataType: 'json',
+                data: options,
+                beforeSend: function (jqXHR) {
+                    data_wrapper.block();
+                    scrollTo('#products-list');
+                },
+                complete: function (jqXHR, textStatus) {
+                    data_wrapper.unblock();
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        window.history.pushState(base_options, base_title, this.url.replace('ajax=1', '').replace(/^&+|&+$/g, ''));
+                        data_wrapper.html(response.html);
+                        $('.js-total-products').text(response.products.total);
+                    } else {
+                        $.alert({
+                            useBootstrap: false,
+                            boxWidth: '400px',
+                            title: response.title,
+                            content: response.message || false,
+                        });
+                    }
+                }
+            });
+        }
+
+        $('body').on('change', '.js-filter-checkbox', function() {
+            handleFilterChange($(this));
+            $(this).closest('form.js-filter-form').trigger('submit');
+        });
+
+        function handleFilterChange (ev) {
+            var this_option = $(ev.target);
+            var this_option_value = this_option.val();
+            var other_option = $('[data-sync-id="' + this_sync + '"]');
+
+            if (this_option.is(':checkbox')) {
+                other_option.attr('checked', this_option.is(':checked')).prop('checked', this_option.is(':checked'));
+
+                if (this_option.is(':checked')) {
+                    var filter_id = this_option.attr('id');
+                    var filter_value = this_option.siblings('span')[0].childNodes[0].nodeValue.trim();
+                    addFilter(filter_value, filter_id);
+                }
+                else {
+                    $('[data-filter-id="' + this_option.attr('id') + '"]').parent().remove();
+                    if(!$('.currently-active__item').length) {
+                        $('.js-active-filters').addClass('hide');
+                    }
+                }
+            }
+            else {
+                other_option.val(this_option.val());
+            }
+        }
+
+        $('body').on('change', '.js-watch-option', function(ev) {
+            var this_option = $(this);
+            var clicked_page = $('.js-pager-wrapper a.selected');
+            readProducts(clicked_page, true);
+        });
+
+        $('body').on('click', '.js-pager-wrapper a', function(ev) {
+            ev.preventDefault();
+            var clicked_page = $(this);
+            readProducts(clicked_page);
+        });
+
+        $('body').on('submit', '.js-filter-form', function(ev) {
+            ev.preventDefault();
+            var this_option = $(this);
+            var clicked_page = $('.js-pager-wrapper a.selected');
+            readProducts(clicked_page, true);
+        });
+
+        $('.js-price-slider').slider({
+            range: true,
+            min: 1500,
+            max: 23250,
+            step: 10,
+            values: [1500, 23250],
+            slide: function(event, ui) {
+                var labelSelector = '.js-price-' + ((ui.handleIndex === 0) ? 'min' : 'max');
+                var textSelector = '.js-slider-label-' + ((ui.handleIndex === 0) ? 'min' : 'max');
+                $(labelSelector).val(ui.value);
+                $(textSelector).text(ui.value);
+            },
+            change: function(event, ui) {
+                $(this).closest('form.js-filter-form').trigger('submit');
+            }
+        });
+
+        $('body').on('change', '.js-price-min, .js-price-max', function (ev) {
+            var affected_form = $(this).closest('form');
+            var sliders = $('.js-price-slider', affected_form);
+            if (sliders.length > 0) {
+                var min_input = $('.js-price-min', affected_form);
+                var max_input = $('.js-price-max', affected_form);
+
+                sliders.each(function() {
+                    var options = $(this).slider( 'option' );
+                    var min = ~~parseInt(min_input.val());
+                    var max = ~~parseInt(max_input.val());
+                    if (min < options.min) {
+                        min = options.min;
+                        min_input.val(min);
+                    }
+                    if (max > options.max) {
+                        max = options.max;
+                        max_input.val(max);
+                    }
+                    $(this).slider('values', [min, max]);
+                });
+            }
+        });
+
+        $('body').on('reset', '.js-filter-form', function (ev) {
+            ev.preventDefault();
+            $(this)[0].reset();
+
+            var sliders = $('.js-price-slider');
+            if (sliders.length > 0) {
+                var options;
+                sliders.each(function() {
+                    options = $(this).slider('option');
+                    var this_form = $(this).closest('.js-filter-form');
+                    var this_min = $('.js-price-min', this_form);
+                    var this_max = $('.js-price-max', this_form);
+                    this_min.val(options.min);
+                    this_max.val(options.max);
+                    $(this).slider('values', [options.min, options.max]);
+                });
+            }
+            $('.js-filter-checkbox').prop('checked', false).attr('checked', false);
+
+            $(this).closest('form.js-filter-form').trigger('submit');
+
+            $('.js-active-filters').empty().addClass('hide');
+        });
+    </script>
 </body>
 </html>

@@ -129,6 +129,10 @@ const hu = {
         discount_expires_in: "Az akció lejár:",
         product_desc: "Leírás",
 		product_params: "Paraméterek",
+        price: "Ár",
+        filter: "Szűrés",
+        reset_filter: "Törlés",
+        show_more: "Mutass többet",
     },
     orders: {
         total_price: "Összeg",

@@ -129,6 +129,10 @@ const sr = {
 		discount_expires_in: "Akcija ističe za:",
         product_desc: "Opis",
 		product_params: "Parametri",
+        price: "Cena",
+        filter: "Filter",
+        reset_filter: "Ponošiti",
+        show_more: "Prikaži više",
     },
     orders: {
         total_price: "Ukupno",
