@@ -130,9 +130,11 @@ const en = {
 		product_desc: "Description",
 		product_params: "Parameters",
         price: "Price",
+        filters: "Filters",
         filter: "Filter",
         reset_filter: "Reset",
         show_more: "Show more",
+        show_less: "Show less",
 	},
 	orders: {
 		total_price: "Total",

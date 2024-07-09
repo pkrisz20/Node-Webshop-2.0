@@ -1,4 +1,9 @@
 .filter {
+    &-wrapper {
+        flex: 0 0 260px;
+        position: sticky;
+        top: 190px;
+    }
 
     &__top {
         color: $c-white;
@@ -12,18 +17,33 @@
         }
     }
 
-    &__sidebar {
-        position: relative;
-        z-index: 10;
+    &__sidebar-content {
+        max-height: calc(75vh - 200px);
+        overflow-y: auto;
+        @include scrollbars(2px, $c-a);
+    }
+
+    &__sidebar-title {
+        background-color: $c-dark3;
+        color: $c-white;
+        padding: 5px 0;
+        border-radius: 3px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 30px;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
     }
 
     &__group {
-        background-color: $c-white;
-        border-radius: 15px;
-        padding: 8px 15px;
+        background-color: $c-grayF3;
+        border-radius: 3px;
+        padding: 8px 10px;
+        color: $c-dark;
 
         &:not(:last-child) {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
     }
 
@@ -31,8 +51,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 10px 0;
-        min-height: 36px;
         user-select: none;
 
         &.js-trigger-filter {
@@ -44,18 +62,8 @@
                 grid-template-rows: 0fr;
                 transition: grid-template-rows .2s ease-out;
 
-                .filter__content--inner {
-                    min-height: 0;
-                    transition: visibility .2s;
-                    visibility: hidden;
-                }
-
                 .filter--open & {
                     grid-template-rows: 1fr;
-
-                    .filter__content--inner {
-                        visibility: visible;
-                    }
                 }
             }
         }
@@ -63,7 +71,7 @@
 
     &__icon {
         margin-left: 10px;
-        transition: color .2s;
+        transition: transform .2s ease;
         transform: translateY(-1px);
         line-height: 17px;
 
@@ -80,10 +88,13 @@
 
     &__title {
         font-size: 18px;
+        font-weight: 700;
         line-height: 30px;
     }
 
     &__content {
+        margin-top: 10px;
+
         &--inner {
             > *:last-child {
                 margin-bottom: 15px;
@@ -112,50 +123,31 @@
     }
 
     &__label {
+        cursor: pointer;
         position: relative;
         user-select: none;
         display: block;
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
 
         [type="checkbox"]:not(:checked),
         [type="checkbox"]:checked {
             ~ span {
                 font-size: 14px;
+                font-weight: 500;
                 line-height: 17px;
-                padding-left: 15px;
-
-                &:before, &:after {
-                    width: 16px;
-                    height: 16px;
-                    top: 0;
-                }
-
-                &:after {
-                    background-size: 9px;
-                }
+                padding-left: 8px;
+                vertical-align: top;
             }
         }
     }
 
     &__options {
         &--expandable {
-            display: grid;
-            grid-template-rows: 0fr;
             overflow: hidden;
-            transition: grid-template-rows .2s;
-
-            .filter__options {
-                min-height: 0;
-                transition: visibility .2s;
-                visibility: hidden;
-            }
-        }
-
-        &--expanded {
-            grid-template-rows: 1fr;
-
-            .filter__options {
-                visibility: visible;
-            }
         }
     }
 
@@ -195,26 +187,32 @@
 
     &__button {
         margin: 5px;
+        border-radius: 3px;
         font-weight: 700;
-        background-color: $c-white;
-        color: $c-dark;
-        width: 122px;
-        height: 44px;
+        transition: all .2s ease;
+        background-color: $c-theme;
+        color: $c-white;
+        padding: 12px 18px;
+        cursor: pointer;
 
-        @media #{ $min-1200 } {
-            color: $c-theme;
+        &:hover {
+            background-color: $c-light-green;
         }
 
         &--reset {
-            background-color: transparent;
-            color: $c-white;
-            border: 2px solid $c-white;
+            background-color: $c-dark-blue;
+            color: $c-a;
+
+            &:hover {
+                color: $c-white;
+                background-color: $c-black;
+            }
         }
     }
 }
 
 .ui-slider.ui-slider {
-    background-color: $c-black;
+    background-color: $c-9;
     border: none;
     border-radius: 2px;
     height: 3px;
@@ -226,9 +224,12 @@
 
     .ui-slider-range {
         border-radius: 0;
+        background-color: $c-dark;
     }
 
     .ui-slider-handle {
+        background-color: $c-dark;
+        border: none;
         border-radius: 100%;
         width: 16px;
         height: 16px;

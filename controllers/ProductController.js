@@ -297,7 +297,7 @@ const getAllProducts = async (req, res) => {
         var webshopFilters = [
             {
                 name: "Fajta",
-                open: false,
+                open: true,
                 filters: [
                     {
                         value: "Durok",
@@ -310,12 +310,28 @@ const getAllProducts = async (req, res) => {
                     {
                         value: "Mangalica",
                         id: 3,
-                    }
+                    },
+                    {
+                        value: "Valami",
+                        id: 4,
+                    },
+                    {
+                        value: "Cica",
+                        id: 5,
+                    },
+                    {
+                        value: "Macska",
+                        id: 6,
+                    },
+                    {
+                        value: "Kutya",
+                        id: 7,
+                    },
                 ]
             },
             {
                 name: "Meret",
-                open: true,
+                open: false,
                 filters: [
                     {
                         value: "Malac",

@@ -23,29 +23,31 @@
                     <p class="list__shorts"><%= category_short_desc %></p>
                 <% } %>
 
-                <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
+                <div class="list__data">
+                    <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
 
-                <section class="listpage products">
-                    <% if (productsTotalCount > 0) { %>
-                        <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                    <section class="listpage products">
+                        <% if (productsTotalCount > 0) { %>
+                            <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                        <% } %>
+
+                        <% if (products.length > 0) { %>
+                            <div class="listpage-container">
+                                <% products.forEach(product => { %>
+                                    <%- include("../components/product-card.ejs", { product: product }) %>
+                                <% }) %>
+                            </div>
+                        <% } else { %>
+                            <div class="system-info">
+                                <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_product_like_this', current_locale) %></strong>
+                            </div>
+                        <% } %>
+                    </section>
+
+                    <% if (pageCount > 1) { %>
+                        <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
                     <% } %>
-
-                    <% if (products.length > 0) { %>
-                        <div class="listpage-container">
-                            <% products.forEach(product => { %>
-                                <%- include("../components/product-card.ejs", { product: product }) %>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_product_like_this', current_locale) %></strong>
-                        </div>
-                    <% } %>
-                </section>
-
-                <% if (pageCount > 1) { %>
-                    <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
-                <% } %>
+                </div>
             </div>
         </main>
 
@@ -117,6 +119,23 @@
                 }
             });
         }
+
+        $('body').on('click', '.js-show-more-filters', function() {
+            var toggleFilterOptionsBtn = $(this);
+            var filterOptions = toggleFilterOptionsBtn.closest('.js-filter-box').find('.js-expandable');
+            filterOptions.slideToggle().toggleClass('expanded');
+
+            var filterOptionsText = $(toggleFilterOptionsBtn).find('span');
+            var filterButtonIcons = $(toggleFilterOptionsBtn).find('.icon');
+            $(filterOptionsText).text(filterOptions.hasClass('expanded') ? filterOptionsText.data('hideText') : filterOptionsText.data('showText'));
+            filterButtonIcons.css('transform', filterOptions.hasClass('expanded') ? 'rotate(180deg)' : 'rotate(0)');
+        });
+
+        $('.js-trigger-filter').on('click', function() {
+            var targetBox = $(this).closest('.js-filter-box').find('.js-filter-options-list');
+            targetBox.slideToggle();
+            targetBox.closest('.js-filter-box').toggleClass('filter--open');
+        });
 
         $('body').on('change', '.js-filter-checkbox', function() {
             handleFilterChange($(this));

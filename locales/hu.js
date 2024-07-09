@@ -130,9 +130,11 @@ const hu = {
         product_desc: "Leírás",
 		product_params: "Paraméterek",
         price: "Ár",
+        filters: "Szűrők",
         filter: "Szűrés",
         reset_filter: "Törlés",
         show_more: "Mutass többet",
+        show_less: "Mutass kevesebbet",
     },
     orders: {
         total_price: "Összeg",

@@ -23,7 +23,15 @@
             margin: 0 0 60px;
         }
     }
+
+    &__data {
+        display: flex;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
     .listpage {
+        flex: 1 1 auto;
 
         &__total-count {
             color: $c-dark3;
@@ -40,6 +48,8 @@
         }
 
         &.products {
+            padding-top: 0;
+
             .listpage-container {
                 @include flexBox("center", "unset", 25px);
                 flex-direction: column;
@@ -50,15 +60,11 @@
                 }
 
                 @media #{ $min-540 } {
-                    @include gridBox("center", 2, 20px, 20px);
-                }
-
-                @media #{ $min-768 } {
-                    @include gridBox("center", 3, 20px, 30px);
+                    @include gridBox("center", 2, 15px, 25px);
                 }
 
                 @media #{ $min-1025 } {
-                    @include gridBox("center", 4, 20px, 30px);
+                    @include gridBox("center", 3, 20px, 30px);
                 }
             }
         }

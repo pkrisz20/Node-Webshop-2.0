@@ -130,9 +130,11 @@ const sr = {
         product_desc: "Opis",
 		product_params: "Parametri",
         price: "Cena",
+        filters: "Filteri",
         filter: "Filter",
         reset_filter: "Ponošiti",
         show_more: "Prikaži više",
+        show_less: "Prikaži manje",
     },
     orders: {
         total_price: "Ukupno",

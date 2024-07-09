@@ -1,8 +1,8 @@
-<div class="sidebar filter-wrapper js-filter-wrapper">
-    <form method="get" class="js-filter-form">
-        <div class="sidebar__content js-sidebar-content">
-            <div class="sidebar__title"><%= languageHandler('products.filters', current_locale) %></div>
+<aside class="filter-wrapper js-filter-wrapper">
+    <div class="filter__sidebar-title"><i class="fas fa-sliders-h"></i> <%= languageHandler('products.filters', current_locale) %></div>
 
+    <form method="get" class="js-filter-form">
+        <div class="filter__sidebar-content js-sidebar-content">
             <div class="filter__group filter--open">
                 <header class="filter__header">
                     <div class="filter__title"><%= languageHandler('products.price', current_locale) %></div>
@@ -31,13 +31,13 @@
                             <div class="filter__title"><%= filterGroup.name %></div>
                             <span class="filter__icon js-filter-icon"><i class="fas fa-chevron-down"></i></span>
                         </header>
-                        <div class="filter__content">
+                        <div class="filter__content js-filter-options-list" style="display: <%= filterGroup.open === true ? 'block' : 'none'%>;">
                             <div class="filter__content--inner">
                                 <% filterGroup.filters.forEach((filterOption, index) => { %>
                                     <% if (index === 0) { %>
                                         <ul class="filter__options">
                                     <% } else if (index === 5) { %>
-                                        <div class="filter__options--expandable js-expandable">
+                                        <div class="filter__options--expandable js-expandable" style="display: none;">
                                             <ul class="filter__options">
                                     <% } %>
                                             <li class="filter__row">
@@ -60,11 +60,14 @@
                                     <% if (index >= 5 && (index + 1) === filterGroup.filters.length) { %>
                                         </div>
                                         <button type="button" class="filter__show-more js-show-more-filters">
-                                            <i class="fas fa-chevron-down"></i>
-                                            <span><%= languageHandler('products.show_more', current_locale) %></span>
-
-                                            <span class="hide"><%= languageHandler('products.show_less', current_locale) %></span>
-                                            <i class="fas fa-chevron-down"></i>
+                                            <i class="icon fas fa-chevron-down"></i>
+                                            <span
+                                                data-show-text="<%= languageHandler('products.show_more', current_locale) %>"
+                                                data-hide-text="<%= languageHandler('products.show_less', current_locale) %>"
+                                            >
+                                                <%= languageHandler('products.show_more', current_locale) %>
+                                            </span>
+                                            <i class="icon fas fa-chevron-down"></i>
                                         </button>
                                     <% } %>
                                 <% }) %>
@@ -72,12 +75,11 @@
                         </div>
                     </div>
                 <% }) %>
-
-                <div class="filter__buttons">
-                    <button type="submit" class="filter__button js-submit-filter"><%= languageHandler('products.filter', current_locale) %></button>
-                    <button type="reset" class="filter__button filter__button--reset"><%= languageHandler('products.reset_filter', current_locale) %></button>
-                </div>
             <% } %>
         </div>
+        <div class="filter__buttons">
+            <button type="submit" class="filter__button js-submit-filter"><%= languageHandler('products.filter', current_locale) %></button>
+            <button type="reset" class="filter__button filter__button--reset"><%= languageHandler('products.reset_filter', current_locale) %></button>
+        </div>
     </form>
-</div>
+</aside>
