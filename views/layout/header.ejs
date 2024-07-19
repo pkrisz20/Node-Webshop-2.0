@@ -193,133 +193,6 @@
     </div>
   </div>
 
-  <div class="header-mobile-nav js-mobile-menu">
-    <div class="wrapper">
-      <div class="close-nav js-close-mobile-menu">
-        <i class="fas fa-times"></i>
-      </div>
-
-      <div class="langs">
-        <div class="langs-item current-lang"><%= current_locale %></div>
-        <% locales.forEach(lang => { %>
-          <% if (lang != current_locale) { %>
-            <a class="langs-item" href="<%= process.env.APP_URL %>/<%= lang %>" target="_self"><%= lang %></a>
-          <% } %>
-        <% }) %>
-      </div>
-
-      <div class="socials">
-        <% if (DB_CONFIG["facebook"]) { %>
-          <a target="_blank" href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media facebook" class="icon facebook"><i class="fab fa-facebook"></i></a>
-        <% } %>
-        <% if (DB_CONFIG["instagram"]) { %>
-          <a target="_blank" href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media instagram" class="icon instagram"><i class="fab fa-instagram"></i></a>
-        <% } %>
-        <% if (DB_CONFIG["tiktok"]) { %>
-          <a target="_blank" href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media tiktok" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
-        <% } %>
-      </div>
-
-      <div class="contacts">
-        <% if (DB_CONFIG["email"]) { %>
-          <a href="mailto:<%= DB_CONFIG["email"] %>" aria-label="Link to send a mail"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-        <% } %>
-        <% if (DB_CONFIG["phone_1"]) { %>
-          <a href="tel:<%= DB_CONFIG["phone_1"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-        <% } %>
-        <% if (DB_CONFIG["phone_2"]) { %>
-          <a href="tel:<%= DB_CONFIG["phone_2"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
-        <% } %>
-      </div>
-
-      <nav class="nav">
-        <ul>
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("nav.home", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>">
-                <%= languageHandler("nav.home", current_locale) %>
-            </a>
-          </li>
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("nav.about", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>"
-            >
-              <%= languageHandler("nav.about", current_locale) %>
-            </a>
-          </li>
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("general.products", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"
-            >
-              <%= languageHandler("general.products", current_locale) %>
-            </a>
-          </li>
-
-          <li class="js-toggle-container">
-            <button
-              type="button"
-              class="js-slide-toggle nav__categories-button"
-            >
-              <%= languageHandler("products.categories", current_locale) %>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-
-            <div class="nav__categories js-toggle-content" style="display: none;">
-              <ul>
-                <% webshopCategories.forEach(category => { %>
-                  <li>
-                    <a
-                      target="_self"
-                      title="<%= category.name %>"
-                      aria-label="<%= category.name %>"
-                      href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= category.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= category.id %>"
-                    >
-                      <%= category.name %>
-                    </a>
-                  </li>
-                <% }) %>
-              </ul>
-            </div>
-          </li>
-
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("nav.gallery", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"
-            >
-              <%= languageHandler("nav.gallery", current_locale) %>
-            </a>
-          </li>
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("nav.blog", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"
-            >
-              <%= languageHandler("nav.blog", current_locale) %>
-            </a>
-          </li>
-          <li>
-            <a
-              target="_self"
-              aria-label="<%= languageHandler("nav.contact", current_locale) %>"
-              href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %>"
-            >
-              <%= languageHandler("nav.contact", current_locale) %>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-
   <button
     type="button"
     class="upscroller js-upscroll"
@@ -329,3 +202,130 @@
     <i class="fas fa-chevron-up"></i>
   </button>
 </header>
+
+<div class="header-mobile-nav js-mobile-menu">
+  <div class="wrapper">
+    <div class="close-nav js-close-mobile-menu">
+      <i class="fas fa-times"></i>
+    </div>
+
+    <div class="langs">
+      <div class="langs-item current-lang"><%= current_locale %></div>
+      <% locales.forEach(lang => { %>
+        <% if (lang != current_locale) { %>
+          <a class="langs-item" href="<%= process.env.APP_URL %>/<%= lang %>" target="_self"><%= lang %></a>
+        <% } %>
+      <% }) %>
+    </div>
+
+    <div class="socials">
+      <% if (DB_CONFIG["facebook"]) { %>
+        <a target="_blank" href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media facebook" class="icon facebook"><i class="fab fa-facebook"></i></a>
+      <% } %>
+      <% if (DB_CONFIG["instagram"]) { %>
+        <a target="_blank" href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media instagram" class="icon instagram"><i class="fab fa-instagram"></i></a>
+      <% } %>
+      <% if (DB_CONFIG["tiktok"]) { %>
+        <a target="_blank" href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media tiktok" class="icon tiktok"><i class="fab fa-tiktok"></i></a>
+      <% } %>
+    </div>
+
+    <div class="contacts">
+      <% if (DB_CONFIG["email"]) { %>
+        <a href="mailto:<%= DB_CONFIG["email"] %>" aria-label="Link to send a mail"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+      <% } %>
+      <% if (DB_CONFIG["phone_1"]) { %>
+        <a href="tel:<%= DB_CONFIG["phone_1"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+      <% } %>
+      <% if (DB_CONFIG["phone_2"]) { %>
+        <a href="tel:<%= DB_CONFIG["phone_2"] %>" aria-label="Link to a phone call"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
+      <% } %>
+    </div>
+
+    <nav class="nav">
+      <ul>
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("nav.home", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>">
+              <%= languageHandler("nav.home", current_locale) %>
+          </a>
+        </li>
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("nav.about", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>"
+          >
+            <%= languageHandler("nav.about", current_locale) %>
+          </a>
+        </li>
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("general.products", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"
+          >
+            <%= languageHandler("general.products", current_locale) %>
+          </a>
+        </li>
+
+        <li class="js-toggle-container">
+          <button
+            type="button"
+            class="js-slide-toggle nav__categories-button"
+          >
+            <%= languageHandler("products.categories", current_locale) %>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+
+          <div class="nav__categories js-toggle-content" style="display: none;">
+            <ul>
+              <% webshopCategories.forEach(category => { %>
+                <li>
+                  <a
+                    target="_self"
+                    title="<%= category.name %>"
+                    aria-label="<%= category.name %>"
+                    href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= category.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= category.id %>"
+                  >
+                    <%= category.name %>
+                  </a>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("nav.gallery", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"
+          >
+            <%= languageHandler("nav.gallery", current_locale) %>
+          </a>
+        </li>
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("nav.blog", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"
+          >
+            <%= languageHandler("nav.blog", current_locale) %>
+          </a>
+        </li>
+        <li>
+          <a
+            target="_self"
+            aria-label="<%= languageHandler("nav.contact", current_locale) %>"
+            href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %>"
+          >
+            <%= languageHandler("nav.contact", current_locale) %>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

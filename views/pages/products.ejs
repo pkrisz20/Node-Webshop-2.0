@@ -7,6 +7,7 @@
 </head>
 
 <body>
+    <div class="site-overlay"></div>
     <div class="site-wrap">
         <%- include('../layout/header.ejs') %>
 
@@ -27,6 +28,11 @@
                     <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
 
                     <section class="listpage products">
+                        <button type="button" class="filter__trigger js-open-filters-sidebar">
+                            <i class="fas fa-sliders-h"></i>
+                            <%= languageHandler('products.filters', current_locale) %>
+                        </button>
+
                         <% if (productsTotalCount > 0) { %>
                             <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
                         <% } %>
@@ -140,6 +146,16 @@
         $('body').on('change', '.js-filter-checkbox', function() {
             handleFilterChange($(this));
             $(this).closest('form.js-filter-form').trigger('submit');
+        });
+
+        $('body').on('click', '.js-open-filters-sidebar', function () {
+            $('.js-filter-wrapper').addClass('filter-wrapper--opened');
+            $('body .site-overlay').css({ visibility: 'visible', opacity: '1' });
+        });
+
+        $('body').on('click', '.js-filters-sidebar-close', function () {
+            $('.js-filter-wrapper').removeClass('filter-wrapper--opened');
+            $('body .site-overlay').css({ visibility: 'hidden', opacity: '1' });
         });
 
         function handleFilterChange (ev) {

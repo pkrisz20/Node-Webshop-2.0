@@ -63,8 +63,12 @@
                     @include gridBox("center", 2, 15px, 25px);
                 }
 
-                @media #{ $min-1025 } {
-                    @include gridBox("center", 3, 20px, 30px);
+                @media #{ $min-768 } {
+                    @include gridBox("center", 3, 15px, 20px);
+                }
+
+                @media #{ $min-1200 } {
+                    gap: 30px 20px;
                 }
             }
         }

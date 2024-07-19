@@ -155,6 +155,13 @@ $(function() {
         });
     }
 
+    $('body').on('click', '.site-overlay', function () {
+        $('.js-filter-wrapper').removeClass('filter-wrapper--opened');
+        $('.js-mobile-menu').removeClass('nav-opened');
+        $(".js-cart").removeClass('open');
+        $('body .site-overlay').css({ visibility: 'hidden', opacity: '0' });
+    });
+
     // Is there any recaptcha validation?
     if (typeof grecaptcha !== 'undefined' && $('.js-form-validate').find('.g-recaptcha').length > 0) {
 
@@ -206,10 +213,12 @@ $(function() {
 
     $('body').on('click', '.js-hamburger-menu', function () {
         $('.js-mobile-menu').addClass('nav-opened');
+        $('body .site-overlay').css({ visibility: 'visible', opacity: '1' });
     });
 
     $('body').on('click', '.js-close-mobile-menu', function () {
         $('.js-mobile-menu').removeClass('nav-opened');
+        $('body .site-overlay').css({ visibility: 'hidden', opacity: '0' });
     });
 
     if ($('.js-countup-section').length > 0) {
@@ -611,10 +620,12 @@ $('body').on("mouseleave", ".js-dropdown-opener", function () {
 // Cart toggle
 $('body').on("click", ".js-cart-btn", function () {
     $(".js-cart").addClass('open');
+    $('body .site-overlay').css({ visibility: 'visible', opacity: '1' });
 });
 
 $('body').on("click", ".js-cart-close", function () {
     $(".js-cart").removeClass('open');
+    $('body .site-overlay').css({ visibility: 'hidden', opacity: '0' });
 });
 
 $('body').on("click", ".js-add-to-cart", function (event) {
