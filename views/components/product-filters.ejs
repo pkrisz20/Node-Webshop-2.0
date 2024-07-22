@@ -11,8 +11,8 @@
                 <div class="filter__content">
                     <div class="filter__content--inner">
                         <div class="filter__slider-inputs">
-                            <input type="text" name="price[min]" value="1500" class="filter__slider-input js-price-min js-number-only" placeholder="Ettol" />
-                            <input type="text" name="price[max]" value="22530" class="filter__slider-input filter__slider-input--right js-price-max js-number-only" placeholder="Eddig" />
+                            <input type="text" name="price[min]" value="1500" class="filter__slider-input js-price-min js-enable-only-number" placeholder="<%= languageHandler('products.filter_from', current_locale) %>" />
+                            <input type="text" name="price[max]" value="22530" class="filter__slider-input filter__slider-input--right js-price-max js-enable-only-number" placeholder="<%= languageHandler('products.filter_to', current_locale) %>" />
                         </div>
                         <div class="filter__slider js-price-slider"></div>
                         <div class="filter__labels">

@@ -35,15 +35,31 @@
 
         &__total-count {
             color: $c-dark3;
-            font-size: 22px;
+            font-size: 18px;
             text-transform: uppercase;
             display: block;
+        }
+
+        &__options {
+            @include flexBox('space-between', 'flex-start', 15px);
+            flex-direction: column;
             margin-bottom: 14px;
-            text-align: center;
 
             @media #{ $min-768 } {
                 margin-bottom: 20px;
-                text-align: left;
+            }
+
+            @media #{ $min-540 } {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            select {
+                padding: 8px 12px;
+                font-size: 15px;
+                color: $c-dark3;
+                font-weight: 500;
+                border: 1px solid $c-grayD8;
             }
         }
 

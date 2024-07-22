@@ -9,6 +9,8 @@ const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPa
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 const { getSlug } = require("../helpers/admin/slugHelper");
+const validLimitValues = [12, 24, 36];
+var validSortOptions = ['on_sale', 'asc_price', 'desc_price', 'alphabetical_asc', 'alphabetical_desc', 'by_date_released'];
 
 const getProductDetails = async (req, res) => {
     // Cart converting stuffs
@@ -350,6 +352,8 @@ const getAllProducts = async (req, res) => {
         ];
 
         return res.render("pages/products", {
+            validLimitValues: validLimitValues,
+            validSortOptions: validSortOptions,
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
             articleLink: languageHandler('slugs.products', lang) ?? null,
@@ -528,6 +532,8 @@ const getCategoryProducts = async (req, res) => {
             }
 
             return res.render("pages/products", {
+                validLimitValues: validLimitValues,
+                validSortOptions: validSortOptions,
                 pageCount: parseInt(pageCount ?? 0),
                 currentPage: parseInt(page ?? 0),
                 articleLink: currentCategorySlug + "/" + languageHandler('slugs.products', lang) + "/" + categoryId,
@@ -741,7 +747,7 @@ const wishlistHandler = async (req, res) => {
     }
 };
 
-const getWishlistListPage = async ( req, res, next ) => {
+const getWishlistListPage = async (req, res, next) => {
     // Cart converting stuffs
     var cart = {
         items: req.session.cart ?? [],
@@ -853,4 +859,8 @@ const getWishlistListPage = async ( req, res, next ) => {
     }
 };
 
-module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler, getWishlistListPage };
+const ajaxProductFilter = async (req, res, next) => {
+    const { query } = req.body;
+};
+
+module.exports = { getProductDetails, getAllProducts, handleProductComment, getCategoryProducts, ajaxLoadMoreComments, wishlistHandler, getWishlistListPage, ajaxProductFilter };

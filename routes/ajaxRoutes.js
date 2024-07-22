@@ -12,6 +12,9 @@ const BlogsController = require("../controllers/BlogsController");
 const SearchController = require("../controllers/SearchController");
 const ContactController = require("../controllers/ContactController");
 
+ajaxRouter.route("/products/search")
+    .get(ProductController.ajaxProductFilter);
+
 ajaxRouter.route("/cart/delete")
     .post(CartController.deleteCartItem);
 

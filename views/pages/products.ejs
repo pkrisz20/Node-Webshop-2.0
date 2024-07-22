@@ -33,9 +33,26 @@
                             <%= languageHandler('products.filters', current_locale) %>
                         </button>
 
-                        <% if (productsTotalCount > 0) { %>
-                            <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
-                        <% } %>
+                        <div class="listpage__options">
+                            <% if (productsTotalCount > 0) { %>
+                                <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                            <% } %>
+
+                            <div class="listpage__options-dropdowns">
+                                <select>
+                                    <option selected="selected" value="deafult"><%= languageHandler('products_sorting.default', current_locale) %></option>
+                                    <% validSortOptions.forEach(option => { %>
+                                        <option value="<%= option %>"><%= languageHandler('products_sorting.' + option, current_locale) %></option>
+                                    <% }) %>
+                                </select>
+                                <select>
+                                    <% validLimitValues.forEach(limitValue => { %>
+                                        <option value="<%= limitValue %>"><%= limitValue %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <% if (products.length > 0) { %>
                             <div class="listpage-container">
@@ -70,10 +87,10 @@
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.ui.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.ui.touch-punch.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
     <script type="text/javascript">
-        function readProducts (clicked_page, reset_link) {
-            var reset_link = reset_link || false;
+        function readProducts (clicked_page, reset_link = false) {
             var pager_url = clicked_page.attr('href');
             var data_wrapper = $('.js-product-list');
             var prod_page = $('.js-product-page');

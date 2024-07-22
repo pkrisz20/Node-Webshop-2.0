@@ -76,8 +76,9 @@
     }
 
     &__sidebar-title {
-        background-color: $c-dark3;
-        color: $c-white;
+        display: inline-block;
+        background-color: transparent;
+        color: $c-dark;
         padding: 5px 0;
         border-radius: 3px;
         text-align: center;
@@ -87,10 +88,8 @@
         letter-spacing: 1px;
         margin-bottom: 15px;
 
-        @media #{ $max-1199 } {
-            display: inline-block;
-            background-color: transparent;
-            color: $c-dark;
+        @media #{ $min-1200 } {
+            display: none;
         }
     }
 
@@ -294,5 +293,6 @@
         height: 16px;
         top: -7px;
         margin-left: -8px;
+        cursor: pointer;
     }
 }
