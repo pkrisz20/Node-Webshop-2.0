@@ -11,15 +11,15 @@
                 <div class="filter__content">
                     <div class="filter__content--inner">
                         <div class="filter__slider-inputs">
-                            <input type="text" name="price[min]" value="1500" class="filter__slider-input js-price-min js-enable-only-number" placeholder="<%= languageHandler('products.filter_from', current_locale) %>" />
-                            <input type="text" name="price[max]" value="22530" class="filter__slider-input filter__slider-input--right js-price-max js-enable-only-number" placeholder="<%= languageHandler('products.filter_to', current_locale) %>" />
+                            <input type="text" name="price[min]" value="<%= min_price %>" class="filter__slider-input js-price-min js-enable-only-number" placeholder="<%= languageHandler('products.filter_from', current_locale) %>" />
+                            <input type="text" name="price[max]" value="<%= max_price %>" class="filter__slider-input filter__slider-input--right js-price-max js-enable-only-number" placeholder="<%= languageHandler('products.filter_to', current_locale) %>" />
                         </div>
                         <div class="filter__slider js-price-slider"></div>
                         <div class="filter__labels">
                             <span class="filter__labels-label"><%= languageHandler('products.price', current_locale) %></span>
-                            <span class="js-slider-label-min">1500</span> RSD
+                            <span class="js-slider-label-min"><%= min_price %></span> RSD
                              -
-                            <span class="js-slider-label-max">22530</span> RSD
+                            <span class="js-slider-label-max"><%= max_price %></span> RSD
                         </div>
                     </div>
                 </div>

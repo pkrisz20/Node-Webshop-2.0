@@ -24,7 +24,7 @@
                     <p class="list__shorts"><%= category_short_desc %></p>
                 <% } %>
 
-                <div class="list__data">
+                <div class="list__data" data-anchor="products-list">
                     <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
 
                     <section class="listpage products">
@@ -35,17 +35,17 @@
 
                         <div class="listpage__options">
                             <% if (productsTotalCount > 0) { %>
-                                <strong class="listpage__total-count"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
+                                <strong class="listpage__total-count js-total-products"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
                             <% } %>
 
                             <div class="listpage__options-dropdowns">
-                                <select>
+                                <select class="js-watch-option">
                                     <option selected="selected" value="deafult"><%= languageHandler('products_sorting.default', current_locale) %></option>
                                     <% validSortOptions.forEach(option => { %>
                                         <option value="<%= option %>"><%= languageHandler('products_sorting.' + option, current_locale) %></option>
                                     <% }) %>
                                 </select>
-                                <select>
+                                <select class="js-watch-option">
                                     <% validLimitValues.forEach(limitValue => { %>
                                         <option value="<%= limitValue %>"><%= limitValue %></option>
                                     <% }) %>
@@ -55,7 +55,7 @@
 
 
                         <% if (products.length > 0) { %>
-                            <div class="listpage-container">
+                            <div class="listpage-container js-product-list">
                                 <% products.forEach(product => { %>
                                     <%- include("../components/product-card.ejs", { product: product }) %>
                                 <% }) %>
@@ -65,11 +65,11 @@
                                 <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_product_like_this', current_locale) %></strong>
                             </div>
                         <% } %>
-                    </section>
 
-                    <% if (pageCount > 1) { %>
-                        <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
-                    <% } %>
+                        <% if (pageCount > 1) { %>
+                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink, customPaginationClass: 'js-pagination-wrapper' }) %>
+                        <% } %>
+                    </section>
                 </div>
             </div>
         </main>
@@ -88,9 +88,27 @@
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.ui.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.ui.touch-punch.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/block.ui.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
     <script type="text/javascript">
-        function readProducts (clicked_page, reset_link = false) {
+        const blockUIOptions = {
+            message: null,
+            css: {
+                padding: 0,
+                margin: 0,
+                color: '#000',
+                border: 'none',
+                backgroundColor: '#c1d2cf',
+                cursor: 'wait'
+            },
+            overlayCSS: {
+                backgroundColor: '#c1d2cf',
+                opacity: 0.6,
+                cursor: 'wait'
+            },
+        };
+
+        function loadProducts (clicked_page, reset_link = false) {
             var pager_url = clicked_page.attr('href');
             var data_wrapper = $('.js-product-list');
             var prod_page = $('.js-product-page');
@@ -99,8 +117,6 @@
             var visible_filter = $('.js-filter-form:visible');
             var filter_inputs = $(':input', visible_filter);
             var filter_data = filter_inputs.serializeArray();
-
-            // only get the list options
             var prod_page_inputs = $('select', prod_page);
             var base_options = prod_page_inputs.serializeArray();
             var options = base_options;
@@ -120,18 +136,19 @@
                 dataType: 'json',
                 data: options,
                 beforeSend: function (jqXHR) {
-                    data_wrapper.block();
-                    scrollTo('#products-list');
+                    data_wrapper.block(blockUIOptions);
+                    scrollToAnchor('#products-list');
                 },
                 complete: function (jqXHR, textStatus) {
-                    data_wrapper.unblock();
+                    data_wrapper.unblock(blockUIOptions);
                 },
                 success: function (response) {
                     if (response.status === 'success') {
                         window.history.pushState(base_options, base_title, this.url.replace('ajax=1', '').replace(/^&+|&+$/g, ''));
-                        data_wrapper.html(response.html);
-                        $('.js-total-products').text(response.products.total);
-                    } else {
+                        // data_wrapper.html(response.products.html);
+                        // $('.js-total-products').text(response.products.total);
+                    }
+                    else {
                         $.alert({
                             useBootstrap: false,
                             boxWidth: '400px',
@@ -142,38 +159,6 @@
                 }
             });
         }
-
-        $('body').on('click', '.js-show-more-filters', function() {
-            var toggleFilterOptionsBtn = $(this);
-            var filterOptions = toggleFilterOptionsBtn.closest('.js-filter-box').find('.js-expandable');
-            filterOptions.slideToggle().toggleClass('expanded');
-
-            var filterOptionsText = $(toggleFilterOptionsBtn).find('span');
-            var filterButtonIcons = $(toggleFilterOptionsBtn).find('.icon');
-            $(filterOptionsText).text(filterOptions.hasClass('expanded') ? filterOptionsText.data('hideText') : filterOptionsText.data('showText'));
-            filterButtonIcons.css('transform', filterOptions.hasClass('expanded') ? 'rotate(180deg)' : 'rotate(0)');
-        });
-
-        $('.js-trigger-filter').on('click', function() {
-            var targetBox = $(this).closest('.js-filter-box').find('.js-filter-options-list');
-            targetBox.slideToggle();
-            targetBox.closest('.js-filter-box').toggleClass('filter--open');
-        });
-
-        $('body').on('change', '.js-filter-checkbox', function() {
-            handleFilterChange($(this));
-            $(this).closest('form.js-filter-form').trigger('submit');
-        });
-
-        $('body').on('click', '.js-open-filters-sidebar', function () {
-            $('.js-filter-wrapper').addClass('filter-wrapper--opened');
-            $('body .site-overlay').css({ visibility: 'visible', opacity: '1' });
-        });
-
-        $('body').on('click', '.js-filters-sidebar-close', function () {
-            $('.js-filter-wrapper').removeClass('filter-wrapper--opened');
-            $('body .site-overlay').css({ visibility: 'hidden', opacity: '1' });
-        });
 
         function handleFilterChange (ev) {
             var this_option = $(ev.target);
@@ -186,13 +171,9 @@
                 if (this_option.is(':checked')) {
                     var filter_id = this_option.attr('id');
                     var filter_value = this_option.siblings('span')[0].childNodes[0].nodeValue.trim();
-                    addFilter(filter_value, filter_id);
                 }
                 else {
                     $('[data-filter-id="' + this_option.attr('id') + '"]').parent().remove();
-                    if(!$('.currently-active__item').length) {
-                        $('.js-active-filters').addClass('hide');
-                    }
                 }
             }
             else {
@@ -202,21 +183,21 @@
 
         $('body').on('change', '.js-watch-option', function(ev) {
             var this_option = $(this);
-            var clicked_page = $('.js-pager-wrapper a.selected');
-            readProducts(clicked_page, true);
+            var clicked_page = $('.js-pagination-wrapper li.active a');
+            loadProducts(clicked_page, true);
         });
 
-        $('body').on('click', '.js-pager-wrapper a', function(ev) {
+        $('body').on('click', '.js-pagination-wrapper li.active a', function(ev) {
             ev.preventDefault();
             var clicked_page = $(this);
-            readProducts(clicked_page);
+            loadProducts(clicked_page);
         });
 
         $('body').on('submit', '.js-filter-form', function(ev) {
             ev.preventDefault();
             var this_option = $(this);
-            var clicked_page = $('.js-pager-wrapper a.selected');
-            readProducts(clicked_page, true);
+            var clicked_page = $('.js-pagination-wrapper li.active a');
+            loadProducts(clicked_page, true);
         });
 
         $('.js-price-slider').slider({
@@ -260,6 +241,38 @@
             }
         });
 
+        $('body').on('click', '.js-show-more-filters', function() {
+            var toggleFilterOptionsBtn = $(this);
+            var filterOptions = toggleFilterOptionsBtn.closest('.js-filter-box').find('.js-expandable');
+            filterOptions.slideToggle().toggleClass('expanded');
+
+            var filterOptionsText = $(toggleFilterOptionsBtn).find('span');
+            var filterButtonIcons = $(toggleFilterOptionsBtn).find('.icon');
+            $(filterOptionsText).text(filterOptions.hasClass('expanded') ? filterOptionsText.data('hideText') : filterOptionsText.data('showText'));
+            filterButtonIcons.css('transform', filterOptions.hasClass('expanded') ? 'rotate(180deg)' : 'rotate(0)');
+        });
+
+        $('.js-trigger-filter').on('click', function() {
+            var targetBox = $(this).closest('.js-filter-box').find('.js-filter-options-list');
+            targetBox.slideToggle();
+            targetBox.closest('.js-filter-box').toggleClass('filter--open');
+        });
+
+        $('body').on('change', '.js-filter-checkbox', function() {
+            handleFilterChange($(this));
+            $(this).closest('form.js-filter-form').trigger('submit');
+        });
+
+        $('body').on('click', '.js-open-filters-sidebar', function () {
+            $('.js-filter-wrapper').addClass('filter-wrapper--opened');
+            $('body .site-overlay').css({ visibility: 'visible', opacity: '1' });
+        });
+
+        $('body').on('click', '.js-filters-sidebar-close', function () {
+            $('.js-filter-wrapper').removeClass('filter-wrapper--opened');
+            $('body .site-overlay').css({ visibility: 'hidden', opacity: '1' });
+        });
+
         $('body').on('reset', '.js-filter-form', function (ev) {
             ev.preventDefault();
             $(this)[0].reset();
@@ -277,11 +290,9 @@
                     $(this).slider('values', [options.min, options.max]);
                 });
             }
+
             $('.js-filter-checkbox').prop('checked', false).attr('checked', false);
-
             $(this).closest('form.js-filter-form').trigger('submit');
-
-            $('.js-active-filters').empty().addClass('hide');
         });
     </script>
 </body>

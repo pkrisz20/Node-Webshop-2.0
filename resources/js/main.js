@@ -184,7 +184,7 @@ $(function() {
 
     $(window).on('load', function() {
         setTimeout(function () {
-            scrollTo(location.hash);
+            window.scrollToAnchor(location.hash);
         }, 200);
     });
 
@@ -337,7 +337,7 @@ $(function() {
         $('body .js-search-input').val().length > 0 && $('body .js-search-input').val('');
     }
 
-    function scrollTo (pathname, direct, event) {
+    window.scrollToAnchor = function (pathname, direct, event) {
         var direct = direct || false;
         var reg = /#/;
         event = event || false;

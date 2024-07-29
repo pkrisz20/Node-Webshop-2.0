@@ -10,7 +10,7 @@ const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 const { getSlug } = require("../helpers/admin/slugHelper");
 const validLimitValues = [12, 24, 36];
-var validSortOptions = ['on_sale', 'asc_price', 'desc_price', 'alphabetical_asc', 'alphabetical_desc', 'by_date_released'];
+const validSortOptions = ['on_sale', 'asc_price', 'desc_price', 'alphabetical_asc', 'alphabetical_desc', 'by_date_released'];
 
 const getProductDetails = async (req, res) => {
     // Cart converting stuffs
@@ -250,6 +250,9 @@ const getAllProducts = async (req, res) => {
     };
 
     let sqlQuery = "SELECT id, name, slug, image_thumbnail, short_description, price, discount_value, discount_end_date, is_new, is_available, is_delivered, max_order_count FROM products WHERE is_active = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+    let selectPrices = "SELECT MIN(price) as min_price, MAX(price) as max_price FROM products WHERE is_active = ?";
+    let min_price = 0;
+    let max_price = 0;
 
     let pageOffset = (page - 1) * parseInt(process.env.PAGINATION);
 
@@ -294,6 +297,10 @@ const getAllProducts = async (req, res) => {
                 pageCount = parseInt(elementsCount[0].each_article_count / parseInt(process.env.PAGINATION));
                 pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
             }
+
+            const prices  = await DoDatabaseQuery(selectPrices, [1]);
+            min_price = prices[0].min_price;
+            max_price = prices[0].max_price;
         }
 
         var webshopFilters = [
@@ -354,6 +361,8 @@ const getAllProducts = async (req, res) => {
         return res.render("pages/products", {
             validLimitValues: validLimitValues,
             validSortOptions: validSortOptions,
+            min_price: min_price ?? 0,
+            max_price: max_price ?? 0,
             pageCount: parseInt(pageCount ?? 0),
             currentPage: parseInt(page ?? 0),
             articleLink: languageHandler('slugs.products', lang) ?? null,
