@@ -4,7 +4,7 @@ const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText, escapeHtml } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const formatDateByLang = require('../helpers/formatDateByLocale');
+const dateTimeHelper = require('../helpers/dateTimeHelper');
 const errorHandler = require('../middleware/errorHandler');
 const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
 const metaDefault = require('../config/meta');
@@ -64,7 +64,7 @@ const getBlogDetails = async (req, res) => {
                 thumb_image: imagePathConverter(data[0].image_thumbnail, "blogs"),
                 images: imagePathConverter(JSON.parse(data[0].images), "blogs") ?? [],
                 isAllowed: Boolean(data[0].comments_allowed),
-                date: formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
+                date: dateTimeHelper.formatDateByLang(data[0].date, lang ?? process.env.FALLBACK_LANG).toLocaleLowerCase()
             }
 
             var metas = {
@@ -104,7 +104,7 @@ const getBlogDetails = async (req, res) => {
             newestBlogsArray = newestBlogsArray.map(item => {
                 return {
                     ...item,
-                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    fullDate: dateTimeHelper.formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
                 };
             });
@@ -257,7 +257,7 @@ const getAllBlogs = async (req, res) => {
             result = result.map(item => {
                 return {
                     ...item,
-                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    fullDate: dateTimeHelper.formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
                     shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                 };

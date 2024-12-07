@@ -5,7 +5,7 @@ const { numberWithCommas, setMomentLocale, capitalizeFirstLetter } = require("..
 const languageHandler = require("../helpers/languageHandler");
 const moment = require("moment");
 const errorHandler = require('../middleware/errorHandler');
-const formatDateByLang = require("../helpers/formatDateByLocale");
+const dateTimeHelper = require("../helpers/dateTimeHelper");
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 const { getSlug } = require("../helpers/admin/slugHelper");
@@ -142,7 +142,7 @@ const handleSearch = async (req, res) => {
             blogsFound.results = blogsFound.results.map(item => {
                 return {
                     ...item,
-                    fullDate: formatDateByLang(item.fullDate, lang),
+                    fullDate: dateTimeHelper.formatDateByLang(item.fullDate, lang),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow())
                 };
             });
@@ -175,7 +175,7 @@ const handleSearch = async (req, res) => {
                     name: getValueByLanguage(element.gallery_name, lang),
                     slug: getSlug(element.slug, lang),
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries") ?? '',
-                    date: formatDateByLang(element.gallery_date, lang),
+                    date: dateTimeHelper.formatDateByLang(element.gallery_date, lang),
                 }
 
                 galleryFound.results.push(tempObject);

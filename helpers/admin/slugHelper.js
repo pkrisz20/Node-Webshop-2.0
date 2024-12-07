@@ -3,7 +3,7 @@ const slugify = require('slugify');
 
 function generateUniqueSlug (titlesObject) {
 
-    if ( typeof titlesObject !== 'object' ) return false;
+    if (typeof titlesObject !== 'object') return false;
 
     for (const item in titlesObject) {
         titlesObject[item] = escapeHtml(titlesObject[item]);

@@ -1,4 +1,4 @@
-function imagePathConverter ( images, path = "products" ) {
+function imagePathConverter (images, path = "products") {
 
     if (!images) {
         return null;

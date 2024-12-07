@@ -7,7 +7,7 @@ const gdprCookies = require('../config/gdpr');
 const errorHandler = require('../middleware/errorHandler');
 const { setMomentLocale, capitalizeFirstLetter, numberWithCommas, limitText } = require("../helpers/globalFunctions");
 const languageHandler = require("../helpers/languageHandler");
-const formatDateByLang = require("../helpers/formatDateByLocale");
+const dateTimeHelper = require("../helpers/dateTimeHelper");
 const { getSlug } = require("../helpers/admin/slugHelper");
 
 const getData = async (req, res) => {
@@ -114,7 +114,7 @@ const getData = async (req, res) => {
             blogs = blogs.map(item => {
                 return {
                     ...item,
-                    fullDate: formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
+                    fullDate: dateTimeHelper.formatDateByLang(item.fullDate, lang ?? process.env.FALLBACK_LANG),
                     relativeDate: capitalizeFirstLetter(moment(item.fullDate, "YYYY-MM-DD").fromNow()),
                     shortDescription: item.shortDescription ? limitText(item.shortDescription) : null
                 };

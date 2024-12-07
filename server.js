@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const session = require("express-session");
-const FileStore = require('session-file-store')(session);
 const fileStoreOptions = require("./config/session-config");
 const csrfProtection = require('csurf');
 const cron = require("node-cron");
@@ -38,18 +37,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Session
-app.use(session({
-    store: new FileStore(fileStoreOptions),
-    secret: process.env.SESSION_SECRET,
-    key: "website_session",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        secure: process.env.APP_DEBUG === 'false',
-    }
-}));
+app.use(session(fileStoreOptions));
 
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));

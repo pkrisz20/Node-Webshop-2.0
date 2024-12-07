@@ -2,7 +2,7 @@ const DoDatabaseQuery = require("../helpers/databaseQueryHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const { setMomentLocale, numberWithCommas, limitText } = require("../helpers/globalFunctions");
-const formatDateByLang = require("../helpers/formatDateByLocale");
+const dateTimeHelper = require("../helpers/dateTimeHelper");
 const languageHandler = require("../helpers/languageHandler");
 const errorHandler = require('../middleware/errorHandler');
 const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPages");
@@ -64,7 +64,7 @@ const getAllGallery = async (req, res) => {
                     name: getValueByLanguage(element.gallery_name, lang),
                     slug: getSlug(element.slug, lang),
                     thumbnailImage: imagePathConverter(element.gallery_thumbnail, "galleries"),
-                    date: formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
+                    date: dateTimeHelper.formatDateByLang(element.gallery_date, lang ?? process.env.FALLBACK_LANG),
                 }
 
                 result.push(tempObject);
@@ -157,7 +157,7 @@ const getGalleryDetails = async (req, res) => {
                 galleryName: getValueByLanguage(data[0].gallery_name, lang),
                 description: getValueByLanguage(data[0].description, lang),
                 galleryImages: imagePathConverter(JSON.parse(data[0].gallery_images), "galleries"),
-                date: formatDateByLang(data[0].gallery_date, lang)
+                date: dateTimeHelper.formatDateByLang(data[0].gallery_date, lang)
             }
         }
 
@@ -183,7 +183,7 @@ const getGalleryDetails = async (req, res) => {
                     name: getValueByLanguage(item.gallery_name, lang),
                     slug: getSlug(item.slug, lang) + `/${ item.id }`,
                     thumbnailImage: imagePathConverter(item.gallery_thumbnail, "galleries"),
-                    date: formatDateByLang(item.gallery_date, lang),
+                    date: dateTimeHelper.formatDateByLang(item.gallery_date, lang),
                 }
 
                 relatedGalleries.push(tempObject);

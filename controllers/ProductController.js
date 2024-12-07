@@ -298,7 +298,7 @@ const getAllProducts = async (req, res) => {
                 pageCount = leftOver > 0 ? pageCount + 1 : pageCount;
             }
 
-            const prices  = await DoDatabaseQuery(selectPrices, [1]);
+            const prices = await DoDatabaseQuery(selectPrices, [1]);
             min_price = prices[0].min_price;
             max_price = prices[0].max_price;
         }
