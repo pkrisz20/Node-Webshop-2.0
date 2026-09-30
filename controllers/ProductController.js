@@ -9,6 +9,9 @@ const { showNotFoundPage, showBadRequestPage } = require("../helpers/showErrorPa
 const metaDefault = require('../config/meta');
 const gdprCookies = require('../config/gdpr');
 const { getSlug } = require("../helpers/admin/slugHelper");
+const Product = require('../models/Product');
+const WebshopCategory = require("../models/WebshopCategory");
+const ProductComment = require("../models/ProductComment");
 const validLimitValues = [12, 24, 36];
 const validSortOptions = ['on_sale', 'asc_price', 'desc_price', 'alphabetical_asc', 'alphabetical_desc', 'by_date_released'];
 
@@ -44,7 +47,49 @@ const getProductDetails = async (req, res) => {
     const sqlQuery = "SELECT products.id, products.slug, products.name, products.description, products.short_description, products.images, products.image_thumbnail, products.price, products.discount_value, products.discount_end_date, products.is_available, products.is_delivered, products.max_order_count, products.comments_allowed, products.category_id, categories.slug AS 'category_slug', categories.name AS 'category_name', AVG(COALESCE(product_comments.rating, 0)) AS 'average_rating', COUNT(product_comments.rating) AS 'all_ratings_count' FROM products INNER JOIN categories ON products.category_id = categories.id LEFT JOIN product_comments ON products.id = product_comments.product_id WHERE products.is_active = ? AND products.id = ?";
 
     try {
-        const data = await DoDatabaseQuery(sqlQuery, [1, productId]);
+        // const data = await DoDatabaseQuery(sqlQuery, [1, productId]);
+
+        const data = await Product.findByPk({
+            attributes: [
+                'id',
+                'slug',
+                'name',
+                'description',
+                'short_description',
+                'images',
+                'image_thumbnail',
+                'price',
+                'discount_value',
+                'discount_end_date',
+                'is_available',
+                'is_delivered',
+                'max_order_count',
+                'comments_allowed',
+                'category_id',
+                [literal("categories.slug"), "category_slug"],
+                [literal("categories.name"), "category_name"],
+                [fn('AVG', fn('COALESCE', col('product_comments.rating'), 0)), 'average_rating'],
+                [fn('COUNT', col('product_comments.rating')), 'all_ratings_count']
+            ],
+            include: [
+                {
+                    model: WebshopCategory,
+                    attributes: [],
+                },
+                {
+                    model: ProductComment,
+                    attributes: [],
+                },
+            ],
+            where: {
+                is_active: 1,
+                id: productId,
+            },
+            group: ['Product.id'],
+        });
+
+        console.log(data);
+        return;
 
         if (data.length === 0) {
             return showNotFoundPage(req, res);

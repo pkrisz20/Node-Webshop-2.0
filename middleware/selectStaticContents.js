@@ -1,23 +1,18 @@
-const { db } = require("../config/db-connection");
 const { getSlug } = require("../helpers/admin/slugHelper");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const errorHandler = require("./errorHandler");
+const { StaticContent } = require("../models");
 
-const selectStaticContents = ( req, res, next ) => {
-
-    const static_contents = {};
+const selectStaticContents = async (req, res, next) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    const staticContentsSQL = "SELECT id, title, slug, content_name FROM static_contents";
 
-    db.query(staticContentsSQL, (err, contents_list) => {
+    try {
+        let static_contents = await StaticContent.findAll({
+            attributes: ['id', 'title', 'slug', 'content_name'],
+        });
 
-        if (err) {
-            return errorHandler(err, req, res, "selectStaticContents", 16);
-        }
-
-        if (contents_list.length > 0) {
-
-            contents_list.forEach(staticContent => {
+        if (static_contents.length > 0) {
+            static_contents.forEach(staticContent => {
                 static_contents[staticContent.content_name] = {
                     id: parseInt(staticContent.id),
                     title: getValueByLanguage(staticContent.title, lang),
@@ -26,9 +21,12 @@ const selectStaticContents = ( req, res, next ) => {
             });
         }
 
-        req.static_content = static_contents ?? null;
+        res.locals.staticContent = static_contents ?? null;
         return next();
-    });
+    }
+    catch (error) {
+        return errorHandler(err, req, res, "selectStaticContents", 6);
+    }
 }
 
 module.exports = selectStaticContents;

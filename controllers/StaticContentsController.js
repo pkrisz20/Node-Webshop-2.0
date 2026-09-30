@@ -4,8 +4,8 @@ const languageHandler = require("../helpers/languageHandler");
 const { numberWithCommas } = require("../helpers/globalFunctions");
 const errorHandler = require('../middleware/errorHandler');
 const { showNotFoundPage } = require("../helpers/showErrorPages");
+const { sequelize, FAQ } = require("../models");
 const metaDefault = require('../config/meta');
-const gdprCookies = require('../config/gdpr');
 
 const getFAQ = async (req, res) => {
     // Cart converting stuffs
@@ -21,10 +21,7 @@ const getFAQ = async (req, res) => {
         }
     });
 
-    var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    let result = [];
-
     var metas = {
         ...metaDefault,
         title: languageHandler("nav.FAQ", lang) + metaDefault['separator'] + metaDefault['title'],
@@ -39,42 +36,32 @@ const getFAQ = async (req, res) => {
         },
     };
 
-    const sqlQuery = "SELECT question, answer FROM faq WHERE is_active = ? ORDER BY id DESC";
-
     try {
-        const data = await DoDatabaseQuery(sqlQuery, [1]);
+        const data = await FAQ.findAll({
+            attributes: ['question', 'answer'],
+            where: {
+                is_active: 1,
+            },
+            order: [['id', 'DESC']],
+        });
 
         if (data.length > 0) {
-
-            data.forEach(element => {
-                let tempObject = {
+            var result = data.map(element => {
+                return {
                     question: getValueByLanguage(element.question, lang),
                     answer: getValueByLanguage(element.answer, lang)
                 }
-
-                result.push(tempObject);
             });
         }
 
         return res.render("pages/faq", {
             questions: result ?? [],
             meta: metas,
-            current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
             cart: cart,
-            locales: ['hu', 'sr', 'en'],
-            languageHandler: languageHandler,
-            DB_CONFIG: DB_CONFIG,
-            showPopupCartInformation: req.session.showPopupCartInformation,
-            webshopCategories: req.webshopCategories,
-            staticContent: req.static_content,
-            wishlistTotalNumber: req.wishlistTotalNumber,
-            gdprCookies: gdprCookies,
-            gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-            csrfToken: req.csrfToken()
         });
     }
     catch (error) {
-        return errorHandler(error, req, res, 'staticController');
+        return errorHandler(error, req, res, 'staticController - getFAQ');
     }
 }
 
@@ -93,7 +80,6 @@ const getGDPR = (req, res) => {
         }
     });
 
-    var { DB_CONFIG } = req;
     var metas = {
         ...metaDefault,
         title: languageHandler("nav.gdpr", req.session.lang ?? process.env.FALLBACK_LANG),
@@ -101,23 +87,11 @@ const getGDPR = (req, res) => {
         url: `${ process.env.APP_URL }/${ req.session.lang ?? process.env.FALLBACK_LANG }/gdpr`,
         image: `${ process.env.APP_URL }/images/logo.png`,
         description: "This is the GDPR page",
-        // keywords: []
     };
 
     return res.render("pages/gdpr", {
         meta: metas,
-        current_locale: req.session.lang ?? process.env.FALLBACK_LANG,
         cart: cart,
-        locales: ['hu', 'sr', 'en'],
-        languageHandler: languageHandler,
-        DB_CONFIG: DB_CONFIG,
-        showPopupCartInformation: req.session.showPopupCartInformation,
-        webshopCategories: req.webshopCategories,
-        staticContent: req.static_content,
-        wishlistTotalNumber: req.wishlistTotalNumber,
-        gdprCookies: gdprCookies,
-        gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-        csrfToken: req.csrfToken()
     });
 }
 
@@ -185,7 +159,6 @@ const getStaticPage = async (req, res) => {
     });
 
     let { routeName } = req.params;
-    var { DB_CONFIG } = req;
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
 
     try {
@@ -219,18 +192,7 @@ const getStaticPage = async (req, res) => {
                 contentShortDescription: staticSiteShort,
                 contentDescription: staticSiteDescription,
                 contentSlug: languageHandler('slugs.content', lang) + "/" + routeName,
-                current_locale: lang,
                 cart: cart,
-                locales: ['hu', 'sr', 'en'],
-                languageHandler: languageHandler,
-                DB_CONFIG: DB_CONFIG,
-                showPopupCartInformation: req.session.showPopupCartInformation,
-                webshopCategories: req.webshopCategories,
-                staticContent: req.static_content,
-                wishlistTotalNumber: req.wishlistTotalNumber,
-                gdprCookies: gdprCookies,
-                gdprAcceptedCookies: JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]'),
-                csrfToken: req.csrfToken()
             });
         }
 

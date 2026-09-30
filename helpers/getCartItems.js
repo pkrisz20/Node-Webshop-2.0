@@ -1,35 +1,41 @@
-const { db } = require("../config/db-connection");
 const languageHandler = require("../helpers/languageHandler");
 const getValueByLanguage = require("../helpers/getValueByLanguage");
 const imagePathConverter = require("../helpers/imagePathConverter");
 const errorHandler = require("../middleware/errorHandler");
 const { getSlug } = require("./admin/slugHelper");
+const { Product } = require("../models");
+const { Sequelize } = require('sequelize');
 
-const getCartItems = (req, res, next) => {
+const getCartItems = async (req, res, next) => {
     const lang = req.session.lang ?? process.env.FALLBACK_LANG;
-    var cartProductIds = [];
     let cartItems = req.session.cart ?? [];
     let showPopupCartInformation = false;
 
-    cartProductIds = cartItems?.map(item => {
+    var cartProductIds = cartItems?.map(item => {
         return item.productId;
     });
 
-    if ( cartProductIds.length > 0 ) {
+    if (cartProductIds.length === 0) {
+        req.session.cart = [];
+        req.session.totalPrice = 0;
+        req.session.totalCount = 0;
+        res.locals.showPopupCartInformation = false;
+        return next();
+    }
 
-        let countParams = Array(cartProductIds.length).fill("?").join(",");
+    if (cartProductIds.length > 0) {
+        try {
+            const result = await Product.findAll({
+                where: {
+                    id: {
+                        [Sequelize.Op.in]: cartProductIds,
+                    },
+                },
+            });
 
-        db.query(`SELECT id, name, slug, price, image_thumbnail, discount_value, discount_end_date, max_order_count, is_available, is_active FROM products WHERE id IN (${ countParams })`, [...cartProductIds], (err, result) => {
-            if (err) {
-                return errorHandler(err, req, res, "getCartItems", 24);
-            }
-
-            else if (result.length > 0) {
-
+            if (result.length > 0) {
                 cartItems?.forEach(cartItem => {
-
                     result.forEach(databaseItem => {
-
                         if (cartItem.productId === databaseItem.id) {
                             cartItem.productName = getValueByLanguage(databaseItem.name, lang),
                             cartItem.slug = getSlug(databaseItem.slug, lang),
@@ -64,18 +70,13 @@ const getCartItems = (req, res, next) => {
                 req.session.cart = cartItems;
                 req.session.totalPrice = totalPrice;
                 req.session.totalCount = totalCount;
-                req.session.showPopupCartInformation = showPopupCartInformation ?? false;
+                res.locals.showPopupCartInformation = showPopupCartInformation ?? false;
                 return next();
             }
-        });
-    }
-
-    else if ( cartProductIds.length == 0 ) {
-        req.session.cart = [];
-        req.session.totalPrice = 0;
-        req.session.totalCount = 0;
-        req.session.showPopupCartInformation = false;
-        return next();
+        }
+        catch (err) {
+            return errorHandler(err, req, res, "getCartItems", 24);
+        }
     }
 }
 
@@ -100,7 +101,7 @@ const getCartListItemsHTML = (cartItems, currentLang) => {
                 </div>
 
                 <div class="cart-product-desc">
-                    <h5 class="cart-product-desc_name">${ item.productName }</h5>
+                    <strong class="cart-product-desc_name">${ item.productName }</strong>
 
                     <div class="quantities">
                         <div class="quantities-container js-quantities">
@@ -121,13 +122,13 @@ const getCartListItemsHTML = (cartItems, currentLang) => {
         </li>`;
     });
 
-    return cartHTML ?? "";
+    return cartHTML;
 }
 
 const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) => {
 
     var cartHTMLContent = `
-        <h5 class="cart-counter">${ languageHandler('orders.cart_count', currentLang) }: <span class="js-cart-counter">${ totalCount }</span></h5>
+        <strong class="cart-counter">${ languageHandler('orders.cart_count', currentLang) }: <span class="js-cart-counter">${ totalCount }</span></strong>
             <div class="cart-container">
                 <div class="cart-container-top">
                     <a href="/${ currentLang }/` + languageHandler('slugs.cart', currentLang) + `" aria-label="Navigation link to the orders page" class="cart-container-top_ordering">${ languageHandler('orders.order', currentLang) }</a>
@@ -151,7 +152,7 @@ const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) =
                             </div>
 
                             <div class="cart-product-desc">
-                                <h5 class="cart-product-desc_name">${ cartItems[0].productName }</h5>
+                                <strong class="cart-product-desc_name">${ cartItems[0].productName }</strong>
 
                                 <div class="quantities">
                                     <div class="quantities-container js-quantities">
@@ -173,7 +174,7 @@ const generateCartItemsHTML = (cartItems, currentLang, totalCount, totalPrice) =
                 </ul>
             </div>`;
 
-    return cartHTMLContent ?? "";
+    return cartHTMLContent;
 }
 
 module.exports = { getCartItems, generateCartItemsHTML, getCartListItemsHTML };

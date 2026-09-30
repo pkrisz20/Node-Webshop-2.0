@@ -12,8 +12,11 @@ const cron = require("node-cron");
 const deleteLogs = require("./jobs/deleteLogs");
 const generateSitemap = require("./jobs/generateSitemap");
 const corsOptions = require("./config/cors");
+const { sequelize } = require("./models");
+const gdprCookies = require("./config/gdpr");
 const { showNotFoundPage, showForbiddenPage } = require("./helpers/showErrorPages");
 const getAssetPath = require("./helpers/getAssetPath");
+const languageHandler = require("./helpers/languageHandler");
 
 // Trust proxy if it's in production
 if (process.env.APP_DEBUG === 'false') {
@@ -51,14 +54,27 @@ app.use(function (err, req, res, next) {
     return next();
 });
 
-// Add the getAssetPath function globally
-app.use((req, res, next) => {
-    res.locals.getAssetPath = getAssetPath;
-    next();
-});
-
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5000, async () => {
     console.log(`Server is running on port ${ process.env.PORT }`);
+
+    try {
+        await sequelize.authenticate();
+
+        if ((process.env.SYNC_DATABASE || 'false') === 'true') {
+            try {
+                await sequelize.sync({
+                    force: process.env.APP_DEBUG === 'true',
+                    alter: process.env.APP_DEBUG === 'false'
+                });
+            }
+            catch (err) {
+                console.error("Error syncing data with the database:", err);
+            }
+        }
+    }
+    catch (error) {
+        console.error("Error connecting to the database:", error);
+    }
 });
 
 // Ajax routes
@@ -77,15 +93,23 @@ app.get('/', (req, res) => {
     res.redirect(`/${ req.session.lang ?? process.env.FALLBACK_LANG }`);
 });
 
-// Language slug handler
+// Language slug handler + global values
 app.use("/:lang", function (req, res, next) {
+    res.locals.languageHandler = languageHandler;
+    res.locals.getAssetPath = getAssetPath;
+    const validLangs = process.env.VALID_LANGS.split(',');
 
-    if ( req.params.lang !== 'en' && req.params.lang !== 'sr' && req.params.lang !== 'hu' )
+    if (!validLangs.includes(req.params.lang))
     {
         return showNotFoundPage(req, res);
     }
 
     req.session.lang = req.params.lang ?? process.env.FALLBACK_LANG;
+    res.locals.current_locale = req.params.lang ?? process.env.FALLBACK_LANG;
+    res.locals.locales = validLangs;
+    res.locals.csrfToken = req.csrfToken();
+    res.locals.gdprCookies = gdprCookies;
+    res.locals.gdprAcceptedCookies = JSON.parse(req.cookies['allowed_cookie_types'] ?? '[]');
     return next();
 });
 
@@ -107,8 +131,8 @@ app.use('/', contactRouter);
 app.use('/', ordersRouter);
 app.use('/', searchRouter);
 app.use('/', staticContentsRouter);
-app.use('/', productsRouter); // Not working properly
-app.use('/', galleryRouter); // Not working properly
+app.use('/', productsRouter);
+app.use('/', galleryRouter);
 app.use('/', blogsRouter);
 
 app.get("*", (req, res) => {

@@ -1,6 +1,5 @@
 function getValueByLanguage ( data, selectedLang = "en" ) {
-
-    if ( !data ) {
+    if (!data) {
         return null;
     }
 
