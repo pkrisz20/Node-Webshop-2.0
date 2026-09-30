@@ -1,74 +1,49 @@
-<!DOCTYPE html>
-<html lang="<%= current_locale %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/gdpr.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <main class="gdpr gdpr-site">
+        <div class="wrapper">
+            <h1 class="main-title"><%= languageHandler('nav.gdpr', current_locale) %></h1>
 
-        <%- include('../components/cart.ejs') %>
+            <section class="gdpr-container">
+                <p class="gdpr-container-information"><%= languageHandler('general.gdpr_db_info', current_locale) %></p>
 
-        <main class="gdpr gdpr-site">
-            <div class="wrapper">
-                <h1 class="main-title"><%= languageHandler('nav.gdpr', current_locale) %></h1>
-
-                <section class="gdpr-container">
-                    <p class="gdpr-container-information"><%= languageHandler('general.gdpr_db_info', current_locale) %></p>
-
-                    <form class="form form-gdpr js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/gdpr/handle">
+                <form class="form form-gdpr js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/gdpr/handle">
+                    <input
+                        id="recaptcha"
+                        value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                        name="recaptcha"
+                        type="hidden"
+                        class="g-recaptcha"
+                    />
+                    <div class="form-row">
                         <input
-                            id="recaptcha"
-                            value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                            name="recaptcha"
-                            type="hidden"
-                            class="g-recaptcha"
+                            id="gdpr_email"
+                            name="gdpr_email"
+                            type="email"
+                            data-rule-required="true"
+                            data-rule-email="true"
+                            placeholder="<%= languageHandler('validations.email', current_locale) %>"
+                            class="form-control"
                         />
-                        <div class="form-row">
-                            <input
-                                id="gdpr_email"
-                                name="gdpr_email"
-                                type="email"
-                                data-rule-required="true"
-                                data-rule-email="true"
-                                placeholder="<%= languageHandler('validations.email', current_locale) %>"
-                                class="form-control"
-                            />
-                            <label for="gdpr_email" class="form-label">
-                                <%= languageHandler('validations.email', current_locale) %>
-                            </label>
+                        <label for="gdpr_email" class="form-label">
+                            <%= languageHandler('validations.email', current_locale) %>
+                        </label>
 
-                            <i class="error-icon fas fa-times" style="display: none;"></i>
-                            <div class="form-row-error" style="display: none;"></div>
-                        </div>
-                        <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
-                    </form>
-                </section>
-            </div>
-        </main>
+                        <i class="error-icon fas fa-times" style="display: none;"></i>
+                        <div class="form-row-error" style="display: none;"></div>
+                    </div>
+                    <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
+                </form>
+            </section>
+        </div>
+    </main>
+<%- endSection() %>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-
-    <% if (current_locale != 'en') { %>
-        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
-    <% } %>
-
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+<%- push('plugins') %>
+    <%- include('../partials/validation-scripts.ejs') %>
+<%- endPush() %>

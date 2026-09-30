@@ -1,0 +1,11 @@
+<%#
+    Form validation libraries: reCAPTCHA (when a site key is set), jQuery Validate and its messages.
+    Pass { recaptcha: false } to skip reCAPTCHA (e.g. on the admin forms).
+-%>
+<% if (locals.recaptcha !== false && process.env.RECAPTCHA_SITE_KEY) { %>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+<script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
+<% if (current_locale != 'en') { %>
+    <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
+<% } %>

@@ -1,65 +1,51 @@
-<!DOCTYPE html>
-<html lang="hu">
-        <!-- HEAD + STYLE LINKS -->
-        <%- include('../layout/head.ejs') %>
-    </head>
-        <%- include('../layout/sidebar-navs.ejs') %>
+<%- extend('layouts/admin') %>
 
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Beérkezett üzenetek</h1>
+<%- section('content') %>
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Beérkezett üzenetek</h1>
 
-                        <% if (incomingMessages.length > 0) { %>
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-table me-1"></i>
-                                    Beérkezett üzenetek
-                                </div>
-                                <div class="card-body table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-dark">
-                                            <tr>
-                                            <th scope="col">Keresztnév</th>
-                                                <th scope="col">Vezetéknév</th>
-                                                <th scope="col">Telefon</th>
-                                                <th scope="col">Település</th>
-                                                <th scope="col">Beküldve ekkor</th>
-                                                <th scope="col">Műveletek</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% incomingMessages.forEach(message => { %>
-                                                <tr>
-                                                    <td><%= message.firstName %></td>
-                                                    <td><%= message.lastName %></td>
-                                                    <td><%= message.phone %></td>
-                                                    <td><%= message.city %></td>
-                                                    <td><%= message.date %></td>
-                                                    <td>
-                                                        <i data-url="<%= process.env.APP_URL %>/admin/messages/delete/<%= message.contactId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                        <i role=button class="fas fa-info-circle link-primary js-get-message-details" data-url="<%= process.env.APP_URL %>/admin/messages/details/<%= message.contactId %>"></i>
-                                                    </td>
-                                                </tr>
-                                            <% }) %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        <% } %>
-
-                        <% if (pageCount > 1) { %>
-                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
-                        <% } %>
+            <% if (incomingMessages.length > 0) { %>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        Beérkezett üzenetek
                     </div>
-                </main>
-            </div>
-        </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                <th scope="col">Keresztnév</th>
+                                    <th scope="col">Vezetéknév</th>
+                                    <th scope="col">Telefon</th>
+                                    <th scope="col">Település</th>
+                                    <th scope="col">Beküldve ekkor</th>
+                                    <th scope="col">Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% incomingMessages.forEach(message => { %>
+                                    <tr>
+                                        <td><%= message.firstName %></td>
+                                        <td><%= message.lastName %></td>
+                                        <td><%= message.phone %></td>
+                                        <td><%= message.city %></td>
+                                        <td><%= message.date %></td>
+                                        <td>
+                                            <i data-url="<%= process.env.APP_URL %>/admin/messages/delete/<%= message.contactId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
+                                            <i role=button class="fas fa-info-circle link-primary js-get-message-details" data-url="<%= process.env.APP_URL %>/admin/messages/details/<%= message.contactId %>"></i>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
 
-        <!-- SCRIPTS -->
-        <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
-    </body>
-</html>
+            <% if (pageCount > 1) { %>
+                <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
+            <% } %>
+        </div>
+    </main>
+<%- endSection() %>

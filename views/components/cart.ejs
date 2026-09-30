@@ -7,7 +7,7 @@
         <div class="cart-container">
             <div class="cart-container-top">
                 <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.cart", current_locale) %>" aria-label="Navigation link to the orders page" class="cart-container-top_ordering"><%= languageHandler('orders.order', current_locale) %></a>
-                <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-total-price"><%= cart.totalPrice %></span><small>RSD</small></strong>
+                <strong class="cart-container-top_total"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-total-price"><%= cart.totalPrice %></span><small><%= currency %></small></strong>
             </div>
 
             <ul class="cart-container-list js-cart-list">
@@ -33,7 +33,7 @@
                                         <button type="button" class="quantities-btn js-quantity-btn plus"><i class="fas fa-plus"></i></button>
                                     </div>
 
-                                    <small class="quantities-price"><i class="fas fa-times"></i> <span><%= cartItem.price %> RSD</span></small>
+                                    <small class="quantities-price"><i class="fas fa-times"></i> <span><%= cartItem.price %> <%= currency %></span></small>
                                 </div>
 
                                 <div class="functions">

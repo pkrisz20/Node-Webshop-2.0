@@ -1,312 +1,252 @@
-<!DOCTYPE html>
-<html lang="hu">
-        <!-- HEAD + STYLE LINKS -->
-        <%- include('../layout/head.ejs') %>
-        <link href="<%= getAssetPath('/admin/css/plugins/select2.min.css') %>" rel="stylesheet" />
-    </head>
-        <%- include('../layout/sidebar-navs.ejs') %>
+<%- extend('layouts/admin') %>
 
-                <main class="p-4">
-                    <h1 class="h3 mb-3">Új termék feltöltése</h1>
+<%- push('styles') %>
+    <link href="<%= getAssetPath('/admin/css/plugins/select2.min.css') %>" rel="stylesheet" />
+<%- endPush() %>
 
-                    <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU">Általános adatok + <img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#params">Paraméterek</a>
-                        </li>
-                    </ul>
+<%- section('content') %>
+    <main class="p-4">
+        <h1 class="h3 mb-3">Új termék feltöltése</h1>
 
-                    <div class="tab-content">
-                        <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
+        <ul class="nav nav-pills mb-3 p-3 border border-primary bg-dark bg-opacity-25 rounded-3" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link fw-semibold active" data-bs-toggle="pill" href="#HU">Általános adatok + <img src="images/flag-hu.png" width="20" height="15" alt="Magyar" /> Magyar</a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#SR"><img src="images/flag-sr.png" width="20" height="15" alt="Szerb" /> Szerb</a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#EN"><img src="images/flag-en.png" width="20" height="15" alt="Angol" /> Angol</a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link fw-semibold" data-bs-toggle="pill" href="#params">Paraméterek</a>
+            </li>
+        </ul>
 
-                            <div class="tab-pane show fade active" id="HU">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-name-hu" class="form-label">Termék megnevezése</label>
-                                            <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name[hu]" value="" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label class="form-label" for="product-category">Kategória</label>
-                                            <select
-                                                data-rule-required="true"
-                                                class="form-select <%= webshopCategories.length > 0 ? 'js-select2' : '' %>"
-                                                data-placeholder="Válassz kategóriát..."
-                                                data-min-input-length="0"
-                                                data-allow-clear="true"
-                                                name="category_id"
-                                                id="product-category"
-                                            >
-                                                <% if (webshopCategories.length > 0) { %>
-                                                    <option></option>
+        <div class="tab-content">
+            <form class="row js-validate-form" method="post" data-url="<%= process.env.APP_URL %>/admin/products/new/handle">
 
-                                                    <% webshopCategories.forEach(category => { %>
-                                                        <option value="<%= category.id %>"><%= category.name %></option>
-                                                    <% }) %>
-
-                                                <% } else { %>
-                                                    <option value="" selected>Nincs feltöltve még kategória...</option>
-                                                <% } %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-row mb-3">
-                                            <label for="product-short-hu" class="form-label">Rövid leírás</label>
-                                            <textarea id="product-short-hu" rows="5" name="short_description[hu]" class="form-control"></textarea>
-                                        </div>
-                                        <div class="form-row">
-                                            <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
-                                            <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 js-price-wrapper">
-                                        <div class="form-row">
-                                            <label for="product-price" class="form-label">Árjegyzék</label>
-                                            <div class="input-group mb-2">
-                                                <span class="input-group-text">RSD</span>
-                                                <input type="text" data-rule-required="true" data-rule-digits="true" name="price" value="" id="product-price" class="form-control" />
-                                                <span class="input-group-text">.00</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
-                                            <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
-                                        </div>
-
-                                        <div class="js-input-container" style="display: none;">
-                                            <div class="form-row mb-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">RSD</span>
-                                                    <input type="text" name="discount_value" class="form-control js-discount-input" />
-                                                    <span class="input-group-text">.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <label for="product-discount-end-date" class="form-label">Az akció tart eddig:</label>
-                                                <input type="date" id="product-discount-end-date" class="form-control" name="discount_end_date" value="" />
-                                                <small class="text-muted">Aktiválódik, ha az aktuális dátumtól későbbi érték van megadva</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_active" id="product-is-active" role="switch" />
-                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
-                                        </div>
-                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_featured" id="product-is-featured" role="switch" />
-                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
-                                        </div>
-                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_available" id="product-is-orderable" role="switch" />
-                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
-                                        </div>
-                                        <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                            <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_new" id="product-is-new" role="switch" />
-                                            <label class="form-check-label ms-sm-2 lh-lg" for="product-is-new">Új</label>
-                                        </div>
-                                        <div>
-                                            <div class="form-check form-switch d-inline-block">
-                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_delivered" id="product-is-delivered" role="switch" />
-                                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
-                                            </div>
-                                            <div class="form-check form-switch ms-sm-2 d-inline-block">
-                                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="comments_allowed" id="product-comments-allowed" role="switch" />
-                                                <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="product-long-hu" class="form-label">Hosszú leírás</label>
-                                    <textarea id="product-long-hu" name="product_description[hu]" class="form-control js-ckeditor"></textarea>
-                                </div>
+                <div class="tab-pane show fade active" id="HU">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="product-name-hu" class="form-label">Termék megnevezése</label>
+                                <input type="text" data-rule-required="true" id="product-name-hu" class="form-control" name="name[hu]" value="" />
                             </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label class="form-label" for="product-category">Kategória</label>
+                                <select
+                                    data-rule-required="true"
+                                    class="form-select <%= webshopCategories.length > 0 ? 'js-select2' : '' %>"
+                                    data-placeholder="Válassz kategóriát..."
+                                    data-min-input-length="0"
+                                    data-allow-clear="true"
+                                    name="category_id"
+                                    id="product-category"
+                                >
+                                    <% if (webshopCategories.length > 0) { %>
+                                        <option></option>
 
-                            <div class="tab-pane fade" id="SR">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-name-sr" class="form-label">Termék megnevezése szerbül</label>
-                                            <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name[sr]" value="" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-short-sr" class="form-label">Rövid leírás szerbül</label>
-                                            <textarea id="product-short-sr" rows="5" name="short_description[sr]" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="product-long-sr" class="form-label">Hosszú leírás szerbül</label>
-                                    <textarea id="product-long-sr" name="product_description[sr]" class="form-control js-ckeditor"></textarea>
-                                </div>
+                                        <% webshopCategories.forEach(category => { %>
+                                            <option value="<%= category.id %>"><%= category.name %></option>
+                                        <% }) %>
+
+                                    <% } else { %>
+                                        <option value="" selected>Nincs feltöltve még kategória...</option>
+                                    <% } %>
+                                </select>
                             </div>
-
-                            <div class="tab-pane fade" id="EN">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-name-en" class="form-label">Termék megnevezése angolul</label>
-                                            <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name[en]" value="" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-row">
-                                            <label for="product-short-en" class="form-label">Rövid leírás angolul</label>
-                                            <textarea id="product-short-en" rows="5" name="short_description[en]" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="product-long-en" class="form-label">Hosszú leírás angolul</label>
-                                    <textarea id="product-long-en" name="product_description[en]" class="form-control js-ckeditor"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="params">
-                                <div class="col-12 mb-3 d-flex justify-content-between">
-                                    <strong class="fs-5">Termékhez tartozó paraméterek</strong>
-                                </div>
-                                <div class="col-12 mb-4 js-container-parameters"></div>
-
-                                <div class="col-12 mb-3">
-                                    <button class="btn btn-primary js-add-parameter" type="button">
-                                        <i class="fas fa-plus-circle"></i>
-                                        Hozzáadás
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit">Mentés</button>
-                            </div>
-                        </form>
-                    </div>
-                </main>
-            </div>
-        </div>
-
-        <!-- SCRIPTS -->
-        <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/select2/select2.full.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/select2/select2.hu.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/ckeditor.min.js') %>"></script>
-        <script src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-        <script src="<%= getAssetPath('/js/plugins/validator_messages_hu.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/jquery.repeatable.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
-        <script type="text/template" id="webshop-parameter-options">
-            <div class="row js-repeatable-row border-top border-3 pt-3 mb-3">
-                <div class="col-2 align-top">
-                    <label for="webshop-parameter-name-{?}" class="form-label">Paraméter neve</label>
-                    <select
-                        name="webshop_parameter_id[{?}]"
-                        id="webshop-parameter-name-{?}"
-                        class="form-select js-select2 js-watch-parameter-change"
-                        data-fouc
-                        data-placeholder="Kiválasztás..."
-                        data-minimum-input-length="0"
-                        data-on-select="updateSelectTwosData"
-                        data-rule-required="true"
-                    >
-                        <option></option>
-
-                        <% webshopParameters.forEach(webshopParam => { %>
-                            <option value="<%= webshopParam.id %>"><%= webshopParam.parameter_name %></option>
-                        <% }) %>
-                    </select>
-                </div>
-
-                <% process.env.VALID_LANGS.split(',').forEach(frontend_language => { %>
-                    <div class="col-3">
-                        <div class="form-row">
-                            <label for="product-parameter-<%= frontend_language %>-{?}" class="form-label">Paraméter értéke (<span class="text-uppercase"><%= frontend_language %></span>)</label>
-                            <input type="text" data-rule-required="true" id="product-parameter-<%= frontend_language %>-{?}" class="form-control" name="parameter_value[<%= frontend_language %>][{?}]" value="" />
                         </div>
                     </div>
-                <% }) %>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-row mb-3">
+                                <label for="product-short-hu" class="form-label">Rövid leírás</label>
+                                <textarea id="product-short-hu" rows="5" name="short_description[hu]" class="form-control"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label for="product-max-order" class="form-label">Maximális rendelhető mennyiség</label>
+                                <input type="text" name="max_order_count" id="product-max-order" data-rule-required="true" data-rule-digits="true" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 js-price-wrapper">
+                            <div class="form-row">
+                                <label for="product-price" class="form-label">Árjegyzék</label>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><%= currency %></span>
+                                    <input type="text" data-rule-required="true" data-rule-digits="true" name="price" value="" id="product-price" class="form-control" />
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
 
-                <div class="d-flex align-items-center justify-content-center border-dark col-1">
-                    <input type="hidden" class="form-control" name="parameter_hash" value="{?}" />
-                    <i role=button class="border border-2 fas fa-trash-alt rounded-2 border-danger p-3 link-danger js-delete-parameter"></i>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input js-discount-input-toggle" type="checkbox" id="discount-price" role="switch" />
+                                <label class="form-check-label ms-sm-2 lh-lg" for="discount-price">Akciós ár</label>
+                            </div>
+
+                            <div class="js-input-container" style="display: none;">
+                                <div class="form-row mb-2">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><%= currency %></span>
+                                        <input type="text" name="discount_value" class="form-control js-discount-input" />
+                                        <span class="input-group-text">.00</span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <label for="product-discount-end-date" class="form-label">Az akció tart eddig:</label>
+                                    <input type="date" id="product-discount-end-date" class="form-control" name="discount_end_date" value="" />
+                                    <small class="text-muted">Aktiválódik, ha az aktuális dátumtól későbbi érték van megadva</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-check form-switch d-inline-block">
+                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_active" id="product-is-active" role="switch" />
+                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-active">Aktív</label>
+                            </div>
+                            <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_featured" id="product-is-featured" role="switch" />
+                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-featured">Főoldali kiemelés</label>
+                            </div>
+                            <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_available" id="product-is-orderable" role="switch" />
+                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-orderable">Rendelhető</label>
+                            </div>
+                            <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_new" id="product-is-new" role="switch" />
+                                <label class="form-check-label ms-sm-2 lh-lg" for="product-is-new">Új</label>
+                            </div>
+                            <div>
+                                <div class="form-check form-switch d-inline-block">
+                                    <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="is_delivered" id="product-is-delivered" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-is-delivered">Szállítható</label>
+                                </div>
+                                <div class="form-check form-switch ms-sm-2 d-inline-block">
+                                    <input class="form-check-input js-boolean-checkbox" type="checkbox" value="0" name="comments_allowed" id="product-comments-allowed" role="switch" />
+                                    <label class="form-check-label ms-sm-2 lh-lg" for="product-comments-allowed">Hozzászólások engedélyezése</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="product-long-hu" class="form-label">Hosszú leírás</label>
+                        <textarea id="product-long-hu" name="product_description[hu]" class="form-control js-ckeditor"></textarea>
+                    </div>
                 </div>
+
+                <div class="tab-pane fade" id="SR">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="product-name-sr" class="form-label">Termék megnevezése szerbül</label>
+                                <input type="text" data-rule-required="true" id="product-name-sr" class="form-control" name="name[sr]" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="product-short-sr" class="form-label">Rövid leírás szerbül</label>
+                                <textarea id="product-short-sr" rows="5" name="short_description[sr]" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="product-long-sr" class="form-label">Hosszú leírás szerbül</label>
+                        <textarea id="product-long-sr" name="product_description[sr]" class="form-control js-ckeditor"></textarea>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="EN">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="product-name-en" class="form-label">Termék megnevezése angolul</label>
+                                <input type="text" data-rule-required="true" id="product-name-en" class="form-control" name="name[en]" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-row">
+                                <label for="product-short-en" class="form-label">Rövid leírás angolul</label>
+                                <textarea id="product-short-en" rows="5" name="short_description[en]" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="product-long-en" class="form-label">Hosszú leírás angolul</label>
+                        <textarea id="product-long-en" name="product_description[en]" class="form-control js-ckeditor"></textarea>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="params">
+                    <div class="col-12 mb-3 d-flex justify-content-between">
+                        <strong class="fs-5">Termékhez tartozó paraméterek</strong>
+                    </div>
+                    <div class="col-12 mb-4 js-container-parameters" data-template="#webshop-parameter-options" data-max-parameters="<%= webshopParameters.length %>"></div>
+
+                    <div class="col-12 mb-3">
+                        <button class="btn btn-primary js-add-parameter" type="button">
+                            <i class="fas fa-plus-circle"></i>
+                            Hozzáadás
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Mentés</button>
+                </div>
+            </form>
+        </div>
+    </main>
+<%- endSection() %>
+
+<%- push('plugins') %>
+    <script src="<%= getAssetPath('/admin/js/select2/select2.full.min.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/select2/select2.hu.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/plugins/ckeditor.min.js') %>"></script>
+    <%- include('../../partials/validation-scripts.ejs', { recaptcha: false }) %>
+    <script src="<%= getAssetPath('/admin/js/plugins/jquery.repeatable.js') %>"></script>
+<%- endPush() %>
+
+<%- push('scripts') %>
+    <script type="text/template" id="webshop-parameter-options">
+        <div class="row js-repeatable-row border-top border-3 pt-3 mb-3">
+            <div class="col-2 align-top">
+                <label for="webshop-parameter-name-{?}" class="form-label">Paraméter neve</label>
+                <select
+                    name="webshop_parameter_id[{?}]"
+                    id="webshop-parameter-name-{?}"
+                    class="form-select js-select2 js-watch-parameter-change"
+                    data-fouc
+                    data-placeholder="Kiválasztás..."
+                    data-minimum-input-length="0"
+                    data-on-select="updateSelectTwosData"
+                    data-rule-required="true"
+                >
+                    <option></option>
+
+                    <% webshopParameters.forEach(webshopParam => { %>
+                        <option value="<%= webshopParam.id %>"><%= webshopParam.parameter_name %></option>
+                    <% }) %>
+                </select>
             </div>
-        </script>
-        <script type="text/javascript">
-            $(function () {
-                $(".js-container-parameters").repeatable({
-                    template: '#webshop-parameter-options',
-                    addTrigger: '.js-add-parameter',
-                    deleteTrigger: '.js-delete-parameter',
-                    itemContainer: '.js-repeatable-row',
-                    max: <%= webshopParameters.length %>,
-                    min: 0,
-                    afterAdd: function (event, callback) {
-                        updateSelectTwosData();
-                        globalScripts.initSelectTwo();
-                    },
-                    beforeDelete: function (event, callback) {
-                        Swal.fire({
-                            title: "Biztosan törlöd ezt a paramétert?",
-                            text: "Ez a folyamat visszafordíthatatlan!",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#008a00",
-                            cancelButtonColor: "#db3700",
-                            confirmButtonText: "Igen, törlöm!",
-                            cancelButtonText: "Nem, mégsem!"
-                        }).then(function (result) {
-                            if (result.isConfirmed) {
-                                callback();
-                                updateSelectTwosData();
-                            }
-                        });
-                    },
-                });
-            });
 
-            function updateSelectTwosData() {
-                let selectedValues = [];
+            <% process.env.VALID_LANGS.split(',').forEach(frontend_language => { %>
+                <div class="col-3">
+                    <div class="form-row">
+                        <label for="product-parameter-<%= frontend_language %>-{?}" class="form-label">Paraméter értéke (<span class="text-uppercase"><%= frontend_language %></span>)</label>
+                        <input type="text" data-rule-required="true" id="product-parameter-<%= frontend_language %>-{?}" class="form-control" name="parameter_value[<%= frontend_language %>][{?}]" value="" />
+                    </div>
+                </div>
+            <% }) %>
 
-                $('.js-select2.js-watch-parameter-change').each(function() {
-                    selectedValues = selectedValues.concat($(this).val());
-                });
-
-                $('.js-select2.js-watch-parameter-change').each(function() {
-                    let $select = $(this);
-                    let currentValues = $select.val() || [];
-
-                    $select.data('currentValues', currentValues);
-                    $select.find('option').prop('disabled', false);
-
-                    selectedValues.forEach(function(value) {
-                        if (!currentValues.includes(value)) {
-                            $select.find('option[value="' + value + '"]').prop('disabled', true);
-                        }
-                    });
-                });
-            }
-        </script>
-    </body>
-</html>
+            <div class="d-flex align-items-center justify-content-center border-dark col-1">
+                <input type="hidden" class="form-control" name="parameter_hash" value="{?}" />
+                <i role=button class="border border-2 fas fa-trash-alt rounded-2 border-danger p-3 link-danger js-delete-parameter"></i>
+            </div>
+        </div>
+    </script>
+    <script src="<%= getAssetPath('/admin/js/product-form.js') %>"></script>
+<%- endPush() %>

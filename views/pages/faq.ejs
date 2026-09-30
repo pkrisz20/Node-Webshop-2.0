@@ -1,58 +1,40 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/faq.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.FAQ', current_locale) }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="faq">
+        <div class="wrapper">
+            <h1 class="main-title"><%= languageHandler('nav.FAQ', current_locale) %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.FAQ', current_locale) }) %>
-
-        <main class="faq">
-            <div class="wrapper">
-                <h1 class="main-title"><%= languageHandler('nav.FAQ', current_locale) %></h1>
-
-                <section class="faq-container">
-                    <% if ( questions.length > 0 ) { %>
-                        <% questions.forEach((item, index) => { %>
-                            <div class="faq-container-box js-faq-container">
-                                <header class="faq-header js-toggle-header">
-                                    <h2 class="faq-header-question"><%= item.question %></h2>
-                                    <i class="fas fa-plus"></i>
-                                </header>
-                                <div class="answer js-answer">
-                                    <div class="ck-content"><%- item.answer %></div>
-                                </div>
+            <section class="faq-container">
+                <% if ( questions.length > 0 ) { %>
+                    <% questions.forEach((item, index) => { %>
+                        <div class="faq-container-box js-faq-container">
+                            <header class="faq-header js-toggle-header">
+                                <h2 class="faq-header-question"><%= item.question %></h2>
+                                <i class="fas fa-plus"></i>
+                            </header>
+                            <div class="answer js-answer">
+                                <div class="ck-content"><%- item.answer %></div>
                             </div>
-                        <% }) %>
-                    <% } else { %>
-                        <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('general.no_content', current_locale) %></strong>
                         </div>
-                    <% } %>
-                </section>
-            </div>
-        </main>
+                    <% }) %>
+                <% } else { %>
+                    <div class="system-info">
+                        <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('general.no_content', current_locale) %></strong>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </main>
+<%- endSection() %>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
+<%- push('scripts') %>
     <script type="text/javascript">
         $('.js-toggle-header').on('click', function () {
             var element = $( this ).closest('.js-faq-container').find('.js-answer');
@@ -60,5 +42,4 @@
             $( this ).toggleClass('active-header');
         });
     </script>
-</body>
-</html>
+<%- endPush() %>

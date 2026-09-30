@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="hu">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/document') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/login.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
+<%- section('body') %>
     <div class="site-wrap">
         <main class="login">
             <div class="wrapper">
@@ -50,14 +49,8 @@
             </div>
         </main>
     </div>
+<%- endSection() %>
 
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-
-    <% if (current_locale != 'en') { %>
-        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
-    <% } %>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+<%- push('plugins') %>
+    <%- include('../partials/validation-scripts.ejs', { recaptcha: false }) %>
+<%- endPush() %>

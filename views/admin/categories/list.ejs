@@ -1,65 +1,51 @@
-<!DOCTYPE html>
-<html lang="hu">
-        <!-- HEAD + STYLE LINKS -->
-        <%- include('../layout/head.ejs') %>
-    </head>
-        <%- include('../layout/sidebar-navs.ejs') %>
+<%- extend('layouts/admin') %>
 
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Kategóriák</h1>
+<%- section('content') %>
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Kategóriák</h1>
 
-                        <% if (webshopCategories.length > 0) { %>
-                            <div class="card mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <div class="fs-5">
-                                        <i class="fas fa-table me-1"></i>
-                                        Kategóriák
-                                    </div>
-                                    <a class="btn btn-primary" target="_self" href="<%= process.env.APP_URL %>/admin/category/new">
-                                        <i class="fas fa-plus-circle"></i>
-                                        Új kategória
-                                    </a>
-                                </div>
-                                <div class="card-body table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th scope="col">Kategória neve</th>
-                                                <th scope="col">Termékek száma</th>
-                                                <th scope="col">Dátum (utoljára módosítva)</th>
-                                                <th scope="col">Műveletek</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% webshopCategories.forEach(category => { %>
-                                                <tr>
-                                                    <td><%= category.name %></td>
-                                                    <td><%- category.productsCount %></td>
-                                                    <td><%= category.date %></td>
-                                                    <td>
-                                                        <i data-url="<%= process.env.APP_URL %>/admin/category/delete/<%= category.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                        <a class="link-dark mx-1" href="<%= process.env.APP_URL %>/admin/category/edit/<%= category.id %>">
-                                                            <i role=button class="fas fa-edit"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            <% }) %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        <% } %>
+            <% if (webshopCategories.length > 0) { %>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="fs-5">
+                            <i class="fas fa-table me-1"></i>
+                            Kategóriák
+                        </div>
+                        <a class="btn btn-primary" target="_self" href="<%= process.env.APP_URL %>/admin/category/new">
+                            <i class="fas fa-plus-circle"></i>
+                            Új kategória
+                        </a>
                     </div>
-                </main>
-            </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">Kategória neve</th>
+                                    <th scope="col">Termékek száma</th>
+                                    <th scope="col">Dátum (utoljára módosítva)</th>
+                                    <th scope="col">Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% webshopCategories.forEach(category => { %>
+                                    <tr>
+                                        <td><%= category.name %></td>
+                                        <td><%- category.productsCount %></td>
+                                        <td><%= category.date %></td>
+                                        <td>
+                                            <i data-url="<%= process.env.APP_URL %>/admin/category/delete/<%= category.id %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
+                                            <a class="link-dark mx-1" href="<%= process.env.APP_URL %>/admin/category/edit/<%= category.id %>">
+                                                <i role=button class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
         </div>
-
-        <!-- SCRIPTS -->
-        <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
-    </body>
-</html>
+    </main>
+<%- endSection() %>

@@ -1,0 +1,37 @@
+<%#
+    Admin page with the top bar and the sidebar menu.
+
+    Sections: content
+    Stacks:   styles  - page stylesheets in the <head>
+              plugins - page specific libraries, loaded before admin.js
+              scripts - page specific scripts and templates, after admin.js
+-%>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <%- include('../admin/partials/head.ejs') %>
+    <%- stack('styles') %>
+</head>
+
+<body class="sb-nav-fixed">
+    <%- include('../admin/partials/topbar.ejs') %>
+
+    <div id="layoutSidenav">
+        <%- include('../admin/partials/sidebar.ejs') %>
+
+        <div id="layoutSidenav_content">
+            <%- yieldContent('content') %>
+        </div>
+    </div>
+
+    <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
+    <%- stack('plugins') %>
+    <script src="<%= getAssetPath('/js/manifest.js') %>"></script>
+    <script src="<%= getAssetPath('/js/vendor.js') %>"></script>
+    <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
+    <%- stack('scripts') %>
+</body>
+</html>

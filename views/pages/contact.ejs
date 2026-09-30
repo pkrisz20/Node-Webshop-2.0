@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
         <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
         <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
@@ -12,230 +11,207 @@
 
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/contact.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.contact', current_locale) }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="contact">
+        <div class="wrapper">
+            <h1 class="main-title"><%= languageHandler('nav.contact', current_locale) %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.contact', current_locale) }) %>
+            <section class="container">
 
-        <main class="contact">
-            <div class="wrapper">
-                <h1 class="main-title"><%= languageHandler('nav.contact', current_locale) %></h1>
+                <% if (DB_CONFIG["phone_1"] || DB_CONFIG["phone_2"] || DB_CONFIG["email"] || DB_CONFIG["company_street"] || DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
+                    <aside class="container-contacts">
+                        <%- include('../components/block-title.ejs', { title: languageHandler('general.contact_datas', current_locale) }) %>
 
-                <section class="container">
-
-                    <% if (DB_CONFIG["phone_1"] || DB_CONFIG["phone_2"] || DB_CONFIG["email"] || DB_CONFIG["company_street"] || DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
-                        <aside class="container-contacts">
-                            <%- include('../components/block-title.ejs', { title: languageHandler('general.contact_datas', current_locale) }) %>
-
-                            <div class="container-contacts-links">
-                                <% if (DB_CONFIG["phone_1"]) { %>
-                                    <a class="data" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:<%= DB_CONFIG["phone_1"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-                                <% } %>
-                                <% if (DB_CONFIG["phone_2"]) { %>
-                                    <a class="data" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:<%= DB_CONFIG["phone_2"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
-                                <% } %>
-                                <% if (DB_CONFIG["email"]) { %>
-                                    <a class="data" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-                                <% } %>
-                                <% if (DB_CONFIG["company_street"]) { %>
-                                    <span class="data" aria-label="Link to the map"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></span>
-                                <% } %>
-
-                                <% if (DB_CONFIG["facebook"]) { %>
-                                    <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Facebook" target="blank" class="data"><i class="fab fa-facebook"></i> Facebook</a>
-                                <% } %>
-                                <% if (DB_CONFIG["instagram"]) { %>
-                                    <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Instagram" target="blank" class="data"><i class="fab fa-instagram"></i> Instagram</a>
-                                <% } %>
-                                <% if (DB_CONFIG["tiktok"]) { %>
-                                    <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="TikTok" target="blank" class="data"><i class="fab fa-tiktok"></i> TikTok</a>
-                                <% } %>
-                            </div>
-                        </aside>
-                    <% } %>
-
-                    <div class="container-form">
-                        <%- include('../components/block-title.ejs', { title: languageHandler('general.contact_title', current_locale), subtitle: languageHandler('general.contact_subtitle', current_locale) }) %>
-
-                        <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/contact/handle">
-                            <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
-                                <input
-                                    id="recaptcha"
-                                    value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                                    name="recaptcha"
-                                    type="hidden"
-                                    class="g-recaptcha"
-                                />
+                        <div class="container-contacts-links">
+                            <% if (DB_CONFIG["phone_1"]) { %>
+                                <a class="data" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:<%= DB_CONFIG["phone_1"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
+                            <% } %>
+                            <% if (DB_CONFIG["phone_2"]) { %>
+                                <a class="data" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:<%= DB_CONFIG["phone_2"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
+                            <% } %>
+                            <% if (DB_CONFIG["email"]) { %>
+                                <a class="data" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+                            <% } %>
+                            <% if (DB_CONFIG["company_street"]) { %>
+                                <span class="data" aria-label="Link to the map"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></span>
                             <% } %>
 
-                            <div class="form-row">
+                            <% if (DB_CONFIG["facebook"]) { %>
+                                <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Facebook" target="blank" class="data"><i class="fab fa-facebook"></i> Facebook</a>
+                            <% } %>
+                            <% if (DB_CONFIG["instagram"]) { %>
+                                <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Instagram" target="blank" class="data"><i class="fab fa-instagram"></i> Instagram</a>
+                            <% } %>
+                            <% if (DB_CONFIG["tiktok"]) { %>
+                                <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="TikTok" target="blank" class="data"><i class="fab fa-tiktok"></i> TikTok</a>
+                            <% } %>
+                        </div>
+                    </aside>
+                <% } %>
+
+                <div class="container-form">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('general.contact_title', current_locale), subtitle: languageHandler('general.contact_subtitle', current_locale) }) %>
+
+                    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/contact/handle">
+                        <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+                            <input
+                                id="recaptcha"
+                                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
+                                name="recaptcha"
+                                type="hidden"
+                                class="g-recaptcha"
+                            />
+                        <% } %>
+
+                        <div class="form-row">
+                            <input
+                                id="first-name"
+                                data-rule-required="true"
+                                name="firstName"
+                                type="text"
+                                placeholder="<%= languageHandler('validations.first_name', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label class="form-label" for="first-name">
+                                <%= languageHandler('validations.first_name', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <input
+                                id="last-name"
+                                data-rule-required="true"
+                                name="lastName"
+                                type="text"
+                                placeholder="<%= languageHandler('validations.last_name', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label class="form-label" for="last-name">
+                                <%= languageHandler('validations.last_name', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <input
+                                id="contact-phone"
+                                data-rule-required="true"
+                                name="phone"
+                                type="text"
+                                placeholder="<%= languageHandler('validations.phone_number', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label class="form-label" for="contact-phone">
+                                <%= languageHandler('validations.phone_number', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <input
+                                id="contact-email"
+                                data-rule-required="true"
+                                data-rule-email="true"
+                                name="email"
+                                type="email"
+                                placeholder="<%= languageHandler('validations.email', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label class="form-label" for="contact-email">
+                                <%= languageHandler('validations.email', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <input
+                                id="contact-city"
+                                data-rule-required="true"
+                                name="city"
+                                type="text"
+                                placeholder="<%= languageHandler('validations.city', current_locale) %>"
+                                class="form-control"
+                            />
+                            <label class="form-label" for="contact-city">
+                                <%= languageHandler('validations.city', current_locale) %>
+                            </label>
+
+                            <i class="error-icon fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <textarea
+                                id="contact-message"
+                                name="comment"
+                                data-rule-required="true"
+                                data-rule-max-length="<%= config.forms.contact.messageMaxLength %>"
+                                placeholder="<%= languageHandler('validations.message', current_locale) %>"
+                                class="form-control--textarea js-characters-count"
+                                rows="10"
+                                maxlength="<%= config.forms.contact.messageMaxLength %>"></textarea>
+                            <label
+                                for="contact-message"
+                                class="form-label form-textarea">
+                                <%= languageHandler('validations.message', current_locale) %>
+                            </label>
+
+                            <i class="error-icon textarea-error fas fa-times" style="display: none;"></i>
+                            <div class="form-row-error" style="display: none;"></div>
+
+                            <small class="characters-count js-counter"><span>1000</span> / 1000</small>
+                        </div>
+
+                        <div class="form-row gdpr">
+                            <label
+                                class="form-label"
+                                for="data-handling">
+                                <%= languageHandler('validations.accept_policy', current_locale) %>
+
                                 <input
-                                    id="first-name"
-                                    data-rule-required="true"
-                                    name="firstName"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.first_name', current_locale) %>"
-                                    class="form-control"
+                                    id="data-handling"
+                                    name="accept"
+                                    type="checkbox"
+                                    checked="checked"
+                                    class="form-row-checkbox"
                                 />
-                                <label class="form-label" for="first-name">
-                                    <%= languageHandler('validations.first_name', current_locale) %>
-                                </label>
+                                <span class="checkmark"></span>
+                            </label>
+                            <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content') %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
+                        </div>
 
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
+                        <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
+                    </form>
+                </div>
+            </section>
+        </div>
 
-                            <div class="form-row">
-                                <input
-                                    id="last-name"
-                                    data-rule-required="true"
-                                    name="lastName"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.last_name', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="last-name">
-                                    <%= languageHandler('validations.last_name', current_locale) %>
-                                </label>
+        <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
+            <section class="contact-map" data-anchor="location">
+                <div style="width: 100%; height: 450px; z-index: 30;" id="map"></div>
+            </section>
+        <% } %>
+    </main>
+<%- endSection() %>
 
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
+<%- push('plugins') %>
+    <%- include('../partials/validation-scripts.ejs') %>
+<%- endPush() %>
 
-                            <div class="form-row">
-                                <input
-                                    id="contact-phone"
-                                    data-rule-required="true"
-                                    name="phone"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.phone_number', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="contact-phone">
-                                    <%= languageHandler('validations.phone_number', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
-
-                            <div class="form-row">
-                                <input
-                                    id="contact-email"
-                                    data-rule-required="true"
-                                    data-rule-email="true"
-                                    name="email"
-                                    type="email"
-                                    placeholder="<%= languageHandler('validations.email', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="contact-email">
-                                    <%= languageHandler('validations.email', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
-
-                            <div class="form-row">
-                                <input
-                                    id="contact-city"
-                                    data-rule-required="true"
-                                    name="city"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.city', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="contact-city">
-                                    <%= languageHandler('validations.city', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
-
-                            <div class="form-row">
-                                <textarea
-                                    id="contact-message"
-                                    name="comment"
-                                    data-rule-required="true"
-                                    data-rule-max-length="1000"
-                                    placeholder="<%= languageHandler('validations.message', current_locale) %>"
-                                    class="form-control--textarea js-characters-count"
-                                    rows="10"
-                                    maxlength="1000"></textarea>
-                                <label
-                                    for="contact-message"
-                                    class="form-label form-textarea">
-                                    <%= languageHandler('validations.message', current_locale) %>
-                                </label>
-
-                                <i class="error-icon textarea-error fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-
-                                <small class="characters-count js-counter"><span>1000</span> / 1000</small>
-                            </div>
-
-                            <div class="form-row gdpr">
-                                <label
-                                    class="form-label"
-                                    for="data-handling">
-                                    <%= languageHandler('validations.accept_policy', current_locale) %>
-
-                                    <input
-                                        id="data-handling"
-                                        name="accept"
-                                        type="checkbox"
-                                        checked="checked"
-                                        class="form-row-checkbox"
-                                    />
-                                    <span class="checkmark"></span>
-                                </label>
-                                <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content') %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
-                            </div>
-
-                            <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
-                        </form>
-                    </div>
-                </section>
-            </div>
-
-            <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
-                <section class="contact-map" data-anchor="location">
-                    <div style="width: 100%; height: 450px; z-index: 30;" id="map"></div>
-                </section>
-            <% } %>
-        </main>
-
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
-        <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-    <% } %>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-
-    <% if (current_locale != 'en') { %>
-        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
-    <% } %>
-
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-
+<%- push('scripts') %>
     <% if (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) { %>
         <script type="text/javascript">
             var platform = new H.service.Platform({
@@ -271,5 +247,4 @@
             });
         </script>
     <% } %>
-</body>
-</html>
+<%- endPush() %>

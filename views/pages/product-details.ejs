@@ -1,272 +1,246 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/product-details.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', {
+        currentLinkName: productDetails.name,
+        previousLinkName: productDetails.category_name,
+        previousLink: productDetails.categorySlug + "/" + languageHandler('slugs.products', current_locale) + "/" + productDetails.categoryID
+    }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="product-details">
 
-        <%- include('../components/breadcrumbs.ejs', {
-            currentLinkName: productDetails.name,
-            previousLinkName: productDetails.category_name,
-            previousLink: productDetails.categorySlug + "/" + languageHandler('slugs.products', current_locale) + "/" + productDetails.categoryID
-        }) %>
+            <section class="product-details-section">
+                <div class="wrapper">
+                    <div class="details">
+                        <div class="details-gallery">
+                            <div class="details-gallery__lead-image icon--hover js-gallery-thumb">
+                                <i class="fas fa-search-plus search-icon"></i>
 
-        <main class="product-details">
-
-                <section class="product-details-section">
-                    <div class="wrapper">
-                        <div class="details">
-                            <div class="details-gallery">
-                                <div class="details-gallery__lead-image icon--hover js-gallery-thumb">
-                                    <i class="fas fa-search-plus search-icon"></i>
-
-                                    <%- include('../components/picture.ejs', {
-                                        imgClass: "details-thumbnail",
-                                        imageSrc: productDetails.thumbnailImage,
-                                        alt: productDetails.name
-                                    }) %>
-                                </div>
-
-                                <% if (productDetails.images.length > 0) { %>
-                                    <div class="details-gallery__thumbs js-gallery">
-                                        <div class="hide" data-src="<%= productDetails.thumbnailImage %>">
-                                            <img src="<%= productDetails.thumbnailImage %>" alt="<%= productDetails.name %> thumbnail">
-                                        </div>
-                                        <% productDetails.images.forEach((image, index) => { %>
-                                            <div class="icon--hover" data-src="<%= image %>">
-                                                <i class="fas fa-search-plus search-icon"></i>
-
-                                                <%- include('../components/picture.ejs', {
-                                                    imageSrc: image,
-                                                    alt: productDetails.name + " #" + (index + 1)
-                                                }) %>
-                                            </div>
-                                        <% }) %>
-                                    </div>
-                                <% } %>
+                                <%- include('../components/picture.ejs', {
+                                    imgClass: "details-thumbnail",
+                                    imageSrc: productDetails.thumbnailImage,
+                                    alt: productDetails.name
+                                }) %>
                             </div>
 
-                            <div class="details-desc">
-                                <h1 class="main-title details-desc-title"><%= productDetails.name %></h1>
-
-                                <% if (productDetails.short) { %>
-                                    <p class="details-desc-short"><%= productDetails.short %></p>
-                                <% } %>
-
-                                <div class="table">
-                                    <div class="table_label"><%= languageHandler('general.category', current_locale) %>: <strong><%= productDetails.category_name %></strong></div>
-
-                                    <% if (productDetails.isAvailable) { %>
-                                        <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="green"><i class="fas fa-check-circle"></i> <%= languageHandler('products.available', current_locale) %></strong></div>
-                                    <% } else if (!productDetails.isAvailable) { %>
-                                        <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="red"><i class="fas fa-times-circle"></i> <%= languageHandler('products.out_of_stock', current_locale) %></strong></div>
-                                    <% } %>
-
-                                    <% if (productDetails.isPostable) { %>
-                                        <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong class="yellow"><i class="fas fa-truck"></i> <%= languageHandler('products.postable', current_locale) %></strong></div>
-                                    <% } else if (!productDetails.isPostable) { %>
-                                        <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong><i class="fas fa-exclamation-circle"></i> <%= languageHandler('products.not_postable', current_locale) %></strong></div>
-                                    <% } %>
-
-                                    <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
-                                        <div class="table_label"><%= languageHandler('products.savings', current_locale) %>: <strong class="savings"><%= productDetails.savings %> RSD</strong></div>
-                                    <% } %>
-
-                                    <% if (productDetails.averageRating > 0 && productDetails.allRatingsCount > 0) { %>
-                                        <div class="table_label">
-                                            <%= languageHandler('products.average_rating', current_locale) %>:
-                                            <strong class="rating">
-                                                <% for (var index = 0; index < productDetails.averageRating; index++) { %>
-                                                    <i class="fas fa-star"></i>
-                                                <% } %>
-                                                (<%= productDetails.allRatingsCount %>)
-                                            </strong>
-                                        </div>
-                                    <% } %>
-                                </div>
-
-                                <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
-                                    <div class="details-desc__timer">
-                                        <strong class="details-desc__timer-title"><%= languageHandler('products.discount_expires_in', current_locale) %></strong>
-                                        <div class="details-desc__timer-timer js-countdown-timer" data-expires="<%= productDetails.discountEndDate %> 23:59:59"></div>
+                            <% if (productDetails.images.length > 0) { %>
+                                <div class="details-gallery__thumbs js-gallery">
+                                    <div class="hide" data-src="<%= productDetails.thumbnailImage %>">
+                                        <img src="<%= productDetails.thumbnailImage %>" alt="<%= productDetails.name %> thumbnail">
                                     </div>
-                                <% } %>
+                                    <% productDetails.images.forEach((image, index) => { %>
+                                        <div class="icon--hover" data-src="<%= image %>">
+                                            <i class="fas fa-search-plus search-icon"></i>
 
-                                <div class="prices">
-                                    <strong class="prices-price"><%= (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) ? productDetails.discount : productDetails.price %> <small>RSD</small></strong>
-
-                                    <% if (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) { %>
-                                        <del class="prices-discount-price"><%= productDetails.price %> RSD</del>
-                                    <% } %>
-                                </div>
-
-                                <div class="details-desc-functions">
-
-                                    <button
-                                        type="button"
-                                        class="details-desc-functions__wishlist js-wishlist-btn <%= productDetails.saved_in_wishlist ? 'saved' : '' %>"
-                                        data-operation="<%= productDetails.saved_in_wishlist ? 'remove' : 'add' %>"
-                                        data-url="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist-handle/<%= productDetails.id %>"
-                                    >
-                                        <i class="far fa-heart"></i>
-                                        <i class="fas fa-heart"></i>
-                                    </button>
-
-                                    <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
-                                        <div class="quantities js-quantities">
-                                            <button
-                                                type="button"
-                                                title="<%= languageHandler('products.decrease_quantity', current_locale) %>"
-                                                aria-label="<%= languageHandler('products.decrease_quantity', current_locale) %>"
-                                                class="quantities-btn minus js-details-quantity-btn"
-                                            >
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input
-                                                class="quantities-input js-product-details-quantity"
-                                                value="1"
-                                                type="number"
-                                                min="1"
-                                                max="<%= productDetails.maxQuantity %>"
-                                                aria-label="<%= languageHandler('products.quantity', current_locale) %>"
-                                            />
-                                            <button
-                                                type="button"
-                                                title="<%= languageHandler('products.increase_quantity', current_locale) %>"
-                                                aria-label="<%= languageHandler('products.increase_quantity', current_locale) %>"
-                                                class="quantities-btn plus js-details-quantity-btn"
-                                            >
-                                                <i class="fas fa-plus"></i>
-                                            </button>
+                                            <%- include('../components/picture.ejs', {
+                                                imageSrc: image,
+                                                alt: productDetails.name + " #" + (index + 1)
+                                            }) %>
                                         </div>
-                                    <% } %>
-
-                                    <% if (isAlreadyInCart) { %>
-                                        <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
-                                    <% } %>
-
-                                    <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
-                                        <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>" aria-label="<%= languageHandler('products.add_cart', current_locale) %>" title="<%= languageHandler('products.add_cart', current_locale) %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
-                                    <% } %>
+                                    <% }) %>
                                 </div>
-                            </div>
+                            <% } %>
                         </div>
 
-                        <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.product', current_locale) + "/" + productDetails.slug + "/" + productDetails.id, mail_subject: productDetails.name }) %>
+                        <div class="details-desc">
+                            <h1 class="main-title details-desc-title"><%= productDetails.name %></h1>
 
-                        <% if (productDetails.description || productDetails.productParams.length > 0) { %>
+                            <% if (productDetails.short) { %>
+                                <p class="details-desc-short"><%= productDetails.short %></p>
+                            <% } %>
 
-                            <div class="tabs js-tabs">
-                                <nav class="tabs__header">
-                                    <ul class="tabs__header-list">
-                                        <% if (productDetails.description) { %>
-                                            <li>
-                                                <button data-tab-link="#product-desc" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_desc', current_locale) %></button>
-                                            </li>
-                                        <% } %>
-                                        <% if (productDetails.productParams.length > 0) { %>
-                                            <li>
-                                                <button data-tab-link="#product-params" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_params', current_locale) %></button>
-                                            </li>
-                                        <% } %>
-                                    </ul>
-                                </nav>
-                                <div class="tabs__content js-tabs-content">
+                            <div class="table">
+                                <div class="table_label"><%= languageHandler('general.category', current_locale) %>: <strong><%= productDetails.category_name %></strong></div>
+
+                                <% if (productDetails.isAvailable) { %>
+                                    <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="green"><i class="fas fa-check-circle"></i> <%= languageHandler('products.available', current_locale) %></strong></div>
+                                <% } else if (!productDetails.isAvailable) { %>
+                                    <div class="table_label"><%= languageHandler('products.status', current_locale) %>: <strong class="red"><i class="fas fa-times-circle"></i> <%= languageHandler('products.out_of_stock', current_locale) %></strong></div>
+                                <% } %>
+
+                                <% if (productDetails.isPostable) { %>
+                                    <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong class="yellow"><i class="fas fa-truck"></i> <%= languageHandler('products.postable', current_locale) %></strong></div>
+                                <% } else if (!productDetails.isPostable) { %>
+                                    <div class="table_label"><%= languageHandler('products.shipping', current_locale) %>: <strong><i class="fas fa-exclamation-circle"></i> <%= languageHandler('products.not_postable', current_locale) %></strong></div>
+                                <% } %>
+
+                                <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
+                                    <div class="table_label"><%= languageHandler('products.savings', current_locale) %>: <strong class="savings"><%= productDetails.savings %> <%= currency %></strong></div>
+                                <% } %>
+
+                                <% if (productDetails.averageRating > 0 && productDetails.allRatingsCount > 0) { %>
+                                    <div class="table_label">
+                                        <%= languageHandler('products.average_rating', current_locale) %>:
+                                        <strong class="rating">
+                                            <% for (var index = 0; index < productDetails.averageRating; index++) { %>
+                                                <i class="fas fa-star"></i>
+                                            <% } %>
+                                            (<%= productDetails.allRatingsCount %>)
+                                        </strong>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <% if (productDetails.isOnDiscount && productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) { %>
+                                <div class="details-desc__timer">
+                                    <strong class="details-desc__timer-title"><%= languageHandler('products.discount_expires_in', current_locale) %></strong>
+                                    <div class="details-desc__timer-timer js-countdown-timer" data-expires="<%= productDetails.discountEndDate %> 23:59:59"></div>
+                                </div>
+                            <% } %>
+
+                            <div class="prices">
+                                <strong class="prices-price"><%= (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) ? productDetails.discount : productDetails.price %> <small><%= currency %></small></strong>
+
+                                <% if (productDetails.isOnDiscount && ((productDetails.discountEndDate && new Date(productDetails.discountEndDate).getTime() > Date.now()) || !productDetails.discountEndDate)) { %>
+                                    <del class="prices-discount-price"><%= productDetails.price %> <%= currency %></del>
+                                <% } %>
+                            </div>
+
+                            <div class="details-desc-functions">
+
+                                <button
+                                    type="button"
+                                    class="details-desc-functions__wishlist js-wishlist-btn <%= productDetails.saved_in_wishlist ? 'saved' : '' %>"
+                                    data-operation="<%= productDetails.saved_in_wishlist ? 'remove' : 'add' %>"
+                                    data-url="<%= process.env.APP_URL %>/<%= current_locale %>/wishlist-handle/<%= productDetails.id %>"
+                                >
+                                    <i class="far fa-heart"></i>
+                                    <i class="fas fa-heart"></i>
+                                </button>
+
+                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                    <div class="quantities js-quantities">
+                                        <button
+                                            type="button"
+                                            title="<%= languageHandler('products.decrease_quantity', current_locale) %>"
+                                            aria-label="<%= languageHandler('products.decrease_quantity', current_locale) %>"
+                                            class="quantities-btn minus js-details-quantity-btn"
+                                        >
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input
+                                            class="quantities-input js-product-details-quantity"
+                                            value="1"
+                                            type="number"
+                                            min="1"
+                                            max="<%= productDetails.maxQuantity %>"
+                                            aria-label="<%= languageHandler('products.quantity', current_locale) %>"
+                                        />
+                                        <button
+                                            type="button"
+                                            title="<%= languageHandler('products.increase_quantity', current_locale) %>"
+                                            aria-label="<%= languageHandler('products.increase_quantity', current_locale) %>"
+                                            class="quantities-btn plus js-details-quantity-btn"
+                                        >
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                <% } %>
+
+                                <% if (isAlreadyInCart) { %>
+                                    <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
+                                <% } %>
+
+                                <% if (productDetails.isAvailable && !isAlreadyInCart) { %>
+                                    <button class="details-desc-functions-cart js-add-to-cart" type="button" data-id="<%= productDetails.id %>" aria-label="<%= languageHandler('products.add_cart', current_locale) %>" title="<%= languageHandler('products.add_cart', current_locale) %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler('products.add_cart', current_locale) %></button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.product', current_locale) + "/" + productDetails.slug + "/" + productDetails.id, mail_subject: productDetails.name }) %>
+
+                    <% if (productDetails.description || productDetails.productParams.length > 0) { %>
+
+                        <div class="tabs js-tabs">
+                            <nav class="tabs__header">
+                                <ul class="tabs__header-list">
                                     <% if (productDetails.description) { %>
-                                        <div id="product-desc">
-                                            <div class="ck-content"><%- productDetails.description %></div>
-                                        </div>
+                                        <li>
+                                            <button data-tab-link="#product-desc" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_desc', current_locale) %></button>
+                                        </li>
                                     <% } %>
                                     <% if (productDetails.productParams.length > 0) { %>
-                                        <dl id="product-params">
-                                            <ul>
-                                                <% productDetails.productParams.forEach(parameter => { %>
-                                                    <li>
-                                                        <dt><%= parameter.name %></dt>
-                                                        <dd><%= parameter.value %></dd>
-                                                    </li>
-                                                <% }) %>
-                                            </ul>
-                                        </dl>
+                                        <li>
+                                            <button data-tab-link="#product-params" class="tabs__header-btn js-tab-link"><%= languageHandler('products.product_params', current_locale) %></button>
+                                        </li>
                                     <% } %>
-                                </div>
+                                </ul>
+                            </nav>
+                            <div class="tabs__content js-tabs-content">
+                                <% if (productDetails.description) { %>
+                                    <div id="product-desc">
+                                        <div class="ck-content"><%- productDetails.description %></div>
+                                    </div>
+                                <% } %>
+                                <% if (productDetails.productParams.length > 0) { %>
+                                    <dl id="product-params">
+                                        <ul>
+                                            <% productDetails.productParams.forEach(parameter => { %>
+                                                <li>
+                                                    <dt><%= parameter.name %></dt>
+                                                    <dd><%= parameter.value %></dd>
+                                                </li>
+                                            <% }) %>
+                                        </ul>
+                                    </dl>
+                                <% } %>
                             </div>
+                        </div>
+                    <% } %>
+                </div>
+            </section>
+
+            <% if (productDetails.isAllowed) { %>
+                <%- include('../components/comments.ejs', { itemId: productDetails.id, articleType: "product" }) %>
+            <% } %>
+
+            <% if (similarProducts.length > 0) { %>
+                <section class="products-carousel">
+                    <div class="wrapper">
+                        <%- include('../components/block-title.ejs', { title: languageHandler('products.similar_products', current_locale) }) %>
+
+                        <div class="js-featured-products">
+                            <% similarProducts.forEach(item => { %>
+                                <div class="slide">
+                                    <%- include("../components/product-card.ejs", { product: item }) %>
+                                </div>
+                            <% }) %>
+                        </div>
+
+                        <% if (similarProducts.length > 1) { %>
+                            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+                            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
                         <% } %>
                     </div>
                 </section>
+            <% } %>
+        </div>
+    </main>
+<%- endSection() %>
 
-                <% if (productDetails.isAllowed) { %>
-                    <%- include('../components/comments.ejs', { itemId: productDetails.id, articleType: "product" }) %>
-                <% } %>
-
-                <% if (similarProducts.length > 0) { %>
-                    <section class="products-carousel">
-                        <div class="wrapper">
-                            <%- include('../components/block-title.ejs', { title: languageHandler('products.similar_products', current_locale) }) %>
-
-                            <div class="js-featured-products">
-                                <% similarProducts.forEach(item => { %>
-                                    <div class="slide">
-                                        <%- include("../components/product-card.ejs", { product: item }) %>
-                                    </div>
-                                <% }) %>
-                            </div>
-
-                            <% if (similarProducts.length > 1) { %>
-                                <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-                                <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
-                            <% } %>
-                        </div>
-                    </section>
-                <% } %>
-            </div>
-        </main>
-
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+<%- push('plugins') %>
     <% if (productDetails.isOnDiscount) { %>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.plugin.min.js') %>"></script>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countdown.min.js') %>"></script>
     <% } %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <% if (productDetails.isAllowed) { %>
-
-        <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
-            <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-        <% } %>
-
-        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-    <% } %>
-
-    <% if (current_locale != 'en' && productDetails.isAllowed) { %>
-        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
+        <%- include('../partials/validation-scripts.ejs') %>
     <% } %>
 
     <% if (productDetails.images.length > 0) { %>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/lightbox.min.js') %>"></script>
     <% } %>
+<%- endPush() %>
 
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-
+<%- push('scripts') %>
     <% if (productDetails.isAllowed && showLoadMoreButton) { %>
         <script type="text/javascript">
             $('body').on('click', '.js-load-more-comments', function () {
@@ -366,5 +340,4 @@
             });
         </script>
     <% } %>
-</body>
-</html>
+<%- endPush() %>

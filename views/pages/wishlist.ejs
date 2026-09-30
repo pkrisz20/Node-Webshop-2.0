@@ -1,55 +1,33 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/product-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.wishlist', current_locale) }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="list">
+        <div class="wrapper">
+            <h1 class="main-title"><%= languageHandler('general.wishlist', current_locale) %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.wishlist', current_locale) }) %>
+            <section class="listpage products">
+                <% if (wishlistTotalNumber > 0) { %>
+                    <strong class="listpage__total-count"><%= wishlistTotalNumber %> <%= languageHandler('general.product', current_locale) %></strong>
+                <% } %>
 
-        <main class="list">
-            <div class="wrapper">
-                <h1 class="main-title"><%= languageHandler('general.wishlist', current_locale) %></h1>
-
-                <section class="listpage products">
-                    <% if (wishlistTotalNumber > 0) { %>
-                        <strong class="listpage__total-count"><%= wishlistTotalNumber %> <%= languageHandler('general.product', current_locale) %></strong>
-                    <% } %>
-
-                    <% if (wishlistProducts.length > 0) { %>
-                        <div class="listpage-container">
-                            <% wishlistProducts.forEach(product => { %>
-                                <%- include("../components/product-card.ejs", { product: product }) %>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('general.no_items_in_wishlist', current_locale) %></strong>
-                        </div>
-                    <% } %>
-                </section>
-            </div>
-        </main>
-
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+                <% if (wishlistProducts.length > 0) { %>
+                    <div class="listpage-container">
+                        <% wishlistProducts.forEach(product => { %>
+                            <%- include("../components/product-card.ejs", { product: product }) %>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="system-info">
+                        <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('general.no_items_in_wishlist', current_locale) %></strong>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </main>
+<%- endSection() %>

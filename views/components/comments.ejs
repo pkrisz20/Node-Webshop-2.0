@@ -61,11 +61,11 @@
                     id="comment-message"
                     name="comment"
                     data-rule-required="true"
-                    data-rule-max-length="1000"
+                    data-rule-max-length="<%= config.forms.comment.textMaxLength %>"
                     placeholder="<%= languageHandler('general.comment', current_locale) %>"
                     class="form-control--textarea js-characters-count"
                     rows="10"
-                    maxlength="1000"></textarea>
+                    maxlength="<%= config.forms.comment.textMaxLength %>"></textarea>
                 <label
                     for="comment-message"
                     class="form-label form-textarea">
@@ -81,16 +81,10 @@
             <% if (articleType === 'product') { %>
                 <div class="form-row">
                     <div class="rating js-ratings-option">
-                        <input type="radio" id="star5" name="rating" value="5">
-                        <label for="star5">&#9733;</label>
-                        <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4">&#9733;</label>
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3">&#9733;</label>
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2">&#9733;</label>
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1">&#9733;</label>
+                        <% for (let star = config.forms.comment.maxRating; star >= 1; star--) { %>
+                            <input type="radio" id="star<%= star %>" name="rating" value="<%= star %>">
+                            <label for="star<%= star %>">&#9733;</label>
+                        <% } %>
                     </div>
                 </div>
             <% } %>

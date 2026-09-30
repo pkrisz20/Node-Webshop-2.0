@@ -1,0 +1,24 @@
+<%#
+    Public page with header, mini cart, footer and the cookie consent panel.
+
+    Sections: content
+    Stacks:   the stacks of layouts/document (styles, plugins, scripts)
+-%>
+<%- extend('layouts/document') %>
+
+<%- section('body') %>
+    <div class="site-overlay"></div>
+    <div class="site-wrap">
+        <%- include('../partials/header.ejs') %>
+
+        <%- include('../components/cart.ejs') %>
+
+        <%- yieldContent('content') %>
+
+        <%- include('../partials/footer.ejs') %>
+    </div>
+
+    <% if (process.env.GDPR_ENABLED || false) { %>
+        <%- include('../components/cookie-panel') %>
+    <% } %>
+<%- endSection() %>

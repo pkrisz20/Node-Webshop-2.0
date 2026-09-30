@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
     <% if (blogDetails.images.length > 0) { %>
@@ -9,145 +8,120 @@
     <% } %>
 
     <link rel="preload" href="<%= getAssetPath('/css/blog-details.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', {
+        currentLinkName: blogDetails.title,
+        previousLinkName: languageHandler('nav.blog', current_locale),
+        previousLink: languageHandler('slugs.blogs', current_locale)
+    }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="blog-details">
+        <section class="blog-details-section">
+            <div class="wrapper">
+                <h1 class="main-title"><%= blogDetails.title %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', {
-            currentLinkName: blogDetails.title,
-            previousLinkName: languageHandler('nav.blog', current_locale),
-            previousLink: languageHandler('slugs.blogs', current_locale)
-        }) %>
+                <div class="blog-container">
+                    <article class="blog-article <%= nextEvents.length > 0 ? 'has-sidebar' : '' %>">
+                        <header class="blog-article__header">
+                            <time class="blog-article__date"><%= blogDetails.date %></time>
+                            <strong class="blog-article__author"><%= blogDetails.author %></strong>
+                        </header>
+                        <div class="blog-thumbnail <%= blogDetails.images.length > 0 ? 'icon--hover js-gallery-thumb' : ''%>">
+                            <i class="fas fa-search-plus search-icon"></i>
 
-        <main class="blog-details">
-            <section class="blog-details-section">
-                <div class="wrapper">
-                    <h1 class="main-title"><%= blogDetails.title %></h1>
-
-                    <div class="blog-container">
-                        <article class="blog-article <%= nextEvents.length > 0 ? 'has-sidebar' : '' %>">
-                            <header class="blog-article__header">
-                                <time class="blog-article__date"><%= blogDetails.date %></time>
-                                <strong class="blog-article__author"><%= blogDetails.author %></strong>
-                            </header>
-                            <div class="blog-thumbnail <%= blogDetails.images.length > 0 ? 'icon--hover js-gallery-thumb' : ''%>">
-                                <i class="fas fa-search-plus search-icon"></i>
-
-                                <%- include('../components/picture.ejs', {
-                                    imageSrc: blogDetails.thumb_image,
-                                    alt: blogDetails.title
-                                }) %>
-                            </div>
-
-                            <% if (blogDetails.images.length > 0) { %>
-                                <div class="blog-article__thumbs js-gallery">
-                                    <div class="hide" data-src="<%= blogDetails.thumb_image %>">
-                                        <img src="<%= blogDetails.thumb_image %>" alt="<%= blogDetails.title %> thumbnail">
-                                    </div>
-                                    <% blogDetails.images.forEach((image, index) => { %>
-                                        <div class="icon--hover" data-src="<%= image %>">
-                                            <i class="fas fa-search-plus search-icon"></i>
-
-                                            <%- include('../components/picture.ejs', {
-                                                imageSrc: image,
-                                                alt: blogDetails.title + " #" + (index + 1)
-                                            }) %>
-                                        </div>
-                                    <% }) %>
-                                </div>
-                            <% } %>
-
-                            <div class="ck-content">
-                                <%- blogDetails.description %>
-                            </div>
-
-                            <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.article', current_locale) + "/" + blogDetails.slug + "/" + blogDetails.id, mail_subject: blogDetails.title }) %>
-                        </article>
-
-                        <% if (nextEvents.length > 0) { %>
-                            <aside class="blog-aside">
-                                <%- include('../components/block-title.ejs', { title: languageHandler('general.next_events', current_locale) }) %>
-
-                                <% nextEvents.forEach((event, index) => { %>
-                                    <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.article', current_locale) %>/<%= event.slug %>/<%= event.id %>" title="<%= event.title %>" aria-label="<%= event.title %>">
-                                        <div class="blog-aside-article-image">
-                                            <%- include('../components/picture.ejs', {
-                                                imageSrc: event.image,
-                                                alt: event.title
-                                            }) %>
-                                        </div>
-
-                                        <div class="texts">
-                                            <h3 class="texts-title"><%= event.title %></h3>
-                                            <time class="texts-time"><i class="fas fa-history"></i> <%= event.date %></time>
-                                        </div>
-                                    </a>
-                                <% }) %>
-                            </aside>
-                        <% } %>
-                    </div>
-                </div>
-            </section>
-
-            <% if (blogDetails.isAllowed) { %>
-                <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
-            <% } %>
-
-            <% if (newestBlogs.length > 0) { %>
-                <section class="featured-blogs">
-                    <div class="wrapper">
-                        <%- include('../components/block-title.ejs', { title: languageHandler('general.newest_blogs', current_locale) }) %>
-
-                        <div class="js-featured-blogs">
-                            <% newestBlogs.forEach(item => { %>
-                                <div class="slide">
-                                    <%- include("../components/blog-card.ejs", { blog: item }) %>
-                                </div>
-                            <% }) %>
+                            <%- include('../components/picture.ejs', {
+                                imageSrc: blogDetails.thumb_image,
+                                alt: blogDetails.title
+                            }) %>
                         </div>
 
-                        <% if (newestBlogs.length > 1) { %>
-                            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-                            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+                        <% if (blogDetails.images.length > 0) { %>
+                            <div class="blog-article__thumbs js-gallery">
+                                <div class="hide" data-src="<%= blogDetails.thumb_image %>">
+                                    <img src="<%= blogDetails.thumb_image %>" alt="<%= blogDetails.title %> thumbnail">
+                                </div>
+                                <% blogDetails.images.forEach((image, index) => { %>
+                                    <div class="icon--hover" data-src="<%= image %>">
+                                        <i class="fas fa-search-plus search-icon"></i>
+
+                                        <%- include('../components/picture.ejs', {
+                                            imageSrc: image,
+                                            alt: blogDetails.title + " #" + (index + 1)
+                                        }) %>
+                                    </div>
+                                <% }) %>
+                            </div>
                         <% } %>
+
+                        <div class="ck-content">
+                            <%- blogDetails.description %>
+                        </div>
+
+                        <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.article', current_locale) + "/" + blogDetails.slug + "/" + blogDetails.id, mail_subject: blogDetails.title }) %>
+                    </article>
+
+                    <% if (nextEvents.length > 0) { %>
+                        <aside class="blog-aside">
+                            <%- include('../components/block-title.ejs', { title: languageHandler('general.next_events', current_locale) }) %>
+
+                            <% nextEvents.forEach((event, index) => { %>
+                                <a class="blog-aside-article" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.article', current_locale) %>/<%= event.slug %>/<%= event.id %>" title="<%= event.title %>" aria-label="<%= event.title %>">
+                                    <div class="blog-aside-article-image">
+                                        <%- include('../components/picture.ejs', {
+                                            imageSrc: event.image,
+                                            alt: event.title
+                                        }) %>
+                                    </div>
+
+                                    <div class="texts">
+                                        <h3 class="texts-title"><%= event.title %></h3>
+                                        <time class="texts-time"><i class="fas fa-history"></i> <%= event.date %></time>
+                                    </div>
+                                </a>
+                            <% }) %>
+                        </aside>
+                    <% } %>
+                </div>
+            </div>
+        </section>
+
+        <% if (blogDetails.isAllowed) { %>
+            <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
+        <% } %>
+
+        <% if (newestBlogs.length > 0) { %>
+            <section class="featured-blogs">
+                <div class="wrapper">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('general.newest_blogs', current_locale) }) %>
+
+                    <div class="js-featured-blogs">
+                        <% newestBlogs.forEach(item => { %>
+                            <div class="slide">
+                                <%- include("../components/blog-card.ejs", { blog: item }) %>
+                            </div>
+                        <% }) %>
                     </div>
-                </section>
-            <% } %>
-        </main>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
+                    <% if (newestBlogs.length > 1) { %>
+                        <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
+                    <% } %>
+                </div>
+            </section>
+        <% } %>
+    </main>
+<%- endSection() %>
 
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+<%- push('plugins') %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <% if (blogDetails.images.length > 0) { %>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/lightbox.min.js') %>"></script>
     <% } %>
 
     <% if (blogDetails.isAllowed) { %>
-
-        <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
-            <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
-        <% } %>
-
-        <script type="text/javascript" src="<%= getAssetPath('/js/plugins/validate.min.js') %>"></script>
-    <% } %>
-
-    <% if (current_locale != 'en' && blogDetails.isAllowed) { %>
-        <script type="text/javascript" src='<%= getAssetPath("/js/plugins/validator_messages_" + current_locale + ".js") %>'></script>
+        <%- include('../partials/validation-scripts.ejs') %>
     <% } %>
 
     <% if (blogDetails.isAllowed && showLoadMoreButton) { %>
@@ -224,7 +198,4 @@
             });
         </script>
     <% } %>
-
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+<%- endPush() %>

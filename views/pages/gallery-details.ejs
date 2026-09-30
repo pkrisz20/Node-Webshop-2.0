@@ -1,112 +1,97 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/gallery-details.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', {
+        currentLinkName: galleryData.galleryName,
+        previousLinkName: languageHandler('nav.gallery', current_locale),
+        previousLink: languageHandler('slugs.galleries', current_locale)
+    }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="gallery-details">
+        <div class="wrapper">
+            <h1 class="main-title"><%= galleryData.galleryName %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', {
-            currentLinkName: galleryData.galleryName,
-            previousLinkName: languageHandler('nav.gallery', current_locale),
-            previousLink: languageHandler('slugs.galleries', current_locale)
-        }) %>
+            <time class="gallery-details-date"><%= galleryData.date %></time>
 
-        <main class="gallery-details">
-            <div class="wrapper">
-                <h1 class="main-title"><%= galleryData.galleryName %></h1>
-
-                <time class="gallery-details-date"><%= galleryData.date %></time>
-
-                <% if (galleryData.description) { %>
-                    <p class="gallery-details-desc"><%= galleryData.description %></p>
-                <% } %>
-
-                <section class="<%= (galleryData.galleryImages && galleryData.galleryImages.length > 0) ? 'gallery-grid js-gallery' : '' %>">
-                    <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
-                        <% galleryData.galleryImages.forEach((image, index) => { %>
-                            <figure class="gallery-grid-item" data-src="<%= image %>">
-                                <figcaption class="icon">
-                                    <i class="far fa-eye"></i>
-                                </figcaption>
-
-                                <%- include('../components/picture.ejs', {
-                                    imageSrc: image,
-                                    alt: galleryData.galleryName + " #" + (index + 1),
-                                }) %>
-                            </figure>
-                        <% }) %>
-                    <% } else if (!galleryData.galleryImages || galleryData.galleryImages.length === 0) { %>
-                        <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_images_in_this_gallery', current_locale) %></strong>
-                        </div>
-                    <% } %>
-                </section>
-
-                <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.gallery', current_locale) + "/" + galleryData.slug + "/" + galleryData.id, mail_subject: galleryData.galleryName }) %>
-            </div>
-
-            <% if (relatedGalleries.length > 0) { %>
-                <section class="featured-galleries">
-                    <div class="wrapper">
-                        <%- include('../components/block-title.ejs', { title: languageHandler('general.related_galleries', current_locale) }) %>
-
-                        <div class="featured-galleries-container">
-                            <div class="js-featured-galleries">
-                                <% relatedGalleries.forEach(item => { %>
-                                    <div class="slide">
-                                        <%- include("../components/gallery-card.ejs", { galleryItem: item }) %>
-                                    </div>
-                                <% }) %>
-                            </div>
-
-                            <% if (relatedGalleries.length > 1) { %>
-                                <button
-                                    type="button"
-                                    class="slick-prev slick-arrow"
-                                    aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
-                                    title="<%= languageHandler('general.prev_page', current_locale) %>"
-                                >
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    class="slick-next slick-arrow"
-                                    aria-label="<%= languageHandler('general.next_page', current_locale) %>"
-                                    title="<%= languageHandler('general.next_page', current_locale) %>"
-                                >
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            <% } %>
-                        </div>
-                    </div>
-                </section>
+            <% if (galleryData.description) { %>
+                <p class="gallery-details-desc"><%= galleryData.description %></p>
             <% } %>
-        </main>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
+            <section class="<%= (galleryData.galleryImages && galleryData.galleryImages.length > 0) ? 'gallery-grid js-gallery' : '' %>">
+                <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
+                    <% galleryData.galleryImages.forEach((image, index) => { %>
+                        <figure class="gallery-grid-item" data-src="<%= image %>">
+                            <figcaption class="icon">
+                                <i class="far fa-eye"></i>
+                            </figcaption>
 
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
+                            <%- include('../components/picture.ejs', {
+                                imageSrc: image,
+                                alt: galleryData.galleryName + " #" + (index + 1),
+                            }) %>
+                        </figure>
+                    <% }) %>
+                <% } else if (!galleryData.galleryImages || galleryData.galleryImages.length === 0) { %>
+                    <div class="system-info">
+                        <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_images_in_this_gallery', current_locale) %></strong>
+                    </div>
+                <% } %>
+            </section>
 
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+            <%- include('../components/sharing-buttons.ejs', { page_url: languageHandler('slugs.gallery', current_locale) + "/" + galleryData.slug + "/" + galleryData.id, mail_subject: galleryData.galleryName }) %>
+        </div>
+
+        <% if (relatedGalleries.length > 0) { %>
+            <section class="featured-galleries">
+                <div class="wrapper">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('general.related_galleries', current_locale) }) %>
+
+                    <div class="featured-galleries-container">
+                        <div class="js-featured-galleries">
+                            <% relatedGalleries.forEach(item => { %>
+                                <div class="slide">
+                                    <%- include("../components/gallery-card.ejs", { galleryItem: item }) %>
+                                </div>
+                            <% }) %>
+                        </div>
+
+                        <% if (relatedGalleries.length > 1) { %>
+                            <button
+                                type="button"
+                                class="slick-prev slick-arrow"
+                                aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
+                                title="<%= languageHandler('general.prev_page', current_locale) %>"
+                            >
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button
+                                type="button"
+                                class="slick-next slick-arrow"
+                                aria-label="<%= languageHandler('general.next_page', current_locale) %>"
+                                title="<%= languageHandler('general.next_page', current_locale) %>"
+                            >
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </section>
+        <% } %>
+    </main>
+<%- endSection() %>
+
+<%- push('plugins') %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/lightbox.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
+<%- endPush() %>
+
+<%- push('scripts') %>
     <script type="text/javascript">
         var gallery = $('.js-gallery figure').simpleLightbox({
             focus: false,
@@ -117,5 +102,4 @@
             sourceAttr:'data-src'
         });
     </script>
-</body>
-</html>
+<%- endPush() %>

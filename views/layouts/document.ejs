@@ -1,0 +1,30 @@
+<%#
+    HTML document of the public site (also used directly by the admin login page).
+
+    Sections: body
+    Stacks:   styles  - page stylesheets in the <head>
+              plugins - page specific libraries, loaded before main.js
+              scripts - page specific scripts, running after main.js
+-%>
+<!DOCTYPE html>
+<html lang="<%= meta.lang || current_locale %>">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <%- stack('styles') %>
+</head>
+
+<body>
+    <%- yieldContent('body') %>
+
+    <script type="text/javascript">
+        var locale = <%- JSON.stringify(current_locale) %>;
+    </script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
+    <%- stack('plugins') %>
+    <script type="text/javascript" src="<%= getAssetPath('/js/manifest.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/vendor.js') %>"></script>
+    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
+    <%- stack('scripts') %>
+</body>
+</html>

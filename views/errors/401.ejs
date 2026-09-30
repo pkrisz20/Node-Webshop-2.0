@@ -1,0 +1,11 @@
+<%- extend('layouts/error') %>
+
+<%- section('code') %>401<%- endSection() %>
+
+<%- section('message') %>
+    <p class="error__text"><%= subtitle %></p>
+<%- endSection() %>
+
+<%- section('actions') %>
+    <a href="<%= process.env.APP_URL %>/admin" target="_self" class="error__link"><%= login_text %></a>
+<%- endSection() %>

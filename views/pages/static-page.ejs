@@ -1,52 +1,30 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/static-page.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: contentTitle }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="static">
+        <section class="static-section">
+            <div class="wrapper">
+                <h1 class="main-title"><%= contentTitle %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: contentTitle }) %>
+                <% if (contentShortDescription) { %>
+                    <p class="static-short"><%= contentShortDescription %></p>
+                <% } %>
 
-        <main class="static">
-            <section class="static-section">
-                <div class="wrapper">
-                    <h1 class="main-title"><%= contentTitle %></h1>
+                <% if (contentDescription) { %>
+                    <div class="ck-content">
+                        <%- contentDescription %>
+                    </div>
+                <% } %>
 
-                    <% if (contentShortDescription) { %>
-                        <p class="static-short"><%= contentShortDescription %></p>
-                    <% } %>
+                <%- include('../components/sharing-buttons.ejs', { page_url: contentSlug, mail_subject: contentTitle }) %>
 
-                    <% if (contentDescription) { %>
-                        <div class="ck-content">
-                            <%- contentDescription %>
-                        </div>
-                    <% } %>
-
-                    <%- include('../components/sharing-buttons.ejs', { page_url: contentSlug, mail_subject: contentTitle }) %>
-
-                </div>
-            </section>
-        </main>
-
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+            </div>
+        </section>
+    </main>
+<%- endSection() %>

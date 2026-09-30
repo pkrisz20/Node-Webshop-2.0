@@ -1,81 +1,67 @@
-<!DOCTYPE html>
-<html lang="hu">
-        <!-- HEAD + STYLE LINKS -->
-        <%- include('../layout/head.ejs') %>
-    </head>
-        <%- include('../layout/sidebar-navs.ejs') %>
+<%- extend('layouts/admin') %>
 
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Blogok</h1>
+<%- section('content') %>
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Blogok</h1>
 
-                        <% if (blogsList.length > 0) { %>
-                            <div class="card mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <div class="fs-5">
-                                        <i class="fas fa-table me-1"></i>
-                                        Blogok
-                                    </div>
+            <% if (blogsList.length > 0) { %>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="fs-5">
+                            <i class="fas fa-table me-1"></i>
+                            Blogok
+                        </div>
 
-                                    <a class="btn btn-primary" target="_self" href="<%= process.env.APP_URL %>/admin/blogs/new">
-                                        <i class="fas fa-plus-circle"></i>
-                                        Új cikk / esemény
-                                    </a>
-                                </div>
-                                <div class="card-body table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th scope="col">Blog címe</th>
-                                                <th scope="col">Látható</th>
-                                                <th scope="col">Szerző</th>
-                                                <th scope="col">Dátum (utoljára módosítva)</th>
-                                                <th scope="col">Műveletek</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% blogsList.forEach(blog => { %>
-                                                <tr>
-                                                    <td><%= blog.blogTitle %></td>
-                                                    <td><%- blog.isActiveIcon %></td>
-                                                    <td><%= blog.author %></td>
-                                                    <td><%= blog.date %></td>
-                                                    <td>
-                                                        <i data-url="<%= process.env.APP_URL %>/admin/blog/delete/<%= blog.blogId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
-                                                        <a class="mx-1 link-dark text-decoration-none" href="<%= process.env.APP_URL %>/admin/blogs/edit/<%= blog.blogId %>">
-                                                            <i role=button class="fas fa-edit"></i>
-                                                        </a>
-                                                        <% if (blog.is_active === 1) { %>
-                                                            <a
-                                                                class="link-dark"
-                                                                target="_blank"
-                                                                href="<%= process.env.APP_URL %>/hu/blog/<%= blog.slug %>"
-                                                            >
-                                                                <i class="fas fa-external-link-alt"></i>
-                                                            </a>
-                                                        <% } %>
-                                                    </td>
-                                                </tr>
-                                            <% }) %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        <% } %>
-
-                        <% if (pageCount > 1) { %>
-                            <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
-                        <% } %>
+                        <a class="btn btn-primary" target="_self" href="<%= process.env.APP_URL %>/admin/blogs/new">
+                            <i class="fas fa-plus-circle"></i>
+                            Új cikk / esemény
+                        </a>
                     </div>
-                </main>
-            </div>
-        </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">Blog címe</th>
+                                    <th scope="col">Látható</th>
+                                    <th scope="col">Szerző</th>
+                                    <th scope="col">Dátum (utoljára módosítva)</th>
+                                    <th scope="col">Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% blogsList.forEach(blog => { %>
+                                    <tr>
+                                        <td><%= blog.blogTitle %></td>
+                                        <td><%- blog.isActiveIcon %></td>
+                                        <td><%= blog.author %></td>
+                                        <td><%= blog.date %></td>
+                                        <td>
+                                            <i data-url="<%= process.env.APP_URL %>/admin/blog/delete/<%= blog.blogId %>" role=button class="fas fa-trash-alt link-danger js-delete-data"></i>
+                                            <a class="mx-1 link-dark text-decoration-none" href="<%= process.env.APP_URL %>/admin/blogs/edit/<%= blog.blogId %>">
+                                                <i role=button class="fas fa-edit"></i>
+                                            </a>
+                                            <% if (blog.is_active === 1) { %>
+                                                <a
+                                                    class="link-dark"
+                                                    target="_blank"
+                                                    href="<%= process.env.APP_URL %>/hu/blog/<%= blog.slug %>"
+                                                >
+                                                    <i class="fas fa-external-link-alt"></i>
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
 
-        <!-- SCRIPTS -->
-        <script src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/bootstrap.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/chart.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/plugins/sweetalert.min.js') %>"></script>
-        <script src="<%= getAssetPath('/admin/js/admin.js') %>"></script>
-    </body>
-</html>
+            <% if (pageCount > 1) { %>
+                <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, paginationLink: paginationLink }) %>
+            <% } %>
+        </div>
+    </main>
+<%- endSection() %>

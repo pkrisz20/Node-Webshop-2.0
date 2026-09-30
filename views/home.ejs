@@ -1,108 +1,88 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="preload" href="<%= getAssetPath('/css/home.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('layout/header.ejs') %>
+<%- section('content') %>
+    <main class="home">
+        <% if (heros.length > 0) { %>
+            <%- include('components/hero.ejs') %>
+        <% } %>
 
-        <%- include('components/cart.ejs') %>
+        <% if (webshopCategories.length > 0) { %>
+            <%- include('components/categories.ejs') %>
+        <% } %>
 
-        <main class="home">
-            <% if (heros.length > 0) { %>
-                <%- include('components/hero.ejs') %>
-            <% } %>
+        <% if (products.length > 0) { %>
+            <%- include('components/featured-products.ejs', { products: products }) %>
 
-            <% if (webshopCategories.length > 0) { %>
-                <%- include('components/categories.ejs') %>
-            <% } %>
+            <div class="more">
+                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler("products.all_products", current_locale) %> <i class="far fa-angle-double-right"></i></a>
+            </div>
+        <% } %>
 
-            <% if (products.length > 0) { %>
-                <%- include('components/featured-products.ejs', { products: products }) %>
+        <section class="bg">
+            <div class="bg-box wrapper">
+                <h2 class="bg-box--title"><%= DB_CONFIG["home_page_title"] %></h2>
+                <p class="bg-box--subtitle"><%= DB_CONFIG["home_page_text"] %></p>
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>
+                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>" aria-label="Link to gallery list page" target="_self" class="bg-box_btn bg-btn"><%= languageHandler("nav.gallery", current_locale) %></a>
+            </div>
+        </section>
 
-                <div class="more">
-                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler("products.all_products", current_locale) %> <i class="far fa-angle-double-right"></i></a>
-                </div>
-            <% } %>
+        <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
+            <section class="countup js-countup-section">
+                <div class="wrapper">
+                    <div class="countup__item">
+                        <i class="fas fa-users countup__item-icon"></i>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["satisfied_clients_number"] %>">0</div>
+                        <span class="countup__item-title"><%= languageHandler("counter.satisfied_clients", current_locale) %></strong>
+                    </div>
 
-            <section class="bg">
-                <div class="bg-box wrapper">
-                    <h2 class="bg-box--title"><%= DB_CONFIG["home_page_title"] %></h2>
-                    <p class="bg-box--subtitle"><%= DB_CONFIG["home_page_text"] %></p>
-                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>
-                    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>" aria-label="Link to gallery list page" target="_self" class="bg-box_btn bg-btn"><%= languageHandler("nav.gallery", current_locale) %></a>
+                    <div class="countup__item">
+                        <i class="fas fa-mug-hot countup__item-icon"></i>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["cups_of_coffe_number"] %>">0</div>
+                        <span class="countup__item-title"><%= languageHandler("counter.cups_coffe", current_locale) %></strong>
+                    </div>
+
+                    <div class="countup__item">
+                        <i class="far fa-chart-bar countup__item-icon"></i>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["animals_in_numbers"] %></div>">0</div>
+                        <span class="countup__item-title"><%= languageHandler("counter.animals", current_locale) %></strong>
+                    </div>
+
+                    <div class="countup__item">
+                        <i class="fas fa-shipping-fast countup__item-icon"></i>
+                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["posted_products_number"] %></div>">0</div>
+                        <span class="countup__item-title"><%= languageHandler("counter.posted_products", current_locale) %></strong>
+                    </div>
                 </div>
             </section>
+        <% } %>
 
-            <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
-                <section class="countup js-countup-section">
-                    <div class="wrapper">
-                        <div class="countup__item">
-                            <i class="fas fa-users countup__item-icon"></i>
-                            <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["satisfied_clients_number"] %>">0</div>
-                            <span class="countup__item-title"><%= languageHandler("counter.satisfied_clients", current_locale) %></strong>
-                        </div>
+        <% if (galleries.length > 0) { %>
+            <%- include('components/featured-gallery.ejs', { images: galleries }) %>
+        <% } %>
 
-                        <div class="countup__item">
-                            <i class="fas fa-mug-hot countup__item-icon"></i>
-                            <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["cups_of_coffe_number"] %>">0</div>
-                            <span class="countup__item-title"><%= languageHandler("counter.cups_coffe", current_locale) %></strong>
-                        </div>
+        <% if (blogs.length > 0) { %>
+            <%- include('components/featured-blogs.ejs', { blogs: blogs }) %>
+        <% } %>
 
-                        <div class="countup__item">
-                            <i class="far fa-chart-bar countup__item-icon"></i>
-                            <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["animals_in_numbers"] %></div>">0</div>
-                            <span class="countup__item-title"><%= languageHandler("counter.animals", current_locale) %></strong>
-                        </div>
+        <% if (blogs.length > 0) { %>
+            <div class="more">
+                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler("nav.visit_blog", current_locale) %> <i class="far fa-angle-double-right"></i></a>
+            </div>
+        <% } %>
+    </main>
+<%- endSection() %>
 
-                        <div class="countup__item">
-                            <i class="fas fa-shipping-fast countup__item-icon"></i>
-                            <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["posted_products_number"] %></div>">0</div>
-                            <span class="countup__item-title"><%= languageHandler("counter.posted_products", current_locale) %></strong>
-                        </div>
-                    </div>
-                </section>
-            <% } %>
-
-            <% if (galleries.length > 0) { %>
-                <%- include('components/featured-gallery.ejs', { images: galleries }) %>
-            <% } %>
-
-            <% if (blogs.length > 0) { %>
-                <%- include('components/featured-blogs.ejs', { blogs: blogs }) %>
-            <% } %>
-
-            <% if (blogs.length > 0) { %>
-                <div class="more">
-                    <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler("nav.visit_blog", current_locale) %> <i class="far fa-angle-double-right"></i></a>
-                </div>
-            <% } %>
-        </main>
-
-        <%- include('layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('./components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
+<%- push('plugins') %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
 
     <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/waypoints.min.js') %>"></script>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countup.min.js') %>"></script>
     <% } %>
-
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+<%- endPush() %>

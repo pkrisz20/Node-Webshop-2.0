@@ -1,109 +1,89 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/about.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.about', current_locale) }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="about">
+        <section class="about-content">
+            <div class="wrapper">
+                <h1 class="main-title"><%= languageHandler('nav.about', current_locale) %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('nav.about', current_locale) }) %>
-
-        <main class="about">
-            <section class="about-content">
-                <div class="wrapper">
-                    <h1 class="main-title"><%= languageHandler('nav.about', current_locale) %></h1>
-
-                    <% if (pageData.shortDesc) { %>
-                        <div class="about-short">
-                            <p class="about-short-text"><%= pageData.shortDesc %></p>
-                        </div>
-                    <% } %>
-                </div>
-
-                <% if (employees.length > 0) { %>
-                    <div class="workers">
-                        <% employees.forEach(employee => { %>
-                            <figure class="workers-container">
-                                <div class="workers-container-image">
-                                    <%- include('../components/picture.ejs', {
-                                        imageSrc: employee.image,
-                                        alt: employee.name + " - " + employee.position
-                                    }) %>
-                                </div>
-                                <figcaption class="workers-container-text">
-                                    <h3 class="workers-container-name"><%= employee.name %></h3>
-                                    <h4 class="workers-container-position"><%= employee.position %></h4>
-                                    <% if (employee.desc) { %>
-                                        <p class="workers-container-desc"><%= employee.desc %></p>
-                                    <% } %>
-
-                                    <div class="workers-container-links">
-                                        <% if (employee.contact.facebook) { %>
-                                            <a title="Facebook" href="<%= employee.contact.facebook %>" target="_blank">
-                                                <i class="fab fa-facebook"></i>
-                                            </a>
-                                        <% } %>
-
-                                        <% if (employee.contact.tiktok) { %>
-                                            <a title="TikTok" href="<%= employee.contact.tiktok %>" target="_blank">
-                                                <i class="fab fa-tiktok"></i>
-                                            </a>
-                                        <% } %>
-
-                                        <% if (employee.contact.instagram) { %>
-                                            <a title="Instagram" href="<%= employee.contact.instagram %>" target="_blank">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
-                                        <% } %>
-
-                                        <% if (employee.contact.email) { %>
-                                            <a title="E-mail" href="mailto:<%= employee.contact.email %>">
-                                                <i class="fas fa-envelope"></i>
-                                            </a>
-                                        <% } %>
-
-                                        <% if (employee.contact.phone) { %>
-                                            <a title="Phone" href="tel:<%= employee.contact.phone %>">
-                                                <i class="fas fa-phone-alt"></i>
-                                            </a>
-                                        <% } %>
-                                    </div>
-                                </figcaption>
-                            </figure>
-                        <% }) %>
+                <% if (pageData.shortDesc) { %>
+                    <div class="about-short">
+                        <p class="about-short-text"><%= pageData.shortDesc %></p>
                     </div>
                 <% } %>
-            </section>
+            </div>
 
-            <% if (pageData.longDesc) { %>
-                <section class="about-long">
-                    <div class="wrapper">
-                        <%- include('../components/block-title.ejs', { title: languageHandler('about.our_story', current_locale), subtitle: languageHandler('about.our_story_subtitle', current_locale), centerTitle: true }) %>
+            <% if (employees.length > 0) { %>
+                <div class="workers">
+                    <% employees.forEach(employee => { %>
+                        <figure class="workers-container">
+                            <div class="workers-container-image">
+                                <%- include('../components/picture.ejs', {
+                                    imageSrc: employee.image,
+                                    alt: employee.name + " - " + employee.position
+                                }) %>
+                            </div>
+                            <figcaption class="workers-container-text">
+                                <h3 class="workers-container-name"><%= employee.name %></h3>
+                                <h4 class="workers-container-position"><%= employee.position %></h4>
+                                <% if (employee.desc) { %>
+                                    <p class="workers-container-desc"><%= employee.desc %></p>
+                                <% } %>
 
-                        <article class="ck-content">
-                            <%- pageData.longDesc %>
-                        </article>
-                    </div>
-                </section>
+                                <div class="workers-container-links">
+                                    <% if (employee.contact.facebook) { %>
+                                        <a title="Facebook" href="<%= employee.contact.facebook %>" target="_blank">
+                                            <i class="fab fa-facebook"></i>
+                                        </a>
+                                    <% } %>
+
+                                    <% if (employee.contact.tiktok) { %>
+                                        <a title="TikTok" href="<%= employee.contact.tiktok %>" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                        </a>
+                                    <% } %>
+
+                                    <% if (employee.contact.instagram) { %>
+                                        <a title="Instagram" href="<%= employee.contact.instagram %>" target="_blank">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                    <% } %>
+
+                                    <% if (employee.contact.email) { %>
+                                        <a title="E-mail" href="mailto:<%= employee.contact.email %>">
+                                            <i class="fas fa-envelope"></i>
+                                        </a>
+                                    <% } %>
+
+                                    <% if (employee.contact.phone) { %>
+                                        <a title="Phone" href="tel:<%= employee.contact.phone %>">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </a>
+                                    <% } %>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    <% }) %>
+                </div>
             <% } %>
-        </main>
+        </section>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
+        <% if (pageData.longDesc) { %>
+            <section class="about-long">
+                <div class="wrapper">
+                    <%- include('../components/block-title.ejs', { title: languageHandler('about.our_story', current_locale), subtitle: languageHandler('about.our_story_subtitle', current_locale), centerTitle: true }) %>
 
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+                    <article class="ck-content">
+                        <%- pageData.longDesc %>
+                    </article>
+                </div>
+            </section>
+        <% } %>
+    </main>
+<%- endSection() %>

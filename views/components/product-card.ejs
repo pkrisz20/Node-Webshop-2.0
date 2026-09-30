@@ -16,9 +16,9 @@
         <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.product", current_locale) %>/<%= product.slug %>/<%= product.id %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
 
         <div class="price__wrap">
-            <strong class="price__wrap-price"><%= (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) ? product.discount : product.price %> <small>RSD</small></strong>
+            <strong class="price__wrap-price"><%= (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) ? product.discount : product.price %> <small><%= currency %></small></strong>
             <% if (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) { %>
-                <del class="price__wrap-price old"><%= product.price %> RSD</del>
+                <del class="price__wrap-price old"><%= product.price %> <%= currency %></del>
             <% } %>
         </div>
         <% if (product.short) { %>

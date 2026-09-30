@@ -1,55 +1,33 @@
-<!DOCTYPE html>
-<html lang="<%= meta.lang %>">
-    <%- include('../layout/head.ejs') %>
+<%- extend('layouts/base') %>
 
+<%- push('styles') %>
     <link rel="preload" href="<%= getAssetPath('/css/gallery-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-</head>
+<%- endPush() %>
 
-<body>
-    <div class="site-overlay"></div>
-    <div class="site-wrap">
-        <%- include('../layout/header.ejs') %>
+<%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.gallery', current_locale) }) %>
 
-        <%- include('../components/cart.ejs') %>
+    <main class="list">
+        <div class="wrapper">
+            <h1 class="main-title"><%= languageHandler('general.gallery', current_locale) %></h1>
 
-        <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('general.gallery', current_locale) }) %>
-
-        <main class="list">
-            <div class="wrapper">
-                <h1 class="main-title"><%= languageHandler('general.gallery', current_locale) %></h1>
-
-                <section class="listpage gallery-list">
-                    <% if (galleries.length > 0) { %>
-                        <div class="listpage-container">
-                            <% galleries.forEach(gallery => { %>
-                                <%- include("../components/gallery-card.ejs", { galleryItem: gallery }) %>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <div class="system-info">
-                            <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_gallery_like_this', current_locale) %></strong>
-                        </div>
-                    <% } %>
-                </section>
-
-                <% if (pageCount > 1) { %>
-                    <%- include('../layout/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
+            <section class="listpage gallery-list">
+                <% if (galleries.length > 0) { %>
+                    <div class="listpage-container">
+                        <% galleries.forEach(gallery => { %>
+                            <%- include("../components/gallery-card.ejs", { galleryItem: gallery }) %>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="system-info">
+                        <strong class="system-info-text"><i class="fas fa-info-circle"></i><%= languageHandler('products.no_gallery_like_this', current_locale) %></strong>
+                    </div>
                 <% } %>
-            </div>
-        </main>
+            </section>
 
-        <%- include('../layout/footer.ejs') %>
-    </div>
-
-    <% if (process.env.GDPR_ENABLED || false) { %>
-        <%- include('../components/cookie-panel') %>
-    <% } %>
-
-    <script type="text/javascript">
-        var locale = <%- JSON.stringify(current_locale) %>;
-    </script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jquery.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/plugins/jconfirm.min.js') %>"></script>
-    <script type="text/javascript" src="<%= getAssetPath('/js/main.js') %>"></script>
-</body>
-</html>
+            <% if (pageCount > 1) { %>
+                <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
+            <% } %>
+        </div>
+    </main>
+<%- endSection() %>

@@ -1,0 +1,50 @@
+<% if (pageCount > 1) { %>
+    <% const radius = config.pagination.pageLinkRadius; %>
+
+    <ul class="pagination justify-content-center">
+        <% if ( currentPage > 1 ) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= currentPage - 1 %>"><i class="fas fa-chevron-left"></i> Előző oldal</a>
+            </li>
+        <% } %>
+
+        <% if (currentPage > radius + 1) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=1">1</a>
+            </li>
+            <% if (currentPage > radius + 2) { %>
+                <li class="mx-2 pe-none">
+                    <span class="btn btn-primary" role="button">...</span>
+                </li>
+            <% } %>
+        <% } %>
+
+        <%
+            const startPage = Math.max(1, currentPage - radius);
+            const endPage = Math.min(pageCount, currentPage + radius);
+        %>
+
+        <% for (var index = startPage; index <= endPage; index++) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary <%= currentPage == index ? 'fw-medium text-bg-dark' : '' %>" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= index %>"><%= index %></a>
+            </li>
+        <% } %>
+
+        <% if (currentPage < pageCount - radius) { %>
+            <% if (currentPage < pageCount - radius - 1) { %>
+                <li class="mx-2 pe-none">
+                    <span class="btn btn-primary" role="button">...</span>
+                </li>
+            <% } %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= pageCount %>"><%= pageCount %></a>
+            </li>
+        <% } %>
+
+        <% if ( currentPage < pageCount ) { %>
+            <li class="mx-2">
+                <a class="btn btn-primary" role="button" href="<%= process.env.APP_URL %>/admin/<%= paginationLink %>/list?page=<%= currentPage + 1 %>">Következő oldal <i class="fas fa-chevron-right"></i></a>
+            </li>
+        <% } %>
+    </ul>
+<% } %>
