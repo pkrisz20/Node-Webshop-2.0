@@ -5,8 +5,8 @@ import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
 import { FAQ } from '../../models';
-import { Formatter } from '../../utils/Formatter';
 import { LocalizedField } from '../../utils/LocalizedField';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 type FaqAttributes = Omit<CreationAttributes<FAQ>, 'id' | 'created_at' | 'updated_at'>;
@@ -22,7 +22,7 @@ export class AdminFaqController extends AdminController {
             meta: this.meta('This is the FAQ admin list page', 'This is the FAQ admin list page'),
             FAQList: questions.map(faq => ({
                 id: faq.id,
-                question: Formatter.limitText(LocalizedField.pick(faq.question, req.language), appConfig.textLengths.adminListQuestion),
+                question: TextFormatter.limitText(LocalizedField.pick(faq.question, req.language), appConfig.textLengths.adminListQuestion),
                 is_active: this.activityIcon(faq.is_active),
                 date: this.lastModified(faq),
             })),
@@ -95,7 +95,7 @@ export class AdminFaqController extends AdminController {
         const input = new FormInput(body);
         const isActive = input.flag('is_active');
 
-        if (isActive === null || !input.hasLocalized('question') || !input.hasLocalized('answer')) {
+        if (isActive === null || !input.isFilledInEveryLanguage('question') || !input.isFilledInEveryLanguage('answer')) {
             return null;
         }
 

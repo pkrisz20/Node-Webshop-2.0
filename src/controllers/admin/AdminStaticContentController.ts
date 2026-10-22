@@ -28,7 +28,7 @@ export class AdminStaticContentController extends AdminController {
     };
 
     readonly edit = async (req: Request, res: Response): Promise<void> => {
-        const contentId = this.parseId(req.params.staticContentID);
+        const contentId = this.parseId(req.params.staticContentId);
 
         if (!contentId) {
             return ErrorPage.badRequest(req, res);
@@ -55,9 +55,9 @@ export class AdminStaticContentController extends AdminController {
     };
 
     readonly update = async (req: Request, res: Response): Promise<void> => {
-        const contentId = this.parseId(req.params.staticContentID);
+        const contentId = this.parseId(req.params.staticContentId);
         const input = new FormInput(req.body);
-        const content = contentId && input.hasLocalized('title') ? await StaticContent.findByPk(contentId) : null;
+        const content = contentId && input.isFilledInEveryLanguage('title') ? await StaticContent.findByPk(contentId) : null;
 
         if (!content) {
             return ApiResponse.fail(res, 'errors.wrong_data');

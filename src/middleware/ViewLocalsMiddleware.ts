@@ -3,7 +3,7 @@ import { appConfig } from '../config/app';
 import { env } from '../config/env';
 import { GDPR_COOKIE_NAME, gdprCookies } from '../config/gdpr';
 import { AssetManifest } from '../utils/AssetManifest';
-import { Formatter } from '../utils/Formatter';
+import { UniqueId } from '../utils/UniqueId';
 import { PriceFormat } from '../utils/PriceFormat';
 import { Translator } from '../utils/Translator';
 import { PriceFormatMiddleware } from './PriceFormatMiddleware';
@@ -23,10 +23,10 @@ export class ViewLocalsMiddleware {
             config: appConfig,
             /** Price display defaults, the requests override them with the admin settings (PriceFormatMiddleware) */
             currency: PriceFormat.DEFAULT.currency,
-            numberWithCommas: (value: number | string | null | undefined) => PriceFormat.DEFAULT.number(value),
+            formatAmount: (value: number | string | null | undefined) => PriceFormat.DEFAULT.formatAmount(value),
             languageHandler: Translator.translate,
             getAssetPath: (fileName: string) => AssetManifest.url(fileName),
-            createUniqueID: Formatter.createUniqueId,
+            createUniqueID: UniqueId.generate,
             locales: env.languages.valid,
             gdprCookies,
         });
@@ -35,7 +35,7 @@ export class ViewLocalsMiddleware {
     /** Cookie types accepted in the GDPR consent panel, the default price display of the controllers */
     static share(req: Request, res: Response, next: NextFunction): void {
         res.locals.gdprAcceptedCookies = ViewLocalsMiddleware.acceptedCookieTypes(req);
-        PriceFormatMiddleware.apply(res, PriceFormat.DEFAULT);
+        PriceFormatMiddleware.setPriceFormat(res, PriceFormat.DEFAULT);
         next();
     }
 

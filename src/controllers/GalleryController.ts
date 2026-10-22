@@ -8,9 +8,9 @@ import { Gallery } from '../models';
 import { GalleryPresenter } from '../presenters/GalleryPresenter';
 import { LocalizedField } from '../utils/LocalizedField';
 import { Pagination } from '../utils/Pagination';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class GalleryController extends Controller {
+export class GalleryController extends PublicController {
     readonly index = async (req: Request, res: Response): Promise<void> => {
         const { language } = req;
         const pagination = Pagination.fromQuery(req.query, appConfig.pagination.perPage);
@@ -33,7 +33,7 @@ export class GalleryController extends Controller {
         res.render('pages/galleries', {
             pageCount: pagination.pageCount(count),
             currentPage: pagination.currentPage,
-            articleLink: listPath,
+            paginationPath: listPath,
             galleries: galleries.map(gallery => galleryPresenter.toCard(gallery)),
             meta: MetaBuilder.page(language, {
                 title: req.translate('nav.gallery'),
@@ -55,7 +55,7 @@ export class GalleryController extends Controller {
         const slug = LocalizedField.pick(gallery.slug, language);
         const galleryPath = `${req.translate('slugs.gallery')}/${slug}/${gallery.id}`;
 
-        if (req.params.slugName !== slug) {
+        if (req.params.itemSlug !== slug) {
             return res.redirect(301, `${env.appUrl}/${language}/${galleryPath}`);
         }
 

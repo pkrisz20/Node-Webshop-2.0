@@ -41,9 +41,9 @@ export const env = Object.freeze({
     recaptchaSecretKey: readString('RECAPTCHA_SECRET_KEY'),
     /** Only the source of the defaults, read them through appConfig.pagination */
     pagination: {
-        front: readInteger('PAGINATION', 12),
-        admin: readInteger('ADMIN_PAGINATION', 20),
-        comments: readInteger('COUNT_COMMENTS_SHOW', 3),
+        perPage: readInteger('PAGINATION', 12),
+        adminPerPage: readInteger('ADMIN_PAGINATION', 20),
+        commentsPerPage: readInteger('COUNT_COMMENTS_SHOW', 3),
     },
     languages: {
         valid: readLanguages('VALID_LANGS'),

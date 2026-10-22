@@ -3,7 +3,7 @@ import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { ContactMessage } from '../../models';
 import { DateFormatter } from '../../utils/DateFormatter';
-import { Formatter } from '../../utils/Formatter';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 /** Messages sent from the contact form */
@@ -50,7 +50,7 @@ export class AdminMessageController extends AdminController {
             htmlResponse: `
                 <div class='d-flex flex-column'>
                     <div class='text-start mb-2'>
-                        <p class='fs-6 mb-0'><b>Üzenet:</b> ${Formatter.escapeHtml(message.client_message)}</p>
+                        <p class='fs-6 mb-0'><b>Üzenet:</b> ${TextFormatter.escapeHtml(message.client_message)}</p>
                     </div>
                 </div>
             `,

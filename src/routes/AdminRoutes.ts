@@ -36,7 +36,7 @@ export class AdminRoutes extends RouteGroup {
 
         // Every route below requires a logged in admin
         this.router.use(AuthMiddleware.requireAdmin);
-        this.router.use(PriceFormatMiddleware.share);
+        this.router.use(new PriceFormatMiddleware().share);
 
         this.action('/logout', auth.logout);
         this.router.get('/dashboard', asyncHandler(dashboard.dashboard));
@@ -110,9 +110,9 @@ export class AdminRoutes extends RouteGroup {
         this.router.get('/webshop-params/list', asyncHandler(parameters.index));
         this.router.get('/webshop-params/new', asyncHandler(parameters.create));
         this.router.post('/webshop-params/new/handle', asyncHandler(parameters.store));
-        this.router.get('/webshop-params/edit/:paramId', asyncHandler(parameters.edit));
-        this.router.post('/webshop-params/edit/handle/:paramId', asyncHandler(parameters.update));
-        this.action('/webshop-params/delete/:paramId', parameters.delete);
+        this.router.get('/webshop-params/edit/:parameterId', asyncHandler(parameters.edit));
+        this.router.post('/webshop-params/edit/handle/:parameterId', asyncHandler(parameters.update));
+        this.action('/webshop-params/delete/:parameterId', parameters.delete);
     }
 
     private registerOrderRoutes(): void {
@@ -175,8 +175,8 @@ export class AdminRoutes extends RouteGroup {
         const staticContents = new AdminStaticContentController();
 
         this.router.get('/static-contents/list', asyncHandler(staticContents.index));
-        this.router.get('/static-contents/edit/:staticContentID', asyncHandler(staticContents.edit));
-        this.router.post('/static-contents/edit/handle/:staticContentID', asyncHandler(staticContents.update));
+        this.router.get('/static-contents/edit/:staticContentId', asyncHandler(staticContents.edit));
+        this.router.post('/static-contents/edit/handle/:staticContentId', asyncHandler(staticContents.update));
     }
 
     private registerMessageRoutes(): void {

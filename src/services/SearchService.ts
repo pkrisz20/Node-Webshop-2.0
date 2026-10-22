@@ -28,7 +28,7 @@ export class SearchService {
 
     findArticles(keywords: string[], { language, limit }: SearchOptions): Promise<Article[]> {
         return Article.findAll({
-            attributes: [...Article.CARD_ATTRIBUTES, Article.commentsCountAttribute()],
+            attributes: Article.cardAttributesWithCommentsCount(),
             where: { is_active: 1, ...this.matchesAnyKeyword('Article.title', keywords, language) },
             limit,
         });

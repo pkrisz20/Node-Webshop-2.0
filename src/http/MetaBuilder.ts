@@ -2,7 +2,7 @@ import { env } from '../config/env';
 import { DEFAULT_OG_IMAGE_PATH, metaDefaults } from '../config/meta';
 import type { Language } from '../locales';
 import { AssetManifest } from '../utils/AssetManifest';
-import { Formatter } from '../utils/Formatter';
+import { TextFormatter } from '../utils/TextFormatter';
 
 interface PageMetaOptions {
     title: string | null;
@@ -27,11 +27,11 @@ export class MetaBuilder {
 
         return {
             ...metaDefaults,
-            title: (Formatter.limitText(title, metaDefaults.limits.title) ?? '') + metaDefaults.separator + metaDefaults.title,
-            lang: metaDefaults.langs[language],
+            title: (TextFormatter.limitText(title, metaDefaults.limits.title) ?? '') + metaDefaults.separator + metaDefaults.title,
+            lang: metaDefaults.htmlLanguageCodes[language],
             type,
             url: path ? `${languageUrl}/${path}` : languageUrl,
-            description: Formatter.limitText(description, metaDefaults.limits.description),
+            description: TextFormatter.limitText(description, metaDefaults.limits.description),
             image: {
                 src: image ?? AssetManifest.url(DEFAULT_OG_IMAGE_PATH),
                 width: metaDefaults['og:image:width'],

@@ -9,7 +9,7 @@ import { env } from './env';
 export const appConfig = {
     /**
      * Display of the prices. These are the defaults, the "Pénznem" and "Ezres elválasztó" admin settings override them
-     * (see SiteConfigService.priceFormatOf). The templates get the resolved values as `currency` and `numberWithCommas()`.
+     * (see SiteConfigService.priceFormatOf). The templates get the resolved values as `currency` and `formatAmount()`.
      */
     priceFormat: {
         /** Shown after every price */
@@ -26,11 +26,11 @@ export const appConfig = {
 
     pagination: {
         /** Items per page of the public lists (PAGINATION in .env overrides it) */
-        perPage: env.pagination.front,
+        perPage: env.pagination.perPage,
         /** Items per page of the admin lists (ADMIN_PAGINATION in .env overrides it) */
-        adminPerPage: env.pagination.admin,
+        adminPerPage: env.pagination.adminPerPage,
         /** Comments shown at once, the "load more" button loads the same amount (COUNT_COMMENTS_SHOW in .env overrides it) */
-        commentsPerPage: env.pagination.comments,
+        commentsPerPage: env.pagination.commentsPerPage,
         /** Options of the "products per page" select */
         productLimitOptions: [12, 24, 36],
         /** Page links shown on both sides of the current page */

@@ -49,6 +49,11 @@ export class Article extends Model<InferAttributes<Article>, InferCreationAttrib
         ];
     }
 
+    /** Attributes of an article card together with the comments count */
+    static cardAttributesWithCommentsCount(): Array<typeof Article.CARD_ATTRIBUTES[number] | ProjectionAlias> {
+        return [...Article.CARD_ATTRIBUTES, Article.commentsCountAttribute()];
+    }
+
     getCommentsCount(): number {
         return Number(this.get('comments_count') ?? 0);
     }

@@ -3,9 +3,9 @@ import { env } from '../config/env';
 import { ApiResponse } from '../http/ApiResponse';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { ContactMessage } from '../models';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class ContactController extends Controller {
+export class ContactController extends PublicController {
     readonly show = (req: Request, res: Response): void => {
         res.render('pages/contact', {
             meta: MetaBuilder.page(req.language, {

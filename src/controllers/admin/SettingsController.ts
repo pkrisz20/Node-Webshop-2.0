@@ -49,10 +49,10 @@ export class SettingsController extends AdminController {
 
         const counters = SiteConfigService.COUNTER_KEYS.map(key => [key, NumberParser.integerOrDefault(body[key], 0)] as const);
         const hasInvalidCounter = counters.some(([, value]) => value === null);
-        const hasMissingText = SiteConfigService.LOCALIZED_KEYS.some(key => !LocalizedField.isFilledInForm(body, key));
+        const hasMissingText = SiteConfigService.LOCALIZED_KEYS.some(key => !LocalizedField.isFilledInEveryLanguage(body, key));
 
         // The price display is optional: an empty value means the default of the config
-        const thousandsSeparator = this.plainValue(body[SiteConfigService.THOUSANDS_SEPARATOR_KEY]);
+        const thousandsSeparator = this.nullIfEmpty(body[SiteConfigService.THOUSANDS_SEPARATOR_KEY]);
         const hasInvalidSeparator = thousandsSeparator !== null && !PriceFormat.isThousandsSeparator(thousandsSeparator);
 
         if (hasInvalidCounter || hasMissingText || hasInvalidSeparator) {
@@ -64,7 +64,7 @@ export class SettingsController extends AdminController {
             LocalizedField.stringify(LocalizedField.fromForm(body, key, { escape: !RICH_TEXT_KEYS.includes(key) })),
         ] as const);
 
-        const plainValues = SiteConfigService.PLAIN_KEYS.map(key => [key, this.plainValue(body[key])] as const);
+        const plainValues = SiteConfigService.PLAIN_KEYS.map(key => [key, this.nullIfEmpty(body[key])] as const);
 
         await this.siteConfigService.save({
             ...Object.fromEntries([...counters, ...localizedValues, ...plainValues]),
@@ -79,13 +79,13 @@ export class SettingsController extends AdminController {
         return THOUSANDS_SEPARATORS.map(separator => ({
             value: separator,
             label: THOUSANDS_SEPARATOR_LABELS[separator],
-            example: new PriceFormat('', separator).number(SEPARATOR_EXAMPLE_PRICE),
+            example: new PriceFormat('', separator).formatAmount(SEPARATOR_EXAMPLE_PRICE),
             isDefault: separator === PriceFormat.DEFAULT.thousandsSeparator,
         }));
     }
 
     /** Empty inputs are saved as NULL */
-    private plainValue(value: unknown): string | null {
+    private nullIfEmpty(value: unknown): string | null {
         return typeof value === 'string' && value.length > 0 ? value : null;
     }
 }

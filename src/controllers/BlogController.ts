@@ -11,10 +11,11 @@ import { CommentPresenter } from '../presenters/CommentPresenter';
 import { CommentService } from '../services/CommentService';
 import { DateFormatter } from '../utils/DateFormatter';
 import { LocalizedField } from '../utils/LocalizedField';
+import { NumberParser } from '../utils/NumberParser';
 import { Pagination } from '../utils/Pagination';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class BlogController extends Controller {
+export class BlogController extends PublicController {
     constructor(private readonly commentService = new CommentService()) {
         super();
     }
@@ -28,7 +29,7 @@ export class BlogController extends Controller {
         }
 
         const { rows: articles, count } = await Article.findAndCountAll({
-            attributes: [...Article.CARD_ATTRIBUTES, Article.commentsCountAttribute()],
+            attributes: Article.cardAttributesWithCommentsCount(),
             where: { is_active: 1 },
             order: [['date', 'DESC']],
             limit: pagination.limit,
@@ -41,7 +42,7 @@ export class BlogController extends Controller {
         res.render('pages/blogs', {
             pageCount: pagination.pageCount(count),
             currentPage: pagination.currentPage,
-            articleLink: listPath,
+            paginationPath: listPath,
             blogs: articles.map(article => articlePresenter.toCard(article)),
             meta: MetaBuilder.page(language, {
                 title: req.translate('nav.blog'),
@@ -63,13 +64,13 @@ export class BlogController extends Controller {
         const slug = LocalizedField.pick(article.slug, language);
         const articlePath = `${req.translate('slugs.article')}/${slug}/${article.id}`;
 
-        if (req.params.slugName !== slug) {
+        if (req.params.itemSlug !== slug) {
             return res.redirect(301, `${env.appUrl}/${language}/${articlePath}`);
         }
 
         const [newestArticles, upcomingEvents, commentPage] = await Promise.all([
             Article.findAll({
-                attributes: [...Article.CARD_ATTRIBUTES, Article.commentsCountAttribute()],
+                attributes: Article.cardAttributesWithCommentsCount(),
                 where: {
                     is_active: 1,
                     id: { [Op.ne]: article.id },
@@ -95,7 +96,7 @@ export class BlogController extends Controller {
             blogDetails,
             newestBlogs: newestArticles.map(newestArticle => articlePresenter.toCard(newestArticle)),
             nextEvents: upcomingEvents.map(event => articlePresenter.toEvent(event)),
-            articleComments: commentPage?.comments.map(comment => commentPresenter.fromArticleComment(comment)) ?? [],
+            comments: commentPage?.comments.map(comment => commentPresenter.fromArticleComment(comment)) ?? [],
             showLoadMoreButton: commentPage?.hasMore ?? false,
             meta: MetaBuilder.page(language, {
                 title: blogDetails.title,
@@ -108,7 +109,7 @@ export class BlogController extends Controller {
     };
 
     readonly storeComment = async (req: Request, res: Response): Promise<void> => {
-        const articleId = this.parseId(req.params.itemId);
+        const articleId = this.parseId(req.params.articleId);
 
         const article = articleId && await Article.findOne({
             attributes: ['id'],
@@ -128,7 +129,7 @@ export class BlogController extends Controller {
 
     readonly loadMoreComments = async (req: Request, res: Response): Promise<void> => {
         const articleId = this.parseId(req.body.blogID);
-        const page = CommentService.parsePage(req.body.offsetNumber);
+        const page = NumberParser.nonNegativeInteger(req.body.offsetNumber);
 
         if (!articleId || page === null) {
             return ApiResponse.fail(res, 'errors.wrong_data');

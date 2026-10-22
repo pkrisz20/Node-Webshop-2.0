@@ -48,7 +48,7 @@ export class Order extends Model<InferAttributes<Order>, InferCreationAttributes
         return ORDER_STATUSES.includes(status as OrderStatus);
     }
 
-    static isClosingStatus(status: OrderStatus): boolean {
+    static isClosedStatus(status: OrderStatus): boolean {
         return CLOSED_STATUSES.includes(status);
     }
 
@@ -57,12 +57,13 @@ export class Order extends Model<InferAttributes<Order>, InferCreationAttributes
     }
 
     getStatusBadge(): OrderStatusBadge {
+        // CreationOptional<OrderStatus> is a branded type, it can not index the record directly
         const status: OrderStatus = this.order_status;
         return STATUS_BADGES[status] ?? STATUS_BADGES.new;
     }
 
     isStatusEditable(): boolean {
-        return !Order.isClosingStatus(this.order_status);
+        return !Order.isClosedStatus(this.order_status);
     }
 
     /** Every status except the current one */

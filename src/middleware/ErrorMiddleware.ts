@@ -6,6 +6,8 @@ import { ErrorReporter } from '../services/ErrorReporter';
 import { Translator } from '../utils/Translator';
 import { InvalidCsrfTokenError } from './CsrfMiddleware';
 
+type ErrorPageRenderer = (req: Request, res: Response) => void;
+
 export class ErrorMiddleware {
     static notFound(req: Request, res: Response): void {
         ErrorPage.notFound(req, res);
@@ -26,9 +28,9 @@ export class ErrorMiddleware {
     }
 
     /** AJAX calls get a JSON error, which the frontend can show in a popup, the pages get an error page */
-    private static respond(req: Request, res: Response, titleKey: string, messageKey: string, renderPage: typeof ErrorPage.forbidden): void {
+    private static respond(req: Request, res: Response, titleKey: string, messageKey: string, renderErrorPage: ErrorPageRenderer): void {
         if (!ErrorMiddleware.expectsJson(req)) {
-            return renderPage(req, res);
+            return renderErrorPage(req, res);
         }
 
         // The error can happen before the locale middleware ran (e.g. a session store error)

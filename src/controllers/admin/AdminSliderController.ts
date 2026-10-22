@@ -5,9 +5,9 @@ import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
 import { Slider } from '../../models';
-import { Formatter } from '../../utils/Formatter';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 type SliderAttributes = Omit<CreationAttributes<Slider>, 'id' | 'created_at' | 'updated_at'>;
@@ -23,7 +23,7 @@ export class AdminSliderController extends AdminController {
             meta: this.meta('Admin sliders list', 'This is the Slider list page page'),
             sliders: sliders.map(slider => ({
                 id: slider.id,
-                title: Formatter.limitText(LocalizedField.pick(slider.title, req.language), appConfig.textLengths.adminListTitle),
+                title: TextFormatter.limitText(LocalizedField.pick(slider.title, req.language), appConfig.textLengths.adminListTitle),
                 is_active: this.activityIcon(slider.is_active),
                 date: this.lastModified(slider),
             })),
@@ -104,7 +104,7 @@ export class AdminSliderController extends AdminController {
         const input = new FormInput(body);
         const isActive = input.flag('is_active');
 
-        if (isActive === null || !input.hasLocalized('title')) {
+        if (isActive === null || !input.isFilledInEveryLanguage('title')) {
             return null;
         }
 

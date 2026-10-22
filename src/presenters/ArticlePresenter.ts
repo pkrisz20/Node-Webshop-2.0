@@ -1,24 +1,21 @@
-import type { Language } from '../locales';
 import type { Article } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
-import { Formatter } from '../utils/Formatter';
 import { ImageUrl } from '../utils/ImageUrl';
-import { LocalizedField } from '../utils/LocalizedField';
+import { TextFormatter } from '../utils/TextFormatter';
+import { Presenter } from './Presenter';
 
-export class ArticlePresenter {
-    constructor(private readonly language: Language) {}
-
+export class ArticlePresenter extends Presenter {
     /** The comments count is available only when the query selected `Article.commentsCountAttribute()` */
     toCard(article: Article) {
         return {
             id: article.id,
             title: this.localized(article.title),
             slug: this.localized(article.slug),
-            shortDescription: Formatter.limitText(this.localized(article.short_description)),
+            shortDescription: TextFormatter.limitText(this.localized(article.short_description)),
             image: ImageUrl.of(article.image_thumbnail, 'blogs'),
             author: article.author,
             fullDate: DateFormatter.formatByLanguage(article.date, this.language),
-            relativeDate: Formatter.capitalizeFirstLetter(DateFormatter.fromNow(article.date, this.language)),
+            relativeDate: TextFormatter.capitalizeFirstLetter(DateFormatter.fromNow(article.date, this.language)),
             commentsCount: article.getCommentsCount(),
             isImportant: Boolean(article.is_important),
         };
@@ -44,12 +41,8 @@ export class ArticlePresenter {
             author: article.author,
             thumb_image: ImageUrl.of(article.image_thumbnail, 'blogs'),
             images: ImageUrl.listOf(article.images, 'blogs'),
-            isAllowed: Boolean(article.comments_allowed),
+            commentsAllowed: Boolean(article.comments_allowed),
             date: DateFormatter.formatByLanguage(article.date, this.language).toLowerCase(),
         };
-    }
-
-    private localized(json: string | null | undefined): string | null {
-        return LocalizedField.pick(json, this.language);
     }
 }

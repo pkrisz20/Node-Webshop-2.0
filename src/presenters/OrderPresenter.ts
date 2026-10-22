@@ -1,20 +1,19 @@
 import type { Language } from '../locales';
 import type { Order } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
-import { Formatter } from '../utils/Formatter';
-import { LocalizedField } from '../utils/LocalizedField';
 import type { PriceFormat } from '../utils/PriceFormat';
-
-interface DisplayOptions {
-    language: Language;
-    priceFormat: PriceFormat;
-}
+import { TextFormatter } from '../utils/TextFormatter';
+import { Presenter } from './Presenter';
 
 const NO_NOTE_BADGE = "<span class='badge text-uppercase fw-medium bg-danger'>Nincs megjegyzés</span>";
 
 /** Order data of the admin pages */
-export class OrderPresenter {
-    static toListRow(order: Order, priceFormat: PriceFormat) {
+export class OrderPresenter extends Presenter {
+    constructor(language: Language, private readonly priceFormat: PriceFormat) {
+        super(language);
+    }
+
+    toListRow(order: Order) {
         return {
             id: order.order_id,
             can_edit_status: order.isStatusEditable(),
@@ -24,22 +23,25 @@ export class OrderPresenter {
             city: order.customer_city,
             phone: order.customer_phone,
             statusData: order.getStatusBadge(),
-            sumPrice: priceFormat.number(order.order_sum_price),
+            sumPrice: this.priceFormat.formatAmount(order.order_sum_price),
             orderDate: DateFormatter.toAdminShortDateTime(order.order_date),
         };
     }
 
-    /** Popup content of the order details, every customer input (and the currency of the admin settings) is escaped */
-    static renderDetailsHtml(order: Order, { language, priceFormat }: DisplayOptions): string {
-        const escape = (value: string | null | undefined) => Formatter.escapeHtml(value ?? '');
-        const currencyCode = escape(priceFormat.currency);
+    /**
+     * Popup content of the order details, every customer input (and the currency of the admin settings) is escaped.
+     * The order lines store no unit price, so the current (discounted) price of the product is shown.
+     */
+    renderDetailsHtml(order: Order): string {
+        const escape = (value: string | null | undefined) => TextFormatter.escapeHtml(value ?? '');
+        const currency = escape(this.priceFormat.currency);
         const note = order.customer_note ? escape(order.customer_note) : NO_NOTE_BADGE;
 
         const productLines = (order.details ?? []).map(detail => {
-            const product = detail.product;
-            const unitPrice = product?.discount_value ?? product?.price;
+            const { product } = detail;
+            const unitPrice = product ? this.priceFormat.formatAmount(product.getEffectivePrice()) : '';
 
-            return `<p class='fs-6 mb-0'>${detail.quantity} x ${LocalizedField.pick(product?.name, language)} (${priceFormat.number(unitPrice)} ${currencyCode} / db)</p>`;
+            return `<p class='fs-6 mb-0'>${detail.quantity} x ${this.localized(product?.name)} (${unitPrice} ${currency} / db)</p>`;
         }).join('');
 
         return `
@@ -56,7 +58,7 @@ export class OrderPresenter {
                 <div class='text-start'>
                     <strong class='text-uppercase fs-5 bg-warning px-1'>Rendelt termékek</strong>
                     ${productLines}
-                    <div class='fs-6 mt-2 bg-danger link-light p-2 d-inline-block'>Fizetendő összeg: <b>${priceFormat.number(order.order_sum_price)} ${currencyCode}</b></div>
+                    <div class='fs-6 mt-2 bg-danger link-light p-2 d-inline-block'>Fizetendő összeg: <b>${this.priceFormat.formatAmount(order.order_sum_price)} ${currency}</b></div>
                 </div>
             </div>
         `;

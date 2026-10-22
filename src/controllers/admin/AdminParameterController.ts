@@ -41,7 +41,7 @@ export class AdminParameterController extends AdminController {
     };
 
     readonly edit = async (req: Request, res: Response): Promise<void> => {
-        const parameterId = this.parseId(req.params.paramId);
+        const parameterId = this.parseId(req.params.parameterId);
 
         if (!parameterId) {
             return ErrorPage.badRequest(req, res);
@@ -63,7 +63,7 @@ export class AdminParameterController extends AdminController {
     };
 
     readonly update = async (req: Request, res: Response): Promise<void> => {
-        const parameterId = this.parseId(req.params.paramId);
+        const parameterId = this.parseId(req.params.parameterId);
         const parameterName = this.parseName(req.body);
         const parameter = parameterId && parameterName ? await WebshopParameter.findByPk(parameterId) : null;
 
@@ -78,7 +78,7 @@ export class AdminParameterController extends AdminController {
 
     /** Deletes the parameter together with its values of every product */
     readonly delete = async (req: Request, res: Response): Promise<void> => {
-        const parameterId = this.parseId(req.params.paramId);
+        const parameterId = this.parseId(req.params.parameterId);
 
         if (!parameterId) {
             this.respondDeleted(res, 0);
@@ -95,6 +95,6 @@ export class AdminParameterController extends AdminController {
 
     private parseName(body: Record<string, unknown>): string | null {
         const input = new FormInput(body);
-        return input.hasLocalized('parameter_name') ? LocalizedField.stringify(input.localized('parameter_name')) : null;
+        return input.isFilledInEveryLanguage('parameter_name') ? LocalizedField.stringify(input.localized('parameter_name')) : null;
     }
 }

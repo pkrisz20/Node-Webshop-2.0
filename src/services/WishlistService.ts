@@ -10,7 +10,7 @@ export class WishlistService {
     }
 
     /** Removes the products from the wishlist which became inactive in the meantime */
-    async keepActiveProducts(session: Session): Promise<number[]> {
+    async removeInactiveProducts(session: Session): Promise<number[]> {
         const productIds = WishlistService.productIds(session);
 
         if (productIds.length === 0) {

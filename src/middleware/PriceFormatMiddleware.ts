@@ -7,22 +7,22 @@ import type { PriceFormat } from '../utils/PriceFormat';
  * The public pages get it from `PageContextMiddleware`, which loads the settings anyway.
  */
 export class PriceFormatMiddleware {
-    private static readonly siteConfigService = new SiteConfigService();
+    constructor(private readonly siteConfigService = new SiteConfigService()) {}
 
-    static async share(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    readonly share = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            PriceFormatMiddleware.apply(res, await PriceFormatMiddleware.siteConfigService.priceFormat());
+            PriceFormatMiddleware.setPriceFormat(res, await this.siteConfigService.loadPriceFormat());
             next();
         }
         catch (error) {
             next(error);
         }
-    }
+    };
 
-    /** Controllers use `res.locals.priceFormat`, the templates `currency` and `numberWithCommas()` */
-    static apply(res: Response, priceFormat: PriceFormat): void {
+    /** Controllers use `res.locals.priceFormat`, the templates `currency` and `formatAmount()` */
+    static setPriceFormat(res: Response, priceFormat: PriceFormat): void {
         res.locals.priceFormat = priceFormat;
         res.locals.currency = priceFormat.currency;
-        res.locals.numberWithCommas = (value: number | string | null | undefined) => priceFormat.number(value);
+        res.locals.formatAmount = (value: number | string | null | undefined) => priceFormat.formatAmount(value);
     }
 }

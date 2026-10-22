@@ -197,7 +197,7 @@
                 </div>
             </section>
 
-            <% if (productDetails.isAllowed) { %>
+            <% if (productDetails.commentsAllowed) { %>
                 <%- include('../components/comments.ejs', { itemId: productDetails.id, articleType: "product" }) %>
             <% } %>
 
@@ -231,7 +231,7 @@
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countdown.min.js') %>"></script>
     <% } %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
-    <% if (productDetails.isAllowed) { %>
+    <% if (productDetails.commentsAllowed) { %>
         <%- include('../partials/validation-scripts.ejs') %>
     <% } %>
 
@@ -241,7 +241,7 @@
 <%- endPush() %>
 
 <%- push('scripts') %>
-    <% if (productDetails.isAllowed && showLoadMoreButton) { %>
+    <% if (productDetails.commentsAllowed && showLoadMoreButton) { %>
         <script type="text/javascript">
             $('body').on('click', '.js-load-more-comments', function () {
                 var this_button = $(this);

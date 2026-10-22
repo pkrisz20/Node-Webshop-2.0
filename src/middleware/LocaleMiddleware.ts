@@ -11,7 +11,7 @@ import { Translator } from '../utils/Translator';
 export class LocaleMiddleware {
     /** Default for every request (e.g. the AJAX calls): the language of the last visited page */
     static fromSession(req: Request, res: Response, next: NextFunction): void {
-        LocaleMiddleware.apply(req, res, req.session.lang ?? env.languages.fallback);
+        LocaleMiddleware.setLanguage(req, res, req.session.lang ?? env.languages.fallback);
         next();
     }
 
@@ -24,13 +24,13 @@ export class LocaleMiddleware {
         }
 
         req.session.lang = lang;
-        LocaleMiddleware.apply(req, res, lang);
+        LocaleMiddleware.setLanguage(req, res, lang);
         next();
     }
 
     /** The admin pages always use the admin language */
     static admin(req: Request, res: Response, next: NextFunction): void {
-        LocaleMiddleware.apply(req, res, env.languages.admin);
+        LocaleMiddleware.setLanguage(req, res, env.languages.admin);
         next();
     }
 
@@ -39,7 +39,7 @@ export class LocaleMiddleware {
         res.redirect(`/${req.session.lang ?? env.languages.fallback}`);
     }
 
-    private static apply(req: Request, res: Response, language: Language): void {
+    private static setLanguage(req: Request, res: Response, language: Language): void {
         req.language = language;
         req.translate = (key, ...params) => Translator.translate(key, language, ...params);
         res.locals.current_locale = language;

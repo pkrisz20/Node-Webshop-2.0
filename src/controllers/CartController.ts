@@ -2,9 +2,9 @@ import type { Request, Response } from 'express';
 import { ApiResponse } from '../http/ApiResponse';
 import { CartPresenter } from '../presenters/CartPresenter';
 import { CartService } from '../services/CartService';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class CartController extends Controller {
+export class CartController extends PublicController {
     constructor(private readonly cartService = new CartService()) {
         super();
     }
@@ -65,8 +65,8 @@ export class CartController extends Controller {
                 ? req.translate('validations.max_quantity', result.maxQuantity ?? '')
                 : req.translate('validations.cart_updated'),
             newValue: result.quantity,
-            totalPrice: res.locals.priceFormat.number(result.totalPrice),
-            alonePrice: res.locals.priceFormat.number(result.linePrice),
+            totalPrice: res.locals.priceFormat.formatAmount(result.totalPrice),
+            alonePrice: res.locals.priceFormat.formatAmount(result.linePrice),
         });
     };
 
@@ -86,7 +86,7 @@ export class CartController extends Controller {
         ApiResponse.success(res, {
             title: req.translate('general.process_success'),
             totalCount: itemsCount,
-            totalPrice: res.locals.priceFormat.number(req.session.totalPrice),
+            totalPrice: res.locals.priceFormat.formatAmount(req.session.totalPrice),
             isEmpty: itemsCount === 0,
         });
     };

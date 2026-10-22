@@ -5,6 +5,12 @@ export class NumberParser {
         return number !== null && number > 0 ? number : null;
     }
 
+    /** Zero or a positive integer (e.g. a page index) from a request parameter, otherwise null */
+    static nonNegativeInteger(value: unknown): number | null {
+        const number = NumberParser.integer(value);
+        return number !== null && number >= 0 ? number : null;
+    }
+
     /** Integer from a request parameter, null for an empty or invalid value */
     static integer(value: unknown): number | null {
         if (value === undefined || value === null || value === '') {

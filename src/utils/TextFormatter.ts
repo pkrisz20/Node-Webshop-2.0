@@ -1,8 +1,7 @@
-import { randomBytes } from 'crypto';
 import { appConfig } from '../config/app';
 
-/** Text helpers, the prices are formatted by `PriceFormat` */
-export class Formatter {
+/** Text helpers, the prices are formatted by `PriceFormat`, the dates by `DateFormatter` */
+export class TextFormatter {
     static capitalizeFirstLetter(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
@@ -22,10 +21,5 @@ export class Formatter {
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
-    }
-
-    /** Short random identifier, used for order ids and uploaded file names */
-    static createUniqueId(): string {
-        return randomBytes(6).toString('hex') + Date.now().toString(36);
     }
 }

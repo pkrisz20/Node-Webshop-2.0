@@ -8,10 +8,10 @@ import { FormInput } from '../../http/FormInput';
 import type { Language } from '../../locales';
 import { Product, ProductComment, ProductParameter, WebshopCategory, WebshopParameter } from '../../models';
 import { DateFormatter } from '../../utils/DateFormatter';
-import { Formatter } from '../../utils/Formatter';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
 import { Slug } from '../../utils/Slug';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 type ProductAttributes = Omit<CreationAttributes<Product>, 'id' | 'created_at' | 'updated_at'>;
@@ -46,7 +46,7 @@ export class AdminProductController extends AdminController {
             paginationLink: 'products',
             webshopProducts: products.map(product => ({
                 productId: product.id,
-                productName: Formatter.limitText(LocalizedField.pick(product.name, req.language), appConfig.textLengths.adminListTitle),
+                productName: TextFormatter.limitText(LocalizedField.pick(product.name, req.language), appConfig.textLengths.adminListTitle),
                 isOnDiscount: this.activityIcon(product.hasActiveDiscount()),
                 is_active: this.activityIcon(product.is_active),
                 date: this.lastModified(product),
@@ -184,7 +184,7 @@ export class AdminProductController extends AdminController {
             isVerified: this.activityIcon(comment.is_verified_purchase),
             isVerifiedInteger: comment.is_verified_purchase,
             productIsActive: comment.product?.is_active,
-            productName: Formatter.limitText(LocalizedField.pick(comment.product?.name, req.language), appConfig.textLengths.adminListTitle),
+            productName: TextFormatter.limitText(LocalizedField.pick(comment.product?.name, req.language), appConfig.textLengths.adminListTitle),
             product_slug: LocalizedField.pick(comment.product?.slug, req.language),
         }));
 
@@ -227,7 +227,7 @@ export class AdminProductController extends AdminController {
         const maxOrderCount = input.integer('max_order_count');
         const flags = input.flags(PRODUCT_FLAGS);
 
-        if (price === null || categoryId === null || maxOrderCount === null || !flags || !input.hasLocalized('name')) {
+        if (price === null || categoryId === null || maxOrderCount === null || !flags || !input.isFilledInEveryLanguage('name')) {
             return null;
         }
 

@@ -15,7 +15,7 @@ export class AuthController extends AdminController {
             return ApiResponse.fail(res, 'errors.unprocessable_data');
         }
 
-        if (!this.isValidCredential(username, env.admin.username) || !this.isValidCredential(password, env.admin.password)) {
+        if (!this.credentialMatches(username, env.admin.username) || !this.credentialMatches(password, env.admin.password)) {
             return ApiResponse.fail(res, 'errors.wrong_data');
         }
 
@@ -47,7 +47,7 @@ export class AuthController extends AdminController {
     };
 
     /** Constant-time comparison, so the response time does not leak how much of the credential matched */
-    private isValidCredential(submitted: string, expected: string): boolean {
+    private credentialMatches(submitted: string, expected: string): boolean {
         const submittedBuffer = Buffer.from(submitted);
         const expectedBuffer = Buffer.from(expected);
 

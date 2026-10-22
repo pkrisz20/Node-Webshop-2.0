@@ -6,11 +6,12 @@ import { ApiResponse } from '../http/ApiResponse';
 import { ErrorPage } from '../http/ErrorPage';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { FAQ, StaticContent } from '../models';
+import { FaqPresenter } from '../presenters/FaqPresenter';
 import { Duration } from '../utils/Duration';
 import { LocalizedField } from '../utils/LocalizedField';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class StaticContentController extends Controller {
+export class StaticContentController extends PublicController {
     readonly faq = async (req: Request, res: Response): Promise<void> => {
         const { language } = req;
         const questions = await FAQ.findAll({
@@ -18,12 +19,10 @@ export class StaticContentController extends Controller {
             where: { is_active: 1 },
             order: [['id', 'DESC']],
         });
+        const faqPresenter = new FaqPresenter(language);
 
         res.render('pages/faq', {
-            questions: questions.map(faq => ({
-                question: LocalizedField.pick(faq.question, language),
-                answer: LocalizedField.pick(faq.answer, language),
-            })),
+            questions: questions.map(question => faqPresenter.toQuestion(question)),
             meta: MetaBuilder.page(language, {
                 title: req.translate('nav.FAQ'),
                 description: req.translate('meta.FAQ_description'),
@@ -35,17 +34,17 @@ export class StaticContentController extends Controller {
     /** Content pages (terms of use, privacy policy), found by the slug of the current language */
     readonly page = async (req: Request, res: Response): Promise<void> => {
         const { language } = req;
-        const { routeName } = req.params;
+        const { contentSlug } = req.params;
 
         // There are only a few locked static contents, so the slug is matched in memory
         const contents = await StaticContent.findAll();
-        const content = contents.find(staticContent => LocalizedField.pick(staticContent.slug, language) === routeName);
+        const content = contents.find(staticContent => LocalizedField.pick(staticContent.slug, language) === contentSlug);
 
         if (!content) {
             return ErrorPage.notFound(req, res);
         }
 
-        const contentPath = `${req.translate('slugs.content')}/${routeName}`;
+        const contentPath = `${req.translate('slugs.content')}/${contentSlug}`;
         const title = LocalizedField.pick(content.title, language);
         const shortDescription = LocalizedField.pick(content.short_description, language);
 
@@ -53,7 +52,7 @@ export class StaticContentController extends Controller {
             contentTitle: title,
             contentShortDescription: shortDescription,
             contentDescription: LocalizedField.pick(content.description, language),
-            contentSlug: contentPath,
+            contentPath,
             meta: MetaBuilder.page(language, {
                 title,
                 description: shortDescription || req.translate('meta.description'),

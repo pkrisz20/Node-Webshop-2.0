@@ -56,8 +56,9 @@ export class FormInput {
         return LocalizedField.fromFormInputs(this.body, inputNameOf, options);
     }
 
-    hasLocalized(name: string): boolean {
-        return LocalizedField.isFilledInForm(this.body, name);
+    /** Every `name[<language>]` input is filled in */
+    isFilledInEveryLanguage(name: string): boolean {
+        return LocalizedField.isFilledInEveryLanguage(this.body, name);
     }
 
     /** One or more values of a repeated input (e.g. hidden inputs of a repeatable block) */

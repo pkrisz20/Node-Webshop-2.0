@@ -5,9 +5,9 @@ import { MetaBuilder } from '../http/MetaBuilder';
 import { CartPresenter } from '../presenters/CartPresenter';
 import { CartService } from '../services/CartService';
 import { OrderService, type CustomerData } from '../services/OrderService';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
-export class OrderController extends Controller {
+export class OrderController extends PublicController {
     constructor(
         private readonly orderService = new OrderService(),
         private readonly cartService = new CartService(),

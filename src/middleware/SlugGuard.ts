@@ -4,14 +4,14 @@ import { Translator } from '../utils/Translator';
 
 /**
  * The public routes share the same URL pattern (e.g. "/:lang/:slug"),
- * so every route checks whether the `:slug` segment is its own translated slug.
+ * so every route checks whether the `:routeSlug` segment is its own translated slug (e.g. "termekek").
  */
 export class SlugGuard {
     static matches(translationKey: string): RequestHandler {
         return (req, _res, next) => {
-            const { lang, slug } = req.params;
+            const { lang, routeSlug } = req.params;
 
-            if (isLanguage(lang) && slug === Translator.translate(translationKey, lang)) {
+            if (isLanguage(lang) && routeSlug === Translator.translate(translationKey, lang)) {
                 return next();
             }
 

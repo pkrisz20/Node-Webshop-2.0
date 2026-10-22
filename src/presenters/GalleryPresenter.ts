@@ -1,12 +1,9 @@
-import type { Language } from '../locales';
 import type { Gallery } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
 import { ImageUrl } from '../utils/ImageUrl';
-import { LocalizedField } from '../utils/LocalizedField';
+import { Presenter } from './Presenter';
 
-export class GalleryPresenter {
-    constructor(private readonly language: Language) {}
-
+export class GalleryPresenter extends Presenter {
     toCard(gallery: Gallery) {
         return {
             id: gallery.id,
@@ -47,9 +44,5 @@ export class GalleryPresenter {
             galleryImages: ImageUrl.listOf(gallery.gallery_images, 'galleries'),
             date: DateFormatter.formatByLanguage(gallery.gallery_date, this.language),
         };
-    }
-
-    private localized(json: string | null | undefined): string | null {
-        return LocalizedField.pick(json, this.language);
     }
 }

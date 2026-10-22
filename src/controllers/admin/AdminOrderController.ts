@@ -19,12 +19,14 @@ export class AdminOrderController extends AdminController {
             offset: pagination.offset,
         });
 
+        const orderPresenter = new OrderPresenter(req.language, res.locals.priceFormat);
+
         res.render('admin/orders/list', {
             meta: this.meta('Admin orders list page', 'This is the orders list page'),
             pageCount: pagination.pageCount(count),
             currentPage: pagination.currentPage,
             paginationLink: 'orders',
-            ordersList: orders.map(order => OrderPresenter.toListRow(order, res.locals.priceFormat)),
+            ordersList: orders.map(order => orderPresenter.toListRow(order)),
         });
     };
 
@@ -33,7 +35,7 @@ export class AdminOrderController extends AdminController {
             include: [{
                 model: OrderDetail,
                 as: 'details',
-                include: [{ model: Product, as: 'product', attributes: ['name', 'price', 'discount_value'] }],
+                include: [{ model: Product, as: 'product', attributes: ['name', 'price', 'discount_value', 'discount_end_date'] }],
             }],
         });
 
@@ -42,22 +44,27 @@ export class AdminOrderController extends AdminController {
         }
 
         ApiResponse.success(res, {
-            htmlResponse: OrderPresenter.renderDetailsHtml(order, { language: req.language, priceFormat: res.locals.priceFormat }),
+            htmlResponse: new OrderPresenter(req.language, res.locals.priceFormat).renderDetailsHtml(order),
         });
     };
 
     /** A closed (done / canceled) order gets the closing date too */
     readonly changeStatus = async (req: Request, res: Response): Promise<void> => {
         const newStatus: unknown = req.body.new_status;
-        const order = Order.isValidStatus(newStatus) ? await Order.findByPk(req.params.orderId) : null;
 
-        if (!order || !Order.isValidStatus(newStatus)) {
+        if (!Order.isValidStatus(newStatus)) {
+            return ApiResponse.fail(res, 'errors.unprocessable_data');
+        }
+
+        const order = await Order.findByPk(req.params.orderId);
+
+        if (!order) {
             return ApiResponse.fail(res, 'errors.unprocessable_data');
         }
 
         await order.update({
             order_status: newStatus,
-            ...(Order.isClosingStatus(newStatus) && { closed_order_at: new Date() }),
+            ...(Order.isClosedStatus(newStatus) && { closed_order_at: new Date() }),
         });
 
         ApiResponse.success(res);

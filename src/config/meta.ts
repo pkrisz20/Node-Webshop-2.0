@@ -8,7 +8,8 @@ export const metaDefaults = Object.freeze({
         title: 60,
         description: 150,
     },
-    langs: {
+    /** Value of the <html lang=""> attribute per language */
+    htmlLanguageCodes: {
         sr: 'sr-Latn',
         en: 'en',
         hu: 'hu',

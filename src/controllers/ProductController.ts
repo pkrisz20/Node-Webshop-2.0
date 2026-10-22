@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { col, fn, Op, type WhereOptions } from 'sequelize';
+import { Op, type WhereOptions } from 'sequelize';
 import { appConfig } from '../config/app';
 import { env } from '../config/env';
 import { ApiResponse } from '../http/ApiResponse';
@@ -7,13 +7,12 @@ import { ErrorPage } from '../http/ErrorPage';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { Product, ProductComment, ProductParameter, WebshopCategory, WebshopParameter } from '../models';
 import { CommentPresenter } from '../presenters/CommentPresenter';
-import type { ProductRating } from '../presenters/ProductPresenter';
 import { CartService } from '../services/CartService';
 import { CommentService } from '../services/CommentService';
 import { LocalizedField } from '../utils/LocalizedField';
 import { NumberParser } from '../utils/NumberParser';
 import { Pagination } from '../utils/Pagination';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
 interface ProductListOptions {
     where: WhereOptions<Product>;
@@ -53,7 +52,7 @@ const PLACEHOLDER_FILTERS = [
     },
 ];
 
-export class ProductController extends Controller {
+export class ProductController extends PublicController {
     constructor(private readonly commentService = new CommentService()) {
         super();
     }
@@ -137,7 +136,7 @@ export class ProductController extends Controller {
         const slug = LocalizedField.pick(product.slug, language);
         const productPath = `${req.translate('slugs.product')}/${slug}/${product.id}`;
 
-        if (req.params.slugName !== slug) {
+        if (req.params.itemSlug !== slug) {
             return res.redirect(301, `${env.appUrl}/${language}/${productPath}`);
         }
 
@@ -146,7 +145,7 @@ export class ProductController extends Controller {
                 where: { product_id: product.id },
                 include: [{ model: WebshopParameter, as: 'parameter', attributes: ['parameter_name'], required: true }],
             }),
-            this.ratingOf(product.id),
+            this.commentService.productRating(product.id),
             Product.findAll({
                 attributes: [...Product.CARD_ATTRIBUTES],
                 where: { is_active: 1, category_id: product.category_id, id: { [Op.ne]: product.id } },
@@ -162,7 +161,7 @@ export class ProductController extends Controller {
             productDetails,
             isAlreadyInCart: CartService.productIds(req.session).includes(product.id),
             similarProducts: similarProducts.map(similarProduct => productPresenter.toCard(similarProduct)),
-            articleComments: commentPage?.comments.map(comment => commentPresenter.fromProductComment(comment)) ?? [],
+            comments: commentPage?.comments.map(comment => commentPresenter.fromProductComment(comment)) ?? [],
             showLoadMoreButton: commentPage?.hasMore ?? false,
             meta: MetaBuilder.page(language, {
                 title: productDetails.name,
@@ -175,7 +174,7 @@ export class ProductController extends Controller {
     };
 
     readonly storeComment = async (req: Request, res: Response): Promise<void> => {
-        const productId = this.parseId(req.params.itemId);
+        const productId = this.parseId(req.params.productId);
 
         const product = productId && await Product.findOne({
             attributes: ['id'],
@@ -202,7 +201,7 @@ export class ProductController extends Controller {
 
     readonly loadMoreComments = async (req: Request, res: Response): Promise<void> => {
         const productId = this.parseId(req.body.productID);
-        const page = CommentService.parsePage(req.body.offsetNumber);
+        const page = NumberParser.nonNegativeInteger(req.body.offsetNumber);
 
         if (!productId || page === null) {
             return ApiResponse.fail(res, 'errors.wrong_data');
@@ -247,7 +246,7 @@ export class ProductController extends Controller {
             max_price: Number(maxPrice ?? 0),
             pageCount: pagination.pageCount(count),
             currentPage: pagination.currentPage,
-            articleLink: options.listPath,
+            paginationPath: options.listPath,
             products: products.map(product => productPresenter.toCard(product)),
             productsTotalCount: count,
             webshopFilters: PLACEHOLDER_FILTERS,
@@ -256,22 +255,5 @@ export class ProductController extends Controller {
             category_short_desc: options.categoryDescription,
             meta: options.meta,
         });
-    }
-
-    /** Average and count of the ratings, comments without rating count as 0 in the average */
-    private async ratingOf(productId: number): Promise<ProductRating> {
-        const result = await ProductComment.findOne({
-            attributes: [
-                [fn('AVG', fn('COALESCE', col('rating'), 0)), 'average'],
-                [fn('COUNT', col('rating')), 'count'],
-            ],
-            where: { product_id: productId },
-            raw: true,
-        }) as unknown as { average: number | string | null; count: number | string } | null;
-
-        return {
-            average: Number(result?.average ?? 0),
-            count: Number(result?.count ?? 0),
-        };
     }
 }

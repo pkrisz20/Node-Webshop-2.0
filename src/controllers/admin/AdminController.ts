@@ -3,8 +3,8 @@ import { appConfig } from '../../config/app';
 import { ApiResponse } from '../../http/ApiResponse';
 import { MetaBuilder, type AdminMeta } from '../../http/MetaBuilder';
 import { DateFormatter } from '../../utils/DateFormatter';
-import { NumberParser } from '../../utils/NumberParser';
 import { Pagination } from '../../utils/Pagination';
+import { Controller } from '../Controller';
 
 interface Timestamped {
     created_at: Date | null;
@@ -15,17 +15,13 @@ interface Timestamped {
  * Base class of the admin controllers.
  * The admin language is set on the request by the admin routes (`req.language`, `req.translate()`).
  */
-export abstract class AdminController {
+export abstract class AdminController extends Controller {
     protected meta(title: string, description = ''): AdminMeta {
         return MetaBuilder.admin(title, description);
     }
 
     protected pagination(req: Request): Pagination | null {
         return Pagination.fromQuery(req.query, appConfig.pagination.adminPerPage);
-    }
-
-    protected parseId(value: unknown): number | null {
-        return NumberParser.positiveInteger(value);
     }
 
     /** Green check or red cross icon of the admin lists */

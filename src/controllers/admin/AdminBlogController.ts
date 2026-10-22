@@ -1,15 +1,16 @@
 import type { Request, Response } from 'express';
-import { appConfig } from '../../config/app';
 import { Op, type CreationAttributes, type WhereOptions } from 'sequelize';
+import { appConfig } from '../../config/app';
 import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
 import { Article, ArticleComment } from '../../models';
 import { DateFormatter } from '../../utils/DateFormatter';
-import { Formatter } from '../../utils/Formatter';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
+import type { Pagination } from '../../utils/Pagination';
 import { Slug } from '../../utils/Slug';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 type ArticleAttributes = Omit<CreationAttributes<Article>, 'id' | 'created_at' | 'updated_at'>;
@@ -25,7 +26,7 @@ export class AdminBlogController extends AdminController {
             return ErrorPage.badRequest(req, res);
         }
 
-        const { rows: articles, count } = await this.findArticles({ date: { [Op.lt]: DateFormatter.today() } }, pagination.limit, pagination.offset);
+        const { rows: articles, count } = await this.findArticles({ date: { [Op.lt]: DateFormatter.today() } }, pagination);
 
         res.render('admin/blogs/list', {
             meta: this.meta('Admin blogs list page', 'This is the blogs list page'),
@@ -36,7 +37,7 @@ export class AdminBlogController extends AdminController {
                 blogId: article.id,
                 slug: LocalizedField.pick(article.slug, req.language),
                 author: article.author,
-                blogTitle: Formatter.limitText(LocalizedField.pick(article.title, req.language), appConfig.textLengths.adminListTitle),
+                blogTitle: TextFormatter.limitText(LocalizedField.pick(article.title, req.language), appConfig.textLengths.adminListTitle),
                 isActiveIcon: this.activityIcon(article.is_active),
                 is_active: article.is_active,
                 date: this.lastModified(article),
@@ -51,7 +52,7 @@ export class AdminBlogController extends AdminController {
             return ErrorPage.badRequest(req, res);
         }
 
-        const { rows: events, count } = await this.findArticles({ date: { [Op.gt]: DateFormatter.today() } }, pagination.limit, pagination.offset);
+        const { rows: events, count } = await this.findArticles({ date: { [Op.gt]: DateFormatter.today() } }, pagination);
 
         res.render('admin/events/list', {
             meta: this.meta('Admin events list page', 'This is the events list page'),
@@ -63,7 +64,7 @@ export class AdminBlogController extends AdminController {
                 slug: LocalizedField.pick(event.slug, req.language),
                 eventDate: DateFormatter.toAdminDateTime(event.date),
                 author: event.author,
-                eventTitle: Formatter.limitText(LocalizedField.pick(event.title, req.language), appConfig.textLengths.adminListTitle),
+                eventTitle: TextFormatter.limitText(LocalizedField.pick(event.title, req.language), appConfig.textLengths.adminListTitle),
                 isActiveIcon: this.activityIcon(event.is_active),
                 is_active: event.is_active,
                 date: this.lastModified(event),
@@ -160,7 +161,7 @@ export class AdminBlogController extends AdminController {
             date: DateFormatter.toAdminDateTime(comment.date),
             isActive: this.activityIcon(comment.is_active),
             blogIsActive: comment.article?.is_active,
-            blogName: Formatter.limitText(LocalizedField.pick(comment.article?.title, req.language), appConfig.textLengths.adminListTitle),
+            blogName: TextFormatter.limitText(LocalizedField.pick(comment.article?.title, req.language), appConfig.textLengths.adminListTitle),
             blog_slug: LocalizedField.pick(comment.article?.slug, req.language),
         }));
 
@@ -181,13 +182,13 @@ export class AdminBlogController extends AdminController {
         this.respondDeleted(res, deletedCount);
     };
 
-    private findArticles(where: WhereOptions<Article>, limit: number, offset: number) {
+    private findArticles(where: WhereOptions<Article>, pagination: Pagination) {
         return Article.findAndCountAll({
             attributes: ['id', 'title', 'slug', 'date', 'author', 'is_active', 'created_at', 'updated_at'],
             where,
             order: [['id', 'DESC']],
-            limit,
-            offset,
+            limit: pagination.limit,
+            offset: pagination.offset,
         });
     }
 
@@ -196,7 +197,7 @@ export class AdminBlogController extends AdminController {
         const flags = input.flags(ARTICLE_FLAGS);
         const author = input.text('author');
 
-        if (!flags || !author || !input.hasLocalized('title')) {
+        if (!flags || !author || !input.isFilledInEveryLanguage('title')) {
             return null;
         }
 

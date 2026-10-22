@@ -23,19 +23,20 @@ export class AjaxRoutes extends RouteGroup {
         const contact = new ContactController();
         const orders = new OrderController();
         const staticContents = new StaticContentController();
+        const priceFormat = new PriceFormatMiddleware();
 
         this.router.get('/products/search', asyncHandler(products.filter));
         this.router.post('/product/comment/load-more', asyncHandler(products.loadMoreComments));
-        this.router.post('/product/comment/:itemId', ValidationMiddleware.body(commentSchema), asyncHandler(products.storeComment));
+        this.router.post('/product/comment/:productId', ValidationMiddleware.body(commentSchema), asyncHandler(products.storeComment));
         this.router.post('/wishlist-handle/:productId', asyncHandler(wishlist.toggle));
 
         // The cart responses contain formatted prices, so they need the price display of the admin settings
-        this.router.post('/cart/add', PriceFormatMiddleware.share, asyncHandler(cart.add));
-        this.router.post('/cart/update', PriceFormatMiddleware.share, asyncHandler(cart.update));
-        this.router.post('/cart/delete', PriceFormatMiddleware.share, asyncHandler(cart.remove));
+        this.router.post('/cart/add', priceFormat.share, asyncHandler(cart.add));
+        this.router.post('/cart/update', priceFormat.share, asyncHandler(cart.update));
+        this.router.post('/cart/delete', priceFormat.share, asyncHandler(cart.remove));
 
         this.router.post('/blog/comment/load-more', asyncHandler(blogs.loadMoreComments));
-        this.router.post('/blog/comment/:itemId', ValidationMiddleware.body(commentSchema), asyncHandler(blogs.storeComment));
+        this.router.post('/blog/comment/:articleId', ValidationMiddleware.body(commentSchema), asyncHandler(blogs.storeComment));
 
         this.router.post('/search', asyncHandler(search.quickSearch));
         this.router.post('/contact/handle', ValidationMiddleware.body(contactSchema), asyncHandler(contact.store));

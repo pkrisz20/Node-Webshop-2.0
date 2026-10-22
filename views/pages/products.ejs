@@ -60,7 +60,7 @@
                     <% } %>
 
                     <% if (pageCount > 1) { %>
-                        <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink, customPaginationClass: 'js-pagination-wrapper' }) %>
+                        <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: paginationPath, customPaginationClass: 'js-pagination-wrapper' }) %>
                     <% } %>
                 </section>
             </div>

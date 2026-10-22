@@ -18,7 +18,7 @@ export class PriceFormat {
     }
 
     /** 1234567 => "1.234.567", "1,234,567" or "1 234 567" */
-    number(value: number | string | null | undefined): string {
+    formatAmount(value: number | string | null | undefined): string {
         if (value === null || value === undefined) {
             return '';
         }

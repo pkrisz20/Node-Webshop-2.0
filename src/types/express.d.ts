@@ -14,7 +14,7 @@ declare global {
         interface Locals {
             priceFormat: PriceFormat;
             currency: string;
-            numberWithCommas: (value: number | string | null | undefined) => string;
+            formatAmount: (value: number | string | null | undefined) => string;
         }
     }
 }

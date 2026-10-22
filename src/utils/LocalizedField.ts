@@ -1,6 +1,6 @@
 import { env } from '../config/env';
 import type { Language } from '../locales';
-import { Formatter } from './Formatter';
+import { TextFormatter } from './TextFormatter';
 
 /** Values of one field keyed by language, stored in the database as a JSON string */
 export type LocalizedValues = Record<Language, string | null>;
@@ -49,14 +49,14 @@ export class LocalizedField {
             const value = body[inputNameOf(language)];
             const text = typeof value === 'string' ? value : '';
 
-            values[language] = text.length === 0 ? null : (escape ? Formatter.escapeHtml(text) : text);
+            values[language] = text.length === 0 ? null : (escape ? TextFormatter.escapeHtml(text) : text);
         }
 
         return values;
     }
 
     /** Checks whether the `field[<language>]` input was filled for every language */
-    static isFilledInForm(body: FormBody, field: string): boolean {
+    static isFilledInEveryLanguage(body: FormBody, field: string): boolean {
         return env.languages.valid.every(language => {
             const value = body[`${field}[${language}]`];
             return typeof value === 'string' && value.length > 0;

@@ -1,14 +1,12 @@
 import type { Request, Response } from 'express';
 import { MetaBuilder } from '../http/MetaBuilder';
-import type { Language } from '../locales';
 import { Article, Gallery, Product, Slider } from '../models';
 import { ArticlePresenter } from '../presenters/ArticlePresenter';
 import { GalleryPresenter } from '../presenters/GalleryPresenter';
-import { ImageUrl } from '../utils/ImageUrl';
-import { LocalizedField } from '../utils/LocalizedField';
-import { Controller } from './Controller';
+import { SliderPresenter } from '../presenters/SliderPresenter';
+import { PublicController } from './PublicController';
 
-export class HomePageController extends Controller {
+export class HomePageController extends PublicController {
     readonly show = async (req: Request, res: Response): Promise<void> => {
         const { language } = req;
 
@@ -19,7 +17,7 @@ export class HomePageController extends Controller {
                 order: [['id', 'DESC']],
             }),
             Article.findAll({
-                attributes: [...Article.CARD_ATTRIBUTES, Article.commentsCountAttribute()],
+                attributes: Article.cardAttributesWithCommentsCount(),
                 where: { is_active: 1, is_featured: 1 },
                 order: [['date', 'DESC']],
             }),
@@ -37,9 +35,10 @@ export class HomePageController extends Controller {
         const productPresenter = this.productPresenter(req, res);
         const articlePresenter = new ArticlePresenter(language);
         const galleryPresenter = new GalleryPresenter(language);
+        const sliderPresenter = new SliderPresenter(language);
 
         res.render('home', {
-            heros: sliders.map(slider => this.toHero(slider, language)),
+            heros: sliders.map(slider => sliderPresenter.toHero(slider)),
             galleries: galleries.map(gallery => galleryPresenter.toFeatured(gallery)),
             blogs: articles.map(article => articlePresenter.toCard(article)),
             products: products.map(product => productPresenter.toCard(product)),
@@ -49,16 +48,4 @@ export class HomePageController extends Controller {
             }),
         });
     };
-
-    private toHero(slider: Slider, language: Language) {
-        return {
-            id: slider.id,
-            text: LocalizedField.pick(slider.title, language),
-            subText: LocalizedField.pick(slider.subtitle, language),
-            image: ImageUrl.of(slider.image, 'heros'),
-            link: LocalizedField.pick(slider.link, language),
-            button: LocalizedField.pick(slider.button_text, language),
-            targetPage: slider.target_page ?? '_blank',
-        };
-    }
 }

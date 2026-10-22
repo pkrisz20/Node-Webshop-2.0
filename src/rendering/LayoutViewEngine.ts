@@ -26,11 +26,11 @@ export class LayoutViewEngine {
 
     private async renderWithLayouts(viewPath: string, options: ExpressRenderOptions): Promise<string> {
         const composition = new ViewComposition();
-        const data = { ...options, ...composition.helpers() };
+        const templateData = { ...options, ...composition.helpers() };
         let templatePath = viewPath;
 
         for (let depth = 0; depth <= MAX_LAYOUT_DEPTH; depth++) {
-            const html = composition.collect(await ejs.renderFile(templatePath, data), templatePath);
+            const html = composition.collect(await ejs.renderFile(templatePath, templateData), templatePath);
             const layout = composition.takeLayout();
 
             if (!layout) {

@@ -110,9 +110,9 @@
             <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
         </form>
 
-        <% if (articleComments.length > 0) { %>
+        <% if (comments.length > 0) { %>
             <div class="comments-container js-comments-container">
-                <% articleComments.forEach(comment => { %>
+                <% comments.forEach(comment => { %>
                     <div class="comments-container-box">
                         <div class="content">
                             <div class="content__top">
@@ -149,7 +149,7 @@
                 </button>
             <% } %>
 
-        <% } else if (articleComments.length == 0) { %>
+        <% } else if (comments.length == 0) { %>
             <div class="comments-information no-comment">
                 <i class="fas fa-info-circle"></i>
                 <p class="comments-information-text"><%= languageHandler('products.no_comment_yet', current_locale) %></p>

@@ -1,9 +1,20 @@
+import { col, fn } from 'sequelize';
 import { appConfig } from '../config/app';
 import { ArticleComment, ProductComment } from '../models';
 
 export interface CommentPage<TComment> {
     comments: TComment[];
     hasMore: boolean;
+}
+
+export interface ProductRating {
+    average: number;
+    count: number;
+}
+
+interface RatingRow {
+    average: number | string | null;
+    count: number | string;
 }
 
 /** Paginates the active comments, the "load more" button requests the next page */
@@ -34,9 +45,20 @@ export class CommentService {
         return { comments: rows, hasMore: count > offset + this.pageSize };
     }
 
-    /** Page number sent by the "load more" button, null for invalid input */
-    static parsePage(value: unknown): number | null {
-        const page = Number(value);
-        return Number.isInteger(page) && page >= 0 ? page : null;
+    /** Average and count of the ratings, comments without rating count as 0 in the average */
+    async productRating(productId: number): Promise<ProductRating> {
+        const row = await ProductComment.findOne({
+            attributes: [
+                [fn('AVG', fn('COALESCE', col('rating'), 0)), 'average'],
+                [fn('COUNT', col('rating')), 'count'],
+            ],
+            where: { product_id: productId },
+            raw: true,
+        }) as unknown as RatingRow | null;
+
+        return {
+            average: Number(row?.average ?? 0),
+            count: Number(row?.count ?? 0),
+        };
     }
 }

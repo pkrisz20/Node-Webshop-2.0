@@ -5,8 +5,8 @@ import { paths } from '../config/paths';
 import type { Language } from '../locales';
 import { Article, Gallery, Product, WebshopCategory } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
-import { Formatter } from '../utils/Formatter';
 import { LocalizedField } from '../utils/LocalizedField';
+import { TextFormatter } from '../utils/TextFormatter';
 import { Translator } from '../utils/Translator';
 
 interface SitemapUrl {
@@ -85,7 +85,7 @@ export class SitemapGenerator {
     private toXml(urls: SitemapUrl[]): string {
         const entries = urls.map(url => [
             '  <url>',
-            `    <loc>${Formatter.escapeHtml(url.loc)}</loc>`,
+            `    <loc>${TextFormatter.escapeHtml(url.loc)}</loc>`,
             `    <lastmod>${url.lastmod}</lastmod>`,
             `    <changefreq>${url.changefreq}</changefreq>`,
             `    <priority>${url.priority}</priority>`,

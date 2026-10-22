@@ -6,10 +6,10 @@ import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
 import { Gallery } from '../../models';
 import { DateFormatter } from '../../utils/DateFormatter';
-import { Formatter } from '../../utils/Formatter';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
 import { Slug } from '../../utils/Slug';
+import { TextFormatter } from '../../utils/TextFormatter';
 import { AdminController } from './AdminController';
 
 type GalleryAttributes = Omit<CreationAttributes<Gallery>, 'id' | 'created_at' | 'updated_at'>;
@@ -38,7 +38,7 @@ export class AdminGalleryController extends AdminController {
             paginationLink: 'gallery',
             galleriesList: galleries.map(gallery => ({
                 galleryId: gallery.id,
-                galleryName: Formatter.limitText(LocalizedField.pick(gallery.gallery_name, req.language), appConfig.textLengths.adminListTitle),
+                galleryName: TextFormatter.limitText(LocalizedField.pick(gallery.gallery_name, req.language), appConfig.textLengths.adminListTitle),
                 is_active: this.activityIcon(gallery.is_active),
                 date: this.lastModified(gallery),
             })),
@@ -116,7 +116,7 @@ export class AdminGalleryController extends AdminController {
         const flags = input.flags(GALLERY_FLAGS);
         const date = input.date('date');
 
-        if (!flags || !date || !input.hasLocalized('name')) {
+        if (!flags || !date || !input.isFilledInEveryLanguage('name')) {
             return null;
         }
 

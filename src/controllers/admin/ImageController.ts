@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import multer from 'multer';
 import { ApiResponse } from '../../http/ApiResponse';
-import { ImageService, InvalidImageFormatError, type UploadMode } from '../../services/ImageService';
 import { ErrorReporter } from '../../services/ErrorReporter';
+import { ImageService, InvalidImageFormatError, type UploadMode } from '../../services/ImageService';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { AdminController } from './AdminController';
 
@@ -22,7 +22,7 @@ export class ImageController extends AdminController {
         const recordId = this.parseId(databaseId);
         const mode: unknown = fileType;
 
-        if (!ImageUrl.isImageFolder(folder) || !recordId || typeof fileSource !== 'string' || !this.isUploadMode(mode)) {
+        if (!ImageUrl.isImageFolder(folder) || !recordId || typeof fileSource !== 'string' || !ImageService.isUploadMode(mode)) {
             return ApiResponse.fail(res, 'errors.wrong_data');
         }
 
@@ -66,16 +66,12 @@ export class ImageController extends AdminController {
         if (error instanceof InvalidImageFormatError) {
             return ApiResponse.error(res, {
                 title: req.translate('errors.wrong_image_format'),
-                message: req.translate('errors.enabled_image_format', ImageService.ALLOWED_EXTENSIONS),
+                message: req.translate('errors.enabled_image_format', ImageService.ALLOWED_EXTENSIONS_TEXT),
             });
         }
 
         // A multer error means a failed upload (e.g. a too large file), anything else happened at the WebP conversion
         const isUploadError = error instanceof multer.MulterError;
         ApiResponse.fail(res, isUploadError ? 'errors.common_error' : 'errors.can_not_generate_webp');
-    }
-
-    private isUploadMode(value: unknown): value is UploadMode {
-        return value === 'single' || value === 'multiple';
     }
 }

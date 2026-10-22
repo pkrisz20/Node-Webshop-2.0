@@ -2,12 +2,12 @@ import type { NextFunction, Request, Response } from 'express';
 import type { Language } from '../locales';
 import { StaticContent, WebshopCategory } from '../models';
 import { CartPresenter } from '../presenters/CartPresenter';
+import { CategoryPresenter } from '../presenters/CategoryPresenter';
 import { CartService } from '../services/CartService';
 import { SiteConfigService } from '../services/SiteConfigService';
 import { WishlistService } from '../services/WishlistService';
-import { PriceFormatMiddleware } from './PriceFormatMiddleware';
-import { ImageUrl } from '../utils/ImageUrl';
 import { LocalizedField } from '../utils/LocalizedField';
+import { PriceFormatMiddleware } from './PriceFormatMiddleware';
 
 interface StaticContentLink {
     id: number;
@@ -20,52 +20,50 @@ interface StaticContentLink {
  * site settings, categories, static content links, refreshed cart and wishlist counter.
  */
 export class PageContextMiddleware {
-    private static readonly siteConfigService = new SiteConfigService();
-    private static readonly cartService = new CartService();
-    private static readonly wishlistService = new WishlistService();
+    constructor(
+        private readonly siteConfigService = new SiteConfigService(),
+        private readonly cartService = new CartService(),
+        private readonly wishlistService = new WishlistService(),
+    ) {}
 
-    static async load(req: Request, res: Response, next: NextFunction): Promise<void> {
+    readonly load = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { language } = req;
 
-            const [siteConfig, categories, staticContents, hasRemovedCartItems, wishlist] = await Promise.all([
-                PageContextMiddleware.siteConfigService.loadForLanguage(language),
-                PageContextMiddleware.loadCategories(language),
-                PageContextMiddleware.loadStaticContentLinks(language),
-                PageContextMiddleware.cartService.refresh(req.session, language),
-                PageContextMiddleware.wishlistService.keepActiveProducts(req.session),
+            const [siteConfig, categories, staticContentLinks, hasRemovedCartItems, wishlistProductIds] = await Promise.all([
+                this.siteConfigService.loadForLanguage(language),
+                this.loadCategories(language),
+                this.loadStaticContentLinks(language),
+                this.cartService.refresh(req.session, language),
+                this.wishlistService.removeInactiveProducts(req.session),
             ]);
 
             const priceFormat = SiteConfigService.priceFormatOf(siteConfig);
-            PriceFormatMiddleware.apply(res, priceFormat);
+            PriceFormatMiddleware.setPriceFormat(res, priceFormat);
 
             res.locals.DB_CONFIG = siteConfig;
             res.locals.webshopCategories = categories;
-            res.locals.staticContent = staticContents;
-            res.locals.showPopupCartInformation = hasRemovedCartItems;
+            res.locals.staticContent = staticContentLinks;
+            res.locals.hasRemovedCartItems = hasRemovedCartItems;
             res.locals.cart = new CartPresenter(language, priceFormat).toView(req.session);
-            res.locals.wishlistTotalNumber = wishlist.length;
+            res.locals.wishlistTotalNumber = wishlistProductIds.length;
 
             next();
         }
         catch (error) {
             next(error);
         }
-    }
+    };
 
-    private static async loadCategories(language: Language) {
+    private async loadCategories(language: Language) {
         const categories = await WebshopCategory.findAll({ attributes: ['id', 'name', 'slug', 'image'] });
+        const categoryPresenter = new CategoryPresenter(language);
 
-        return categories.map(category => ({
-            id: category.id,
-            name: LocalizedField.pick(category.name, language),
-            category_image: ImageUrl.of(category.image, 'categories'),
-            category_slug: LocalizedField.pick(category.slug, language),
-        }));
+        return categories.map(category => categoryPresenter.toMenuItem(category));
     }
 
     /** Static contents keyed by their content name, e.g. `staticContent.terms_of_use.slug` */
-    private static async loadStaticContentLinks(language: Language): Promise<Record<string, StaticContentLink>> {
+    private async loadStaticContentLinks(language: Language): Promise<Record<string, StaticContentLink>> {
         const contents = await StaticContent.findAll({ attributes: ['id', 'title', 'slug', 'content_name'] });
 
         return Object.fromEntries(contents.map(content => [

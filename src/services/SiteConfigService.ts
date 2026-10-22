@@ -44,7 +44,7 @@ export class SiteConfigService {
         return Object.fromEntries(rows.map(row => [row.config_key, row.config_value ?? null]));
     }
 
-    async priceFormat(): Promise<PriceFormat> {
+    async loadPriceFormat(): Promise<PriceFormat> {
         return SiteConfigService.priceFormatOf(await this.loadAll());
     }
 

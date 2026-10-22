@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 import { appConfig } from '../../config/app';
 import { OrderPresenter } from '../../presenters/OrderPresenter';
 import { OrderStatisticsService } from '../../services/OrderStatisticsService';
-import type { PriceFormat } from '../../utils/PriceFormat';
 import { AdminController } from './AdminController';
 
 export class DashboardController extends AdminController {
@@ -20,21 +19,21 @@ export class DashboardController extends AdminController {
         });
     };
 
-    readonly dashboard = async (_req: Request, res: Response): Promise<void> => {
+    readonly dashboard = async (req: Request, res: Response): Promise<void> => {
         res.render('admin/dashboard', {
             meta: this.meta('Admin dashboard', 'This is the Admin dashboard page'),
-            ...await this.collectStatistics(res.locals.priceFormat),
+            ...await this.collectStatistics(new OrderPresenter(req.language, res.locals.priceFormat)),
         });
     };
 
-    readonly statistics = async (_req: Request, res: Response): Promise<void> => {
+    readonly statistics = async (req: Request, res: Response): Promise<void> => {
         res.render('admin/statistics', {
             meta: this.meta('Statistics', 'This is the statistics admin page'),
-            ...await this.collectStatistics(res.locals.priceFormat),
+            ...await this.collectStatistics(new OrderPresenter(req.language, res.locals.priceFormat)),
         });
     };
 
-    private async collectStatistics(priceFormat: PriceFormat) {
+    private async collectStatistics(orderPresenter: OrderPresenter) {
         const currentYear = new Date().getFullYear();
 
         const [latestOrders, orderCounts, financesPerMonth, ordersCountPerMonth] = await Promise.all([
@@ -45,7 +44,7 @@ export class DashboardController extends AdminController {
         ]);
 
         return {
-            lastOrders: latestOrders.map(order => OrderPresenter.toListRow(order, priceFormat)),
+            lastOrders: latestOrders.map(order => orderPresenter.toListRow(order)),
             orderCounts,
             financesPerMonth,
             maxValueFromMonths: Math.max(...financesPerMonth),

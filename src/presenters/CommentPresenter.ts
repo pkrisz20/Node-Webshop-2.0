@@ -1,8 +1,7 @@
-import type { Language } from '../locales';
 import type { ArticleComment, ProductComment } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
-import { Formatter } from '../utils/Formatter';
-import { Translator } from '../utils/Translator';
+import { TextFormatter } from '../utils/TextFormatter';
+import { Presenter } from './Presenter';
 
 export interface CommentView {
     id: number;
@@ -13,9 +12,7 @@ export interface CommentView {
     is_verified?: boolean;
 }
 
-export class CommentPresenter {
-    constructor(private readonly language: Language) {}
-
+export class CommentPresenter extends Presenter {
     fromProductComment(comment: ProductComment): CommentView {
         return {
             id: comment.id,
@@ -42,11 +39,11 @@ export class CommentPresenter {
             <div class="comments-container-box">
                 <div class="content">
                     <div class="content__top">
-                        <strong class="content__top-name">${Formatter.escapeHtml(comment.name)}</strong>
+                        <strong class="content__top-name">${TextFormatter.escapeHtml(comment.name)}</strong>
                         ${this.renderVerifiedBadge(comment)}
                         ${this.renderRating(comment)}
                     </div>
-                    <p class="content-comment">${Formatter.escapeHtml(comment.description)}</p>
+                    <p class="content-comment">${TextFormatter.escapeHtml(comment.description)}</p>
                     <time class="content-date"><i class="fas fa-history"></i> ${comment.date}</time>
                 </div>
             </div>`).join('');
@@ -57,7 +54,7 @@ export class CommentPresenter {
             return '';
         }
 
-        const label = Translator.translate('products.verified_purchase', this.language);
+        const label = this.translate('products.verified_purchase');
         return `<span class="content__top-badge"><i class="fas fa-check-circle icon"></i>${label}</span>`;
     }
 

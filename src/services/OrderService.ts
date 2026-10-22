@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import { Database } from '../database/Database';
 import { Order, OrderDetail, Product } from '../models';
 import type { CartItem } from '../types/cart';
-import { Formatter } from '../utils/Formatter';
+import { UniqueId } from '../utils/UniqueId';
 
 export interface CustomerData {
     firstname: string;
@@ -34,12 +34,12 @@ export class OrderService {
             return null;
         }
 
-        const sumPrice = orderLines.reduce((total, line) => total + line.quantity * line.unitPrice, 0);
+        const totalPrice = orderLines.reduce((total, line) => total + line.quantity * line.unitPrice, 0);
 
         return Database.sequelize.transaction(async transaction => {
             const order = await Order.create({
-                order_id: Formatter.createUniqueId(),
-                order_sum_price: sumPrice,
+                order_id: UniqueId.generate(),
+                order_sum_price: totalPrice,
                 customer_firstname: customer.firstname,
                 customer_lastname: customer.lastname,
                 customer_email: customer.email,

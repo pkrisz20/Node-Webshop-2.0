@@ -26,7 +26,7 @@
             </section>
 
             <% if (pageCount > 1) { %>
-                <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: articleLink }) %>
+                <%- include('../partials/pagination.ejs', { pageCount: pageCount, currentPage: currentPage, link: paginationPath }) %>
             <% } %>
         </div>
     </main>

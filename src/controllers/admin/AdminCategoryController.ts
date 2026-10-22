@@ -100,7 +100,7 @@ export class AdminCategoryController extends AdminController {
     private parseForm(body: Record<string, unknown>): CategoryAttributes | null {
         const input = new FormInput(body);
 
-        if (!input.hasLocalized('name')) {
+        if (!input.isFilledInEveryLanguage('name')) {
             return null;
         }
 

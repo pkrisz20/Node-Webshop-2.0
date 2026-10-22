@@ -4,11 +4,11 @@ import { ApiResponse } from '../http/ApiResponse';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { Product } from '../models';
 import { WishlistService } from '../services/WishlistService';
-import { Controller } from './Controller';
+import { PublicController } from './PublicController';
 
 type WishlistOperation = 'add' | 'remove';
 
-export class WishlistController extends Controller {
+export class WishlistController extends PublicController {
     constructor(private readonly wishlistService = new WishlistService()) {
         super();
     }
@@ -44,11 +44,11 @@ export class WishlistController extends Controller {
             return ApiResponse.fail(res, 'errors.wrong_data');
         }
 
-        const isDone = operation === 'add'
+        const isWishlistChanged = operation === 'add'
             ? await this.wishlistService.add(req.session, productId)
             : this.wishlistService.remove(req.session, productId);
 
-        if (!isDone) {
+        if (!isWishlistChanged) {
             return ApiResponse.fail(res, 'errors.common_error');
         }
 

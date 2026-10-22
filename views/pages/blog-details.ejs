@@ -87,7 +87,7 @@
             </div>
         </section>
 
-        <% if (blogDetails.isAllowed) { %>
+        <% if (blogDetails.commentsAllowed) { %>
             <%- include('../components/comments.ejs', { itemId: blogDetails.id, articleType: "blog" }) %>
         <% } %>
 
@@ -120,11 +120,11 @@
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/lightbox.min.js') %>"></script>
     <% } %>
 
-    <% if (blogDetails.isAllowed) { %>
+    <% if (blogDetails.commentsAllowed) { %>
         <%- include('../partials/validation-scripts.ejs') %>
     <% } %>
 
-    <% if (blogDetails.isAllowed && showLoadMoreButton) { %>
+    <% if (blogDetails.commentsAllowed && showLoadMoreButton) { %>
         <script type="text/javascript">
             $('body').on('click', '.js-load-more-comments', function () {
                 var this_button = $(this);

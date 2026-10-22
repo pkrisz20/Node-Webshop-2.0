@@ -37,11 +37,11 @@
                                                 <button type="button" class="quantities-btn plus js-quantity-btn"><i class="fas fa-plus"></i></button>
                                             </div>
 
-                                            <small class="quantities-price"><i class="fas fa-times"></i> <span><%= numberWithCommas(cartItem.price) %> <%= currency %></span></small>
+                                            <small class="quantities-price"><i class="fas fa-times"></i> <span><%= formatAmount(cartItem.price) %> <%= currency %></span></small>
                                         </div>
                                     </div>
 
-                                    <strong class="order-price"><span class="js-order-alone-price"><%= numberWithCommas(cartItem.quantity * cartItem.price) %></span> <%= currency %></strong>
+                                    <strong class="order-price"><span class="js-order-alone-price"><%= formatAmount(cartItem.quantity * cartItem.price) %></span> <%= currency %></strong>
 
                                     <div class="order-functions">
                                         <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.product', current_locale) %>/<%= cartItem.slug %>/<%= cartItem.productId %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>

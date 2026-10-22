@@ -8,7 +8,7 @@ import { appConfig } from '../config/app';
 import { env } from '../config/env';
 import { paths } from '../config/paths';
 import { Article, Employee, Gallery, Product, Slider, WebshopCategory } from '../models';
-import { Formatter } from '../utils/Formatter';
+import { UniqueId } from '../utils/UniqueId';
 import type { ImageFolder } from '../utils/ImageUrl';
 import { ImageUrl } from '../utils/ImageUrl';
 import { Logger } from '../utils/Logger';
@@ -45,9 +45,13 @@ export class InvalidImageFormatError extends Error {
 
 export class ImageService {
     /** e.g. "jpg, jpeg, png" for the error message */
-    static readonly ALLOWED_EXTENSIONS = appConfig.uploads.allowedImageExtensions.join(', ');
+    static readonly ALLOWED_EXTENSIONS_TEXT = appConfig.uploads.allowedImageExtensions.join(', ');
     /** Matches both the file extension and the mime type (image/jpeg, image/png) */
-    private static readonly ALLOWED_TYPES = new RegExp(appConfig.uploads.allowedImageExtensions.join('|'));
+    private static readonly ALLOWED_TYPE_PATTERN = new RegExp(appConfig.uploads.allowedImageExtensions.join('|'));
+
+    static isUploadMode(value: unknown): value is UploadMode {
+        return value === 'single' || value === 'multiple';
+    }
 
     static supportsMode(folder: ImageFolder, mode: UploadMode): boolean {
         return mode === 'single' || GALLERY_COLUMNS[folder] !== undefined;
@@ -58,12 +62,12 @@ export class ImageService {
         const uploader = multer({
             storage: multer.diskStorage({
                 destination: (_req, _file, callback) => callback(null, path.join(paths.files, folder)),
-                filename: (_req, file, callback) => callback(null, `${Formatter.createUniqueId()}-${file.originalname}`),
+                filename: (_req, file, callback) => callback(null, `${UniqueId.generate()}-${file.originalname}`),
             }),
             limits: { fileSize: appConfig.uploads.maxImageSizeInBytes },
             fileFilter: (_req, file, callback) => {
-                const hasAllowedExtension = ImageService.ALLOWED_TYPES.test(path.extname(file.originalname).toLowerCase());
-                const hasAllowedMimeType = ImageService.ALLOWED_TYPES.test(file.mimetype);
+                const hasAllowedExtension = ImageService.ALLOWED_TYPE_PATTERN.test(path.extname(file.originalname).toLowerCase());
+                const hasAllowedMimeType = ImageService.ALLOWED_TYPE_PATTERN.test(file.mimetype);
 
                 if (hasAllowedExtension && hasAllowedMimeType) {
                     return callback(null, true);
