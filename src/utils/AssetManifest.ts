@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { env } from '../config/env';
 import { paths } from '../config/paths';
-import { Logger } from './Logger';
+import { Logger } from '../services/Logger';
 
 interface ManifestCache {
     modifiedAt: number;
@@ -30,7 +30,7 @@ export class AssetManifest {
             return AssetManifest.cache.entries;
         }
         catch (error) {
-            void Logger.error(`Error reading the asset path from mix-manifest.json: ${(error as Error).message}`);
+            void Logger.error('The mix-manifest.json could not be read', (error as Error).message);
             return {};
         }
     }

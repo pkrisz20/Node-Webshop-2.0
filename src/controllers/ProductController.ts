@@ -9,6 +9,7 @@ import { Product, ProductComment, ProductParameter, WebshopCategory, WebshopPara
 import { CommentPresenter } from '../presenters/CommentPresenter';
 import { CartService } from '../services/CartService';
 import { CommentService } from '../services/CommentService';
+import { Logger } from '../services/Logger';
 import { LocalizedField } from '../utils/LocalizedField';
 import { NumberParser } from '../utils/NumberParser';
 import { Pagination } from '../utils/Pagination';
@@ -187,7 +188,7 @@ export class ProductController extends PublicController {
 
         const { fullName, email, comment, rating } = req.body;
 
-        await ProductComment.create({
+        const savedComment = await ProductComment.create({
             name: fullName,
             email,
             comment,
@@ -195,6 +196,7 @@ export class ProductController extends PublicController {
             date: new Date(),
             product_id: product.id,
         });
+        await Logger.info('Product comment submitted', `Comment #${savedComment.id} on product #${product.id}`);
 
         ApiResponse.success(res, { title: req.translate('general.process_success') });
     };

@@ -1,8 +1,10 @@
 import type { Request, Response } from 'express';
 import multer from 'multer';
+import path from 'path';
 import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorReporter } from '../../services/ErrorReporter';
 import { ImageService, InvalidImageFormatError, type UploadMode } from '../../services/ImageService';
+import { Logger } from '../../services/Logger';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { AdminController } from './AdminController';
 
@@ -32,6 +34,7 @@ export class ImageController extends AdminController {
             return ApiResponse.fail(res, 'errors.file_does_not_exist');
         }
 
+        await Logger.info('Admin image deleted', `${folder} #${recordId}: ${path.basename(fileSource)}`);
         ApiResponse.success(res);
     };
 
@@ -53,6 +56,8 @@ export class ImageController extends AdminController {
             await this.imageService.generateWebpVersions(files);
             await this.imageService.attachToRecord(folder, recordId, files, mode);
 
+            const fileNames = files.map(file => file.filename).join(', ');
+            await Logger.info('Admin images uploaded', `${folder} #${recordId}, ${files.length} file(s) with WebP version: ${fileNames}`);
             ApiResponse.success(res);
         }
         catch (error) {
@@ -60,18 +65,23 @@ export class ImageController extends AdminController {
         }
     }
 
+    /** A rejected file (not allowed format, too large) is a warning, a failed WebP conversion is an error */
     private async handleUploadError(error: unknown, req: Request, res: Response): Promise<void> {
-        await ErrorReporter.report(error, req);
-
         if (error instanceof InvalidImageFormatError) {
+            await Logger.warning('Rejected image upload', error.message);
+
             return ApiResponse.error(res, {
                 title: req.translate('errors.wrong_image_format'),
                 message: req.translate('errors.enabled_image_format', ImageService.ALLOWED_EXTENSIONS_TEXT),
             });
         }
 
-        // A multer error means a failed upload (e.g. a too large file), anything else happened at the WebP conversion
-        const isUploadError = error instanceof multer.MulterError;
-        ApiResponse.fail(res, isUploadError ? 'errors.common_error' : 'errors.can_not_generate_webp');
+        if (error instanceof multer.MulterError) {
+            await Logger.warning('Rejected image upload', `${error.code}: ${error.message}`);
+            return ApiResponse.fail(res, 'errors.common_error');
+        }
+
+        await ErrorReporter.report(error);
+        ApiResponse.fail(res, 'errors.can_not_generate_webp');
     }
 }

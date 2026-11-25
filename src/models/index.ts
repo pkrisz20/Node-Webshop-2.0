@@ -4,10 +4,9 @@ import { ArticleComment } from './ArticleComment';
 import { Config } from './Config';
 import { ContactMessage } from './ContactMessage';
 import { Employee } from './Employee';
-import { ErrorLog } from './ErrorLog';
 import { FAQ } from './FAQ';
 import { Gallery } from './Gallery';
-import { Login } from './Login';
+import { Log } from './Log';
 import { Order } from './Order';
 import { OrderDetail } from './OrderDetail';
 import { Product } from './Product';
@@ -24,10 +23,9 @@ const models = [
     Config,
     ContactMessage,
     Employee,
-    ErrorLog,
     FAQ,
     Gallery,
-    Login,
+    Log,
     Order,
     OrderDetail,
     Product,
@@ -96,10 +94,9 @@ export {
     Config,
     ContactMessage,
     Employee,
-    ErrorLog,
     FAQ,
     Gallery,
-    Login,
+    Log,
     Order,
     OrderDetail,
     Product,
@@ -110,3 +107,5 @@ export {
     WebshopCategory,
     WebshopParameter,
 };
+
+export { LOG_TYPES, type LogType } from './Log';

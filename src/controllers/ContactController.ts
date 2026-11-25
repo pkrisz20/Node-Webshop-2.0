@@ -3,6 +3,7 @@ import { env } from '../config/env';
 import { ApiResponse } from '../http/ApiResponse';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { ContactMessage } from '../models';
+import { Logger } from '../services/Logger';
 import { PublicController } from './PublicController';
 
 export class ContactController extends PublicController {
@@ -20,7 +21,7 @@ export class ContactController extends PublicController {
     readonly store = async (req: Request, res: Response): Promise<void> => {
         const { firstName, lastName, email, phone, city, comment } = req.body;
 
-        await ContactMessage.create({
+        const message = await ContactMessage.create({
             first_name: firstName,
             last_name: lastName,
             email,
@@ -29,6 +30,9 @@ export class ContactController extends PublicController {
             client_message: comment,
             date: new Date(),
         });
+
+        // Only the id: the personal data of the sender stays in the message
+        await Logger.info('Contact message received', `Message #${message.id}`);
 
         ApiResponse.success(res, {
             title: req.translate('general.process_success'),

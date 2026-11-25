@@ -11,7 +11,6 @@ import { Article, Employee, Gallery, Product, Slider, WebshopCategory } from '..
 import { UniqueId } from '../utils/UniqueId';
 import type { ImageFolder } from '../utils/ImageUrl';
 import { ImageUrl } from '../utils/ImageUrl';
-import { Logger } from '../utils/Logger';
 
 export type UploadMode = 'single' | 'multiple';
 
@@ -93,7 +92,6 @@ export class ImageService {
     /** Generates a .webp copy next to every uploaded image (requires the `cwebp` command line tool) */
     async generateWebpVersions(files: Express.Multer.File[]): Promise<void> {
         await Promise.all(files.map(file => this.convertToWebp(file.path)));
-        await Logger.info(`WebP image generated successfully (${files.length} file).`);
     }
 
     async attachToRecord(folder: ImageFolder, recordId: number, files: Express.Multer.File[], mode: UploadMode): Promise<void> {

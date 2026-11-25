@@ -8,6 +8,7 @@ import { env } from './config/env';
 import { paths } from './config/paths';
 import { sessionOptions } from './config/session';
 import { Database } from './database/Database';
+import { RequestContext } from './http/RequestContext';
 import { Scheduler } from './jobs/Scheduler';
 import { CsrfMiddleware } from './middleware/CsrfMiddleware';
 import { ErrorMiddleware } from './middleware/ErrorMiddleware';
@@ -17,6 +18,7 @@ import { LayoutViewEngine } from './rendering/LayoutViewEngine';
 import { AdminRoutes } from './routes/AdminRoutes';
 import { AjaxRoutes } from './routes/AjaxRoutes';
 import { PageRoutes } from './routes/PageRoutes';
+import { Logger } from './services/Logger';
 
 export class App {
     private readonly server: Express = express();
@@ -30,14 +32,17 @@ export class App {
 
     async start(): Promise<void> {
         this.server.listen(env.port, () => console.log(`Server is running on port ${env.port}`));
-        this.scheduler.start();
 
         try {
             await Database.connect();
         }
         catch (error) {
-            console.error('Error connecting to the database:', error);
+            // Without database the entry goes into logs/fallback.log and the console
+            await Logger.error('Database connection failed', (error as Error).message);
         }
+
+        // After the connection attempt, because the startup jobs need the database
+        this.scheduler.start();
     }
 
     private configureViews(): void {
@@ -57,6 +62,9 @@ export class App {
     private registerMiddleware(): void {
         this.server.use(express.static(paths.files));
         this.server.use(express.static(paths.public));
+
+        // Every log entry written while serving a (non static file) request gets its IP address, user agent and URL
+        this.server.use(RequestContext.track);
 
         this.server.use(cookieParser());
         this.server.use(session(sessionOptions));

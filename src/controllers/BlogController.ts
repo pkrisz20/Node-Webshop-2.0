@@ -9,6 +9,7 @@ import { Article, ArticleComment } from '../models';
 import { ArticlePresenter } from '../presenters/ArticlePresenter';
 import { CommentPresenter } from '../presenters/CommentPresenter';
 import { CommentService } from '../services/CommentService';
+import { Logger } from '../services/Logger';
 import { DateFormatter } from '../utils/DateFormatter';
 import { LocalizedField } from '../utils/LocalizedField';
 import { NumberParser } from '../utils/NumberParser';
@@ -122,7 +123,8 @@ export class BlogController extends PublicController {
 
         const { fullName, email, comment } = req.body;
 
-        await ArticleComment.create({ name: fullName, email, comment, date: new Date(), blog_id: article.id });
+        const savedComment = await ArticleComment.create({ name: fullName, email, comment, date: new Date(), blog_id: article.id });
+        await Logger.info('Article comment submitted', `Comment #${savedComment.id} on article #${article.id}`);
 
         ApiResponse.success(res, { title: req.translate('general.process_success') });
     };

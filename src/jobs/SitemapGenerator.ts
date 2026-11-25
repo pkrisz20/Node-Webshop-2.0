@@ -21,17 +21,22 @@ interface SluggedRecord {
     slug: string | null;
 }
 
-/** Translation keys of the list pages without database content */
+/**
+ * Translation keys of the list pages without database content.
+ * The cart and the wishlist are left out: their content belongs to the visitor, they are not worth indexing.
+ */
 const STATIC_PAGE_SLUG_KEYS = [
     'slugs.products',
     'slugs.blogs',
     'slugs.galleries',
     'slugs.faq',
-    'slugs.cart',
-    'slugs.wishlist',
     'slugs.contact',
     'slugs.about_us',
 ];
+
+/** Both files contain the APP_URL, so they are generated on every server (not stored in git) */
+const SITEMAP_FILE = path.join(paths.public, 'sitemap.xml');
+const ROBOTS_FILE = path.join(paths.public, 'robots.txt');
 
 export class SitemapGenerator {
     async generate(): Promise<void> {
@@ -39,8 +44,19 @@ export class SitemapGenerator {
         const staticUrls = this.staticPageUrls(today);
         const detailUrls = await this.detailPageUrls(today);
 
-        await fs.writeFile(path.join(paths.public, 'sitemap.xml'), this.toXml([...staticUrls, ...detailUrls]));
-        await fs.writeFile(path.join(paths.public, 'robots.txt'), this.robotsTxt());
+        await fs.writeFile(SITEMAP_FILE, this.toXml([...staticUrls, ...detailUrls]));
+        await fs.writeFile(ROBOTS_FILE, this.robotsTxt());
+    }
+
+    /** Both files exist and the sitemap was generated today */
+    async isUpToDate(): Promise<boolean> {
+        try {
+            const [sitemap] = await Promise.all([fs.stat(SITEMAP_FILE), fs.stat(ROBOTS_FILE)]);
+            return DateFormatter.toDateString(sitemap.mtime) === DateFormatter.today();
+        }
+        catch {
+            return false;
+        }
     }
 
     private staticPageUrls(today: string): SitemapUrl[] {

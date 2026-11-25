@@ -3,6 +3,7 @@ import { env } from '../config/env';
 import { ApiResponse } from '../http/ApiResponse';
 import { ErrorPage } from '../http/ErrorPage';
 import { ErrorReporter } from '../services/ErrorReporter';
+import { Logger } from '../services/Logger';
 import { Translator } from '../utils/Translator';
 import { InvalidCsrfTokenError } from './CsrfMiddleware';
 
@@ -20,10 +21,11 @@ export class ErrorMiddleware {
         }
 
         if (error instanceof InvalidCsrfTokenError) {
+            void Logger.warning('Rejected request', error.message);
             return ErrorMiddleware.respond(req, res, 'errors.forbidden', 'errors.no_permission', ErrorPage.forbidden);
         }
 
-        void ErrorReporter.report(error, req);
+        void ErrorReporter.report(error);
         ErrorMiddleware.respond(req, res, 'errors.server_error', 'errors.common_error', ErrorPage.serverError);
     }
 

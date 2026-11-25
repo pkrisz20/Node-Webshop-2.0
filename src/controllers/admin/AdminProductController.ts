@@ -7,6 +7,7 @@ import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
 import type { Language } from '../../locales';
 import { Product, ProductComment, ProductParameter, WebshopCategory, WebshopParameter } from '../../models';
+import { Logger } from '../../services/Logger';
 import { DateFormatter } from '../../utils/DateFormatter';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
@@ -209,6 +210,7 @@ export class AdminProductController extends AdminController {
 
         await comment.update({ is_verified_purchase: comment.is_verified_purchase === 1 ? 0 : 1 });
 
+        await Logger.info('Product comment verification changed', `Comment #${comment.id}, verified purchase: ${comment.is_verified_purchase === 1 ? 'yes' : 'no'}`);
         ApiResponse.success(res);
     };
 

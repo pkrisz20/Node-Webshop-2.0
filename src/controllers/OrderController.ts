@@ -4,6 +4,7 @@ import { ApiResponse } from '../http/ApiResponse';
 import { MetaBuilder } from '../http/MetaBuilder';
 import { CartPresenter } from '../presenters/CartPresenter';
 import { CartService } from '../services/CartService';
+import { Logger } from '../services/Logger';
 import { OrderService, type CustomerData } from '../services/OrderService';
 import { PublicController } from './PublicController';
 
@@ -39,6 +40,7 @@ export class OrderController extends PublicController {
         }
 
         this.cartService.clear(req.session);
+        await Logger.info('Order placed', `${order.order_id}, total: ${order.order_sum_price}`);
 
         ApiResponse.success(res, {
             title: req.translate('general.process_success'),

@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { appConfig } from '../../config/app';
 import { ApiResponse } from '../../http/ApiResponse';
 import { MetaBuilder, type AdminMeta } from '../../http/MetaBuilder';
+import { Logger } from '../../services/Logger';
 import { DateFormatter } from '../../utils/DateFormatter';
 import { Pagination } from '../../utils/Pagination';
 import { Controller } from '../Controller';
@@ -36,13 +37,21 @@ export abstract class AdminController extends Controller {
         return DateFormatter.toAdminDateTime(record.updated_at ?? record.created_at);
     }
 
-    /** The admin forms navigate to the returned URL after a successful save */
+    /**
+     * The admin forms navigate to the returned URL after a successful save.
+     * The save is logged, the URL of the request tells which form was saved, the redirect URL tells the saved record.
+     */
     protected respondSaved(res: Response, redirectUrl: string): void {
+        const action = res.req.originalUrl.includes('/new/') ? 'created' : 'updated';
+
+        void Logger.info(`Admin record ${action}`, redirectUrl);
         ApiResponse.success(res, { redirect_url: redirectUrl });
     }
 
+    /** The deletion is logged, the URL of the request tells the deleted record */
     protected respondDeleted(res: Response, deletedCount: number): void {
         if (deletedCount > 0) {
+            void Logger.info('Admin record deleted', `${deletedCount} record(s)`);
             return ApiResponse.success(res);
         }
 

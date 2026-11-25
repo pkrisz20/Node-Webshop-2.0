@@ -1,12 +1,19 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { paths } from '../config/paths';
-import type { LogFile } from '../utils/Logger';
+import { Op } from 'sequelize';
+import { appConfig } from '../config/app';
+import { LOG_TYPES, Log, type LogType } from '../models';
+import { Duration } from '../utils/Duration';
 
-const ROTATED_LOG_FILES: LogFile[] = ['requests.log', 'errors.log'];
-
+/** Deletes the log entries older than the retention period of their type (appConfig.logs.retentionDays) */
 export class LogCleaner {
-    async clean(): Promise<void> {
-        await Promise.all(ROTATED_LOG_FILES.map(fileName => fs.rm(path.join(paths.logs, fileName), { force: true })));
+    /** @returns The number of deleted entries per type */
+    async clean(): Promise<Record<LogType, number>> {
+        const deletedCounts = {} as Record<LogType, number>;
+
+        for (const type of LOG_TYPES) {
+            const deleteBefore = new Date(Date.now() - Duration.daysInMilliseconds(appConfig.logs.retentionDays[type]));
+            deletedCounts[type] = await Log.destroy({ where: { log_type: type, log_date: { [Op.lt]: deleteBefore } } });
+        }
+
+        return deletedCounts;
     }
 }

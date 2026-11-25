@@ -1,4 +1,5 @@
 import type { Language } from '../locales';
+import type { LogType } from '../models/Log';
 import { env } from './env';
 
 /**
@@ -114,6 +115,15 @@ export const appConfig = {
 
     /** Lifetime of the cookie storing the accepted cookie types of the GDPR panel */
     cookieConsentLifetimeDays: 365,
+
+    logs: {
+        /** The log entries older than this (in days) are deleted every Monday (see LogCleaner) */
+        retentionDays: {
+            info: 90,
+            warning: 180,
+            error: 365,
+        } satisfies Record<LogType, number>,
+    },
 } as const;
 
 export type AppConfig = typeof appConfig;

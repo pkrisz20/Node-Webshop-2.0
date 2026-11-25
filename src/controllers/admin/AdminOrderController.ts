@@ -3,6 +3,7 @@ import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { Order, OrderDetail, Product } from '../../models';
 import { OrderPresenter } from '../../presenters/OrderPresenter';
+import { Logger } from '../../services/Logger';
 import { AdminController } from './AdminController';
 
 export class AdminOrderController extends AdminController {
@@ -62,11 +63,14 @@ export class AdminOrderController extends AdminController {
             return ApiResponse.fail(res, 'errors.unprocessable_data');
         }
 
+        const previousStatus = order.order_status;
+
         await order.update({
             order_status: newStatus,
             ...(Order.isClosedStatus(newStatus) && { closed_order_at: new Date() }),
         });
 
+        await Logger.info('Order status changed', `${order.order_id}: ${previousStatus} -> ${newStatus}`);
         ApiResponse.success(res);
     };
 

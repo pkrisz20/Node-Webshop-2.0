@@ -1,28 +1,31 @@
 import { timingSafeEqual } from 'crypto';
 import type { Request, Response } from 'express';
-import requestIp from 'request-ip';
 import { env } from '../../config/env';
 import { ApiResponse } from '../../http/ApiResponse';
 import { CsrfMiddleware } from '../../middleware/CsrfMiddleware';
-import { Login } from '../../models';
+import { Logger } from '../../services/Logger';
 import { AdminController } from './AdminController';
 
+/** The title of the successful logins, the migration of the old `logins` table uses it too */
+const LOGIN_LOG_TITLE = 'Admin login';
+const FAILED_LOGIN_LOG_TITLE = 'Failed admin login';
+
+/** The submitted username and password are never logged (a password typed into the username field would end up in the log) */
 export class AuthController extends AdminController {
     readonly login = async (req: Request, res: Response): Promise<void> => {
         const { admin_username: username, admin_password: password } = req.body;
 
         if (typeof username !== 'string' || typeof password !== 'string' || !username || !password) {
+            await Logger.warning(FAILED_LOGIN_LOG_TITLE, 'Missing username or password');
             return ApiResponse.fail(res, 'errors.unprocessable_data');
         }
 
         if (!this.credentialMatches(username, env.admin.username) || !this.credentialMatches(password, env.admin.password)) {
+            await Logger.warning(FAILED_LOGIN_LOG_TITLE, 'Wrong username or password');
             return ApiResponse.fail(res, 'errors.wrong_data');
         }
 
-        await Login.create({
-            login_ip_address: requestIp.getClientIp(req) ?? 'unknown',
-            login_datetime: new Date(),
-        });
+        await Logger.info(LOGIN_LOG_TITLE, 'Successful admin login');
 
         // A new session id and CSRF token after the login prevent session fixation
         await this.regenerateSession(req);
@@ -36,8 +39,9 @@ export class AuthController extends AdminController {
         });
     };
 
-    readonly logout = (req: Request, res: Response): void => {
+    readonly logout = async (req: Request, res: Response): Promise<void> => {
         req.session.authenticated = false;
+        await Logger.info('Admin logout');
 
         ApiResponse.success(res, {
             title: 'Sikeresen kijelentkezett!',
