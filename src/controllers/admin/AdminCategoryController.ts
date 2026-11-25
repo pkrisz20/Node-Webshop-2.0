@@ -3,7 +3,7 @@ import type { CreationAttributes } from 'sequelize';
 import { ApiResponse } from '../../http/ApiResponse';
 import { ErrorPage } from '../../http/ErrorPage';
 import { FormInput } from '../../http/FormInput';
-import { WebshopCategory } from '../../models';
+import { Product, WebshopCategory } from '../../models';
 import { ImageUrl } from '../../utils/ImageUrl';
 import { LocalizedField } from '../../utils/LocalizedField';
 import { Slug } from '../../utils/Slug';
@@ -89,11 +89,23 @@ export class AdminCategoryController extends AdminController {
         this.respondSaved(res, `/admin/category/edit/${category.id}`);
     };
 
-    /** The products of the category are deleted too (ON DELETE CASCADE) */
+    /** A category with products can not be deleted (the foreign key is ON DELETE RESTRICT) */
     readonly delete = async (req: Request, res: Response): Promise<void> => {
         const categoryId = this.parseId(req.params.categoryId);
-        const deletedCount = categoryId ? await WebshopCategory.destroy({ where: { id: categoryId } }) : 0;
 
+        if (!categoryId) {
+            this.respondDeleted(res, 0);
+            return;
+        }
+
+        const productsCount = await Product.count({ where: { category_id: categoryId } });
+
+        if (productsCount > 0) {
+            ApiResponse.fail(res, 'errors.category_has_products', productsCount);
+            return;
+        }
+
+        const deletedCount = await WebshopCategory.destroy({ where: { id: categoryId } });
         this.respondDeleted(res, deletedCount);
     };
 
@@ -106,7 +118,7 @@ export class AdminCategoryController extends AdminController {
 
         return {
             name: LocalizedField.stringify(input.localized('name')),
-            slug: Slug.fromTitles(input.localized('name', { escape: false })),
+            slug: Slug.fromTitles(input.localized('name')),
             short_description: LocalizedField.stringify(input.localized('short_description')),
         };
     }

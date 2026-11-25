@@ -52,7 +52,12 @@ export class OrderService {
             }, { transaction });
 
             await OrderDetail.bulkCreate(
-                orderLines.map(line => ({ order_id: order.order_id, product_id: line.productId, quantity: line.quantity })),
+                orderLines.map(line => ({
+                    order_id: order.order_id,
+                    product_id: line.productId,
+                    quantity: line.quantity,
+                    unit_price: line.unitPrice,
+                })),
                 { transaction },
             );
 

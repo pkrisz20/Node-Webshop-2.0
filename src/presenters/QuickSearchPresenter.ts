@@ -1,6 +1,7 @@
 import { env } from '../config/env';
 import type { Article, Gallery, Product } from '../models';
 import { ImageUrl } from '../utils/ImageUrl';
+import { TextFormatter } from '../utils/TextFormatter';
 import { Presenter } from './Presenter';
 
 interface QuickSearchItem {
@@ -60,23 +61,27 @@ export class QuickSearchPresenter extends Presenter {
             return `<div class="search__not-found" style="margin-bottom: 20px;">${this.translate(emptyMessageKey)}</div>`;
         }
 
+        // The titles, slugs and image names are admin inputs, so every value is escaped
+        const escape = TextFormatter.escapeHtml;
+
         return items.map(item => {
+            const title = escape(item.title);
             const link = `
-                <a class="container_box" href="${item.url}" aria-label="${item.title}">
+                <a class="container_box" href="${escape(item.url)}" aria-label="${title}">
                     <div class="container_box--image">
                         <picture>
-                            <source srcset="${item.image ?? ''}">
+                            <source srcset="${escape(item.image)}">
                             <img
                                 class="img"
                                 loading="lazy"
-                                alt="${item.title}"
+                                alt="${title}"
                                 src="images/no-picture.jpg"
                                 onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
                             />
                         </picture>
                     </div>
-                    <strong class="container_box--title">${item.title}</strong>
-                    ${item.subtitle !== undefined ? `<strong class="container_box--category">${item.subtitle}</strong>` : ''}
+                    <strong class="container_box--title">${title}</strong>
+                    ${item.subtitle !== undefined ? `<strong class="container_box--category">${escape(item.subtitle)}</strong>` : ''}
                 </a>`;
 
             return wrapEachItem ? `<div style="margin-bottom: 10px;">${link}</div>` : link;

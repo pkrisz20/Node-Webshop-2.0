@@ -65,9 +65,9 @@ export class AdminStaticContentController extends AdminController {
 
         await content.update({
             title: LocalizedField.stringify(input.localized('title')),
-            slug: Slug.fromTitles(input.localized('title', { escape: false })),
+            slug: Slug.fromTitles(input.localized('title')),
             short_description: LocalizedField.stringify(input.localized('short_description')),
-            description: LocalizedField.stringify(input.localized('content_description', { escape: false })),
+            description: LocalizedField.stringify(input.localized('content_description')),
         });
 
         this.respondSaved(res, `/admin/static-contents/edit/${content.id}`);

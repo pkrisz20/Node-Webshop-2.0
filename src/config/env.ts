@@ -56,7 +56,6 @@ export const env = Object.freeze({
         username: readString('DB_USERNAME'),
         password: readString('DB_PASSWORD'),
         timezone: readString('DB_TIMEZONE'),
-        sync: readBoolean('SYNC_DATABASE'),
     },
     sessionSecret: readString('SESSION_SECRET'),
     admin: {

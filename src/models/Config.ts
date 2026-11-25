@@ -18,7 +18,7 @@ export class Config extends Model<InferAttributes<Config>, InferCreationAttribut
             {
                 config_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
                 config_key: { type: DataTypes.STRING(200), allowNull: false },
-                config_value: { type: DataTypes.STRING(1500), allowNull: true },
+                config_value: { type: DataTypes.TEXT, allowNull: true },
             },
             {
                 sequelize,

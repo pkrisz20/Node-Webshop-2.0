@@ -57,18 +57,21 @@ export class CartPresenter extends Presenter {
             </div>`;
     }
 
+    /** The product name, slug and image name are admin inputs, so they are escaped */
     private renderItem(item: DisplayedCartItem): string {
-        const productUrl = `/${this.language}/${this.translate('slugs.product')}/${item.slug}/${item.productId}`;
+        const escape = TextFormatter.escapeHtml;
+        const productName = escape(item.productName);
+        const productUrl = escape(`/${this.language}/${this.translate('slugs.product')}/${item.slug}/${item.productId}`);
 
         return `
             <li class="cart-container-list-item js-cart-item">
                 <div class="cart-product">
                     <div class="cart-product-image">
                         <picture>
-                            <source srcset="${item.image ?? ''}">
+                            <source srcset="${escape(item.image)}">
                             <img
                                 class="cart-product-img"
-                                alt="${item.productName}"
+                                alt="${productName}"
                                 loading="lazy"
                                 src="images/no-picture.jpg"
                                 onerror="this.onerror = null;this.parentNode.children[0].srcset = this.src;"
@@ -77,7 +80,7 @@ export class CartPresenter extends Presenter {
                     </div>
 
                     <div class="cart-product-desc">
-                        <strong class="cart-product-desc_name">${item.productName}</strong>
+                        <strong class="cart-product-desc_name">${productName}</strong>
 
                         <div class="quantities">
                             <div class="quantities-container js-quantities">

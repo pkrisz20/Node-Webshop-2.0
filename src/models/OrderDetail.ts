@@ -16,6 +16,8 @@ export class OrderDetail extends Model<InferAttributes<OrderDetail>, InferCreati
     declare order_id: string;
     declare product_id: number;
     declare quantity: number;
+    /** Unit price paid at the time of the order, NULL for the old orders whose original price is unknown */
+    declare unit_price: number | null;
 
     declare order?: NonAttribute<Order>;
     declare product?: NonAttribute<Product>;
@@ -27,6 +29,7 @@ export class OrderDetail extends Model<InferAttributes<OrderDetail>, InferCreati
                 order_id: { type: DataTypes.STRING(500), allowNull: false },
                 product_id: { type: DataTypes.INTEGER, allowNull: false },
                 quantity: { type: DataTypes.INTEGER, allowNull: false },
+                unit_price: { type: DataTypes.INTEGER, allowNull: true },
             },
             {
                 sequelize,

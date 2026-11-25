@@ -191,6 +191,7 @@ const hu = {
 		unauthorized: "Azonosítatlan felhasználó",
 		forbidden: "Hozzáférés megtagadva",
         can_not_generate_webp: "A WEBP kiterjesztésű kép generálása sikertelen volt. Próbálja újra később...",
+        category_has_products: "A kategória nem törölhető, mert {0} termék tartozik hozzá. Előbb törölje vagy helyezze át a termékeket!",
     },
     meta: {
 		description: "Boldog libák, egészséges termékek: Libáinkat a legnagyobb gondossággal neveljük. Számukra tágas, természetes környezetet biztosítunk, ahol szabadon legelészhetnek, és táplálkozhatnak tápanyagokban gazdag gabonákkal. Ez egészségesebb, ízletesebb termékeket eredményez.",

@@ -234,9 +234,9 @@ export class AdminProductController extends AdminController {
         return {
             attributes: {
                 name: LocalizedField.stringify(input.localized('name')),
-                slug: Slug.fromTitles(input.localized('name', { escape: false })),
+                slug: Slug.fromTitles(input.localized('name')),
                 short_description: LocalizedField.stringify(input.localized('short_description')),
-                description: LocalizedField.stringify(input.localized('product_description', { escape: false })),
+                description: LocalizedField.stringify(input.localized('product_description')),
                 price,
                 discount_value: input.integer('discount_value'),
                 discount_end_date: input.date('discount_end_date'),
@@ -260,7 +260,7 @@ export class AdminProductController extends AdminController {
                 return [];
             }
 
-            const values = input.localizedInputs(language => `parameter_value[${language}][${hash}]`, { escape: false });
+            const values = input.localizedInputs(language => `parameter_value[${language}][${hash}]`);
 
             return [{ parameter_id: parameterId, parameter_value: LocalizedField.stringify(values) }];
         });

@@ -101,7 +101,7 @@ export class AdminFaqController extends AdminController {
 
         return {
             question: LocalizedField.stringify(input.localized('question')),
-            answer: LocalizedField.stringify(input.localized('answer', { escape: false })),
+            answer: LocalizedField.stringify(input.localized('answer')),
             is_active: isActive,
         };
     }

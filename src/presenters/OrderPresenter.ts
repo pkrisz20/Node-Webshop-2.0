@@ -1,5 +1,5 @@
 import type { Language } from '../locales';
-import type { Order } from '../models';
+import type { Order, OrderDetail } from '../models';
 import { DateFormatter } from '../utils/DateFormatter';
 import type { PriceFormat } from '../utils/PriceFormat';
 import { TextFormatter } from '../utils/TextFormatter';
@@ -28,21 +28,15 @@ export class OrderPresenter extends Presenter {
         };
     }
 
-    /**
-     * Popup content of the order details, every customer input (and the currency of the admin settings) is escaped.
-     * The order lines store no unit price, so the current (discounted) price of the product is shown.
-     */
+    /** Popup content of the order details, every customer and admin input (product names, currency) is escaped */
     renderDetailsHtml(order: Order): string {
-        const escape = (value: string | null | undefined) => TextFormatter.escapeHtml(value ?? '');
+        const escape = TextFormatter.escapeHtml;
         const currency = escape(this.priceFormat.currency);
         const note = order.customer_note ? escape(order.customer_note) : NO_NOTE_BADGE;
 
-        const productLines = (order.details ?? []).map(detail => {
-            const { product } = detail;
-            const unitPrice = product ? this.priceFormat.formatAmount(product.getEffectivePrice()) : '';
-
-            return `<p class='fs-6 mb-0'>${detail.quantity} x ${this.localized(product?.name)} (${unitPrice} ${currency} / db)</p>`;
-        }).join('');
+        const productLines = (order.details ?? []).map(detail => (
+            `<p class='fs-6 mb-0'>${detail.quantity} x ${escape(this.localized(detail.product?.name))} (${this.unitPriceText(detail, currency)})</p>`
+        )).join('');
 
         return `
             <div class='d-flex flex-column'>
@@ -62,5 +56,21 @@ export class OrderPresenter extends Presenter {
                 </div>
             </div>
         `;
+    }
+
+    /**
+     * The unit price saved with the order. The lines of the old orders have no saved price,
+     * the current price of the product is shown for them, marked as such.
+     */
+    private unitPriceText(detail: OrderDetail, currency: string): string {
+        if (detail.unit_price !== null) {
+            return `${this.priceFormat.formatAmount(detail.unit_price)} ${currency} / db`;
+        }
+
+        if (!detail.product) {
+            return 'ismeretlen ár';
+        }
+
+        return `${this.priceFormat.formatAmount(detail.product.getEffectivePrice())} ${currency} / db, jelenlegi ár`;
     }
 }

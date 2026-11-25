@@ -26,7 +26,10 @@ export class AdminBlogController extends AdminController {
             return ErrorPage.badRequest(req, res);
         }
 
-        const { rows: articles, count } = await this.findArticles({ date: { [Op.lt]: DateFormatter.today() } }, pagination);
+        // Today's articles are articles (only the future ones are events), the ones without a date are listed here too
+        const { rows: articles, count } = await this.findArticles({
+            [Op.or]: [{ date: { [Op.lte]: DateFormatter.today() } }, { date: null }],
+        }, pagination);
 
         res.render('admin/blogs/list', {
             meta: this.meta('Admin blogs list page', 'This is the blogs list page'),
@@ -74,6 +77,8 @@ export class AdminBlogController extends AdminController {
 
     readonly create = (_req: Request, res: Response): void => {
         res.render('admin/blogs/new', {
+            // The date input only accepts the zero-padded YYYY-MM-DD format
+            defaultDate: DateFormatter.today(),
             meta: this.meta('Új cikk', 'This is the article upload page'),
         });
     };
@@ -203,9 +208,9 @@ export class AdminBlogController extends AdminController {
 
         return {
             title: LocalizedField.stringify(input.localized('title')),
-            slug: Slug.fromTitles(input.localized('title', { escape: false })),
+            slug: Slug.fromTitles(input.localized('title')),
             short_description: LocalizedField.stringify(input.localized('short_description')),
-            description: LocalizedField.stringify(input.localized('article_description', { escape: false })),
+            description: LocalizedField.stringify(input.localized('article_description')),
             date: input.date('date'),
             author,
             ...flags,

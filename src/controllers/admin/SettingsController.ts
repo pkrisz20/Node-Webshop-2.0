@@ -8,9 +8,6 @@ import { AdminController } from './AdminController';
 
 type LocalizedKey = typeof SiteConfigService.LOCALIZED_KEYS[number];
 
-/** Rich text settings, their HTML content must not be escaped */
-const RICH_TEXT_KEYS: readonly LocalizedKey[] = ['about_us_long'];
-
 const THOUSANDS_SEPARATOR_LABELS: Record<ThousandsSeparator, string> = {
     dot: 'Pont',
     comma: 'Vessző',
@@ -59,10 +56,7 @@ export class SettingsController extends AdminController {
             return ApiResponse.fail(res, 'errors.wrong_data');
         }
 
-        const localizedValues = SiteConfigService.LOCALIZED_KEYS.map(key => [
-            key,
-            LocalizedField.stringify(LocalizedField.fromForm(body, key, { escape: !RICH_TEXT_KEYS.includes(key) })),
-        ] as const);
+        const localizedValues = SiteConfigService.LOCALIZED_KEYS.map(key => [key, LocalizedField.stringify(LocalizedField.fromForm(body, key))] as const);
 
         const plainValues = SiteConfigService.PLAIN_KEYS.map(key => [key, this.nullIfEmpty(body[key])] as const);
 

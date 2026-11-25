@@ -190,6 +190,7 @@ const sr = {
 		unauthorized: "Neovlašćeno korisnik",
 		forbidden: "Pristup zabranjen",
         can_not_generate_webp: "Generisanje slike sa WEBP ekstenzijom nije uspelo. Molimo pokušajte ponovo kasnije...",
+        category_has_products: "Kategorija ne može biti obrisana, jer joj pripada {0} proizvod(a). Prvo obrišite ili premestite proizvode!",
     },
     meta: {
 		description: "Srećne guske, zdravi proizvodi: Naše guske se uzgajaju s najvećom pažnjom i pažnjom. Pružamo im prostrano, prirodno okruženje gde mogu slobodno šetati i uživati u ishrani bogatoj hranljivim žitaricama. To se prevodi u zdravije, ukusnije proizvode.",

@@ -78,9 +78,9 @@ export class Product extends Model<InferAttributes<Product>, InferCreationAttrib
             {
                 id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
                 name: { type: DataTypes.STRING(1000), allowNull: false },
-                slug: { type: DataTypes.STRING(500), allowNull: true },
+                slug: { type: DataTypes.STRING(1000), allowNull: true },
                 short_description: { type: DataTypes.STRING(3000), allowNull: true },
-                description: { type: DataTypes.TEXT('long'), allowNull: true },
+                description: { type: DataTypes.TEXT, allowNull: true },
                 images: { type: DataTypes.STRING(1000), allowNull: true },
                 image_thumbnail: { type: DataTypes.STRING(300), allowNull: true },
                 price: { type: DataTypes.FLOAT(100, 2), allowNull: false },
@@ -94,8 +94,8 @@ export class Product extends Model<InferAttributes<Product>, InferCreationAttrib
                 max_order_count: { type: DataTypes.INTEGER, allowNull: true },
                 comments_allowed: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
                 category_id: { type: DataTypes.INTEGER, allowNull: false },
-                created_at: DataTypes.DATE,
-                updated_at: DataTypes.DATE,
+                created_at: { type: DataTypes.DATE, allowNull: false },
+                updated_at: { type: DataTypes.DATE, allowNull: false },
             },
             {
                 sequelize,

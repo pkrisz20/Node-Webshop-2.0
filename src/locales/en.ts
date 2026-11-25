@@ -190,6 +190,7 @@ const en = {
 		unauthorized: "Unauthorized user",
 		forbidden: "Forbidden",
         can_not_generate_webp: "Generating an image with the WEBP extension has failed. Please try again later...",
+        category_has_products: "The category can not be deleted, {0} product(s) belong to it. Delete or move the products first!",
 	},
 	meta: {
 		description: "Happy Geese, Healthy Products: Our geese are raised with the utmost care and attention. We provide them with a spacious, natural environment where they can roam freely and enjoy a diet of nutrient-rich grains. This translates into healthier, tastier products.",

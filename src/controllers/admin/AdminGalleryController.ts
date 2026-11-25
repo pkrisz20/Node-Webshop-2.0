@@ -47,6 +47,8 @@ export class AdminGalleryController extends AdminController {
 
     readonly create = (_req: Request, res: Response): void => {
         res.render('admin/gallery/new', {
+            // The date input only accepts the zero-padded YYYY-MM-DD format
+            defaultDate: DateFormatter.today(),
             meta: this.meta('Új galléria', 'This is the gallery upload page'),
         });
     };
@@ -122,7 +124,7 @@ export class AdminGalleryController extends AdminController {
 
         return {
             gallery_name: LocalizedField.stringify(input.localized('name')),
-            slug: Slug.fromTitles(input.localized('name', { escape: false })),
+            slug: Slug.fromTitles(input.localized('name')),
             description: LocalizedField.stringify(input.localized('description')),
             gallery_date: date,
             ...flags,

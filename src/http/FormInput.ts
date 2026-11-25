@@ -46,14 +46,14 @@ export class FormInput {
         return value && DateFormatter.isValidDate(value) ? value : null;
     }
 
-    /** Values of the `name[en]`, `name[hu]` ... inputs, plain text inputs are HTML escaped by default */
-    localized(name: string, options: { escape?: boolean } = {}): LocalizedValues {
-        return LocalizedField.fromForm(this.body, name, options);
+    /** Values of the `name[en]`, `name[hu]` ... inputs as they were typed (the output is escaped, see LocalizedValues) */
+    localized(name: string): LocalizedValues {
+        return LocalizedField.fromForm(this.body, name);
     }
 
     /** Localized values of inputs with a custom name pattern, e.g. `parameter_value[en][<hash>]` */
-    localizedInputs(inputNameOf: (language: Language) => string, options: { escape?: boolean } = {}): LocalizedValues {
-        return LocalizedField.fromFormInputs(this.body, inputNameOf, options);
+    localizedInputs(inputNameOf: (language: Language) => string): LocalizedValues {
+        return LocalizedField.fromFormInputs(this.body, inputNameOf);
     }
 
     /** Every `name[<language>]` input is filled in */

@@ -14,8 +14,9 @@ export class TextFormatter {
         return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
     }
 
-    static escapeHtml(text: string): string {
-        return text
+    /** For the HTML built in TypeScript (the templates escape with `<%= %>`), a missing value becomes an empty string */
+    static escapeHtml(text: string | null | undefined): string {
+        return (text ?? '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')

@@ -1,16 +1,15 @@
 import { env } from '../config/env';
 import type { Language } from '../locales';
-import { TextFormatter } from './TextFormatter';
 
-/** Values of one field keyed by language, stored in the database as a JSON string */
+/**
+ * Values of one field keyed by language, stored in the database as a JSON string.
+ * The values are stored as they were typed: the templates escape the plain texts on output (`<%= %>`),
+ * and only the rich text editor values are printed unescaped (`<%- %>`).
+ * HTML built in TypeScript must escape the plain texts itself (`TextFormatter.escapeHtml`).
+ */
 export type LocalizedValues = Record<Language, string | null>;
 
 type FormBody = Record<string, unknown>;
-
-interface FormReadOptions {
-    /** Escape the HTML characters (plain text inputs), rich text editor values are kept as they are */
-    escape?: boolean;
-}
 
 export class LocalizedField {
     /** Picks the value of one language from a localized JSON column */
@@ -37,19 +36,19 @@ export class LocalizedField {
     }
 
     /** Reads the `field[en]`, `field[hu]` ... inputs of a submitted admin form, empty inputs become `null` */
-    static fromForm(body: FormBody, field: string, options: FormReadOptions = {}): LocalizedValues {
-        return LocalizedField.fromFormInputs(body, language => `${field}[${language}]`, options);
+    static fromForm(body: FormBody, field: string): LocalizedValues {
+        return LocalizedField.fromFormInputs(body, language => `${field}[${language}]`);
     }
 
     /** Reads one input per language, the input names are built by `inputNameOf` */
-    static fromFormInputs(body: FormBody, inputNameOf: (language: Language) => string, { escape = true }: FormReadOptions = {}): LocalizedValues {
+    static fromFormInputs(body: FormBody, inputNameOf: (language: Language) => string): LocalizedValues {
         const values = {} as LocalizedValues;
 
         for (const language of env.languages.valid) {
             const value = body[inputNameOf(language)];
             const text = typeof value === 'string' ? value : '';
 
-            values[language] = text.length === 0 ? null : (escape ? TextFormatter.escapeHtml(text) : text);
+            values[language] = text.length === 0 ? null : text;
         }
 
         return values;
