@@ -1,0 +1,32 @@
+// Quantity stepper: mini cart, order page (.quantities-container) and product page (.quantities.js-quantities)
+
+
+.quantities {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    &-container {
+        @include stepper(38px);
+    }
+
+    &-price {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: $c-muted;
+        font-size: 14px;
+        font-weight: 600;
+
+        i {
+            font-size: 10px;
+            opacity: .7;
+        }
+
+        span {
+            color: $c-ink;
+            font-weight: 700;
+        }
+    }
+}

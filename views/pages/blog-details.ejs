@@ -1,13 +1,13 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" />
 
     <% if (blogDetails.images.length > 0) { %>
-        <link rel="preload" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" />
     <% } %>
 
-    <link rel="preload" href="<%= getAssetPath('/css/blog-details.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/blog-details.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>
@@ -92,24 +92,7 @@
         <% } %>
 
         <% if (newestBlogs.length > 0) { %>
-            <section class="featured-blogs">
-                <div class="wrapper">
-                    <%- include('../components/block-title.ejs', { title: languageHandler('general.newest_blogs', current_locale) }) %>
-
-                    <div class="js-featured-blogs">
-                        <% newestBlogs.forEach(item => { %>
-                            <div class="slide">
-                                <%- include("../components/blog-card.ejs", { blog: item }) %>
-                            </div>
-                        <% }) %>
-                    </div>
-
-                    <% if (newestBlogs.length > 1) { %>
-                        <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-                        <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
-                    <% } %>
-                </div>
-            </section>
+            <%- include('../components/featured-blogs.ejs', { blogs: newestBlogs, blockTitle: languageHandler('general.newest_blogs', current_locale) }) %>
         <% } %>
     </main>
 <%- endSection() %>

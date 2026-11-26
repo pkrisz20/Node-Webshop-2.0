@@ -1,36 +1,22 @@
 @import "../variables.scss";
 @import "../mixins.scss";
 
-.gdpr {
-    &.gdpr-site {
-        margin: 50px 0 0;
+.gdpr-site {
+    padding: 22px 0 80px;
+
+    .wrapper {
+        max-width: 720px + $gutter * 2;
     }
 
-    .main-title {
-        margin: 0 0 25px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 60px;
-        }
-    }
-
-    .form {
-        &.form-gdpr {
-            @media #{ $min-1200 } {
-                width: 60%;
-            }
-        }
-    }
-
-    &-container {
-        padding: 20px 0 60px;
+    .gdpr-container {
+        padding: 0;
+        @include card(clamp(24px, 4vw, 40px), $r-xl);
 
         &-information {
-            margin: 0 0 20px;
-            color: $c-dark;
-            @include resp('font-size', 14px, 17px, 767px);
-            font-weight: 600;
-            line-height: 25px;
+            margin-bottom: 24px;
+            color: $c-muted;
+            font-size: 16px;
+            line-height: 1.7;
         }
     }
 }

@@ -1,9 +1,19 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/home.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/home.css') %>" />
 <%- endPush() %>
+
+<%
+    const hasCounters = DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0;
+    const counters = [
+        { icon: 'fas fa-smile', number: DB_CONFIG["satisfied_clients_number"], label: languageHandler("counter.satisfied_clients", current_locale) },
+        { icon: 'fas fa-mug-hot', number: DB_CONFIG["cups_of_coffe_number"], label: languageHandler("counter.cups_coffe", current_locale) },
+        { icon: 'fas fa-feather-alt', number: DB_CONFIG["animals_in_numbers"], label: languageHandler("counter.animals", current_locale) },
+        { icon: 'fas fa-shipping-fast', number: DB_CONFIG["posted_products_number"], label: languageHandler("counter.posted_products", current_locale) },
+    ];
+%>
 
 <%- section('content') %>
     <main class="home">
@@ -19,45 +29,43 @@
             <%- include('components/featured-products.ejs', { products: products }) %>
 
             <div class="more">
-                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler("products.all_products", current_locale) %> <i class="far fa-angle-double-right"></i></a>
+                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler("products.all_products", current_locale) %> <i class="fas fa-arrow-right"></i></a>
             </div>
         <% } %>
 
-        <section class="bg">
-            <div class="bg-box wrapper">
-                <h2 class="bg-box--title"><%= DB_CONFIG["home_page_title"] %></h2>
-                <p class="bg-box--subtitle"><%= DB_CONFIG["home_page_text"] %></p>
-                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>" aria-label="Link to about us page" target="_self" class="bg-box_btn"><%= languageHandler("nav.about", current_locale) %></a>
-                <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>" aria-label="Link to gallery list page" target="_self" class="bg-box_btn bg-btn"><%= languageHandler("nav.gallery", current_locale) %></a>
+        <section class="story">
+            <div class="wrapper">
+                <div class="story__card">
+                    <div class="story__media">
+                        <img src="<%= getAssetPath('/images/city-animals.jpg') %>" alt="<%= DB_CONFIG["home_page_title"] || process.env.SITE_NAME %>" loading="lazy" />
+                    </div>
+
+                    <div class="story__content">
+                        <span class="story__eyebrow"><%= process.env.SITE_NAME %></span>
+                        <h2 class="story__title"><%= DB_CONFIG["home_page_title"] %></h2>
+                        <p class="story__text"><%= DB_CONFIG["home_page_text"] %></p>
+
+                        <div class="story__actions">
+                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>" aria-label="Link to about us page" target="_self" class="story__btn story__btn--primary"><%= languageHandler("nav.about", current_locale) %> <i class="fas fa-arrow-right"></i></a>
+                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>" aria-label="Link to gallery list page" target="_self" class="story__btn story__btn--ghost"><%= languageHandler("nav.gallery", current_locale) %></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
+        <% if (hasCounters) { %>
             <section class="countup js-countup-section">
-                <div class="wrapper">
-                    <div class="countup__item">
-                        <i class="fas fa-users countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["satisfied_clients_number"] %>">0</div>
-                        <span class="countup__item-title"><%= languageHandler("counter.satisfied_clients", current_locale) %></strong>
-                    </div>
-
-                    <div class="countup__item">
-                        <i class="fas fa-mug-hot countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["cups_of_coffe_number"] %>">0</div>
-                        <span class="countup__item-title"><%= languageHandler("counter.cups_coffe", current_locale) %></strong>
-                    </div>
-
-                    <div class="countup__item">
-                        <i class="far fa-chart-bar countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["animals_in_numbers"] %></div>">0</div>
-                        <span class="countup__item-title"><%= languageHandler("counter.animals", current_locale) %></strong>
-                    </div>
-
-                    <div class="countup__item">
-                        <i class="fas fa-shipping-fast countup__item-icon"></i>
-                        <div class="countup__item-number js-countup-item" data-number="<%= DB_CONFIG["posted_products_number"] %></div>">0</div>
-                        <span class="countup__item-title"><%= languageHandler("counter.posted_products", current_locale) %></strong>
-                    </div>
+                <div class="wrapper countup__grid">
+                    <% counters.forEach(counter => { %>
+                        <div class="countup__item">
+                            <span class="countup__item-icon"><i class="<%= counter.icon %>"></i></span>
+                            <div class="countup__item-body">
+                                <div class="countup__item-number js-countup-item" data-number="<%= counter.number %>">0</div>
+                                <span class="countup__item-title"><%= counter.label %></span>
+                            </div>
+                        </div>
+                    <% }) %>
                 </div>
             </section>
         <% } %>
@@ -68,11 +76,9 @@
 
         <% if (blogs.length > 0) { %>
             <%- include('components/featured-blogs.ejs', { blogs: blogs }) %>
-        <% } %>
 
-        <% if (blogs.length > 0) { %>
-            <div class="more">
-                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler("nav.visit_blog", current_locale) %> <i class="far fa-angle-double-right"></i></a>
+            <div class="more more--last">
+                <a class="more-button" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler("nav.visit_blog", current_locale) %> <i class="fas fa-arrow-right"></i></a>
             </div>
         <% } %>
     </main>
@@ -81,7 +87,7 @@
 <%- push('plugins') %>
     <script type="text/javascript" src="<%= getAssetPath('/js/plugins/slick.min.js') %>"></script>
 
-    <% if (DB_CONFIG["satisfied_clients_number"] > 0 && DB_CONFIG["cups_of_coffe_number"] > 0 && DB_CONFIG["animals_in_numbers"] > 0 && DB_CONFIG["posted_products_number"] > 0) { %>
+    <% if (hasCounters) { %>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/waypoints.min.js') %>"></script>
         <script type="text/javascript" src="<%= getAssetPath('/js/plugins/countup.min.js') %>"></script>
     <% } %>

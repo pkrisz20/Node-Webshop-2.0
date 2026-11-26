@@ -2,65 +2,120 @@
 @import "../mixins.scss";
 
 .contact {
-    margin: 50px 0 0;
+    padding-bottom: 40px;
 
     .main-title {
-        margin: 0 0 60px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 100px;
-        }
-    }
-
-    &-map {
-        padding: 50px 0 0;
-        width: 100%;
-        height: 500px;
-
-        #map {
-            cursor: grab;
-        }
+        margin-bottom: 32px;
     }
 
     .container {
-        @include flexBox("space-between", "flex-start", 30px);
-        flex-direction: column;
-        width: 100%;
-        padding: 0;
-        margin-bottom: 40px;
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        align-items: start;
+        gap: 32px;
+        padding: 0 0 56px;
 
-        @media #{ $min-768 } {
-            flex-direction: row;
+        @media #{ $max-1024 } {
+            grid-template-columns: minmax(0, 1fr);
         }
 
         &-contacts {
-            flex: 0 0 240px;
+            position: relative;
+            overflow: hidden;
+            padding: clamp(28px, 4vw, 44px);
+            border-radius: $r-xl;
+            background:
+                radial-gradient(80% 70% at 100% 0%, rgba($c-primary, .5), transparent 60%),
+                radial-gradient(60% 50% at 0% 100%, rgba($c-lime, .1), transparent 60%),
+                $c-deep;
+            color: $c-white;
+            box-shadow: $shadow-lg;
+
+            @media #{ $max-767 } {
+                border-radius: $r-lg;
+            }
+
+            .header_title-main {
+                color: $c-white;
+                font-size: 30px;
+            }
 
             &-links {
-                @include flexBox("flex-start", "flex-start", 20px);
+                display: flex;
                 flex-direction: column;
+                gap: 10px;
+            }
 
-                .data {
-                    color: $c-9;
-                    transition: color .2s ease-in-out;
+            .data {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 12px 14px;
+                border-radius: $r-md;
+                background-color: rgba($c-white, .06);
+                border: 1px solid rgba($c-white, .08);
+                color: rgba($c-white, .9);
+                font-size: 15px;
+                font-weight: 600;
+                word-break: break-word;
+                transition: background-color $t-fast $ease, transform $t-fast $ease;
 
-                    &:hover {
-                        color: $c-dark2;
-                    }
+                i {
+                    display: grid;
+                    place-items: center;
+                    flex-shrink: 0;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: $r-sm;
+                    background-color: rgba($c-white, .1);
+                    color: $c-lime;
+                    font-size: 14px;
                 }
             }
-        }
 
-        .header_title {
-            margin-bottom: 30px;
-
-            &-main {
-                @include resp('font-size', 20px, 24px, 768px, 1920px);
+            a.data:hover {
+                background-color: rgba($c-white, .12);
+                color: $c-white;
+                transform: translateX(3px);
             }
         }
 
         &-form {
-            width: 100%;
+            @include card(clamp(24px, 4vw, 44px), $r-xl);
+
+            @media #{ $max-767 } {
+                border-radius: $r-lg;
+            }
+
+            .header_title {
+                margin-bottom: 26px;
+
+                &-main {
+                    font-size: 30px;
+                }
+            }
+        }
+    }
+
+    &-map {
+        padding: 0 0 40px;
+
+        #map {
+            max-width: $wrapper;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: $r-xl;
+            border: 1px solid $c-line;
+            box-shadow: $shadow-sm;
+
+            @media #{ $max-1199 } {
+                margin: 0 $gutter-mobile;
+                width: auto !important;
+            }
+
+            @media #{ $min-1200 } {
+                width: calc(100% - #{$gutter * 2}) !important;
+            }
         }
     }
 }

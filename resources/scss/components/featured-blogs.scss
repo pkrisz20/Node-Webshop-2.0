@@ -1,50 +1,25 @@
 .featured-blogs {
-    .header_title {
-        margin-bottom: 40px;
-    }
+    padding-bottom: 36px;
 
-    & > .wrapper {
-        position: relative;
-    }
+    .js-featured-blogs:not(.slick-initialized) {
+        display: flex;
+        gap: 24px;
+        overflow: hidden;
 
-    .slick {
-        &-track {
-            padding: 10px 0;
-            display: flex !important;
-            float: left;
-        }
+        > .slide {
+            flex: 0 0 calc(25% - 18px);
 
-        &-slide {
-            height: inherit !important;
-            margin: 0 6px;
-        }
-
-        &-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: $c-theme;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-
-            i {
-                font-size: 24px;
-                color: $c-white;
-
-                @media #{ $min-768 } {
-                    font-size: 30px;
-                }
+            @media #{ $max-1199 } {
+                flex-basis: calc(33.333% - 16px);
             }
-        }
 
-        &-prev {
-            left: 5px !important;
-        }
+            @media #{ $max-767 } {
+                flex-basis: calc(50% - 12px);
+            }
 
-        &-next {
-            right: 5px !important;
+            @media #{ $max-539 } {
+                flex-basis: 100%;
+            }
         }
     }
 }

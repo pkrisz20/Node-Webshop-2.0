@@ -1,27 +1,61 @@
 .sharing {
-    @include flexBox("flex-start", "center", 10px);
-    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
 
     &-button {
-        @include flexBox();
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        border-radius: 5px;
-        color: $c-white;
-        cursor: pointer;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid $c-line;
+        background-color: $c-surface;
+        color: $c-ink;
+        font-size: 15px;
+        transition: background-color $t-fast $ease, color $t-fast $ease, border-color $t-fast $ease, transform $t-fast $ease;
 
-        &--facebook {
+        &:hover {
+            transform: translateY(-2px);
+            color: $c-white;
+        }
+
+        img {
+            width: 14px;
+            height: 14px;
+            // The X logo is white, it is shown dark until hover
+            filter: invert(1);
+            transition: filter $t-fast $ease;
+        }
+
+        &--facebook:hover {
             background-color: $c-facebook;
+            border-color: $c-facebook;
         }
-        &--twitter {
-            background-color: $c-black;
+
+        &--twitter:hover {
+            background-color: $c-twitter;
+            border-color: $c-twitter;
+
+            img {
+                filter: none;
+            }
         }
-        &--email {
-            background-color: $c-github;
+
+        &--email:hover {
+            background-color: $c-deep;
+            border-color: $c-deep;
         }
-        &--clipboard {
-            background-color: $c-warning;
+
+        &--clipboard:hover {
+            background-color: $c-primary;
+            border-color: $c-primary;
+        }
+
+        &--clipboard:active {
+            transform: scale(.94);
         }
     }
 }

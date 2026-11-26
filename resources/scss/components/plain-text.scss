@@ -1,289 +1,150 @@
-@import "../variables.scss";
-
+// Rich text written in the admin editor (CKEditor)
 .ck-content {
-    margin: 20px 0;
-    color: $c-4;
-    font-size: 14px;
-    line-height: 1.5;
+    color: $c-ink-2;
+    font-size: 17px;
+    line-height: 1.8;
+    word-wrap: break-word;
 
-    > * {
-        margin-bottom: 1.5em;
+    > * + * {
+        margin-top: 1.1em;
+    }
 
-        &:last-child, &.last {
-            margin-bottom: 0;
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.8em;
+        color: $c-ink;
+        font-family: $font-display;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -.01em;
+
+        & + * {
+            margin-top: .6em;
         }
     }
 
-    ol {
-        list-style: outside decimal;
-        margin-left: 22px;
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.7em; }
+    h3 { font-size: 1.4em; }
+    h4 { font-size: 1.2em; }
+    h5, h6 { font-size: 1.05em; }
+
+    > :first-child {
+        margin-top: 0;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+
+    a {
+        color: $c-primary;
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+
+        &:hover {
+            color: $c-primary-dark;
+        }
+    }
+
+    strong, b {
+        color: $c-ink;
+    }
+
+    ul, ol {
+        padding-left: 1.4em;
+
+        li + li {
+            margin-top: .4em;
+        }
     }
 
     ul {
         list-style: none;
 
         li {
-            padding-left: 16px;
             position: relative;
 
             &::before {
-                background-color: $c-theme;
-                border-radius: 50%;
-                content: '';
+                content: "";
                 position: absolute;
-                top: .625em;
-                left: 0;
-                width: 4px;
-                height: 4px;
+                left: -1.1em;
+                top: .72em;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background-color: $c-primary;
             }
         }
     }
 
-    dl {
-        margin-left: 22px;
-    }
+    ol {
+        list-style: decimal;
 
-    dt {
-        font-weight: 700;
-    }
-
-    pre,
-    code,
-    address {
-        font-family: Georgia, "Times New Roman", Times, serif;
+        li::marker {
+            color: $c-primary;
+            font-weight: 700;
+        }
     }
 
     blockquote {
-        border: none;
-        border-left: 2px solid;
-        padding: 0 0 0 20px;
-        margin-left: 0;
-        margin-right: 0;
-        color: $c-theme;
-    }
-
-    table {
-        border: 1px solid $c-e;
-        border-collapse: collapse;
-        width: 100%;
-
-        &[border="0"] {
-            border: 0;
-            border-collapse: separate;
-
-            td {
-                border: none;
-            }
-        }
-
-        &:not([cellpadding]) {
-            th,
-            td {
-                padding: 5px 10px;
-            }
-        }
-
-        &.bt {
-            max-width: 100%;
-
-            td {
-                padding: 0;
-
-                &::before {
-                    background-color: $c-4;
-                    color: $c-white;
-                    font-size:13px;
-                    padding: 4px 10px;
-                    text-transform: uppercase;
-                }
-
-                span {
-                    padding: 4px 10px;
-                    word-wrap: break-word;
-                }
-            }
-
-            &.two-axis tr td:first-of-type,
-            &.two-axis tr:nth-of-type(2n+2) td:first-of-type,
-            &.two-axis tr td:first-of-type:before {
-                background-color: tint($c-4, 20%);
-                color: $c-white;
-            }
-
-            &.two-axis tr td:first-of-type {
-                background: tint($c-4, 20%);
-                color: $c-white;
-            }
-        }
-    }
-
-    table.no-border {
-        border: none;
-
-        td {
-            background: none;
-            border: none;
-        }
-    }
-
-    th,
-    td {
-        padding: 4px 10px;
-        vertical-align: top;
-    }
-
-    th {
-        background-color: $c-4;
-        border: none;
-        color: $c-white;
-        text-align: center;
-    }
-
-    td {
-        border: none;
-    }
-
-    tbody tr:nth-child(even) td {
-        background-color: $c-grayF7;
-    }
-
-    a {
-        color: $c-theme;
-        transition: color .3s ease;
-
-        &:hover {
-            color: $c-4;
-        }
-    }
-
-    sub, sup {
-      font-size: 75%;
-      line-height: 0;
-      position: relative;
-      vertical-align: baseline;
-    }
-
-    sup {
-      top: -0.5em;
-    }
-
-    sub {
-      bottom: -0.25em;
-    }
-
-    strong {
-        color: $c-dark2;
-        font-weight: 600;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        color: $c-theme;
-        font-weight: 700;
-        line-height: 1.4;
-        font-size: 18px;
-        line-height: 22px;
-        margin-bottom: 14px;
-    }
-
-    h1 { font-size:1.8em };
-    h2 { font-size:1.6em };
-    h3 { font-size:1.4em };
-    h4 { font-size:1.2em };
-    h5 { font-size:1.1em };
-    h6 { font-size:1em };
-
-    figure {
-        background-color: $c-white;
-        border: 1px solid $c-a;
-        float: left;
-        margin: 0 20px 10px 0;
-        padding: 4px;
-
-        .img-wrapper {
-            text-align: center;
-            max-width: 100%;
-
-            img {
-                height: auto !important;
-                border-radius: 14px;
-            }
-        }
-
-        img {
-            border: none;
-            margin: 0;
-            max-width: 100%;
-            padding: 0;
-        }
-
-        figcaption {
-            font-size:15px;
-            padding: 2px 14px;
-            text-align: center;
-        }
-
-        &[style*="float:right"],
-        &[style*="float: right"] {
-            margin: 0 0 10px 20px;
-        }
+        padding: 18px 24px;
+        border-left: 4px solid $c-primary;
+        border-radius: 0 $r-md $r-md 0;
+        background-color: $c-primary-softer;
+        color: $c-ink;
+        font-family: $font-display;
+        font-size: 1.15em;
+        font-style: italic;
+        line-height: 1.6;
     }
 
     img {
-        height: auto !important;
         max-width: 100%;
-        border-radius: 14px;
+        height: auto;
+        border-radius: $r-md;
     }
 
-    img[style*="float:left"],
-    img[style*="float: left"] {
-        margin-right: 20px;
-        margin-bottom: 10px;
+    figure {
+        margin-left: 0;
+        margin-right: 0;
+
+        figcaption {
+            margin-top: 8px;
+            color: $c-muted;
+            font-size: 14px;
+            text-align: center;
+        }
     }
 
-    img[style*="float:right"],
-    img[style*="float: right"] {
-        margin-left: 20px;
-        margin-bottom: 10px;
-    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: $r-md;
+        font-size: 15px;
 
-    @media #{ $max-1199 } {
-        table {
-            display: block;
-            max-width: 100% !important;
-            width: 100%;
-
-            thead,
-            tbody,
-            tfoot,
-            caption,
-            tr,
-            th,
-            td {
-                display: block;
-                max-width: 100% !important;
-                width: 100%;
-            }
+        th, td {
+            padding: 12px 14px;
+            border: 1px solid $c-line;
+            text-align: left;
         }
 
-        h1 { font-size:1.5em };
-        h2 { font-size:1.4em };
-        h3 { font-size:1.3em };
-        h4 { font-size:1.2em };
-        h5 { font-size:1.1em };
-        h6 { font-size:1em };
+        th {
+            background-color: $c-bg-2;
+            color: $c-ink;
+            font-weight: 700;
+        }
     }
-}
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid $c-a;
-    margin: 1.5em 0;
-    padding: 0;
+    hr {
+        border: none;
+        height: 1px;
+        background-color: $c-line;
+    }
+
+    @media #{ $max-767 } {
+        font-size: 16px;
+    }
 }

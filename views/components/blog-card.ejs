@@ -1,32 +1,29 @@
-<div class="blog-card">
-    <div class="datetime">
-        <span class="datetime-value"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></span>
-    </div>
-    <% if (blog.isImportant) { %>
-        <div class="badge">
-            <span class="badge--important"><%= languageHandler('general.important', current_locale) %></span>
-        </div>
-    <% } %>
-    <a
-        class="image"
-        title="<%= blog.title %>"
-        href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>"
-        aria-label="Navigation to the current blog article - <%= blog.title %>"
-    >
+<% const articleUrl = process.env.APP_URL + '/' + current_locale + '/' + languageHandler("slugs.article", current_locale) + '/' + blog.slug + '/' + blog.id; %>
+<article class="blog-card">
+    <a class="image" title="<%= blog.title %>" href="<%= articleUrl %>" aria-label="Navigation to the current blog article - <%= blog.title %>">
         <%- include('./picture.ejs', { imageSrc: blog.image, alt: blog.title }) %>
-    </a>
-    <div class="blog-card-content">
-        <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
 
-        <div class="bottom">
-            <div class="bottom-author"><i class="fas fa-user"></i> <%= blog.author %></div>
-            <div class="bottom-count"><i class="fas fa-comment-dots"></i> <%= blog.commentsCount %></div>
+        <span class="blog-card__chip"><i class="far fa-calendar-alt"></i> <%= blog.relativeDate %></span>
+
+        <% if (blog.isImportant) { %>
+            <span class="badge badge--important"><%= languageHandler('general.important', current_locale) %></span>
+        <% } %>
+    </a>
+
+    <div class="blog-card-content">
+        <div class="blog-card-meta">
+            <time class="blog-card-fulldate"><%= blog.fullDate %></time>
+            <span class="blog-card-meta__dot"></span>
+            <span class="blog-card-meta__author"><%= blog.author %></span>
+            <span class="blog-card-meta__comments" title="<%= languageHandler('general.comments', current_locale) %>"><i class="far fa-comment"></i> <%= blog.commentsCount %></span>
         </div>
-        <time class="blog-card-fulldate"><i class="far fa-calendar-alt"></i> <%= blog.fullDate %></time>
+
+        <a href="<%= articleUrl %>" title="<%= blog.title %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="title"><%= blog.title %></a>
 
         <% if (blog.shortDescription) { %>
             <p class="short"><%= blog.shortDescription %></p>
         <% } %>
+
+        <a href="<%= articleUrl %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link"><%= languageHandler('general.read_more', current_locale) %> <i class="fas fa-arrow-right"></i></a>
     </div>
-    <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.article", current_locale) %>/<%= blog.slug %>/<%= blog.id %>" aria-label="Navigation to the current blog article - <%= blog.title %>" class="blog-card-link btn"><%= languageHandler('general.read_more', current_locale) %> <i class="far fa-angle-double-right"></i></a>
-</div>
+</article>

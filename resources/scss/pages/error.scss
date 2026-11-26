@@ -1,61 +1,76 @@
 @import "../variables.scss";
 @import "../mixins.scss";
 
-.site-wrap {
-    padding-top: 0 !important;
+body:has(.error) {
+    background:
+        radial-gradient(60% 60% at 100% 0%, rgba($c-primary, .45), transparent 60%),
+        radial-gradient(50% 50% at 0% 100%, rgba($c-lime, .12), transparent 60%),
+        $c-deep;
+}
 
-    .error {
-        width: 100%;
-        min-height: 100vh;
-        height: 100%;
-        background-image: url('/images/city-animals.jpg');
-        background-position: center;
-        background-size: cover;
-        position: relative;
-        @include flexBox();
-        flex-direction: column;
+.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 100vh;
+    padding: 48px 20px;
+    text-align: center;
+    color: rgba($c-white, .78);
 
-        &::before {
-            @include absoluteFullSize();
-            content: "";
-            z-index: 1;
-            background-color: rgba($c-black, .65);
+    &__code {
+        order: -1;
+        color: transparent;
+        font-family: $font-display;
+        font-size: clamp(120px, 22vw, 220px);
+        font-weight: 600;
+        line-height: .9;
+        letter-spacing: -.04em;
+        -webkit-text-stroke: 2px rgba($c-white, .55);
+        background: linear-gradient(180deg, rgba($c-lime, .35), rgba($c-white, 0));
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    &__title {
+        max-width: 640px;
+        color: $c-white;
+        font-family: $font-display;
+        font-size: clamp(28px, 3.4vw, 42px);
+        font-weight: 600;
+        line-height: 1.15;
+    }
+
+    &__text {
+        max-width: 520px;
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    &__link {
+        @include btnBase(52px);
+        @include btnGlass();
+        min-width: 220px;
+        margin-top: 6px;
+
+        &:nth-of-type(1) {
+            @include btnLight();
+            margin-top: 18px;
         }
 
-        &__title {
-            position: relative;
-            z-index: 2;
-            @include resp(font-size, 24px, 50px);
-            color: $c-light-gray2;
-        }
-
-        &__text {
-            color: $c-white;
-            font-size: 16px;
-            margin: 15px 0;
-            z-index: 2;
-        }
-
-        &__code {
-            position: relative;
-            z-index: 2;
-            @include resp(font-size, 30px, 80px);
-            color: $c-LightGray;
-        }
-
-        &__link {
-            position: relative;
-            z-index: 2;
-            padding: 12px 24px;
-            border-radius: 24px;
-            color: $c-white;
-            background-color: $c-theme;
-            @include resp(font-size, 14px, 18px);
-            transition: background-color .2s ease;
-            margin-bottom: 20px;
+        &:last-of-type {
+            border: none;
+            background: none;
+            backdrop-filter: none;
+            min-height: 36px;
+            color: rgba($c-white, .6);
+            font-size: 13px;
+            font-weight: 600;
 
             &:hover {
-                background-color: $c-light-green;
+                background: none;
+                color: $c-white;
             }
         }
     }

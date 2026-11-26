@@ -1,57 +1,22 @@
+// Related galleries carousel on the gallery page
 .featured-galleries {
-    padding: 0;
-    margin-top: 30px;
+    padding-bottom: 40px;
 
-    &-container {
-        position: relative;
-    }
+    .js-featured-galleries:not(.slick-initialized) {
+        display: flex;
+        gap: 24px;
+        overflow: hidden;
 
-    .header_title {
-        margin-bottom: 40px;
-    }
+        > .slide {
+            flex: 0 0 calc(33.333% - 16px);
 
-    & > .wrapper {
-        position: relative;
-    }
-
-    .slick {
-        &-track {
-            padding: 10px 0;
-            display: flex !important;
-            float: left;
-        }
-
-        &-slide {
-            height: inherit !important;
-            margin: 0 6px;
-        }
-
-        &-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: $c-theme;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-
-            i {
-                font-size: 24px;
-                color: $c-white;
-
-                @media #{ $min-768 } {
-                    font-size: 30px;
-                }
+            @media #{ $max-767 } {
+                flex-basis: calc(50% - 12px);
             }
-        }
 
-        &-prev {
-            left: -20px !important;
-        }
-
-        &-next {
-            right: -20px !important;
+            @media #{ $max-539 } {
+                flex-basis: 100%;
+            }
         }
     }
 }

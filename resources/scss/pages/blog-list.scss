@@ -5,38 +5,17 @@
 @import "../components/pagination.scss";
 
 .list {
-    margin: 50px 0 0;
+    padding-bottom: 80px;
 
     .main-title {
-        margin: 0 0 25px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 60px;
-        }
+        margin-bottom: 32px;
     }
-    .listpage {
-        &.blogs {
-            .listpage-container {
-                @include flexBox("center", "center", 25px);
-                flex-direction: column;
+}
 
-                @media #{ $max-539 } {
-                    margin: 0 auto;
-                    max-width: 350px;
-                }
+.listpage {
+    padding: 0;
 
-                @media #{ $min-540 } {
-                    @include gridBox("center", 2, 20px, 20px);
-                }
-
-                @media #{ $min-768 } {
-                    @include gridBox("center", 3, 25px, 30px);
-                }
-
-                @media #{ $min-1025 } {
-                    @include gridBox("center", 4, 20px, 30px);
-                }
-            }
-        }
+    &-container {
+        @include autoGrid(300px, 26px);
     }
 }

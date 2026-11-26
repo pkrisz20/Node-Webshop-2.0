@@ -9,8 +9,8 @@
         <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
     <% } %>
 
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/contact.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/contact.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>
@@ -34,7 +34,7 @@
                                 <a class="data" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:<%= DB_CONFIG["phone_2"] %>"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
                             <% } %>
                             <% if (DB_CONFIG["email"]) { %>
-                                <a class="data" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
+                                <a class="data" aria-label="<%= DB_CONFIG["email"] %>" href="mailto:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
                             <% } %>
                             <% if (DB_CONFIG["company_street"]) { %>
                                 <span class="data" aria-label="Link to the map"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></span>

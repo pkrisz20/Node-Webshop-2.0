@@ -1,4 +1,3 @@
-@use 'sass:math';
 @import "../variables.scss";
 @import "../mixins.scss";
 
@@ -9,194 +8,224 @@
 @import "../components/plain-text.scss";
 
 .blog-details {
-    padding: 40px 0;
-    background-color: $c-grayF9;
+    padding-bottom: 40px;
 
     &-section {
-        padding: 0 0 40px;
-        position: relative;
+        padding: 0 0 48px;
+    }
 
-        & > .main-title {
-            margin: 0 0 60px;
+    .main-title {
+        max-width: 900px;
+        margin-bottom: 24px;
+    }
 
-            @media #{ $min-768 } {
-                margin: 0 0 100px;
+    .comments {
+        padding-top: 16px;
+    }
+}
+
+.blog-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+
+    &:has(.blog-aside) {
+        grid-template-columns: minmax(0, 1fr) 340px;
+
+        @media #{ $max-1024 } {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}
+
+.blog-article {
+    min-width: 0;
+    @include card(clamp(22px, 4vw, 48px), $r-xl);
+
+    @media #{ $max-767 } {
+        border-radius: $r-lg;
+    }
+
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 18px;
+        margin-bottom: 24px;
+        color: $c-muted;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    &__date,
+    &__author {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+            color: $c-primary;
+        }
+    }
+
+    &__date::before {
+        content: "\f133";
+    }
+
+    &__author {
+        color: $c-ink;
+
+        &::before {
+            content: "\f007";
+        }
+    }
+
+    &__thumbs {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 10px;
+        margin: -14px 0 32px;
+
+        > div {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: $r-md;
+            cursor: zoom-in;
+            @include fillPicture();
+
+            &:hover img {
+                transform: scale(1.06);
+            }
+
+            img {
+                transition: transform .5s $ease;
             }
         }
 
-        .blog {
-            &-container {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
+        .search-icon {
+            display: none;
+        }
+    }
 
-                @media #{ $min-768 } {
-                    flex-direction: row;
-                }
+    .ck-content {
+        max-width: 760px;
+    }
+}
 
-                .icon--hover {
-                    position: relative;
-                    cursor: pointer;
+.blog-thumbnail {
+    position: relative;
+    aspect-ratio: 16 / 8;
+    margin-bottom: 32px;
+    overflow: hidden;
+    border-radius: $r-lg;
+    background-color: $c-bg-2;
+    @include fillPicture();
+    @include noPictureSurface();
 
-                    .search-icon {
-                        opacity: 0;
-                        visibility: hidden;
-                        @include absoluteCenter();
-                        font-size: 28px;
-                        color: $c-3;
-                        transition: opacity .3s ease;
-                        z-index: 3;
-                    }
+    &.js-gallery-thumb {
+        cursor: zoom-in;
+    }
 
-                    &::before {
-                        @include absoluteFullSize();
-                        content: "";
-                        background-color: transparent;
-                        transition: background-color .3s ease;
-                        z-index: 2;
-                    }
+    .search-icon {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        z-index: 2;
+        display: none;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: rgba($c-white, .92);
+        color: $c-ink;
+        box-shadow: $shadow-sm;
+    }
 
-                    &:hover {
-                        .search-icon {
-                            opacity: 1;
-                            visibility: visible;
-                        }
-                    }
+    &.icon--hover .search-icon {
+        display: grid;
+    }
+}
 
-                    &:hover::before {
-                        background-color: rgba($c-white, .5);
-                    }
-                }
+// Upcoming events
+.blog-aside {
+    position: sticky;
+    top: $header-main-h + $header-nav-h + 24px;
+    align-self: start;
+    @include card(24px, $r-xl);
+
+    @media #{ $max-1024 } {
+        position: static;
+    }
+
+    .header_title {
+        margin-bottom: 18px;
+
+        &-main {
+            font-size: 24px;
+        }
+    }
+
+    &-article {
+        display: grid;
+        grid-template-columns: 76px minmax(0, 1fr);
+        align-items: center;
+        gap: 14px;
+        padding: 10px;
+        margin: 0 -10px;
+        border-radius: $r-md;
+        color: $c-ink;
+        transition: background-color $t-fast $ease;
+
+        &:hover {
+            background-color: $c-primary-softer;
+
+            .texts-title {
+                color: $c-primary;
             }
-            &-thumbnail {
-                @include respImage(0.62);
-                margin-bottom: 10px;
+        }
 
-                img {
-                    border-radius: 3px;
-                }
+        & + & {
+            margin-top: 4px;
+        }
+
+        &-image {
+            width: 76px;
+            height: 76px;
+            overflow: hidden;
+            border-radius: $r-sm;
+            background-color: $c-bg-2;
+            @include fillPicture();
+            @include noPictureSurface();
+
+            picture::after {
+                width: 40%;
             }
-            &-article {
-                width: 100%;
-                margin: 0 0 30px;
+        }
+    }
 
-                &__header {
-                    @include flexBox("space-between", "center", 10px);
-                    margin-bottom: 15px;
-                    border-bottom: 1px solid $c-dark-blue;
-                }
+    .texts {
+        &-title {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.35;
+            transition: color $t-fast $ease;
+            @include lineClamp(2);
+        }
 
-                &.has-sidebar {
-                    @media #{ $min-768 } {
-                        width: calc(100% - 320px);
-                    }
-                }
+        &-time {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            color: $c-muted;
+            font-size: 12.5px;
+            font-weight: 600;
 
-                &__date, &__author {
-                    @include resp('font-size', 15px, 18px);
-                    background-color: $c-dark-blue;
-                    color: $c-white;
-                    padding: 2px;
-                    font-weight: 600;
-                }
-
-                &__thumbs {
-                    display: none;
-
-                    @media #{ $min-768 } {
-                        display: flex;
-                        flex-wrap: wrap;
-                    }
-
-                    & > div {
-                        cursor: pointer;
-
-                        &:not(:last-child) {
-                            margin: 0 5px 5px 0;
-                        }
-                    }
-
-                    img {
-                        border-radius: 3px;
-                        width: 110px;
-                        height: 110px;
-                        object-fit: cover;
-                        object-position: center;
-                    }
-                }
-            }
-            &-aside {
-                .header_title {
-                    margin-bottom: 0;
-
-                    &-main {
-                        font-size: 24px;
-                    }
-                }
-
-                width: 100%;
-                @include flexBox("flex-start", "flex-start", 15px);
-                flex-direction: column;
-
-                @media #{ $min-768 } {
-                    width: 300px;
-                }
-
-                &-article {
-                    display: flex;
-                    gap: 15px;
-                    width: 100%;
-                    border-radius: 5px;
-                    padding: 5px;
-                    transition: all .2s ease-in-out;
-
-                    &-image {
-                        width: 80px;
-                        height: 80px;
-                        flex-shrink: 0;
-                        overflow: hidden;
-                        border-radius: 3px;
-
-                        img {
-                            transition: transform .2s ease-in-out;
-                            @include imageCover();
-                        }
-                    }
-
-                    .texts {
-                        &-title {
-                            @include resp('font-size', 14px, 17px);
-                            margin-bottom: 7px;
-                            transition: all .2s ease-in-out;
-                        }
-                        &-time {
-                            font-size: 13px;
-                            color: $c-9;
-                            transition: all .2s ease-in-out;
-
-                            @media #{ $min-1200 } {
-                                font-size: 15px;
-                            }
-                        }
-                    }
-
-                    &:hover {
-                        background-color: $c-grayE6;
-                        box-shadow: 0 0 8px rgba($c-black, .75);
-
-                        .blog-aside-article-image {
-                            img {
-                                transform: scale(1.1);
-                            }
-                        }
-                        .texts-title {
-                            color: $c-dark;
-                        }
-                        .texts-time {
-                            color: $c-dark3;
-                        }
-                    }
-                }
+            i {
+                color: $c-primary;
             }
         }
     }

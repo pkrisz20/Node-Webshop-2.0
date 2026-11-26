@@ -1,167 +1,106 @@
+// Home page gallery mosaic (only the galleries with an image are shown)
 .gallery {
-    background-color: rgba($c-d, .5);
+    padding-bottom: 36px;
 
-    @media #{ $max-1024 } {
-        padding: 40px 0;
-    }
+    &-list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-auto-rows: 230px;
+        gap: 16px;
+        margin-bottom: 28px;
 
-    .wrapper {
-        & > .header_title {
-            margin-bottom: 30px;
+        @media #{ $max-1024 } {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-rows: 200px;
         }
-    }
 
-    .more {
-        margin: 40px auto 0 !important;
-    }
-
-    .gallery-list {
-        @include gridBox("center", 4, 0, 0);
+        @media #{ $max-767 } {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-auto-rows: 160px;
+            gap: 10px;
+        }
 
         &-card {
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            transition: transform .3s;
             position: relative;
             overflow: hidden;
+            border-radius: $r-lg;
+            background-color: $c-bg-2;
+            @include fillPicture();
+            @include noPictureSurface();
 
-            picture {
-                @include paddingBottom(215, 300);
+            // The big tile only when there are enough images for a mosaic
+            &:first-child:nth-last-child(n+5) {
+                grid-column: span 2;
+                grid-row: span 2;
             }
 
-            .overlay {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                visibility: hidden;
-                background-color: $c-white;
-                transition: .4s;
-                transform: translate3d(0, 100%, 0);
-
-                &_content {
-                    width: 100%;
-                    height: 100%;
-                    visibility: hidden;
-                    text-align: center;
-                    @include flexBox();
-                    flex-direction: column;
-
-                    &::before {
-                        @include absoluteFullSize();
-                        content: '';
-                        height: 6px!important;
-                        background-color: $c-theme;
-                    }
-
-                    .icons {
-                        margin: 20px 0;
-                        visibility: hidden;
-                        pointer-events: none;
-
-                        button {
-                            cursor: pointer;
-                            background-color: transparent;
-                        }
-
-                        i {
-                            transition: .3s;
-                            border-radius: 50%;
-                            padding: 15px;
-                            font-size: 14px;
-                            background-color: $c-white;
-                            color: $c-theme;
-                            border: 2px solid $c-theme;
-                            margin: 0 5px;
-
-                            &:hover {
-                                background-color: $c-theme;
-                                color: $c-white;
-                            }
-
-                            @media #{$max-767} {
-                                padding: 10px;
-                                margin: 0 5px;
-                            }
-
-                            @media #{$max-539} {
-                                padding: 8px;
-                            }
-                        }
-
-                        @media #{ $max-1024 } {
-                            margin: 10px 0 0;
-                        }
-
-                        @media #{$max-767} {
-                            margin: 5px 0;
-                        }
-                    }
-
-                    .hover_title {
-                        margin: 5px;
-                        font-size: 15px;
-                        line-height: 25px;
-                        color: $c-theme;
-                        font-weight: 700;
-                        text-transform: uppercase;
-
-                        @media #{$max-767} {
-                            margin: 0;
-                        }
-
-                        @media #{$max-539} {
-                            font-size: 13px;
-                        }
-                    }
-
-                    .hover_sub {
-                        margin: 5px;
-                        font-size: 14px;
-                        line-height: 25px;
-                        color: $c-4;
-                        font-weight: 300;
-
-                        @media #{$max-767} {
-                            margin: 0;
-                        }
-                    }
-                }
+            img {
+                transition: transform .7s $ease;
             }
 
-            &:hover, &:focus {
+            &:hover img {
+                transform: scale(1.06);
+            }
 
-                .overlay {
-                    visibility: visible;
-                    transform: translate3d(0, 0, 0);
-
-                    .overlay_content {
-                        visibility: visible;
-
-                        .icons {
-                            visibility: visible;
-                            pointer-events: visible;
-                        }
-                    }
-                }
+            &:hover .overlay {
+                opacity: 1;
             }
         }
+    }
 
-        @media #{$max-767} {
-            display: grid;
-            grid-template-columns: repeat(3, 33%);
+    .overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+        background: linear-gradient(180deg, rgba($c-deep, 0) 35%, rgba($c-deep, .85) 100%);
+        opacity: 0;
+        transition: opacity $t $ease;
+
+        @media (hover: none) {
+            opacity: 1;
         }
 
-        @media #{$max-539} {
-            display: grid;
-            grid-template-columns: repeat(2, 50%);
-        }
-
-        @media #{ $max-419 } {
+        &_content {
             display: flex;
-            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+        }
+    }
+
+    .hover_title {
+        color: $c-white;
+        font-family: $font-display;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    .icons {
+        display: flex;
+        gap: 8px;
+
+        a,
+        button {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: rgba($c-white, .16);
+            border: 1px solid rgba($c-white, .35);
+            color: $c-white;
+            font-size: 13px;
+            backdrop-filter: blur(6px);
+            transition: background-color $t-fast $ease, color $t-fast $ease;
+
+            &:hover {
+                background-color: $c-white;
+                color: $c-primary;
+            }
         }
     }
 }

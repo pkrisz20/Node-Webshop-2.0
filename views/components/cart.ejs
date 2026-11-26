@@ -1,6 +1,8 @@
-<div class="cart js-cart">
-    <div class="cart-close js-cart-close"><i class="fas fa-times"></i></div>
-    <h4 class="cart-title"><i class="fas fa-shopping-cart"></i> <%= languageHandler('orders.your_cart', current_locale) %></h4>
+<aside class="cart js-cart" aria-label="<%= languageHandler('orders.your_cart', current_locale) %>">
+    <div class="cart-header">
+        <h4 class="cart-title"><i class="fas fa-shopping-bag"></i> <%= languageHandler('orders.your_cart', current_locale) %></h4>
+        <button type="button" class="cart-close js-cart-close" aria-label="<%= languageHandler('general.remove', current_locale) %>"><i class="fas fa-times"></i></button>
+    </div>
 
     <% if (cart.items.length > 0) { %>
         <h5 class="cart-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <span class="js-cart-counter"><%= cart.totalCount %></span></h5>
@@ -15,7 +17,6 @@
                     <li class="cart-container-list-item js-cart-item">
                         <div class="cart-product">
                             <div class="cart-product-image">
-
                                 <%- include('../components/picture.ejs', {
                                     imgClass: "cart-product-img",
                                     imageSrc: cartItem.image,
@@ -47,5 +48,12 @@
             </ul>
         </div>
     <% } %>
-    <h5 class="cart-empty js-cart-empty <%= cart.items.length > 0 ? 'hide' : 'show'%>"><i class="fas fa-exclamation-circle"></i> <%= languageHandler('orders.cart_empty', current_locale) %></h5>
-</div>
+
+    <div class="cart-empty js-cart-empty <%= cart.items.length > 0 ? 'hide' : 'show'%>">
+        <div class="cart-empty__inner">
+            <span class="cart-empty__icon"><i class="fas fa-shopping-basket"></i></span>
+            <p class="cart-empty__text"><%= languageHandler('orders.cart_empty', current_locale) %></p>
+            <a class="cart-empty__link" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler('products.all_products', current_locale) %> <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</aside>

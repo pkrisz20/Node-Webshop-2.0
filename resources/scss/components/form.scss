@@ -1,316 +1,284 @@
+// Forms with floating labels: every input is followed by its label, the placeholder
+// (the same text) is hidden, the label moves up while the field is focused or filled.
+
+$c-star: #f2b01e;
+
 .form {
-    margin: 0;
     width: 100%;
-    display: flex;
-    flex-direction: column;
 
-    & > .row {
-        display: flex;
-        flex-direction: column;
+    .row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 16px;
 
-        @media #{ $min-768 } {
-            flex-direction: row;
-            gap: 25px;
+        @media #{ $max-767 } {
+            grid-template-columns: minmax(0, 1fr);
         }
-    }
-
-    &-eye {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 16px;
-        z-index: 1;
-        cursor: pointer;
     }
 
     &-row {
-        width: 100%;
         position: relative;
-        margin-bottom: 28px;
+        margin-bottom: 16px;
 
-        .rating {
-            line-height: 1;
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
+        &-error {
+            margin-top: 6px;
+            padding-left: 4px;
 
-            input {
-                display: none;
-
-                &:checked + label,
-                &:checked ~ label {
-                    color: $c-yellow;
-                }
-            }
-
-            label {
-                cursor: pointer;
-                font-size: 35px;
-                color: $c-c;
-
-                &:hover,
-                &:hover ~ label {
-                    color: $c-yellow;
-                }
+            label,
+            .is-invalid {
+                display: block;
+                color: $c-accent;
+                font-size: 13px;
+                font-weight: 600;
             }
         }
 
-        &.gdpr {
-            & > label {
-                all: unset;
-                color: $c-9;
+        // Rating stars (5 ... 1 in the markup, shown reversed)
+        .rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 2px;
+            padding: 8px 14px;
+            border-radius: $r-pill;
+            background-color: $c-bg;
+            border: 1px solid $c-line;
+
+            input {
+                @include visuallyHidden();
+            }
+
+            label {
+                color: $c-line;
+                font-size: 28px;
+                line-height: 1;
                 cursor: pointer;
-                position: relative;
-                padding-left: 25px;
-                cursor: pointer;
-                font-size: 14px;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
+                transition: color $t-fast $ease, transform $t-fast $ease;
 
-                @media #{ $min-768 } {
-                    font-size: 16px;
-                }
-
-                .checkmark {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    height: 15px;
-                    width: 15px;
-                    background-color: $c-c;
-
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        left: 6px;
-                        top: 2px;
-                        width: 5px;
-                        height: 10px;
-                        border: solid $c-white;
-                        border-width: 0 3px 3px 0;
-                        -webkit-transform: rotate(45deg);
-                        -ms-transform: rotate(45deg);
-                        transform: rotate(45deg);
-                    }
-                }
-
-                &:hover input ~ .checkmark {
-                    background-color: $c-9;
-                }
-
-                input {
-                    position: absolute;
-                    opacity: 0;
-                    cursor: pointer;
-                    height: 0;
-                    width: 0;
-
-                    &:checked ~ .checkmark {
-                        background-color: $c-theme;
-                    }
-
-                    &:checked ~ .checkmark::after {
-                        display: block;
-                    }
+                &:hover {
+                    transform: scale(1.12);
                 }
             }
-            span.gdpr-details {
-                color: $c-9;
+
+            input:checked ~ label,
+            label:hover,
+            label:hover ~ label {
+                color: $c-star;
+            }
+
+            input:focus-visible + label {
+                @include focusRing();
+                border-radius: 4px;
+            }
+        }
+
+        // Data handling consent
+        &.gdpr {
+            margin: 6px 0 22px;
+
+            .form-label {
+                position: relative;
+                top: auto;
+                left: auto;
+                display: inline-block;
+                max-width: none;
+                overflow: visible;
+                padding-left: 34px;
+                transform: none;
+                white-space: normal;
+                color: $c-ink-2;
                 font-size: 14px;
+                font-weight: 500;
+                line-height: 1.5;
+                pointer-events: auto;
+                cursor: pointer;
+            }
 
-                @media #{ $min-768 } {
-                    font-size: 16px;
-                }
+            .form-row-checkbox {
+                position: absolute;
+                opacity: 0;
+                width: 1px;
+                height: 1px;
+            }
 
-                a {
-                    font-weight: 600;
-                    transition: .2s ease-in-out;
-                    &:hover {
-                        color: $c-dark-blue;
-                    }
+            .checkmark {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 22px;
+                height: 22px;
+                border-radius: 7px;
+                border: 1.5px solid $c-line;
+                background-color: $c-surface;
+                transition: background-color $t-fast $ease, border-color $t-fast $ease;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: 4px;
+                    left: 7px;
+                    width: 5px;
+                    height: 10px;
+                    border: solid $c-white;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                    opacity: 0;
                 }
+            }
+
+            .form-row-checkbox:checked + .checkmark {
+                background-color: $c-primary;
+                border-color: $c-primary;
+
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            .form-row-checkbox:focus-visible + .checkmark {
+                box-shadow: $shadow-focus;
+            }
+        }
+
+        .gdpr-details {
+            display: block;
+            margin: 4px 0 0 34px;
+            color: $c-muted;
+            font-size: 13px;
+
+            a {
+                font-weight: 600;
+                text-decoration: underline;
+                text-underline-offset: 3px;
             }
         }
 
         .characters-count {
-            color: $c-light-gray;
+            display: block;
+            margin-top: 6px;
+            padding-right: 4px;
+            text-align: right;
+            color: $c-muted-2;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        i {
-            color: $c-red;
-            font-size: 18px;
+        .error-icon {
             position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            &.textarea-error {
-                top: 20px;
-            }
-
-            &.fa-eye,
-            &.fa-eye-slash {
-                color: $c-dark;
-            }
+            top: 21px;
+            right: 18px;
+            color: $c-accent;
+            font-size: 14px;
+            pointer-events: none;
         }
+    }
 
-        &-error {
-            position: absolute;
-            bottom: -18px;
-            left: 0;
-            width: 100%;
-            font-size: 13px;
-            color: $c-red;
+    // Show / hide password (admin login)
+    &-eye {
+        position: absolute;
+        top: 0;
+        right: 6px;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 58px;
+        color: $c-muted;
+        cursor: pointer;
+
+        &:hover {
+            color: $c-primary;
         }
     }
 
     &-label {
         position: absolute;
-        z-index: 2;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 16px;
-        transition: all .2s ease-in-out;
-        color: $c-9;
+        top: 18px;
+        left: 19px;
+        max-width: calc(100% - 40px);
+        overflow: hidden;
+        color: $c-muted;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         pointer-events: none;
-
-        &.form-textarea {
-            top: 20px;
-        }
+        transform-origin: left top;
+        transition: transform $t-fast $ease, color $t-fast $ease;
 
         &.error {
-            color: $c-red !important;
+            color: $c-accent;
+        }
+    }
+
+    &-control,
+    &-control--textarea {
+        display: block;
+        width: 100%;
+        border: 1.5px solid $c-line;
+        border-radius: $r-md;
+        background-color: $c-surface;
+        color: $c-ink;
+        font-size: 15px;
+        font-weight: 500;
+        transition: border-color $t-fast $ease, box-shadow $t-fast $ease;
+
+        &::placeholder {
+            color: transparent;
+        }
+
+        &:hover {
+            border-color: darken($c-line, 8%);
+        }
+
+        &:focus {
+            border-color: $c-primary;
+            box-shadow: $shadow-focus;
+        }
+
+        &:focus + .form-label,
+        &:not(:placeholder-shown) + .form-label {
+            transform: translateY(-10px) scale(.78);
+        }
+
+        &:focus + .form-label {
+            color: $c-primary;
+        }
+
+        &.is-invalid {
+            border-color: $c-accent;
+            background-color: lighten($c-accent-soft, 1%);
+
+            &:focus {
+                box-shadow: 0 0 0 4px rgba($c-accent, .12);
+            }
+        }
+
+        &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 40px $c-surface inset;
+            -webkit-text-fill-color: $c-ink;
         }
     }
 
     &-control {
-        padding: 10px 30px 10px 10px;
-        border: 1px solid $c-light-gray2;
-        font-size: 16px;
-        line-height: 19px;
-        color: $c-dark;
-        width: 100%;
-
-        &:focus, &:active {
-            outline: 2px solid $c-theme;
-        }
-        &:focus + label, &:not(:placeholder-shown) + label, &:active + label, &:-webkit-autofill + label {
-            top: -2px;
-            left: 10px;
-            background-color: $c-white;
-            color: $c-theme;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 0 3px;
-        }
-        &::placeholder {
-            opacity: 0;
-            color: $c-9;
-            transition: all .3s;
-        }
-        &:focus::placeholder {
-            opacity: 1;
-        }
-        &:not(:placeholder-shown) {
-            outline: 2px solid $c-theme;
-        }
-
-        &.is-invalid {
-            color: $c-red !important;
-            border-color: $c-red !important;
-            outline: 2px solid $c-red !important;
-        }
+        height: 58px;
+        padding: 22px 18px 6px;
     }
 
-    textarea {
-        line-height: 19px;
-        color: $c-dark;
-        font-size: 16px;
-        padding: 10px 25px 10px 10px;
-        border: 1px solid $c-light-gray2;
-        width: 100%;
-        resize: none;
-
-        &:not(:placeholder-shown) {
-            outline: 2px solid $c-theme;
-        }
-
-        &::placeholder {
-            color: $c-light-gray;
-        }
-
-        &:focus, &:active {
-            outline: 2px solid $c-theme;
-        }
-        &:focus + label, &:not(:placeholder-shown) + label, &:active + label, &:-webkit-autofill + label {
-            top: -2px;
-            left: 10px;
-            background-color: $c-white;
-            color: $c-theme;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 0 3px;
-        }
-        &::placeholder {
-            opacity: 0;
-            color: $c-9;
-            transition: all .3s;
-        }
-        &:focus::placeholder {
-            opacity: 1;
-        }
-        &.is-invalid {
-            color: $c-red !important;
-            border-color: $c-red !important;
-            outline: 2px solid $c-red !important;
-        }
+    &-control--textarea {
+        min-height: 160px;
+        padding: 28px 18px 14px;
+        line-height: 1.6;
+        resize: vertical;
     }
 
     &-submit {
-        padding: 15px 0;
-        font-size: 15px;
-        color: $c-white;
-        font-weight: 700;
-        border-radius: 3px;
-        border: none;
-        width: 160px;
-        text-transform: uppercase;
-        background-color: $c-theme;
-        position: relative;
-        cursor: pointer;
-        transition: all .3s ease-in-out;
+        @include btnBase(54px);
+        @include btnPrimary();
+        min-width: 200px;
 
-        @media #{ $min-768 } {
-            width: 250px;
-            font-size: 18px;
-            line-height: 16px;
-            padding: 20px 0;
-        }
-
-        &.disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-
-        &:hover {
-            background-color: $c-light-green;
-        }
-
-        &::after {
-            position: absolute;
-            content: '';
+        @media #{ $max-539 } {
             width: 100%;
-            height: 4px;
-            left: 0;
-            bottom: 0;
-            background-color: $c-light-green2;
-        }
-
-        i {
-          margin-right: 5px;
         }
     }
 }

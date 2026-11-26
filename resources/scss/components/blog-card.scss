@@ -1,137 +1,141 @@
 .blog-card {
-    width: 100%;
-    height: 100% !important;
-    background-color: $c-grayE6;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: box-shadow .3s ease;
-    @include flexBox("flex-start", "flex-start");
+    display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: $r-lg;
+    border: 1px solid $c-line;
+    background-color: $c-surface;
+    box-shadow: $shadow-xs;
+    @include hoverLift();
+
+    .image {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background-color: $c-bg-2;
+        @include fillPicture();
+        @include noPictureSurface();
+
+        img {
+            transition: transform .7s $ease;
+        }
+    }
+
+    @media (hover: hover) {
+        &:hover .image img {
+            transform: scale(1.05);
+        }
+    }
+
+    &__chip {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 30px;
+        padding: 0 12px;
+        border-radius: $r-pill;
+        background-color: rgba($c-white, .94);
+        color: $c-ink;
+        font-size: 12px;
+        font-weight: 700;
+        box-shadow: $shadow-xs;
+
+        i {
+            color: $c-primary;
+        }
+    }
+
+    .badge--important {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 2;
+        @include badge($c-accent);
+    }
 
     &-content {
-        @include flexBox("flex-start", "flex-start");
+        display: flex;
         flex-direction: column;
-        margin: 10px 10px 0;
+        flex: 1;
+        gap: 10px;
+        padding: 20px 22px 22px;
+    }
 
-        & > .title {
-            transition: color .3s ease;
-            font-size: 18px;
-            line-height: 26px;
-            color: $c-dark;
-            font-weight: 700;
-            margin-bottom: 10px;
+    &-meta {
+        display: flex;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        align-items: center;
+        gap: 6px 10px;
+        color: $c-muted;
+        font-size: 12.5px;
+        font-weight: 600;
 
-            &:hover {
-                color: $c-warning;
-            }
+        &__dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: $c-muted-2;
+        }
+
+        &__author {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &__comments {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
         }
     }
 
-    .datetime {
-        position: absolute;
-        right: 5px;
-        top: 5px;
-        z-index: 2;
-        padding: 3px 10px;
-        @include flexBox();
-        background-color: $c-skyblue;
-        border-radius: 4px;
+    .title {
+        color: $c-ink;
+        font-family: $font-display;
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: -.01em;
+        @include lineClamp(2);
 
-        &-value {
-            font-size: 12px;
-            color: $c-white;
-
-            i {
-                margin-right: 5px;
-            }
-        }
-    }
-
-    .badge {
-        position: absolute;
-        left: 5px;
-        top: 5px;
-        z-index: 1;
-        @include flexBox("center", "flex-start", 5px);
-        flex-direction: column;
-        color: $c-white;
-        font-size: 12px;
-
-        &--important {
-            border-radius: 4px;
-            padding: 3px 10px;
-            background-color: $c-red2;
-        }
-
-        &--featured {
-            border-radius: 4px;
-            padding: 3px 10px;
-            background-color: $c-warning;
-        }
-    }
-
-    & > .image {
-        width: 100%;
-        display: block;
-        position: relative;
-        overflow: hidden;
-
-        picture {
-            @include respImage(0.71);
-            transition: transform .3s ease-in-out;
+        &:hover {
+            color: $c-primary;
         }
     }
 
     .short {
+        color: $c-muted;
         font-size: 14px;
-        color: $c-gray71;
-        line-height: 18px;
-        margin: 0 0 10px;
-    }
-
-    .bottom {
-        @include flexBox("flex-start", "center", 10px);
-        font-size: 14px;
-        color: $c-3;
-        flex-wrap: wrap;
-        transition: color .3s ease-in-out;
-
-        &-separator {
-            margin: 0 5px;
-        }
-    }
-
-    &-fulldate {
-        display: block;
-        color: $c-3;
-        font-size: 13px;
-        transition: color .3s ease-in-out;
-        margin: 10px 0;
-        font-weight: 600;
+        line-height: 1.6;
+        @include lineClamp(3);
     }
 
     &-link {
-        margin: auto 0 10px 10px;
-        @include btn($c-white, $c-dark3, $c-theme);
-        padding: 5px 12px;
-        font-size: 13px;
-        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 6px;
+        color: $c-primary;
+        font-size: 14px;
+        font-weight: 700;
 
         i {
-            font-weight: 600;
-            transform: translateY(1px);
+            font-size: 12px;
+            transition: transform $t-fast $ease;
         }
-    }
 
-    &:hover {
-        box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.75);
-
-        .image {
-            picture {
-                transform: scale(1.1);
-            }
+        &:hover i {
+            transform: translateX(4px);
         }
     }
 }

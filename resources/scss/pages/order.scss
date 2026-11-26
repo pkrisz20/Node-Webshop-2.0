@@ -2,196 +2,289 @@
 @import "../mixins.scss";
 
 .order {
-    margin: 50px 0 0;
+    padding-bottom: 80px;
 
-    .main-title {
-        margin: 0 0 25px;
+    &-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        align-items: start;
+        gap: 32px;
 
-        @media #{ $min-768 } {
-            margin: 0 0 60px;
+        @media #{ $max-1024 } {
+            grid-template-columns: minmax(0, 1fr);
         }
     }
 
-    &-container {
-        padding: 20px 0 60px;
+    &-main {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        min-width: 0;
+    }
 
-        & > .header_title {
-            margin-bottom: 30px;
+    &-container,
+    &-form {
+        padding: clamp(22px, 3.5vw, 36px);
+        border-radius: $r-xl;
+        border: 1px solid $c-line;
+        background-color: $c-surface;
+        box-shadow: $shadow-xs;
+
+        @media #{ $max-767 } {
+            border-radius: $r-lg;
         }
+    }
 
-        &-items {
-            width: 100%;
-            height: auto;
-            @include flexBox("center", "center");
-            flex-direction: column;
-            margin: 0 0 25px;
+    &-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
 
-            &-card {
-                @include flexBox("space-between", "center");
-                padding: 25px;
-                width: 100%;
-                border-bottom: 2px solid $c-dark;
+        .header_title {
+            margin-bottom: 0;
+
+            &-main {
+                font-size: 26px;
+            }
+
+            &-sub {
+                font-size: 15px;
             }
         }
+
+        &__number {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: $c-primary;
+            color: $c-white;
+            font-weight: 800;
+        }
     }
 
-    &-total_price {
-        display: inline-block;
-        pointer-events: none;
-        font-size: 20px;
-        border: 1px solid $c-dark-blue;
-        color: $c-dark-blue;
-        background-color: $c-yellow;
-        padding: 7px;
-        text-transform: uppercase;
-    }
+    &-container-items {
+        display: flex;
+        flex-direction: column;
 
-    &-counter {
-        color: $c-dark;
-        font-size: 17px;
-        margin: 0 0 15px;
-    }
+        &-card {
+            display: grid;
+            grid-template-columns: 88px minmax(0, 1fr) auto auto;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 0;
+            border-top: 1px solid $c-line-2;
 
-    &-empty {
-        width: 100%;
-        margin: 30px 0 0;
-        padding: 8px;
-        border-radius: 3px;
-        background-color: $c-red;
-        color: $c-white;
-        font-size: 18px;
-        font-weight: 400;
+            &:first-child {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            @media #{ $max-767 } {
+                grid-template-columns: 72px minmax(0, 1fr) auto;
+                gap: 12px 14px;
+            }
+        }
     }
 
     &-image {
-        max-width: 150px;
-        width: 100%;
-        height: 100%;
+        width: 88px;
+        height: 88px;
+        overflow: hidden;
+        border-radius: $r-md;
+        background-color: $c-bg-2;
+        @include fillPicture();
+        @include noPictureSurface();
 
-        picture {
-            @include respImage(0.76);
-
-            img {
-                border-radius: 5px;
-            }
+        @media #{ $max-767 } {
+            width: 72px;
+            height: 72px;
         }
     }
 
     &-infos {
-        @include flexBox("center", "flex-start", 10px);
+        display: flex;
         flex-direction: column;
-        width: 350px;
+        gap: 10px;
+        min-width: 0;
 
         &-title {
-            color: $c-gray71;
-            font-size: 18px;
-        }
-
-        .quantities {
-            width: 100%;
-            @include flexBox("flex-start", "center", 5px);
-
-            &-container {
-                display: inline-flex;
-                align-items: center;
-            }
-
-            &-btn {
-                width: 30px;
-                height: 30px;
-                background-color: $c-dark;
-                @include flexBox();
-                color: $c-a;
-                font-size: 12px;
-                font-weight: 700;
-                cursor: pointer;
-                transition: all .2s ease-in-out;
-
-                &:hover {
-                    background-color: $c-theme;
-                    color: $c-white;
-                }
-
-                &.minus {
-                    border-top-left-radius: 30px;
-                    border-bottom-left-radius: 30px;
-                }
-                &.plus {
-                    border-top-right-radius: 30px;
-                    border-bottom-right-radius: 30px;
-                }
-            }
-
-            &-input {
-                height: 30px;
-                width: 50px;
-                background-color: $c-b;
-                color: $c-dark;
-                font-weight: 600;
-                font-size: 15px;
-                text-align: center;
-            }
-
-            &-price {
-                font-size: 15px;
-                color: $c-gray71;
-                font-weight: 700;
-            }
+            color: $c-ink;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.35;
+            @include lineClamp(2);
         }
     }
 
     &-price {
-        font-size: 18px;
-        color: $c-dark2;
+        color: $c-ink;
+        font-family: $font-display;
+        font-size: 20px;
+        font-weight: 600;
+        white-space: nowrap;
+
+        @media #{ $max-767 } {
+            grid-column: 2;
+            font-size: 18px;
+        }
     }
 
     &-functions {
-        @include flexBox("flex-end", "center", 20px);
+        display: flex;
+        gap: 4px;
 
-        &-details {
-            @include flexBox();
-            background-color: $c-info;
-            padding: 5px;
-            border-radius: 3px;
-            width: 35px;
-            height: 35px;
-            transition: .2s ease-in-out;
+        @media #{ $max-767 } {
+            grid-column: 3;
+            grid-row: 1 / span 2;
+            flex-direction: column;
+        }
 
-            &:hover {
-                background-color: $c-skyblue;
-            }
+        &-details,
+        &-remove {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: $c-muted-2;
+            font-size: 14px;
+            transition: background-color $t-fast $ease, color $t-fast $ease;
+        }
 
-            i {
-                font-size: 20px;
+        &-details:hover {
+            background-color: $c-primary-soft;
+            color: $c-primary;
+        }
+
+        &-remove:hover {
+            background-color: $c-accent-soft;
+            color: $c-accent;
+        }
+    }
+
+    // Sticky summary
+    &-summary {
+        position: sticky;
+        top: $header-main-h + $header-nav-h + 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 28px;
+        border-radius: $r-xl;
+        background:
+            radial-gradient(80% 70% at 100% 0%, rgba($c-primary, .45), transparent 60%),
+            $c-deep;
+        color: rgba($c-white, .78);
+        box-shadow: $shadow-lg;
+
+        @media #{ $max-1024 } {
+            position: static;
+            order: -1;
+        }
+
+        &__title {
+            color: $c-white;
+            font-family: $font-display;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        &__row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba($c-white, .12);
+            font-size: 15px;
+
+            strong {
                 color: $c-white;
             }
         }
-        &-remove {
-            @include flexBox();
-            background-color: $c-red;
-            padding: 5px;
-            border-radius: 3px;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-            transition: .2s ease-in-out;
+
+        &__total {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 600;
+
+            strong {
+                color: $c-white;
+                font-family: $font-display;
+                font-size: 40px;
+                font-weight: 600;
+                line-height: 1.1;
+                letter-spacing: -.02em;
+
+                small {
+                    font-family: $font-body;
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: rgba($c-white, .7);
+                }
+            }
+        }
+
+        &__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: $c-lime;
+            font-size: 14px;
+            font-weight: 700;
 
             &:hover {
-                background-color: $c-error;
-            }
-
-            i {
-                font-size: 20px;
                 color: $c-white;
             }
         }
     }
 
     &-form {
-        padding: 0 0 60px;
+        .form-submit {
+            width: 100%;
+            height: 58px;
+            font-size: 16px;
+        }
+    }
 
-        .header_title {
-            margin-bottom: 40px;
+    // Empty cart
+    &-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 72px 24px;
+        border-radius: $r-xl;
+        border: 1px dashed $c-line;
+        background-color: $c-surface;
+        text-align: center;
+
+        &__icon {
+            display: grid;
+            place-items: center;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background-color: $c-primary-soft;
+            color: $c-primary;
+            font-size: 36px;
+        }
+
+        &__title {
+            font-family: $font-display;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        &__link {
+            @include btnBase(52px);
+            @include btnPrimary();
+            margin-top: 6px;
         }
     }
 }

@@ -6,67 +6,53 @@
 @import "../components/gallery-card.scss";
 
 .search-list {
-    margin: 50px 0 0;
+    padding-bottom: 60px;
 
     .main-title {
-        margin: 0 0 25px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 60px;
-        }
+        margin-bottom: 28px;
     }
+
     &-listpage {
-        padding: 30px 0;
+        position: relative;
+        padding: 0 0 48px;
+
+        & + & {
+            padding-top: 40px;
+            border-top: 1px solid $c-line;
+        }
 
         .header_title {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+
+            &-main {
+                font-size: 30px;
+            }
         }
 
         &--counter {
-            margin-bottom: 20px;
-            font-size: 15px;
-            color: $c-6;
-            font-weight: 500;
-            display: block;
-            text-transform: lowercase;
+            position: absolute;
+            top: 6px;
+            right: 0;
+            display: inline-flex;
+            align-items: center;
+            height: 30px;
+            padding: 0 12px;
+            border-radius: $r-pill;
+            background-color: $c-primary-soft;
+            color: $c-primary-dark;
+            font-size: 13px;
+            font-weight: 800;
         }
 
-        .container {
-            @include flexBox("center", "unset", 25px);
-            flex-direction: column;
+        & + & .search-list-listpage--counter {
+            top: 46px;
+        }
+    }
 
-            @media #{ $max-539 } {
-                margin: 0 auto;
-                max-width: 320px;
-            }
-
-            @media #{ $min-540 } {
-                @include gridBox("center", 2, 20px, 20px);
-            }
-
-            @media #{ $min-768 } {
-                @include gridBox("center", 3, 20px, 30px);
-            }
-
-            @media #{ $min-1025 } {
-                @include gridBox("center", 4, 20px, 30px);
-            }
-
-            &.gallery {
-                @include flexBox("center", "center", 25px);
-
-                @media #{ $max-539 } {
-                    max-width: 350px;
-                }
-
-                @media #{ $min-768 } {
-                    @include gridBox("center", 3, 25px, 30px);
-                }
-
-                @media #{ $min-1025 } {
-                    @include gridBox("center", 3, 40px, 50px);
-                }
-            }
+    .container {
+        &:has(.blog-card),
+        &.gallery {
+            @include autoGrid(280px, 24px);
         }
     }
 }

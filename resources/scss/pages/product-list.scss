@@ -6,91 +6,113 @@
 @import "../components/pagination.scss";
 
 .list {
-    margin: 50px 0 0;
+    padding-bottom: 80px;
 
-    &__shorts {
-        width: 100%;
-        font-size: 16px;
-        color: $c-dark;
-        font-weight: 400;
-        line-height: 22px;
-    }
-
-    .main-title {
-        margin: 0 0 25px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 60px;
-        }
+    .list__shorts {
+        max-width: 760px;
+        color: $c-muted;
+        font-size: 17px;
+        line-height: 1.7;
     }
 
     &__data {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        align-items: start;
+        gap: 32px;
+
+        @media #{ $max-1024 } {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}
+
+.listpage {
+    min-width: 0;
+    padding: 0;
+
+    &__options {
         display: flex;
-        align-items: flex-start;
-        gap: 25px;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+
+        &-dropdowns {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
     }
 
-    .listpage {
-        flex: 1 1 auto;
+    &__total-count {
+        display: inline-flex;
+        align-items: center;
+        height: 36px;
+        padding: 0 14px;
+        border-radius: $r-pill;
+        background-color: $c-primary-soft;
+        color: $c-primary-dark;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .02em;
+    }
 
-        &__total-count {
-            color: $c-dark3;
-            font-size: 18px;
-            text-transform: uppercase;
-            display: block;
+    // Wishlist: the count is above the grid
+    > .listpage__total-count {
+        margin-bottom: 22px;
+    }
+}
+
+.select {
+    position: relative;
+    display: inline-flex;
+
+    &::after {
+        content: "\f078";
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 10px;
+        color: $c-muted;
+        pointer-events: none;
+    }
+
+    select {
+        height: 44px;
+        min-width: 200px;
+        padding: 0 42px 0 18px;
+        border-radius: $r-pill;
+        border: 1px solid $c-line;
+        background-color: $c-surface;
+        color: $c-ink;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        transition: border-color $t-fast $ease, box-shadow $t-fast $ease;
+
+        &:hover {
+            border-color: darken($c-line, 10%);
         }
 
-        &__options {
-            @include flexBox('space-between', 'flex-start', 15px);
-            flex-direction: column;
-            margin-bottom: 14px;
-
-            @media #{ $min-768 } {
-                margin-bottom: 20px;
-            }
-
-            @media #{ $min-540 } {
-                flex-direction: row;
-                align-items: center;
-            }
-
-            select {
-                padding: 8px 12px;
-                font-size: 15px;
-                color: $c-dark3;
-                font-weight: 500;
-                border: 1px solid $c-grayD8;
-            }
+        &:focus {
+            border-color: $c-primary;
+            box-shadow: $shadow-focus;
         }
+    }
 
-        &.products {
-            padding-top: 0;
+    &--small select {
+        min-width: 86px;
+    }
 
-            .listpage-container {
-                @include flexBox("center", "unset", 25px);
-                flex-direction: column;
-
-                @media #{ $max-539 } {
-                    margin: 0 auto;
-                    max-width: 320px;
-                }
-
-                @media #{ $min-540 } {
-                    @include gridBox("center", 2, 15px, 25px);
-                }
-
-                @media #{ $min-768 } {
-                    @include gridBox("center", 3, 15px, 20px);
-                }
-
-                @media #{ $min-1200 } {
-                    gap: 30px 20px;
-                }
-            }
-
-            nav.pagination {
-                margin: 30px 0 0;
-            }
+    @media #{ $max-539 } {
+        select {
+            min-width: 0;
         }
     }
 }

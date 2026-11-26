@@ -1,75 +1,98 @@
+<%
+    const footerHome = process.env.APP_URL + '/' + current_locale;
+    const footerPage = slugKey => footerHome + '/' + languageHandler(slugKey, current_locale);
+    const footerContentPage = name => footerHome + '/' + languageHandler('slugs.content', current_locale) + '/' + staticContent[name]['slug'];
+    const footerHasSocials = DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"];
+%>
 <footer class="footer">
-    <div class="footer-top">
-        <div class="wrapper">
-            <a class="footer-logo" target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>" aria-label="<%= process.env.SITE_NAME %> home page link">
+    <div class="footer-main">
+        <div class="wrapper footer-main__grid">
+            <div class="footer-brand">
+                <a class="footer-logo" target="_self" href="<%= footerHome %>" aria-label="<%= process.env.SITE_NAME %> home page link">
+                    <%- include('../components/picture.ejs', {
+                        imageURL: true,
+                        imgClass: "logo-img",
+                        webpImage: getAssetPath('/images/logo.webp'),
+                        imageSrc: getAssetPath('/images/logo.png'),
+                        alt: process.env.SITE_NAME + " footer logo",
+                    }) %>
+                </a>
 
-                <%- include('../components/picture.ejs', {
-                    imageURL: true,
-                    imgClass: "logo-img",
-                    webpImage: getAssetPath('/images/logo.webp'),
-                    imageSrc: getAssetPath('/images/logo.png'),
-                    alt: process.env.SITE_NAME + " footer logo",
-                }) %>
-            </a>
-        </div>
-    </div>
-    <div class="footer-middle">
-        <div class="wrapper">
-            <div class="footer-middle-container">
-                <% if (DB_CONFIG["phone_1"] || DB_CONFIG["phone_2"] || DB_CONFIG["email"] || DB_CONFIG["company_street"]) { %>
-                    <div class="footer-middle-col">
-                        <h3 class="footer-title"><%= languageHandler('nav.contact', current_locale) %></h3>
-                        <% if (DB_CONFIG["phone_1"]) { %>
-                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_1"] %>" href="tel:0611237896"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_1"] %></a>
-                        <% } %>
-                        <% if (DB_CONFIG["phone_2"]) { %>
-                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["phone_2"] %>" href="tel:0631234567"><i class="fas fa-phone-alt"></i> <%= DB_CONFIG["phone_2"] %></a>
-                        <% } %>
-                        <% if (DB_CONFIG["email"]) { %>
-                            <a class="footer-title-link" aria-label="<%= DB_CONFIG["email"] %>" href="mail:<%= DB_CONFIG["email"] %>"><i class="fas fa-envelope"></i> <%= DB_CONFIG["email"] %></a>
-                        <% } %>
-                        <% if (DB_CONFIG["company_street"]) { %>
-                            <a target="_self" class="footer-title-link" aria-label="Map" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %><%= (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) ? '#location' : '' %>"><i class="fas fa-map-marker-alt"></i> <%= DB_CONFIG["company_street"] %></a>
-                        <% } %>
-                    </div>
+                <% if (DB_CONFIG["home_page_text"]) { %>
+                    <p class="footer-brand__text"><%= DB_CONFIG["home_page_text"] %></p>
                 <% } %>
-                <div class="footer-middle-col">
-                    <h3 class="footer-title"><%= languageHandler('nav.quick_links', current_locale) %></h3>
-                    <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('nav.about', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.about_us", current_locale) %>"><%= languageHandler('nav.about', current_locale) %></a>
-                    <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('general.products', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.products", current_locale) %>"><%= languageHandler('general.products', current_locale) %></a>
-                    <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('nav.gallery', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.galleries", current_locale) %>"><%= languageHandler('nav.gallery', current_locale) %></a>
-                    <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('nav.blog', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.blogs", current_locale) %>"><%= languageHandler('nav.blog', current_locale) %></a>
-                    <a target="_self" class="footer-title-link" aria-label="<%= languageHandler('nav.contact', current_locale) %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.contact", current_locale) %>"><%= languageHandler('nav.contact', current_locale) %></a>
-                </div>
-                <div class="footer-middle-col">
-                    <h3 class="footer-title"><%= languageHandler('nav.support', current_locale) %></h3>
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.faq', current_locale) %>" aria-label="<%= languageHandler('nav.FAQ', current_locale) %>" class="footer-title-link"><i class="fas fa-question-circle"></i> <%= languageHandler('nav.FAQ', current_locale) %></a>
 
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content', current_locale) %>/<%= staticContent['terms_of_use']['slug'] %>" aria-label="<%= staticContent['terms_of_use']['title'] %>" class="footer-title-link"><i class="fas fa-hand-point-right"></i> <%= staticContent['terms_of_use']['title'] %></a>
-
-                    <a target="_self" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content', current_locale) %>/<%= staticContent['privacy_policy']['slug'] %>" aria-label="<%= staticContent['privacy_policy']['title'] %>" class="footer-title-link"><i class="fas fa-shield-alt"></i> <%= staticContent['privacy_policy']['title'] %></a>
-                </div>
-                <% if (DB_CONFIG["facebook"] || DB_CONFIG["instagram"] || DB_CONFIG["tiktok"]) { %>
-                    <div class="footer-middle-col">
-                        <h3 class="footer-title"><%= languageHandler('general.follow_us', current_locale) %></h3>
+                <% if (footerHasSocials) { %>
+                    <div class="footer-socials">
                         <% if (DB_CONFIG["facebook"]) { %>
-                            <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Link to social media facebook" target="blank" class="footer-title-link social"><i class="fab fa-facebook"></i> Facebook</a>
+                            <a href="<%= DB_CONFIG["facebook"] %>" aria-label="Facebook" title="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
                         <% } %>
                         <% if (DB_CONFIG["instagram"]) { %>
-                            <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Link to social media instagram" target="blank" class="footer-title-link social"><i class="fab fa-instagram"></i> Instagram</a>
+                            <a href="<%= DB_CONFIG["instagram"] %>" aria-label="Instagram" title="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
                         <% } %>
                         <% if (DB_CONFIG["tiktok"]) { %>
-                            <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="Link to social media tiktok" target="blank" class="footer-title-link social"><i class="fab fa-tiktok"></i> TikTok</a>
+                            <a href="<%= DB_CONFIG["tiktok"] %>" aria-label="TikTok" title="TikTok" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
                         <% } %>
                     </div>
                 <% } %>
             </div>
+
+            <div class="footer-col">
+                <h3 class="footer-title"><%= languageHandler('nav.quick_links', current_locale) %></h3>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.about_us') %>"><%= languageHandler('nav.about', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.products') %>"><%= languageHandler('general.products', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.galleries') %>"><%= languageHandler('nav.gallery', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.blogs') %>"><%= languageHandler('nav.blog', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.contact') %>"><%= languageHandler('nav.contact', current_locale) %></a>
+            </div>
+
+            <div class="footer-col">
+                <h3 class="footer-title"><%= languageHandler('nav.support', current_locale) %></h3>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.faq') %>"><%= languageHandler('nav.FAQ', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerContentPage('terms_of_use') %>"><%= staticContent['terms_of_use']['title'] %></a>
+                <a target="_self" class="footer-link" href="<%= footerContentPage('privacy_policy') %>"><%= staticContent['privacy_policy']['title'] %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.wishlist') %>"><%= languageHandler('general.wishlist', current_locale) %></a>
+                <a target="_self" class="footer-link" href="<%= footerPage('slugs.cart') %>"><%= languageHandler('general.cart', current_locale) %></a>
+            </div>
+
+            <% if (DB_CONFIG["phone_1"] || DB_CONFIG["phone_2"] || DB_CONFIG["email"] || DB_CONFIG["company_street"]) { %>
+                <div class="footer-col footer-col--contact">
+                    <h3 class="footer-title"><%= languageHandler('nav.contact', current_locale) %></h3>
+                    <% if (DB_CONFIG["company_street"]) { %>
+                        <a target="_self" class="footer-contact" href="<%= footerPage('slugs.contact') %><%= (DB_CONFIG["map_lat"] && DB_CONFIG["map_long"]) ? '#location' : '' %>">
+                            <span class="footer-contact__icon"><i class="fas fa-map-marker-alt"></i></span>
+                            <span><%= DB_CONFIG["company_street"] %></span>
+                        </a>
+                    <% } %>
+                    <% if (DB_CONFIG["phone_1"]) { %>
+                        <a class="footer-contact" href="tel:<%= DB_CONFIG["phone_1"] %>">
+                            <span class="footer-contact__icon"><i class="fas fa-phone-alt"></i></span>
+                            <span><%= DB_CONFIG["phone_1"] %></span>
+                        </a>
+                    <% } %>
+                    <% if (DB_CONFIG["phone_2"]) { %>
+                        <a class="footer-contact" href="tel:<%= DB_CONFIG["phone_2"] %>">
+                            <span class="footer-contact__icon"><i class="fas fa-phone-alt"></i></span>
+                            <span><%= DB_CONFIG["phone_2"] %></span>
+                        </a>
+                    <% } %>
+                    <% if (DB_CONFIG["email"]) { %>
+                        <a class="footer-contact" href="mailto:<%= DB_CONFIG["email"] %>">
+                            <span class="footer-contact__icon"><i class="fas fa-envelope"></i></span>
+                            <span><%= DB_CONFIG["email"] %></span>
+                        </a>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </div>
+
     <div class="footer-bottom">
-        <div class="wrapper">
-            <div class="footer-bottom-row">
-                <strong><%= process.env.SITE_NAME %> &copy; <%= new Date().getFullYear() %>. <%= languageHandler('validations.rights_reserved', current_locale) %>.</strong>
+        <div class="wrapper footer-bottom__row">
+            <span><%= process.env.SITE_NAME %> &copy; <%= new Date().getFullYear() %>. <%= languageHandler('validations.rights_reserved', current_locale) %>.</span>
+            <div class="footer-bottom__links">
+                <a target="_self" href="<%= footerContentPage('terms_of_use') %>"><%= staticContent['terms_of_use']['title'] %></a>
+                <a target="_self" href="<%= footerContentPage('privacy_policy') %>"><%= staticContent['privacy_policy']['title'] %></a>
             </div>
         </div>
     </div>

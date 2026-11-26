@@ -1,9 +1,9 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/gallery-details.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/lightbox.min.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/gallery-details.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>
@@ -15,13 +15,14 @@
 
     <main class="gallery-details">
         <div class="wrapper">
-            <h1 class="main-title"><%= galleryData.galleryName %></h1>
+            <header class="page-header gallery-details-header">
+                <time class="gallery-details-date"><i class="far fa-calendar-alt"></i> <%= galleryData.date %></time>
+                <h1 class="main-title"><%= galleryData.galleryName %></h1>
 
-            <time class="gallery-details-date"><%= galleryData.date %></time>
-
-            <% if (galleryData.description) { %>
-                <p class="gallery-details-desc"><%= galleryData.description %></p>
-            <% } %>
+                <% if (galleryData.description) { %>
+                    <p class="gallery-details-desc"><%= galleryData.description %></p>
+                <% } %>
+            </header>
 
             <section class="<%= (galleryData.galleryImages && galleryData.galleryImages.length > 0) ? 'gallery-grid js-gallery' : '' %>">
                 <% if (galleryData.galleryImages && galleryData.galleryImages.length > 0) { %>
@@ -50,35 +51,23 @@
         <% if (relatedGalleries.length > 0) { %>
             <section class="featured-galleries">
                 <div class="wrapper">
-                    <%- include('../components/block-title.ejs', { title: languageHandler('general.related_galleries', current_locale) }) %>
-
-                    <div class="featured-galleries-container">
-                        <div class="js-featured-galleries">
-                            <% relatedGalleries.forEach(item => { %>
-                                <div class="slide">
-                                    <%- include("../components/gallery-card.ejs", { galleryItem: item }) %>
-                                </div>
-                            <% }) %>
-                        </div>
+                    <div class="section-head">
+                        <%- include('../components/block-title.ejs', { title: languageHandler('general.related_galleries', current_locale) }) %>
 
                         <% if (relatedGalleries.length > 1) { %>
-                            <button
-                                type="button"
-                                class="slick-prev slick-arrow"
-                                aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
-                                title="<%= languageHandler('general.prev_page', current_locale) %>"
-                            >
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button
-                                type="button"
-                                class="slick-next slick-arrow"
-                                aria-label="<%= languageHandler('general.next_page', current_locale) %>"
-                                title="<%= languageHandler('general.next_page', current_locale) %>"
-                            >
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                            <div class="section-head__arrows">
+                                <button type="button" class="slick-prev slick-arrow" aria-label="<%= languageHandler('general.prev_page', current_locale) %>" title="<%= languageHandler('general.prev_page', current_locale) %>"><i class="fas fa-arrow-left"></i></button>
+                                <button type="button" class="slick-next slick-arrow" aria-label="<%= languageHandler('general.next_page', current_locale) %>" title="<%= languageHandler('general.next_page', current_locale) %>"><i class="fas fa-arrow-right"></i></button>
+                            </div>
                         <% } %>
+                    </div>
+
+                    <div class="js-featured-galleries">
+                        <% relatedGalleries.forEach(item => { %>
+                            <div class="slide">
+                                <%- include("../components/gallery-card.ejs", { galleryItem: item }) %>
+                            </div>
+                        <% }) %>
                     </div>
                 </div>
             </section>

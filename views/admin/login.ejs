@@ -1,7 +1,7 @@
 <%- extend('layouts/document') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/login.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/login.css') %>" />
 <%- endPush() %>
 
 <%- section('body') %>

@@ -1,48 +1,74 @@
-<div class="product">
-    <a class="product_image" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.product", current_locale) %>/<%= product.slug %>/<%= product.id %>" aria-label="<%= product.name %>">
-        <% if (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) { %>
-            <span class="badge badge--discount"><%= languageHandler("products.discount", current_locale) %></span>
+<%
+    const productUrl = process.env.APP_URL + '/' + current_locale + '/' + languageHandler("slugs.product", current_locale) + '/' + product.slug + '/' + product.id;
+    const onSale = product.isOnDiscount && (!product.discountEndDate || new Date(product.discountEndDate).getTime() > Date.now());
+    const amountOf = value => Number(String(value).replace(/[^0-9]/g, ''));
+    const salePercent = onSale ? Math.round((1 - amountOf(product.discount) / amountOf(product.price)) * 100) : 0;
+%>
+<article class="product <%= product.isAvailable ? '' : 'product--unavailable' %>">
+    <div class="product_media">
+        <a class="product_image" title="<%= product.name %>" href="<%= productUrl %>" aria-label="<%= product.name %>">
+            <%- include('./picture.ejs', { imageSrc: product.image, alt: product.name }) %>
+        </a>
+
+        <% if (onSale || product.isNew) { %>
+            <div class="product_badges">
+                <% if (onSale) { %>
+                    <span class="badge badge--discount"><%= salePercent > 0 ? '-' + salePercent + '%' : languageHandler("products.discount", current_locale) %></span>
+                <% } %>
+                <% if (product.isNew) { %>
+                    <span class="badge badge--new"><%= languageHandler("products.new", current_locale) %></span>
+                <% } %>
+            </div>
         <% } %>
-        <% if (product.isNew) { %>
-            <span class="badge badge--new"><%= languageHandler("products.new", current_locale) %></span>
-        <% } %>
+
+        <button
+            type="button"
+            class="wishlist-btn js-wishlist-btn <%= product.saved_in_wishlist ? 'saved' : '' %>"
+            data-operation="<%= product.saved_in_wishlist ? 'remove' : 'add' %>"
+            data-url="<%= process.env.APP_URL %>/ajax/wishlist-handle/<%= product.id %>"
+            aria-label="<%= languageHandler("general.wishlist", current_locale) %>"
+            title="<%= languageHandler("general.wishlist", current_locale) %>"
+        >
+            <i class="far fa-heart"></i>
+            <i class="fas fa-heart"></i>
+        </button>
+
         <% if (product.isPostable) { %>
-            <span class="badge badge--postable"><i class="fas fa-truck"></i></span>
+            <span class="product_postable" title="<%= languageHandler("products.postable", current_locale) %>">
+                <i class="fas fa-truck"></i>
+                <span><%= languageHandler("products.postable", current_locale) %></span>
+            </span>
+        <% } %>
+    </div>
+
+    <div class="product_desc">
+        <% if (product.category) { %>
+            <span class="product_category"><%= product.category %></span>
         <% } %>
 
-        <%- include('./picture.ejs', { imageSrc: product.image, alt: product.name }) %>
-    </a>
-    <div class="product_desc">
-        <a class="title" title="<%= product.name %>" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.product", current_locale) %>/<%= product.slug %>/<%= product.id %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
+        <a class="title" title="<%= product.name %>" href="<%= productUrl %>" aria-label="Navigation to the current product - <%= product.name %>"><%= product.name %></a>
 
-        <div class="price__wrap">
-            <strong class="price__wrap-price"><%= (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) ? product.discount : product.price %> <small><%= currency %></small></strong>
-            <% if (product.isOnDiscount && ((product.discountEndDate && new Date(product.discountEndDate).getTime() > Date.now()) || !product.discountEndDate)) { %>
-                <del class="price__wrap-price old"><%= product.price %> <%= currency %></del>
-            <% } %>
-        </div>
         <% if (product.short) { %>
             <p class="product_desc-short"><%= product.short %></p>
         <% } %>
 
-        <div class="product_desc-functions">
-            <% if (product.already_in_cart) { %>
-                <div class="added-cart"><i class="fas fa-coins"></i><%= languageHandler('orders.already_added', current_locale) %></div>
-            <% } else if (product.isAvailable) { %>
-                <button type="button" title="<%= languageHandler("products.add_cart", current_locale) %>" aria-label="<%= languageHandler("products.add_cart", current_locale) %>" class="cart-btn js-add-to-cart" data-id="<%= product.id %>"><i class="fas fa-shopping-cart"></i> <%= languageHandler("products.add_cart", current_locale) %></button>
-            <% } else if (!product.isAvailable) { %>
-                <div class="unavailable"><i class="fas fa-times-circle"></i><%= languageHandler("products.out_of_stock", current_locale) %></div>
-            <% } %>
+        <div class="product_desc-bottom">
+            <div class="price__wrap">
+                <strong class="price__wrap-price <%= onSale ? 'price__wrap-price--sale' : '' %>"><%= onSale ? product.discount : product.price %> <small><%= currency %></small></strong>
+                <% if (onSale) { %>
+                    <del class="price__wrap-price old"><%= product.price %> <%= currency %></del>
+                <% } %>
+            </div>
 
-            <button
-                type="button"
-                class="wishlist-btn js-wishlist-btn <%= product.saved_in_wishlist ? 'saved' : '' %>"
-                data-operation="<%= product.saved_in_wishlist ? 'remove' : 'add' %>"
-                data-url="<%= process.env.APP_URL %>/ajax/wishlist-handle/<%= product.id %>"
-            >
-                <i class="far fa-heart"></i>
-                <i class="fas fa-heart"></i>
-            </button>
+            <div class="product_desc-functions">
+                <% if (product.already_in_cart) { %>
+                    <div class="added-cart"><i class="fas fa-check"></i><span><%= languageHandler('orders.already_added', current_locale) %></span></div>
+                <% } else if (product.isAvailable) { %>
+                    <button type="button" title="<%= languageHandler("products.add_cart", current_locale) %>" aria-label="<%= languageHandler("products.add_cart", current_locale) %>" class="cart-btn js-add-to-cart" data-id="<%= product.id %>"><i class="fas fa-shopping-bag"></i> <span><%= languageHandler("products.add_cart", current_locale) %></span></button>
+                <% } else { %>
+                    <div class="unavailable"><i class="fas fa-ban"></i><span><%= languageHandler("products.out_of_stock", current_locale) %></span></div>
+                <% } %>
+            </div>
         </div>
     </div>
-</div>
+</article>

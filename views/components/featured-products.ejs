@@ -1,6 +1,29 @@
 <section class="products-carousel">
     <div class="wrapper">
-        <%- include('./block-title.ejs', { title: languageHandler('general.products', current_locale), subtitle: languageHandler('general.product_subtitle', current_locale) }) %>
+        <div class="section-head">
+            <%- include('./block-title.ejs', { title: languageHandler('general.products', current_locale), subtitle: languageHandler('general.product_subtitle', current_locale) }) %>
+
+            <% if (products.length > 1) { %>
+                <div class="section-head__arrows">
+                    <button
+                        type="button"
+                        class="slick-prev slick-arrow"
+                        aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
+                        title="<%= languageHandler('general.prev_page', current_locale) %>"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button
+                        type="button"
+                        class="slick-next slick-arrow"
+                        aria-label="<%= languageHandler('general.next_page', current_locale) %>"
+                        title="<%= languageHandler('general.next_page', current_locale) %>"
+                    >
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            <% } %>
+        </div>
 
         <div class="js-featured-products">
             <% products.forEach(item => { %>
@@ -9,23 +32,5 @@
                 </div>
             <% }) %>
         </div>
-        <% if (products.length > 1) { %>
-            <button
-                type="button"
-                class="slick-prev slick-arrow"
-                aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
-                title="<%= languageHandler('general.prev_page', current_locale) %>"
-            >
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button
-                type="button"
-                class="slick-next slick-arrow"
-                aria-label="<%= languageHandler('general.next_page', current_locale) %>"
-                title="<%= languageHandler('general.next_page', current_locale) %>"
-            >
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        <% } %>
     </div>
 </section>

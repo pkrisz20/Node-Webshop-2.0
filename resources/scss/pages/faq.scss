@@ -3,69 +3,87 @@
 @import "../components/plain-text.scss";
 
 .faq {
-    margin: 50px 0;
+    padding-bottom: 80px;
+
+    .wrapper {
+        max-width: $wrapper-narrow + $gutter * 2;
+    }
 
     .main-title {
-        margin: 0 0 35px;
-
-        @media #{ $min-768 } {
-            margin: 0 0 75px;
-        }
+        margin-bottom: 32px;
     }
 
     &-container {
-        @include flexBox("center", "flex-start", 10px);
+        display: flex;
         flex-direction: column;
+        gap: 12px;
         padding: 0;
 
         &-box {
-            width: 100%;
+            overflow: hidden;
+            border-radius: $r-lg;
+            border: 1px solid $c-line;
+            background-color: $c-surface;
+            box-shadow: $shadow-xs;
+            transition: box-shadow $t $ease, border-color $t $ease;
 
-            .faq-header {
-                border: 1px solid $c-light-gray;
-                background-color: $c-grayF3;
-                position: relative;
-                padding: 15px 35px 15px 15px;
-                cursor: pointer;
-                transition: all .3s ease-in-out;
-
-                &-question {
-                    transition: all .3s ease-in-out;
-                    line-height: 30px;
-                    color: $c-dark3;
-                    @include resp('font-size', 18px, 20px);
-                }
-
-                &.active-header {
-                    background-color: $c-middleblue;
-
-                    h2 {
-                        color: $c-white;
-                    }
-
-                    i {
-                        transform: translateY(-50%) rotate(135deg);
-                        color: $c-white;
-                    }
-                }
-
-                i {
-                    position: absolute;
-                    top: 50%;
-                    right: 15px;
-                    transform: translateY(-50%);
-                    color: $c-middleblue;
-                    font-size: 20px;
-                    transition: all .3s ease-in-out;
-                }
+            &:has(.active-header) {
+                border-color: rgba($c-primary, .35);
+                box-shadow: $shadow-md;
             }
+        }
+    }
 
-            .answer {
-                background-color: $c-d;
-                overflow: hidden;
-                display: none;
-                padding: 0 15px;
-            }
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px 24px;
+        cursor: pointer;
+        user-select: none;
+
+        &-question {
+            color: $c-ink;
+            font-family: $font-body;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        i {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: $c-bg-2;
+            color: $c-ink;
+            font-size: 13px;
+            transition: transform $t $ease, background-color $t $ease, color $t $ease;
+        }
+
+        &:hover i {
+            background-color: $c-primary-soft;
+            color: $c-primary;
+        }
+
+        &.active-header i {
+            background-color: $c-primary;
+            color: $c-white;
+            transform: rotate(45deg);
+        }
+    }
+
+    .answer {
+        display: none;
+        padding: 0 24px 24px;
+
+        .ck-content {
+            padding-top: 18px;
+            border-top: 1px solid $c-line-2;
+            font-size: 16px;
         }
     }
 }

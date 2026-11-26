@@ -1,39 +1,47 @@
 .breadcrumbs {
-    background-color: $c-grayE6;
+    padding: 26px 0 0;
+
+    @media #{ $max-767 } {
+        padding-top: 18px;
+    }
 
     &-list {
-        padding: 8px 0;
-        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 10px;
+        font-size: 13px;
+        font-weight: 600;
 
         &-item {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            color: $c-muted;
 
-            &:not(:last-child)::after {
-                content: ">";
-                display: inline-block;
-                font-size: 13px;
-                margin: 0 5px;
-                transform: translateY(1px);
-            }
-
-            a, span {
-                font-size: 14px;
-                vertical-align: bottom;
+            & + &::before {
+                content: "\f054";
+                font-family: "Font Awesome 5 Free";
+                font-weight: 900;
+                font-size: 8px;
+                color: $c-muted-2;
             }
 
             a {
-                transition: color .3s ease;
-                color: $c-gray71;
-                font-weight: 600;
+                color: $c-muted;
 
                 &:hover {
-                    color: $c-warning;
+                    color: $c-primary;
                 }
             }
 
             span {
-                color: $c-dark;
-                font-weight: 700;
+                max-width: 46ch;
+                overflow: hidden;
+                color: $c-ink;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }

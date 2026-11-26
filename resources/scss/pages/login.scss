@@ -1,33 +1,71 @@
 @import '../variables';
 @import '../mixins';
 
-body {
+.login {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 48px 0;
     background-image: url('/images/admin-login.jpg');
     background-position: center;
     background-size: cover;
-    position: relative;
 
     &::before {
-        @include absoluteFullSize();
         content: "";
-        background-color: rgba($c-black, .6);
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(70% 70% at 100% 0%, rgba($c-primary, .55), transparent 60%),
+            linear-gradient(160deg, rgba($c-deep, .82), rgba($c-deep, .94));
     }
-}
 
-.login {
-    height: inherit;
+    .wrapper {
+        position: relative;
+        max-width: 460px + $gutter * 2;
+    }
 
     .main-title {
-        margin: 0 0 30px;
+        margin-bottom: 26px;
+        color: $c-white;
+        font-size: 38px;
+        text-align: center;
+
+        &::before {
+            content: "\f023";
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background-color: rgba($c-white, .12);
+            border: 1px solid rgba($c-white, .2);
+            color: $c-lime;
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            font-size: 22px;
+        }
     }
 
-    & > .wrapper {
-        position: relative;
-        z-index: 10;
-        max-width: 500px;
-        border-radius: 10px;
-        overflow: hidden;
-        background-color: $c-white;
-        padding: 20px;
+    .form {
+        padding: 32px;
+        border-radius: $r-xl;
+        background-color: $c-surface;
+        box-shadow: $shadow-lg;
+
+        @media #{ $max-539 } {
+            padding: 22px;
+        }
+
+        .form-control {
+            padding-right: 52px;
+        }
+
+        .form-submit {
+            width: 100%;
+            margin-top: 6px;
+        }
     }
 }

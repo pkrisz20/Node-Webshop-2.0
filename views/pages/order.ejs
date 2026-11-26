@@ -1,247 +1,167 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/order.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/order.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>
+    <%- include('../components/breadcrumbs.ejs', { currentLinkName: languageHandler('orders.order', current_locale) }) %>
+
+    <%
+        const orderFields = [
+            [
+                { id: 'order-firstname', name: 'firstname', label: languageHandler('validations.first_name', current_locale), rules: 'data-rule-required="true"', autocomplete: 'given-name' },
+                { id: 'order-lastname', name: 'lastname', label: languageHandler('validations.last_name', current_locale), rules: 'data-rule-required="true"', autocomplete: 'family-name' },
+            ],
+            [
+                { id: 'order-email', name: 'email', type: 'email', label: languageHandler('validations.email', current_locale), rules: 'data-rule-required="true" data-rule-email="true"', autocomplete: 'email' },
+                { id: 'order-phone', name: 'phone', label: languageHandler('validations.phone_number', current_locale), rules: 'data-rule-required="true"', autocomplete: 'tel' },
+            ],
+            [
+                { id: 'order-city', name: 'city', label: languageHandler('validations.city', current_locale), rules: 'data-rule-required="true"', autocomplete: 'address-level2' },
+                { id: 'order-postcode', name: 'postcode', label: languageHandler('validations.postcode', current_locale), rules: 'data-rule-required="true" data-rule-digits="true"', autocomplete: 'postal-code' },
+            ],
+            [
+                { id: 'order-address', name: 'address', label: languageHandler('validations.address', current_locale), rules: 'data-rule-required="true"', autocomplete: 'street-address' },
+            ],
+        ];
+    %>
+
     <main class="order">
         <div class="wrapper">
-            <h1 class="main-title"><%= languageHandler('orders.order', current_locale) %></h1>
-
-            <section class="order-container">
-                <%- include('../components/block-title.ejs', { title: languageHandler('orders.cart_contains', current_locale), subtitle: languageHandler('orders.cart_contains_sub', current_locale) }) %>
-
-                <% if (cart.items.length > 0) { %>
-                    <div>
-                        <h6 class="order-counter"><%= languageHandler('orders.cart_count', current_locale) %>: <%= cart.totalCount %></h6>
-
-                        <div class="order-container-items js-order-items-container">
-                            <% cart.items.forEach(cartItem => { %>
-                                <div class="order-container-items-card js-order-item">
-                                    <div class="order-image">
-
-                                        <%- include('../components/picture.ejs', {
-                                            imageSrc: cartItem.image,
-                                            alt: cartItem.productName
-                                        }) %>
-                                    </div>
-                                    <div class="order-infos">
-                                        <h3 class="order-infos-title"><%= cartItem.productName %></h3>
-                                        <div class="quantities">
-                                            <div class="quantities-container js-quantities">
-                                                <button type="button" class="quantities-btn minus js-quantity-btn"><i class="fas fa-minus"></i></button>
-
-                                                <input class="quantities-input js-product-quantity" data-id="<%= cartItem.productId %>" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
-
-                                                <button type="button" class="quantities-btn plus js-quantity-btn"><i class="fas fa-plus"></i></button>
-                                            </div>
-
-                                            <small class="quantities-price"><i class="fas fa-times"></i> <span><%= formatAmount(cartItem.price) %> <%= currency %></span></small>
-                                        </div>
-                                    </div>
-
-                                    <strong class="order-price"><span class="js-order-alone-price"><%= formatAmount(cartItem.quantity * cartItem.price) %></span> <%= currency %></strong>
-
-                                    <div class="order-functions">
-                                        <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.product', current_locale) %>/<%= cartItem.slug %>/<%= cartItem.productId %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
-                                        <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" class="order-functions-remove js-remove-cart" data-id="<%= cartItem.productId %>"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                        <strong class="order-total_price"><%= languageHandler('orders.total_price', current_locale) %>: <span class="js-order-total-price"><%= cart.totalPrice %></span> <%= currency %></strong>
-                    </div>
-                <% } else if (cart.items.length === 0) { %>
-                    <h5 class="order-empty"><i class="fas fa-exclamation-circle"></i> <%= languageHandler("orders.cart_empty", current_locale) %></h5>
-                <% } %>
-            </section>
+            <header class="page-header">
+                <h1 class="main-title"><%= languageHandler('orders.order', current_locale) %></h1>
+            </header>
 
             <% if (cart.items.length > 0) { %>
-                <section class="order-form">
-                    <%- include('../components/block-title.ejs', { title: languageHandler('orders.order_form', current_locale), subtitle: languageHandler('orders.order_form_sub', current_locale) }) %>
-
-                    <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/order/handle">
-                        <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
-                            <input
-                                id="recaptcha"
-                                value="<%= process.env.RECAPTCHA_SITE_KEY %>"
-                                name="recaptcha"
-                                type="hidden"
-                                class="g-recaptcha"
-                            />
-                        <% } %>
-
-                        <div class="row">
-                            <div class="form-row">
-                                <input
-                                    id="order-firstname"
-                                    name="firstname"
-                                    type="text"
-                                    data-rule-required="true"
-                                    placeholder="<%= languageHandler('validations.first_name', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="order-firstname">
-                                    <%= languageHandler('validations.first_name', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
+                <div class="order-layout">
+                    <div class="order-main">
+                        <section class="order-container">
+                            <div class="order-step">
+                                <span class="order-step__number">1</span>
+                                <%- include('../components/block-title.ejs', { title: languageHandler('orders.cart_contains', current_locale), subtitle: languageHandler('orders.cart_contains_sub', current_locale) }) %>
                             </div>
 
-                            <div class="form-row">
-                                <input
-                                    id="order-lastname"
-                                    name="lastname"
-                                    type="text"
-                                    data-rule-required="true"
-                                    placeholder="<%= languageHandler('validations.last_name', current_locale) %>"
-                                    class="form-control"
-                                />
+                            <div class="order-container-items js-order-items-container">
+                                <% cart.items.forEach(cartItem => { %>
+                                    <div class="order-container-items-card js-order-item">
+                                        <div class="order-image">
+                                            <%- include('../components/picture.ejs', {
+                                                imageSrc: cartItem.image,
+                                                alt: cartItem.productName
+                                            }) %>
+                                        </div>
 
-                                <label class="form-label" for="order-lastname">
-                                    <%= languageHandler('validations.last_name', current_locale) %>
-                                </label>
+                                        <div class="order-infos">
+                                            <h3 class="order-infos-title"><%= cartItem.productName %></h3>
+                                            <div class="quantities">
+                                                <div class="quantities-container js-quantities">
+                                                    <button type="button" class="quantities-btn minus js-quantity-btn"><i class="fas fa-minus"></i></button>
+                                                    <input class="quantities-input js-product-quantity" data-id="<%= cartItem.productId %>" type="number" value="<%= cartItem.quantity %>" min="1" max="<%= cartItem.maxQuantity %>" />
+                                                    <button type="button" class="quantities-btn plus js-quantity-btn"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                                <small class="quantities-price"><i class="fas fa-times"></i> <span><%= formatAmount(cartItem.price) %> <%= currency %></span></small>
+                                            </div>
+                                        </div>
 
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
+                                        <strong class="order-price"><span class="js-order-alone-price"><%= formatAmount(cartItem.quantity * cartItem.price) %></span> <%= currency %></strong>
+
+                                        <div class="order-functions">
+                                            <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.product', current_locale) %>/<%= cartItem.slug %>/<%= cartItem.productId %>" class="order-functions-details" aria-label="Link to product details"><i class="fas fa-info-circle"></i></a>
+                                            <button type="button" value="<%= languageHandler('general.remove', current_locale) %>" class="order-functions-remove js-remove-cart" data-id="<%= cartItem.productId %>" aria-label="<%= languageHandler('general.remove', current_locale) %>"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                <% }) %>
                             </div>
-                        </div>
+                        </section>
 
-                        <div class="row">
-                            <div class="form-row">
-                                <input
-                                    id="order-email"
-                                    data-rule-required="true"
-                                    data-rule-email="true"
-                                    name="email"
-                                    type="email"
-                                    placeholder="<%= languageHandler('validations.email', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="order-email">
-                                    <%= languageHandler('validations.email', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
-
-                            <div class="form-row">
-                                <input
-                                    id="order-phone"
-                                    data-rule-required="true"
-                                    name="phone"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.phone_number', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="order-phone">
-                                    <%= languageHandler('validations.phone_number', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-row">
-                                <input
-                                    id="order-city"
-                                    name="city"
-                                    type="text"
-                                    data-rule-required="true"
-                                    placeholder="<%= languageHandler('validations.city', current_locale) %>"
-                                    class="form-control"
-                                />
-
-                                <label class="form-label" for="order-city">
-                                    <%= languageHandler('validations.city', current_locale) %>
-                                </label>
-
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
+                        <section class="order-form">
+                            <div class="order-step">
+                                <span class="order-step__number">2</span>
+                                <%- include('../components/block-title.ejs', { title: languageHandler('orders.order_form', current_locale), subtitle: languageHandler('orders.order_form_sub', current_locale) }) %>
                             </div>
 
-                            <div class="form-row">
-                                <input
-                                    id="order-postcode"
-                                    data-rule-required="true"
-                                    data-rule-digits="true"
-                                    name="postcode"
-                                    type="text"
-                                    placeholder="<%= languageHandler('validations.postcode', current_locale) %>"
-                                    class="form-control"
-                                />
-                                <label class="form-label" for="order-postcode">
-                                    <%= languageHandler('validations.postcode', current_locale) %>
-                                </label>
+                            <form class="form js-form-validate" method="post" data-url="<%= process.env.APP_URL %>/ajax/order/handle">
+                                <% if (process.env.RECAPTCHA_SITE_KEY || false) { %>
+                                    <input id="recaptcha" value="<%= process.env.RECAPTCHA_SITE_KEY %>" name="recaptcha" type="hidden" class="g-recaptcha" />
+                                <% } %>
 
-                                <i class="error-icon fas fa-times" style="display: none;"></i>
-                                <div class="form-row-error" style="display: none;"></div>
-                            </div>
+                                <% orderFields.forEach(row => { %>
+                                    <div class="<%= row.length > 1 ? 'row' : '' %>">
+                                        <% row.forEach(field => { %>
+                                            <div class="form-row">
+                                                <input
+                                                    id="<%= field.id %>"
+                                                    name="<%= field.name %>"
+                                                    type="<%= field.type || 'text' %>"
+                                                    <%- field.rules %>
+                                                    autocomplete="<%= field.autocomplete %>"
+                                                    placeholder="<%= field.label %>"
+                                                    class="form-control"
+                                                />
+                                                <label class="form-label" for="<%= field.id %>"><%= field.label %></label>
+
+                                                <i class="error-icon fas fa-times" style="display: none;"></i>
+                                                <div class="form-row-error" style="display: none;"></div>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                <% }) %>
+
+                                <div class="form-row">
+                                    <textarea
+                                        id="order-note"
+                                        name="comment"
+                                        data-rule-max-length="<%= config.forms.order.noteMaxLength %>"
+                                        placeholder="<%= languageHandler('general.comment', current_locale) %>"
+                                        class="form-control--textarea js-characters-count"
+                                        rows="5"
+                                        maxlength="<%= config.forms.order.noteMaxLength %>"></textarea>
+                                    <label for="order-note" class="form-label form-textarea"><%= languageHandler('general.comment', current_locale) %></label>
+
+                                    <i class="error-icon textarea-error fas fa-times" style="display: none;"></i>
+                                    <div class="form-row-error" style="display: none;"></div>
+
+                                    <small class="characters-count js-counter"><span>1000</span> / 1000</small>
+                                </div>
+
+                                <div class="form-row gdpr">
+                                    <label class="form-label" for="data-handling">
+                                        <%= languageHandler('validations.accept_policy', current_locale) %>
+
+                                        <input id="data-handling" name="accept" type="checkbox" checked="checked" class="form-row-checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content', current_locale) %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
+                                </div>
+
+                                <button type="submit" class="form-submit"><i class="fas fa-lock"></i> <%= languageHandler('orders.order', current_locale) %></button>
+                            </form>
+                        </section>
+                    </div>
+
+                    <aside class="order-summary">
+                        <h2 class="order-summary__title"><%= languageHandler('orders.your_cart', current_locale) %></h2>
+
+                        <div class="order-summary__row">
+                            <span><%= languageHandler('orders.cart_count', current_locale) %></span>
+                            <strong class="order-counter"><%= cart.totalCount %></strong>
                         </div>
 
-                        <div class="form-row">
-                            <input
-                                id="order-address"
-                                data-rule-required="true"
-                                name="address"
-                                type="text"
-                                placeholder="<%= languageHandler('validations.address', current_locale) %>"
-                                class="form-control"
-                            />
-                            <label class="form-label" for="order-address">
-                                <%= languageHandler('validations.address', current_locale) %>
-                            </label>
-
-                            <i class="error-icon fas fa-times" style="display: none;"></i>
-                            <div class="form-row-error" style="display: none;"></div>
+                        <div class="order-summary__total">
+                            <span><%= languageHandler('orders.total_price', current_locale) %></span>
+                            <strong class="order-total_price"><span class="js-order-total-price"><%= cart.totalPrice %></span> <small><%= currency %></small></strong>
                         </div>
 
-                        <div class="form-row">
-                            <textarea
-                                id="order-note"
-                                name="comment"
-                                data-rule-max-length="<%= config.forms.order.noteMaxLength %>"
-                                placeholder="<%= languageHandler('general.comment', current_locale) %>"
-                                class="form-control--textarea js-characters-count"
-                                rows="10"
-                                maxlength="<%= config.forms.order.noteMaxLength %>"></textarea>
-
-                            <label for="order-note" class="form-label form-textarea">
-                                <%= languageHandler('general.comment', current_locale) %>
-                            </label>
-
-                            <i class="error-icon textarea-error fas fa-times" style="display: none;"></i>
-                            <div class="form-row-error" style="display: none;"></div>
-
-                            <small class="characters-count js-counter"><span>1000</span> / 1000</small>
-                        </div>
-
-                        <div class="form-row gdpr">
-                            <label
-                                class="form-label"
-                                for="data-handling">
-                                <%= languageHandler('validations.accept_policy', current_locale) %>
-
-                                <input
-                                    id="data-handling"
-                                    name="accept"
-                                    type="checkbox"
-                                    checked="checked"
-                                    class="form-row-checkbox"
-                                />
-                                <span class="checkmark"></span>
-                            </label>
-                            <span class="gdpr-details"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.content', current_locale) %>/<%= staticContent['privacy_policy']['slug'] %>"><%= staticContent['privacy_policy']['title'] %></a></span>
-                        </div>
-
-                        <button type="submit" class="form-submit"><i class="fas fa-coins"></i> <%= languageHandler('orders.order', current_locale) %></button>
-                    </form>
-                </section>
+                        <a class="order-summary__link" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.products', current_locale) %>"><i class="fas fa-arrow-left"></i> <%= languageHandler('products.all_products', current_locale) %></a>
+                    </aside>
+                </div>
+            <% } else { %>
+                <div class="order-empty">
+                    <span class="order-empty__icon"><i class="fas fa-shopping-basket"></i></span>
+                    <h2 class="order-empty__title"><%= languageHandler("orders.cart_empty", current_locale) %></h2>
+                    <a class="order-empty__link" href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler('slugs.products', current_locale) %>"><%= languageHandler('products.all_products', current_locale) %> <i class="fas fa-arrow-right"></i></a>
+                </div>
             <% } %>
         </div>
     </main>

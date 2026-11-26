@@ -1,189 +1,177 @@
 .hero {
-    padding: 0 !important;
-    height: calc(100vh - 110px);
-    width: 100%;
-    max-height: 1200px !important;
-    position: relative;
+    padding: 24px 0 8px;
 
-    @media #{ $min-1025 } {
-        height: calc(100vh - 180px);
+    @media #{ $max-767 } {
+        padding-top: 14px;
     }
 
-    &-wrapper {
-        display: block;
-        width: 100%;
-        height: calc(100vh - 110px);
-        max-height: 1200px !important;
+    &__frame {
         position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        border-radius: $r-xl;
+        background-color: $c-deep;
+        box-shadow: $shadow-lg;
 
-        @media #{ $min-1025 } {
-            height: calc(100vh - 180px);
+        @media #{ $max-767 } {
+            border-radius: $r-lg;
         }
     }
 
-    .slick {
-        &-track,
-        &-list {
-            height: 100%;
+    // Before slick is ready only the first slide is shown
+    .hero-wrapper:not(.slick-initialized) .slide:not(:first-child) {
+        display: none;
+    }
+
+    .slide {
+        position: relative;
+        display: flex !important;
+        align-items: center;
+        min-height: clamp(460px, 64vh, 640px);
+
+        @media #{ $max-767 } {
+            align-items: flex-end;
+            min-height: 520px;
         }
 
-        &-prev {
-            left: 10px;
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba($c-deep, .86) 0%, rgba($c-deep, .6) 42%, rgba($c-deep, .08) 100%);
+            pointer-events: none;
 
-            @media #{ $min-1025 } {
-                left: 33px;
+            @media #{ $max-767 } {
+                background: linear-gradient(0deg, rgba($c-deep, .92) 0%, rgba($c-deep, .55) 55%, rgba($c-deep, .1) 100%);
             }
         }
 
-        &-next {
-            right: 10px;
+        &__media {
+            position: absolute;
+            inset: 0;
+            @include fillPicture();
+            @include noPictureSurface(dark);
 
-            @media #{ $min-1025 } {
-                right: 33px;
+            picture::after {
+                left: auto;
+                right: 12%;
+                width: 30%;
+                max-width: 280px;
+                opacity: .1;
             }
         }
+    }
 
-        &-next, &-prev {
-            display: none;
+    .slick-active .slide__media img {
+        animation: slowZoom 9s ease-out both;
+    }
+
+    .box {
+        position: relative;
+        z-index: 2;
+        max-width: 680px;
+        padding: 72px clamp(28px, 6vw, 84px);
+        color: $c-white;
+
+        @media #{ $max-767 } {
+            padding: 40px 24px 76px;
+        }
+
+        &-eyebrow {
+            @include eyebrow($c-lime);
+        }
+
+        &-title {
+            margin-top: 18px;
+            font-family: $font-display;
+            font-size: clamp(38px, 4.8vw, 70px);
+            font-weight: 600;
+            line-height: 1.03;
+            letter-spacing: -.02em;
+            color: $c-white;
+            text-wrap: balance;
+        }
+
+        &-subtitle {
+            max-width: 520px;
+            margin-top: 18px;
+            color: rgba($c-white, .82);
+            font-size: clamp(16px, 1.2vw, 19px);
+            line-height: 1.65;
+        }
+
+        &-btn {
+            @include btnBase(56px);
+            @include btnLight();
+            margin-top: 34px;
+            padding: 0 30px;
 
             i {
-                font-size: 30px;
-                color: $c-white;
-
-                @media #{ $max-767 } {
-                    font-size: 24px;
-                }
+                font-size: 13px;
+                transition: transform $t-fast $ease;
             }
 
-            @media #{ $min-1200 } {
-                cursor: pointer;
-                width: 40px;
-                height: 40px;
-                border-radius: 3px;
-                @include flexBox();
-                z-index: 1;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                color: transparent;
-                background-color: transparent;
+            &:hover i {
+                transform: translateX(4px);
             }
         }
+    }
 
+    .slick-active .box > *,
+    .hero-wrapper:not(.slick-initialized) .box > * {
+        animation: fadeUp .8s $ease both;
+    }
 
-        &-dots {
-            position: absolute;
-            bottom: 15px !important;
-            width: auto;
-            display: flex;
-            align-items: center;
-            padding: 3px 0;
-            left: 50%;
-            transform: translateX(-50%);
+    .slick-active .box > :nth-child(2) {
+        animation-delay: .08s;
+    }
 
-            @media #{ $min-1025 } {
-                bottom: 35px !important;
-            }
+    .slick-active .box > :nth-child(3) {
+        animation-delay: .16s;
+    }
 
-            li {
-                width: 11px!important;
-                height: 11px!important;
-                border-radius: 50%!important;
-                margin: 0 4px;
+    .slick-active .box > :nth-child(4) {
+        animation-delay: .24s;
+    }
 
-                button {
-                    color: transparent;
-                    width: 100%!important;
-                    height: 100%!important;
-                    background-color: $c-white;
-                    border-radius: 50%!important;
-                    padding: 0;
+    &__controls {
+        position: absolute;
+        right: 28px;
+        bottom: 28px;
+        z-index: 3;
+        display: flex;
+        gap: 10px;
 
-                    &:before {
-                        display: none;
-                    }
-                }
-
-                &.slick-active {
-                    button {
-                        background-color: $c-theme;
-                    }
-                }
-            }
+        @media #{ $max-1199 } {
+            display: none;
         }
 
-        &-slide {
-            height: 100%;
-            position: relative;
+        .slick-arrow {
+            @include btnGlass();
+            width: 52px;
+            height: 52px;
+            box-shadow: none;
+        }
+    }
 
-            &::after {
-                position: absolute;
-                top: 0;
-                left: 0;
-                content: '';
-                width: 100%;
-                height: 100%;
-                background-color: rgba($c-black, 0.65);
-            }
+    .hero-dots {
+        position: absolute;
+        left: clamp(28px, 6vw, 84px);
+        bottom: 32px;
+        z-index: 3;
 
-            img {
-                @include imageCover();
-            }
+        @media #{ $max-767 } {
+            left: 24px;
+            bottom: 28px;
+        }
 
-            .box {
-                @include absoluteCenter();
-                z-index: 2;
-                @include flexBox();
-                flex-direction: column;
-                max-width: 1200px;
-                width: 100%;
-                padding: 0 30px;
-                height: auto;
-                text-align: center;
+        .slick-dots button {
+            background-color: rgba($c-white, .4);
+        }
 
-                @media #{ $min-1200 } {
-                    padding: 0 50px;
-                }
-
-                &-title {
-                    font-size: 50px;
-                    @include resp('font-size', 25px, 50px);
-                    color: $c-white;
-                    font-weight: 600;
-                    pointer-events: none;
-                    margin-bottom: 20px;
-                    text-transform: uppercase;
-                }
-
-                &-subtitle {
-                    @include resp('font-size', 16px, 20px);
-                    color: $c-white;
-                    pointer-events: none;
-                    margin-bottom: 25px;
-                    font-weight: 400;
-                }
-
-                &-btn {
-                    cursor: pointer;
-                    text-decoration: none;
-                    padding: 10px 24px;
-                    background-color: $c-red2;
-                    color: $c-white;
-                    @include resp('font-size', 16px, 20px);
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    transition: background-color .3s ease;
-                    border-radius: 27px;
-
-                    @media #{ $min-540 } {
-                        padding: 12px 30px;
-                    }
-
-                    &:hover {
-                        background-color: $c-skyblue;
-                    }
-                }
-            }
+        .slick-dots .slick-active button {
+            background-color: $c-white;
         }
     }
 }

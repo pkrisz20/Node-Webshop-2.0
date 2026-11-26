@@ -1,100 +1,117 @@
 .featured-categories {
-    width: 100%;
-    height: auto;
-    display: flex;
-    padding: 0;
-    margin: 20px 0 0;
+    padding-bottom: 24px;
 
-    & > .wrapper {
-        position: relative;
-    }
-
-    .slick {
-
-        &-slide {
-            display: flex !important;
-            justify-content: center;
-            align-items: center;
-        }
-
-        &-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: $c-theme;
-            border-radius: 50%;
-            height: 45px;
-            width: 45px;
-            cursor: pointer;
-
-            i {
-                font-size: 24px;
-                color: $c-white;
-
-                @media #{ $min-768 } {
-                    font-size: 30px;
-                }
-            }
-        }
-
-        &-prev {
-            left: 5px !important;
-
-            @media #{ $min-1200 } {
-                left: 20px !important;
-            }
-        }
-
-        &-next {
-            right: 5px !important;
-
-            @media #{ $min-1200 } {
-                right: 20px !important;
-            }
-        }
+    .category-card {
+        display: block;
+        height: 100%;
     }
 
     .card {
-        width: 210px;
-        height: 210px;
-        cursor: pointer;
-        overflow: hidden;
         position: relative;
+        isolation: isolate;
+        min-height: 300px;
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border-radius: $r-lg;
+        background-color: $c-deep;
+        box-shadow: $shadow-sm;
+        transition: transform $t $ease, box-shadow $t $ease;
 
-        &::before {
-            @include absoluteFullSize();
+        @media #{ $max-539 } {
+            aspect-ratio: 4 / 3;
+            min-height: 0;
+        }
+
+        &::after {
             content: "";
+            position: absolute;
+            inset: 0;
             z-index: 1;
-            background-color: rgba($c-black, .6);
+            background: linear-gradient(180deg, rgba($c-deep, 0) 38%, rgba($c-deep, .88) 100%);
+            pointer-events: none;
         }
 
-        @media #{ $min-1200 } {
-            width: 260px;
-            height: 260px;
-            margin: 0;
-        }
+        &-media {
+            position: absolute;
+            inset: 0;
+            @include fillPicture();
+            @include noPictureSurface(dark);
 
-        &:hover {
+            picture::after {
+                top: 18%;
+                bottom: auto;
+                width: 34%;
+                max-width: 110px;
+            }
+
             img {
-                transform: scale(1.1);
+                transition: transform .7s $ease;
             }
         }
 
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            transition: transform .3s ease-in-out;
+        &-body {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 24px;
         }
 
         &-text {
-            @include absoluteCenter();
             color: $c-white;
-            z-index: 2;
-            font-weight: 500;
-            text-align: center;
-            @include resp('font-size', 16px, 20px);
+            font-family: $font-display;
+            font-size: clamp(22px, 1.8vw, 27px);
+            font-weight: 600;
+            line-height: 1.15;
+            letter-spacing: -.01em;
         }
+
+        &-arrow {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba($c-white, .35);
+            background-color: rgba($c-white, .12);
+            color: $c-white;
+            font-size: 14px;
+            backdrop-filter: blur(6px);
+            transition: background-color $t-fast $ease, color $t-fast $ease, transform $t $ease;
+        }
+    }
+
+    .category-card:hover .card {
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
+
+        .card-media img {
+            transform: scale(1.06);
+        }
+
+        .card-arrow {
+            background-color: $c-white;
+            color: $c-primary;
+            transform: rotate(-35deg);
+        }
+    }
+
+    // Different tones for the cards without image
+    .slick-slide:nth-child(3n+2) .card-media picture:has(img[src*="no-picture"]) {
+        background:
+            radial-gradient(90% 80% at 85% 0%, rgba($c-lime, .22), transparent 55%),
+            linear-gradient(150deg, $c-primary-dark 0%, $c-primary 100%);
+    }
+
+    .slick-slide:nth-child(3n+3) .card-media picture:has(img[src*="no-picture"]) {
+        background:
+            radial-gradient(80% 70% at 10% 0%, rgba($c-primary-light, .5), transparent 60%),
+            linear-gradient(160deg, $c-deep-3 0%, $c-deep 100%);
     }
 }

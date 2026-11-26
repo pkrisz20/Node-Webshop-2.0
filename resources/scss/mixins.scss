@@ -1,5 +1,12 @@
 @use 'sass:math';
 
+/** Simple leaf outline, used as a mask (its color comes from background-color) */
+$leaf-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20C4 11 10 4 20 4c0 10-7 16-16 16z'/%3E%3Cpath d='M4 20 14 10'/%3E%3C/svg%3E");
+
+// ==========================================================================
+// Layout helpers
+// ==========================================================================
+
 @mixin imageCover {
     object-fit: cover;
     object-position: center;
@@ -37,36 +44,35 @@
     row-gap: $gap-rows;
 }
 
-@mixin btn($color: $c-white, $bg: $c-black, $hover: rgba($bg, .75)) {
-    text-decoration: none;
-    cursor: pointer;
-    display: inline-block;
-    border-radius: $base-radius;
-    padding: $base-padding $base-padding * 2;
-    color: $color;
-    background-color: $bg;
-    transition: all .3s ease-in-out;
-
-    &:hover {
-        background-color: $hover;
-    }
+/** Responsive card grid: as many columns as fit, never narrower than $min */
+@mixin autoGrid($min: 260px, $gap: $gutter) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(#{$min}, 100%), 1fr));
+    gap: $gap;
 }
 
-@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, $c-white, 50%)) {
-    scrollbar-color: $foreground-color $background-color;
-    scrollbar-width: thin;
+@mixin lineClamp($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 
-    &::-webkit-scrollbar {
-        width: $size;
-    }
+@mixin visuallyHidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 
-    &::-webkit-scrollbar-thumb {
-        background: $foreground-color;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: $background-color;
-    }
+@mixin focusRing($color: $c-primary) {
+    outline: 2px solid rgba($color, .55);
+    outline-offset: 2px;
 }
 
 @mixin paddingBottom($first, $second) {
@@ -99,6 +105,20 @@
     }
 }
 
+/** A <picture> that fills its (positioned, sized) parent */
+@mixin fillPicture {
+    picture {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        display: block;
+        @include imageCover();
+    }
+}
+
 @mixin resp($property, $min, $max, $rangeMin: 320px, $rangeMax: 1920px) {
     $diff: $max - $min;
     $diff: math.div($diff, 1px);
@@ -112,5 +132,338 @@
 
     @media (min-width: $rangeMax) {
         #{$property}: $max;
+    }
+}
+
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, $c-white, 50%)) {
+    scrollbar-color: $foreground-color $background-color;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: $size;
+        height: $size;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $foreground-color;
+        border-radius: $r-pill;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $background-color;
+    }
+}
+
+// ==========================================================================
+// Surfaces
+// ==========================================================================
+
+@mixin card($padding: 24px, $radius: $r-lg) {
+    background-color: $c-surface;
+    border: 1px solid $c-line;
+    border-radius: $radius;
+    box-shadow: $shadow-xs;
+    padding: $padding;
+}
+
+@mixin hoverLift {
+    transition: transform $t $ease, box-shadow $t $ease, border-color $t $ease;
+
+    @media (hover: hover) {
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: $shadow-lg;
+            border-color: transparent;
+        }
+    }
+}
+
+/**
+ * Elegant surface instead of the green "no picture" placeholder image:
+ * the placeholder is hidden and the picture gets a soft branded background with a leaf mark.
+ */
+@mixin noPictureSurface($tone: light) {
+    picture:has(img[src*="no-picture"]),
+    &:has(> img[src*="no-picture"]) {
+        position: relative;
+
+        @if $tone == dark {
+            background:
+                radial-gradient(120% 90% at 85% 10%, rgba($c-lime, .16), transparent 55%),
+                radial-gradient(90% 80% at 10% 100%, rgba($c-primary-light, .45), transparent 60%),
+                linear-gradient(135deg, $c-deep 0%, $c-deep-2 45%, $c-primary-dark 100%);
+        } @else {
+            background:
+                radial-gradient(90% 70% at 80% 15%, rgba($c-lime, .14), transparent 60%),
+                linear-gradient(160deg, $c-primary-softer 0%, $c-primary-soft 100%);
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 22%;
+            max-width: 72px;
+            aspect-ratio: 1;
+            opacity: if($tone == dark, .18, .5);
+            background-color: if($tone == dark, $c-white, rgba($c-primary, .35));
+            -webkit-mask: $leaf-mask center / contain no-repeat;
+            mask: $leaf-mask center / contain no-repeat;
+            pointer-events: none;
+        }
+
+        img {
+            opacity: 0;
+        }
+    }
+}
+
+// ==========================================================================
+// Buttons
+// ==========================================================================
+
+@mixin btnBase($height: 48px) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: $height;
+    padding: 0 26px;
+    border: 1px solid transparent;
+    border-radius: $r-pill;
+    font-family: $font-body;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: .01em;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color $t-fast $ease, color $t-fast $ease, border-color $t-fast $ease, box-shadow $t $ease, transform $t-fast $ease;
+
+    i {
+        font-size: .95em;
+    }
+
+    &:focus-visible {
+        @include focusRing();
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &.disabled,
+    &:disabled {
+        opacity: .55;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
+@mixin btnPrimary {
+    background-color: $c-primary;
+    color: $c-white;
+    box-shadow: 0 8px 20px -10px rgba($c-primary, .9);
+
+    &:hover {
+        background-color: $c-primary-dark;
+        color: $c-white;
+        box-shadow: 0 12px 24px -10px rgba($c-primary, .9);
+    }
+}
+
+@mixin btnDark {
+    background-color: $c-deep;
+    color: $c-white;
+
+    &:hover {
+        background-color: $c-deep-3;
+        color: $c-white;
+    }
+}
+
+@mixin btnAccent {
+    background-color: $c-accent;
+    color: $c-white;
+    box-shadow: 0 8px 20px -10px rgba($c-accent, .9);
+
+    &:hover {
+        background-color: $c-accent-dark;
+        color: $c-white;
+    }
+}
+
+@mixin btnOutline($color: $c-ink) {
+    background-color: transparent;
+    color: $color;
+    border-color: rgba($color, .22);
+
+    &:hover {
+        border-color: $color;
+        background-color: rgba($color, .04);
+        color: $color;
+    }
+}
+
+@mixin btnLight {
+    background-color: $c-white;
+    color: $c-ink;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+        background-color: $c-white;
+        color: $c-primary;
+        box-shadow: $shadow-md;
+    }
+}
+
+@mixin btnGlass {
+    background-color: rgba($c-white, .14);
+    color: $c-white;
+    border-color: rgba($c-white, .35);
+    backdrop-filter: blur(8px);
+
+    &:hover {
+        background-color: rgba($c-white, .24);
+        color: $c-white;
+        border-color: rgba($c-white, .6);
+    }
+}
+
+/** Old signature, kept for the templates which still use it */
+@mixin btn($color: $c-white, $bg: $c-primary, $hover: null) {
+    @include btnBase();
+    color: $color;
+    background-color: $bg;
+
+    &:hover {
+        background-color: if($hover, $hover, darken($bg, 6%));
+        color: $color;
+    }
+}
+
+/** Round icon button (wishlist, carousel arrows, close buttons) */
+@mixin iconButton($size: 44px) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    border: 1px solid $c-line;
+    background-color: $c-white;
+    color: $c-ink;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color $t-fast $ease, color $t-fast $ease, border-color $t-fast $ease, box-shadow $t $ease, transform $t-fast $ease;
+
+    &:hover {
+        border-color: $c-primary;
+        color: $c-primary;
+        box-shadow: $shadow-sm;
+    }
+
+    &:focus-visible {
+        @include focusRing();
+    }
+}
+
+// ==========================================================================
+// Typography helpers
+// ==========================================================================
+
+@mixin eyebrow($color: $c-primary) {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: $color;
+
+    &::before {
+        content: "";
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background-color: currentColor;
+        opacity: .7;
+    }
+}
+
+@mixin displayHeading($min: 30px, $max: 44px) {
+    font-family: $font-display;
+    font-weight: 600;
+    font-optical-sizing: auto;
+    letter-spacing: -.015em;
+    line-height: 1.1;
+    color: $c-ink;
+    font-size: clamp(#{$min}, 2.4vw + 1rem, #{$max});
+}
+
+@mixin badge($bg: $c-primary, $color: $c-white) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: $r-pill;
+    background-color: $bg;
+    color: $color;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+// ==========================================================================
+// Quantity stepper (- input +)
+// ==========================================================================
+
+@mixin stepper($height: 40px) {
+    display: inline-flex;
+    align-items: center;
+    height: $height;
+    padding: 3px;
+    border: 1px solid $c-line;
+    border-radius: $r-pill;
+    background-color: $c-surface;
+
+    .quantities-btn {
+        display: grid;
+        place-items: center;
+        width: $height - 8px;
+        height: $height - 8px;
+        border-radius: 50%;
+        color: $c-ink;
+        font-size: 11px;
+        transition: background-color $t-fast $ease, color $t-fast $ease;
+
+        &:hover {
+            background-color: $c-primary-soft;
+            color: $c-primary;
+        }
+
+        &.disabled {
+            opacity: .5;
+            pointer-events: none;
+        }
+    }
+
+    .quantities-input {
+        width: 38px;
+        height: 100%;
+        text-align: center;
+        color: $c-ink;
+        font-size: 15px;
+        font-weight: 700;
     }
 }

@@ -1,8 +1,8 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/search-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/slick.min.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/search-list.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>

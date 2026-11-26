@@ -1,24 +1,36 @@
 <section class="featured-categories">
     <div class="wrapper">
+        <div class="section-head">
+            <%- include('./block-title.ejs', { title: languageHandler('products.categories', current_locale) }) %>
+
+            <% if (webshopCategories.length > 1) { %>
+                <div class="section-head__arrows">
+                    <button type="button" class="slick-prev slick-arrow" aria-label="<%= languageHandler('general.prev_page', current_locale) %>"><i class="fas fa-arrow-left"></i></button>
+                    <button type="button" class="slick-next slick-arrow" aria-label="<%= languageHandler('general.next_page', current_locale) %>"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            <% } %>
+        </div>
+
         <div class="featured-categories-carousel js-categories-carousel">
             <% webshopCategories.forEach(item => { %>
                 <a
+                    class="category-card"
                     target="_self"
                     href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= item.category_slug %>/<%= languageHandler("slugs.products", current_locale) %>/<%= item.id %>"
                     aria-label="<%= item.name %>"
                     title="<%= item.name %>"
                 >
                     <div class="card">
-                        <%- include('./picture.ejs', { imageSrc: item.category_image, imgClass: "card-icon", alt: item.name }) %>
-                        <h3 class="card-text"><%= item.name %></h3>
+                        <div class="card-media">
+                            <%- include('./picture.ejs', { imageSrc: item.category_image, imgClass: "card-icon", alt: item.name }) %>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-text"><%= item.name %></h3>
+                            <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                        </div>
                     </div>
                 </a>
             <% }) %>
         </div>
-
-        <% if (webshopCategories.length > 1) { %>
-            <button type="button" class="slick-prev slick-arrow"><i class="fas fa-chevron-left"></i></button>
-            <button type="button" class="slick-next slick-arrow"><i class="fas fa-chevron-right"></i></button>
-        <% } %>
     </div>
 </section>

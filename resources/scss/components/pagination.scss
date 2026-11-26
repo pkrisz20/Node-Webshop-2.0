@@ -1,55 +1,70 @@
 .pagination {
-  margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
 
-  &-list {
-    @include flexBox();
-    flex-wrap: wrap;
-  }
-
-  &-item {
-    background-color: $c-success;
-    transition: all .3s ease;
-    border-radius: 3px;
-    @include flexBox();
-    margin: 0 5px 5px;
-
-    &.active {
-      background-color: $c-warning;
+    &-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px;
+        border-radius: $r-pill;
+        border: 1px solid $c-line;
+        background-color: $c-surface;
+        box-shadow: $shadow-xs;
     }
 
-    &.disabled {
-      pointer-events: none;
-    }
+    &-item {
+        a,
+        span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            border-radius: $r-pill;
+            color: $c-ink-2;
+            font-size: 14px;
+            font-weight: 700;
+            transition: background-color $t-fast $ease, color $t-fast $ease;
+        }
 
-    &:hover {
-      &:not(.active) {
-        background-color: $c-light-green2;
-      }
-    }
+        a:hover {
+            background-color: $c-primary-softer;
+            color: $c-primary;
+        }
 
-    @media #{ $max-767 } {
-      &:not(.arrow) {
-        display: none;
-      }
-    }
+        &.active a {
+            background-color: $c-primary;
+            color: $c-white;
+            box-shadow: 0 8px 16px -10px rgba($c-primary, .9);
+        }
 
-    a, span {
-      padding: 10px;
-      color: $c-white;
+        &.disabled span {
+            color: $c-muted-2;
+        }
 
-      i {
-        color: $c-white;
-        font-size: 18px;
-        margin: 0 5px;
-      }
-    }
+        &.arrow a {
+            padding: 0 16px;
 
-    &.prev-arrow {
-      margin-right: 10px;
-    }
+            i {
+                font-size: 11px;
+            }
+        }
 
-    &.next-arrow {
-      margin-left: 10px;
+        @media #{ $max-539 } {
+            &.arrow a {
+                font-size: 0;
+                gap: 0;
+                padding: 0;
+
+                i {
+                    font-size: 12px;
+                }
+            }
+        }
     }
-  }
 }

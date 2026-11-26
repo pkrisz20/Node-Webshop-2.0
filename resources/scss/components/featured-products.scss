@@ -1,60 +1,25 @@
 .products-carousel {
-    padding: 40px 0;
+    padding-bottom: 36px;
 
-    @media #{ $min-1025 } {
-        padding: 60px 0 40px;
-    }
+    .js-featured-products:not(.slick-initialized) {
+        display: flex;
+        gap: 24px;
+        overflow: hidden;
 
-    .slick {
+        > .slide {
+            flex: 0 0 calc(25% - 18px);
 
-        &-track {
-            display: flex !important;
-            padding: 10px 0;
-            float: left;
-        }
+            @media #{ $max-1199 } {
+                flex-basis: calc(33.333% - 16px);
+            }
 
-        &-slide {
-            height: inherit !important;
-        }
+            @media #{ $max-767 } {
+                flex-basis: calc(50% - 12px);
+            }
 
-        &-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: $c-theme;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-
-            i {
-                font-size: 24px;
-                color: $c-white;
-
-                @media #{ $min-768 } {
-                    font-size: 30px;
-                }
+            @media #{ $max-539 } {
+                flex-basis: 100%;
             }
         }
-
-        &-prev {
-            left: 5px !important;
-        }
-
-        &-next {
-            right: 5px !important;
-        }
-    }
-
-    & > .wrapper {
-        position: relative;
-    }
-
-    .header_title {
-        margin-bottom: 40px;
-    }
-
-    .product {
-        margin: 0 6px;
     }
 }

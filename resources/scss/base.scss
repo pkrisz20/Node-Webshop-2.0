@@ -8,23 +8,64 @@
     outline: none;
 }
 
+:focus-visible {
+    @include focusRing();
+}
+
 *::selection {
-    background-color: $c-theme;
+    background-color: $c-primary;
     color: $c-white;
 }
 
+html {
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+    font-family: $font-body;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @include scrollbars(10px, rgba($c-deep, .35), $c-bg);
+
+    &:focus-within {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+    background-color: $c-bg;
+    color: $c-ink-2;
+    font-family: $font-body;
+    font-size: 16px;
+    line-height: 1.6;
+    accent-color: $c-primary;
+}
+
 .wrapper {
-    padding: 0 30px;
     width: 100%;
+    padding: 0 $gutter-mobile;
+    margin: 0 auto;
+
+    @media #{ $min-768 } {
+        padding: 0 $gutter;
+    }
 
     @media #{ $min-1200 } {
-        padding: 0 15px;
-        max-width: $wrapper;
-        margin: 0 auto;
+        max-width: $wrapper + $gutter * 2;
     }
 }
 
 h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    color: $c-ink;
+    line-height: 1.2;
+}
+
+p {
     margin: 0;
 }
 
@@ -34,14 +75,34 @@ ol, ul {
     margin: 0;
 }
 
+img,
+picture,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
 section {
-    padding: 60px 0;
+    padding: 72px 0;
+
+    @media #{ $max-767 } {
+        padding: 52px 0;
+    }
 }
 
 a {
     text-decoration: none;
     cursor: pointer;
-    color: $c-theme;
+    color: $c-primary;
+    transition: color $t-fast $ease;
+
+    &:hover {
+        color: $c-primary-dark;
+    }
+}
+
+strong, b {
+    font-weight: 700;
 }
 
 button,
@@ -50,8 +111,15 @@ optgroup,
 select,
 textarea {
     font-family: inherit;
+    font-size: inherit;
+    color: inherit;
     border: none;
     outline: none;
+    background: none;
+}
+
+button {
+    cursor: pointer;
 }
 
 input::-webkit-outer-spin-button,
@@ -62,7 +130,7 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
     appearance: textfield;
-    -moz-appearance:textfield; /* Firefox */
+    -moz-appearance: textfield;
 }
 
 input[type=hidden] {
@@ -74,20 +142,18 @@ input[type=hidden] {
     display: none !important;
 }
 
-html {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    font-family: $main-font;
-    @include scrollbars(7px, rgba($c-theme, .6), $c-d);
-
-    &:focus-within {
-      scroll-behavior: smooth;
-    }
+/** The H1 of the inner pages */
+.main-title {
+    @include displayHeading(32px, 52px);
+    margin: 0 0 14px;
+    text-wrap: balance;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    accent-color: $c-theme;
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

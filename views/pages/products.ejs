@@ -1,51 +1,55 @@
 <%- extend('layouts/base') %>
 
 <%- push('styles') %>
-    <link rel="preload" href="<%= getAssetPath('/css/plugins/jquery-ui.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="preload" href="<%= getAssetPath('/css/product-list.css') %>" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/plugins/jquery-ui.css') %>" />
+    <link rel="stylesheet" href="<%= getAssetPath('/css/product-list.css') %>" />
 <%- endPush() %>
 
 <%- section('content') %>
     <%- include('../components/breadcrumbs.ejs', { currentLinkName: main_title }) %>
 
     <main class="list">
-
         <div class="wrapper">
-            <h1 class="main-title"><%= main_title %></h1>
+            <header class="page-header">
+                <h1 class="main-title"><%= main_title %></h1>
 
-            <% if (category_short_desc) { %>
-                <p class="list__shorts"><%= category_short_desc %></p>
-            <% } %>
+                <% if (category_short_desc) { %>
+                    <p class="list__shorts"><%= category_short_desc %></p>
+                <% } %>
+            </header>
 
             <div class="list__data" data-anchor="products-list">
                 <%- include('../components/product-filters', { webshopFilters: webshopFilters }) %>
 
                 <section class="listpage products">
-                    <button type="button" class="filter__trigger js-open-filters-sidebar">
-                        <i class="fas fa-sliders-h"></i>
-                        <%= languageHandler('products.filters', current_locale) %>
-                    </button>
-
                     <div class="listpage__options">
+                        <button type="button" class="filter__trigger js-open-filters-sidebar">
+                            <i class="fas fa-sliders-h"></i>
+                            <%= languageHandler('products.filters', current_locale) %>
+                        </button>
+
                         <% if (productsTotalCount > 0) { %>
                             <strong class="listpage__total-count js-total-products"><%= productsTotalCount %> <%= languageHandler('general.product', current_locale) %></strong>
                         <% } %>
 
                         <div class="listpage__options-dropdowns">
-                            <select class="js-watch-option">
-                                <option selected="selected" value="deafult"><%= languageHandler('products_sorting.default', current_locale) %></option>
-                                <% validSortOptions.forEach(option => { %>
-                                    <option value="<%= option %>"><%= languageHandler('products_sorting.' + option, current_locale) %></option>
-                                <% }) %>
-                            </select>
-                            <select class="js-watch-option">
-                                <% validLimitValues.forEach(limitValue => { %>
-                                    <option value="<%= limitValue %>"><%= limitValue %></option>
-                                <% }) %>
-                            </select>
+                            <label class="select">
+                                <select class="js-watch-option" aria-label="<%= languageHandler('products_sorting.default', current_locale) %>">
+                                    <option selected="selected" value="deafult"><%= languageHandler('products_sorting.default', current_locale) %></option>
+                                    <% validSortOptions.forEach(option => { %>
+                                        <option value="<%= option %>"><%= languageHandler('products_sorting.' + option, current_locale) %></option>
+                                    <% }) %>
+                                </select>
+                            </label>
+                            <label class="select select--small">
+                                <select class="js-watch-option" aria-label="Limit">
+                                    <% validLimitValues.forEach(limitValue => { %>
+                                        <option value="<%= limitValue %>"><%= limitValue %></option>
+                                    <% }) %>
+                                </select>
+                            </label>
                         </div>
                     </div>
-
 
                     <% if (products.length > 0) { %>
                         <div class="listpage-container js-product-list">

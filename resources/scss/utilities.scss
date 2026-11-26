@@ -2,6 +2,11 @@
     display: block !important;
 }
 
-.hide {
+.hide,
+.hidden {
     display: none !important;
+}
+
+.sr-only {
+    @include visuallyHidden();
 }

@@ -1,10 +1,11 @@
 <section class="comments">
-    <div class="wrapper">
+    <div class="wrapper comments__layout">
+        <div class="comments__form-col">
 
         <%- include('./block-title.ejs', { title: languageHandler('general.comments', current_locale), subtitle: languageHandler('general.comments_subtitle', current_locale) }) %>
 
         <div class="comments-information">
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fas fa-shield-alt"></i>
             <p class="comments-information-text"><%= languageHandler('validations.accept_terms', current_locale) %></p>
             <p class="comments-information-text"><%= languageHandler('general.details_here', current_locale) %>: <a href="<%= process.env.APP_URL %>/<%= current_locale %>/<%= languageHandler("slugs.content", current_locale) %>/<%= staticContent['terms_of_use']['slug'] %>"><%= staticContent['terms_of_use']['title'] %></a></p>
         </div>
@@ -109,6 +110,9 @@
 
             <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> <%= languageHandler('validations.send', current_locale) %></button>
         </form>
+        </div>
+
+        <div class="comments__list-col">
 
         <% if (comments.length > 0) { %>
             <div class="comments-container js-comments-container">
@@ -129,7 +133,7 @@
                                 <% } %>
                             </div>
                             <p class="content-comment"><%= comment.description %></p>
-                            <time class="content-date"><i class="fas fa-history"></i> <%= comment.date %></time>
+                            <time class="content-date"><i class="far fa-clock"></i> <%= comment.date %></time>
                         </div>
                     </div>
                 <% }) %>
@@ -155,5 +159,6 @@
                 <p class="comments-information-text"><%= languageHandler('products.no_comment_yet', current_locale) %></p>
             </div>
         <% } %>
+        </div>
     </div>
 </section>

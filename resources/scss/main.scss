@@ -6,51 +6,309 @@
 
 @import "./components/header.scss";
 @import "./components/footer.scss";
+@import "./components/quantities.scss";
 @import "./components/cart.scss";
 @import "./components/form.scss";
 @import "./components/block-title.scss";
 @import "./components/cookies.scss";
 @import "./components/breadcrumbs.scss";
 
+// ==========================================================================
+// Page frame
+// ==========================================================================
+
 .site-wrap {
-  padding-top: 205px;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
-  @media #{ $max-1199 } {
-    padding-top: 195px;
-  }
-
-  @media #{ $max-1024 } {
-    padding-top: 113px;
-  }
-}
-
-.system-info {
-  width: 100%;
-  background-color: $c-info;
-  padding: 10px;
-  border-radius: 5px;
-
-  &-text {
-      color: $c-white;
-      font-size: 20px;
-
-      i {
-          font-size: 20px;
-          margin-right: 10px;
-      }
-  }
+    > main {
+        flex: 1;
+    }
 }
 
 .site-overlay {
-  visibility: hidden;
-  opacity: 0;
-  transition: all .3s ease;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba($c-dark, .5);
-  z-index: 99;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgba($c-deep, .45);
+    backdrop-filter: blur(3px);
+    transition: opacity $t $ease, visibility $t;
+}
+
+/** Info box of the empty lists */
+.system-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 20px 22px;
+    border-radius: $r-lg;
+    border: 1px dashed rgba($c-primary, .35);
+    background-color: $c-primary-softer;
+
+    &-text {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: $c-ink;
+        font-size: 16px;
+        font-weight: 600;
+
+        i {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: $c-surface;
+            color: $c-primary;
+            font-size: 17px;
+            box-shadow: $shadow-xs;
+        }
+    }
+}
+
+/** "All products", "Visit the blog" ... links under the home page sections */
+.more {
+    display: flex;
+    justify-content: center;
+    padding: 8px 16px 0;
+
+    &-button {
+        @include btnBase(52px);
+        @include btnOutline($c-ink);
+        background-color: $c-surface;
+
+        i {
+            font-size: 12px;
+            transition: transform $t-fast $ease;
+        }
+
+        &:hover i {
+            transform: translateX(4px);
+        }
+    }
+}
+
+// ==========================================================================
+// Carousels (slick): equal height slides, round arrow buttons
+// ==========================================================================
+
+.slick-slider {
+    .slick-track {
+        display: flex !important;
+    }
+
+    .slick-slide {
+        height: inherit !important;
+
+        > div {
+            height: 100%;
+        }
+    }
+
+    .slide {
+        height: 100%;
+    }
+}
+
+.slick-arrow {
+    @include iconButton(46px);
+    z-index: 5;
+    box-shadow: $shadow-sm;
+
+    &.slick-disabled {
+        opacity: .4;
+        pointer-events: none;
+    }
+}
+
+.slick-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    li {
+        display: flex;
+    }
+
+    button {
+        width: 8px;
+        height: 8px;
+        border-radius: $r-pill;
+        background-color: rgba($c-deep, .2);
+        font-size: 0;
+        transition: width $t $ease, background-color $t $ease;
+    }
+
+    .slick-active button {
+        width: 26px;
+        background-color: $c-primary;
+    }
+}
+
+// ==========================================================================
+// Dialogs (jquery-confirm)
+// ==========================================================================
+
+.jconfirm {
+    font-family: $font-body !important;
+
+    .jconfirm-bg {
+        background-color: $c-deep !important;
+        opacity: .5 !important;
+    }
+
+    &.jconfirm-light .jconfirm-box,
+    .jconfirm-box {
+        padding: 28px 28px 22px !important;
+        border-radius: $r-lg !important;
+        border: none !important;
+        box-shadow: $shadow-lg !important;
+
+        div.jconfirm-title-c {
+            padding-bottom: 10px !important;
+
+            .jconfirm-title {
+                font-family: $font-display !important;
+                font-size: 24px !important;
+                font-weight: 600 !important;
+                color: $c-ink !important;
+                line-height: 1.25 !important;
+            }
+        }
+
+        div.jconfirm-content-pane .jconfirm-content {
+            color: $c-muted;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .jconfirm-buttons {
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+            float: none !important;
+            padding-top: 6px;
+
+            button {
+                @include btnBase(44px);
+                @include btnPrimary();
+                margin: 0 !important;
+                padding: 0 22px !important;
+                text-transform: none !important;
+                font-size: 14px !important;
+                font-weight: 700 !important;
+
+                &.btn-default {
+                    background-color: $c-primary !important;
+                    color: $c-white !important;
+                }
+
+                &:first-child:not(:last-child) {
+                    background-color: transparent !important;
+                    color: $c-ink !important;
+                    border-color: $c-line;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}
+
+// ==========================================================================
+// Section head: block title on the left, carousel arrows on the right
+// ==========================================================================
+
+.section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 34px;
+
+    @media #{ $max-767 } {
+        margin-bottom: 24px;
+    }
+
+    .header_title {
+        margin-bottom: 0;
+    }
+
+    &__arrows {
+        display: flex;
+        flex-shrink: 0;
+        gap: 10px;
+
+        @media #{ $max-539 } {
+            .slick-arrow {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    }
+}
+
+/** Gutters between the carousel cards, and room for the hover shadow */
+.js-featured-products,
+.js-featured-blogs,
+.js-featured-galleries,
+.js-categories-carousel {
+    &.slick-initialized {
+        .slick-list {
+            margin: -12px -12px -30px;
+            padding: 12px 0 30px;
+        }
+
+        .slick-slide {
+            padding: 0 12px;
+        }
+    }
+}
+
+.js-categories-carousel:not(.slick-initialized) {
+    display: flex;
+    gap: 24px;
+    overflow: hidden;
+
+    > a {
+        flex: 0 0 calc(25% - 18px);
+
+        @media #{ $max-1199 } {
+            flex-basis: calc(33.333% - 16px);
+        }
+
+        @media #{ $max-767 } {
+            flex-basis: calc(50% - 12px);
+        }
+
+        @media #{ $max-539 } {
+            flex-basis: 100%;
+        }
+    }
+}
+
+// ==========================================================================
+// Inner pages: title area under the breadcrumbs
+// ==========================================================================
+
+.breadcrumbs + main {
+    padding-top: 22px;
+
+    @media #{ $max-767 } {
+        padding-top: 14px;
+    }
+}
+
+.page-header {
+    margin-bottom: 32px;
+
+    .main-title {
+        margin-bottom: 10px;
+    }
 }

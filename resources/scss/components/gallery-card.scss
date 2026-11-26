@@ -1,113 +1,97 @@
 .gallery-card {
-    width: 100%;
-    height: 100% !important;
-    border: none;
-    display: block;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 4px 5px 10px rgba($c-black, .75);
     position: relative;
-    cursor: pointer;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: $r-lg;
+    background-color: $c-deep;
+    box-shadow: $shadow-xs;
+    isolation: isolate;
+    transition: transform $t $ease, box-shadow $t $ease;
 
-    &-date {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        background-color: $c-yellow;
-        color: $c-dark-blue;
-        font-size: 14px;
-        font-weight: 600;
-        padding: 7px 12px;
-        border-radius: 15px;
-        z-index: 10;
-    }
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
 
-    &-image {
-        width: 100%;
-        position: relative;
-
-        picture {
-            @include respImage(0.71);
+        img {
+            transform: scale(1.06);
         }
 
         .icon {
-            @include absoluteCenter();
-            display: inline-block;
-            z-index: 4;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility, opacity .3s ease-in-out;
+            opacity: 1;
+            transform: none;
+        }
+    }
 
-            & > i {
-                font-size: 35px;
-                color: $c-white;
-            }
+    &-date {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 3;
+        display: inline-flex;
+        align-items: center;
+        height: 28px;
+        padding: 0 12px;
+        border-radius: $r-pill;
+        background-color: rgba($c-white, .94);
+        color: $c-ink;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    &-image {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        @include fillPicture();
+        @include noPictureSurface(dark);
+
+        img {
+            transition: transform .7s $ease;
         }
 
-        &::before {
-            @include absoluteFullSize();
-            content: '';
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
             z-index: 1;
-            transition: all .3s ease-in-out;
-            visibility: hidden;
-            opacity: 0;
+            background: linear-gradient(180deg, rgba($c-deep, 0) 45%, rgba($c-deep, .85) 100%);
         }
+    }
+
+    .icon {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background-color: rgba($c-white, .94);
+        color: $c-primary;
+        font-size: 14px;
+        opacity: 0;
+        transform: scale(.85);
+        transition: opacity $t-fast $ease, transform $t-fast $ease;
     }
 
     .caption {
-        padding: 0 0 10px 0;
-        @include flexBox("flex-start", "center", 10px);
-        flex-direction: column;
         position: absolute;
-        z-index: 4;
-        bottom: 0;
         left: 0;
-        width: 100%;
-        visibility: hidden;
-        opacity: 0;
-        transition: all .3s ease-in-out;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        padding: 20px;
 
         &-name {
-            font-size: 20px;
-            line-height: 30px;
+            display: block;
             color: $c-white;
+            font-family: $font-display;
+            font-size: 21px;
             font-weight: 600;
-        }
-        &-category {
-            font-size: 16px;
-            color: $c-white;
-            font-weight: 600;
-
-            & > span {
-                color: $c-white;
-                height: 100%;
-
-                &:first-child {
-                    margin-right: 10px;
-                }
-                &:last-child {
-                    margin-left: 10px;
-                }
-            }
-        }
-    }
-
-    &:hover {
-        .gallery-card-image {
-            &::before {
-                opacity: 1;
-                visibility: visible;
-                background-color: rgba($c-black, 0.6);
-            }
-
-            .icon {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-        .caption {
-            opacity: 1;
-            visibility: visible;
+            line-height: 1.2;
+            @include lineClamp(2);
         }
     }
 }

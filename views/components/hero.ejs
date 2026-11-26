@@ -1,47 +1,55 @@
 <section class="hero">
-    <div class="hero-wrapper js-hero-slick">
-        <% heros.forEach((data, index) => { %>
-            <div class="slide">
-                <div class="box">
-                    <% if (index == 0) { %>
-                        <h1 class="box-title"><%= data.text %></h1>
-                    <% } else { %>
-                        <h2 class="box-title"><%= data.text %></h2>
-                    <% } %>
+    <div class="wrapper">
+        <div class="hero__frame">
+            <div class="hero-wrapper js-hero-slick">
+                <% heros.forEach((data, index) => { %>
+                    <div class="slide">
+                        <div class="slide__media">
+                            <%- include('./picture.ejs', { imageSrc: data.image, alt: data.text, loading: index === 0 ? 'eager' : 'lazy' }) %>
+                        </div>
 
-                    <% if (data.subText) { %>
-                        <p class="box-subtitle"><%= data.subText %></p>
-                    <% } %>
+                        <div class="box">
+                            <span class="box-eyebrow"><%= process.env.SITE_NAME %></span>
 
-                    <% if (data.link) { %>
-                        <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button || languageHandler("general.read_more", current_locale) %></a>
-                    <% } %>
-                </div>
+                            <% if (index == 0) { %>
+                                <h1 class="box-title"><%= data.text %></h1>
+                            <% } else { %>
+                                <h2 class="box-title"><%= data.text %></h2>
+                            <% } %>
 
-                <%- include('./picture.ejs', { imageSrc: data.image, alt: data.text }) %>
+                            <% if (data.subText) { %>
+                                <p class="box-subtitle"><%= data.subText %></p>
+                            <% } %>
+
+                            <% if (data.link) { %>
+                                <a href="<%= data.link %>" target="<%= data.targetPage %>" class="box-btn"><%= data.button || languageHandler("general.read_more", current_locale) %> <i class="fas fa-arrow-right"></i></a>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
             </div>
-        <% }) %>
-    </div>
 
-    <% if (heros.length > 1) { %>
-        <button
-            type="button"
-            class="slick-prev slick-arrow"
-            aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
-            title="<%= languageHandler('general.prev_page', current_locale) %>"
-        >
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button
-            type="button"
-            class="slick-next slick-arrow"
-            aria-label="<%= languageHandler('general.next_page', current_locale) %>"
-            title="<%= languageHandler('general.next_page', current_locale) %>"
-        >
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    <% } %>
-    <% if (heros.length > 1) { %>
-        <div class="hero-dots"></div>
-    <% } %>
+            <% if (heros.length > 1) { %>
+                <div class="hero__controls">
+                    <button
+                        type="button"
+                        class="slick-prev slick-arrow"
+                        aria-label="<%= languageHandler('general.prev_page', current_locale) %>"
+                        title="<%= languageHandler('general.prev_page', current_locale) %>"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button
+                        type="button"
+                        class="slick-next slick-arrow"
+                        aria-label="<%= languageHandler('general.next_page', current_locale) %>"
+                        title="<%= languageHandler('general.next_page', current_locale) %>"
+                    >
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="hero-dots"></div>
+            <% } %>
+        </div>
+    </div>
 </section>

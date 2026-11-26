@@ -1,13 +1,86 @@
-$main-font: "Montserrat", sans-serif;
+// ==========================================================================
+// Design tokens
+// The color world of the shop stays: emerald green, deep petrol, red for the
+// sales and alerts, lime for small highlights.
+// ==========================================================================
 
-$base-container: 1200px;
-$wrapper: 1170px;
-$base-padding: 15px;
+// Typography
+$font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+$font-display: "Fraunces", Georgia, "Times New Roman", serif;
+$main-font: $font-body;
+
+// Layout
+$wrapper: 1280px;
+$wrapper-narrow: 820px;
+$base-container: $wrapper;
+$base-padding: 16px;
 $base-margin: 10px;
-$base-radius: 5px;
-$base-box-shadow: 1px 3px 5px rgba(0,0,0,.1);
+$gutter: 24px;
+$gutter-mobile: 16px;
 
+// Radius
+$r-xs: 6px;
+$r-sm: 10px;
+$r-md: 14px;
+$r-lg: 20px;
+$r-xl: 28px;
+$r-pill: 999px;
+$base-radius: $r-sm;
+
+// Brand colors
 $c-theme: #007d54;
+$c-primary: $c-theme;
+$c-primary-dark: #00603f;
+$c-primary-darker: #004a31;
+$c-primary-light: #0b8b51;
+$c-primary-soft: #e7f3ed;
+$c-primary-softer: #f1f8f4;
+
+$c-deep: #082a2e;
+$c-deep-2: #0d3b3f;
+$c-deep-3: #12494c;
+
+$c-accent: #c70000;
+$c-accent-dark: #a30000;
+$c-accent-soft: #fdecec;
+
+$c-lime: #b4e800;
+$c-lime-soft: #f3fbd9;
+
+$c-amber: #b77626;
+$c-amber-soft: #fbf2e6;
+
+// Neutrals (a hint of green, so they sit well next to the brand colors)
+$c-ink: #10201d;
+$c-ink-2: #2a3b38;
+$c-muted: #5d6e6a;
+$c-muted-2: #8a9894;
+$c-line: #e3e8e5;
+$c-line-2: #eef2ef;
+$c-bg: #f6f8f6;
+$c-bg-2: #eef3ef;
+$c-surface: #ffffff;
+
+// Shadows
+$shadow-xs: 0 1px 2px rgba($c-deep, .06);
+$shadow-sm: 0 1px 2px rgba($c-deep, .05), 0 2px 8px -2px rgba($c-deep, .08);
+$shadow-md: 0 2px 4px -1px rgba($c-deep, .05), 0 10px 24px -8px rgba($c-deep, .16);
+$shadow-lg: 0 4px 10px -4px rgba($c-deep, .08), 0 24px 48px -16px rgba($c-deep, .24);
+$shadow-focus: 0 0 0 4px rgba($c-primary, .18);
+$base-box-shadow: $shadow-sm;
+
+// Motion
+$ease: cubic-bezier(.2, .7, .2, 1);
+$t-fast: .18s;
+$t: .3s;
+
+// Header
+$header-topbar-h: 40px;
+$header-main-h: 84px;
+$header-nav-h: 52px;
+$header-main-h-mobile: 64px;
+
+// Legacy color names (still used by a few templates and plugins)
 $c-light-green: #0b8b51;
 $c-light-green2: #39946b;
 $c-skyblue: #2d6787;
@@ -23,12 +96,13 @@ $c-success: #117a4b;
 $c-error: #b10101;
 $c-info: #2874a6;
 
-$c-facebook: #4267b2;
+$c-facebook: #1877f2;
 $c-instagram: #e1306c;
+$c-tiktok: #111111;
 $c-discord: #5865f2;
 $c-github: #967bb6;
-$c-twitter: #1DA1F2;
-$c-youtube: #FF0000;
+$c-twitter: #000000;
+$c-youtube: #ff0000;
 
 $c-light-gray: #90aebd;
 $c-light-gray2: #c1d2cf;
@@ -62,6 +136,7 @@ $c-2: #222;
 $c-1: #111;
 $c-black: #000;
 
+// Breakpoints
 $min-420: "(min-width: 420px)";
 $min-540: "(min-width: 540px)";
 $min-768: "(min-width: 768px)";
